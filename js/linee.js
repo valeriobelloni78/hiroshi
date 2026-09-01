@@ -41,10 +41,14 @@ const G  = {
   /* tessuti */
   tRegistro: 55, tIntreccio: 45, tApertura: 3.0, tChiusura: 4.3,
   tPasso: 38, tLivello: 32, tSpazio: 55,
+  /* grani */
+  gTesta: 0, gCorsa: 20, gNube: 22, gDensita: 14, gGrano: 120,
+  gAltezza: 0, gSparpaglio: 30, gSpazio: 45,
 };
 const GT = { ...G };
 const effG  = { registro: 45, calore: 70, spazio: 72, densita: 5, addensamento: 30, colore: 2500 };
 const effGT = { registro: 55, intreccio: 45, apertura: 3.0, chiusura: 4.3, passo: 38, livello: 32, spazio: 55 };
+const effGR = { testa: 0, corsa: 20, nube: 22, densita: 14, grano: 120, altezza: 0, sparpaglio: 30, spazio: 45 };
 
 /* ------------------------------------------------- le due influenze esterne
    Sono simmetriche e non si toccano: **l'ora del giorno inclina le gocce, la
@@ -98,6 +102,23 @@ function effettiviFrasi() {
 /* I tessuti pescano da un canale della deriva che le gocce non usano — il
    `corpo` muove il loro LIVELLO, cioè quanto lo sfondo sta sotto al primo
    piano. Tutto il resto glielo muove la stagione. */
+/* I grani non hanno né un'ora né una stagione: hanno il BARICENTRO, lo stesso
+   che fa salire e scendere le gocce e i tessuti. Non è una terza lettura della
+   stessa grandezza — è la stessa, applicata a una sorgente in più: quando la
+   musica sale, sale anche la nube. Cinque semitoni di escursione, perché su un
+   materiale registrato una trasposizione grande si sente come un difetto di
+   velocità, non come un registro. */
+function effettiviGrani() {
+  effGR.testa      = clamp(G.gTesta, 0, 100);
+  effGR.corsa      = clamp(G.gCorsa, -100, 100);
+  effGR.nube       = clamp(G.gNube, 0, 100);
+  effGR.densita    = clamp(G.gDensita, 0.5, 80);
+  effGR.grano      = clamp(G.gGrano, 10, 500);
+  effGR.altezza    = clamp(G.gAltezza + deriva.centro * 5, -24, 24);
+  effGR.sparpaglio = clamp(G.gSparpaglio, 0, 100);
+  effGR.spazio     = clamp(G.gSpazio, 0, 100);
+}
+
 function effettiviTessuti() {
   const st = tavolozzaStagionale(meseCorrente());
   effGT.registro  = clamp(G.tRegistro + st.registro, 0, 100);

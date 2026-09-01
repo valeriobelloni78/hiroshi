@@ -27,8 +27,23 @@ tornano nella stessa combinazione; la coprimalità è una condizione
 peggiore è **247 ore**, dieci giorni. `prova.mjs` rifà quel conto a ogni corsa
 e fallisce sotto le 24 ore.
 
+**Il microfono non si granula dal vivo: si registra, e si granula la
+registrazione.** Tre ragioni, tutte strutturali. L'ESPORTAZIONE: `passo(now)`
+percorre il tempo più in fretta del tempo reale, e un flusso dal microfono non
+si può percorrere più in fretta del tempo reale — renderebbe silenzio nel wav,
+cioè romperebbe la promessa che il file suoni come quello che si è ascoltato.
+LA TESTA DI LETTURA: su un flusso si può solo guardare indietro di un ritardo
+fisso, mentre su una registrazione la testa si ferma, torna, va al contrario —
+e «fermarsi dentro un suono» è metà di quello che il granulare serve a fare.
+IL RIENTRO: microfono aperto e altoparlanti accesi sono un anello, e un anello
+con dentro un granulare è un fischio.
+
 **La somma dei tessuti si normalizza sugli INVILUPPI, mai su un conteggio di
-voci.** Sorgenti incoerenti si sommano in potenza, quindi il bus si divide per
+voci.** Vale anche per i **grani**, dove però la somma si conosce senza
+sommarla: quanti grani suonano insieme è densità per durata, due numeri che
+stanno in un cursore. Senza dividere per √N, alzare la densità vorrebbe dire
+alzare il volume invece di infittire la nube — e la densità è proprio il
+comando che si muove per cambiare la grana. Sorgenti incoerenti si sommano in potenza, quindi il bus si divide per
 √N — ma sotto la radice va la somma degli inviluppi. Contando le teste, il bus
 scenderebbe di 3 dB nell'istante in cui una voce comincia ad aprirsi, cioè
 mentre è ancora inudibile: un buco che precede il suono. È possibile solo
@@ -42,11 +57,22 @@ API 2D del browser. Nessun bundler, nessun npm, nessun passo di compilazione:
 si apre `index.html` e funziona, anche senza rete.
 
 **Niente file caricati con `fetch`.** Su `file://` il CORS li blocca e l'app
-resterebbe senza testi al doppio clic. I dizionari sono oggetti JavaScript.
-Vale anche per gli AudioWorklet: `addModule` di un file locale fallisce. Se
-serviranno, il modulo va costruito come stringa e caricato da un blob —
-`URL.createObjectURL(new Blob([codice], {type:"text/javascript"}))` — che
-funziona anche da `file://`.
+resterebbe senza testi al doppio clic. I dizionari sono oggetti JavaScript. I
+file dell'utente arrivano da un `<input type=file>` e passano per
+`decodeAudioData`: nessuna richiesta di rete.
+
+**Un AudioWorklet si carica da un `data:` URI, NON da un blob.** `addModule`
+di un percorso locale fallisce per il CORS — quello si sapeva — ma anche il
+blob fallisce: su `file://` `URL.createObjectURL` dà un `blob:null/…`, origine
+opaca, e `addModule` risponde `AbortError: Unable to load a worklet's module`.
+Misurato. Da `http://` il blob funziona, ed è così che la cosa passa
+inosservata: si prova sul server, va, e poi non va sul doppio clic — che è
+proprio il caso che questo progetto promette di reggere. La strada è
+`"data:text/javascript," + encodeURIComponent(codice)`, verificata su tutti e
+due. Si usa `encodeURIComponent` e non `btoa` perché `btoa` non regge un
+carattere fuori dal Latin-1: basterebbe un accento in un commento dentro il
+processore. Il codice è in `preparaCattura()`, dentro `grani.js`, e il
+registratore userà lo stesso.
 
 **La palette è definita una volta sola**, nelle variabili CSS di
 `css/style.css`. Quando arriverà il disegno, anche il canvas le leggerà da lì.
@@ -58,8 +84,8 @@ della stessa grandezza e non spostare una di queste due senza spostare anche
 la chiave che le dichiara.
 
 **Le dipendenze scorrono in una direzione sola:**
-`deriva ← linee ← timbri ← tessuti ← mood ← banco ← motore ← tavola`. Il
-modello non conosce l'audio; l'audio non conosce il disegno.
+`deriva ← linee ← timbri ← tessuti ← grani ← mood ← banco ← motore ← tavola`.
+Il modello non conosce l'audio; l'audio non conosce il disegno.
 
 **`mood.js` è l'unico file che attraversa**, e ha un file suo proprio per
 dichiararlo. Un mood scrive insieme i parametri del modello, i periodi delle
@@ -229,8 +255,17 @@ il modo in cui una rete a retroazione sbaglia — che la compensazione dei
 tessuti sia **liscia** dove quella per conteggio di teste scatterebbe, e che i
 sedici mood siano in regola: periodi coprimi dentro ogni serie, riallineamento
 sopra le 24 ore in tutte e 64 le combinazioni, ogni timbro una volta sola, e
-quattro accoppiate rese dal motore intero senza clippare. Esce con codice
-diverso da zero se qualcosa non torna. Serve `playwright` e un Chromium.
+quattro accoppiate rese dal motore intero senza clippare. Sui **grani**
+verifica che la testa di lettura si muova davvero (un accumulatore che non
+accumula è un difetto muto: si sente solo come una nube che non va da nessuna
+parte), che la compensazione segua la densità, e che in modo intonato tutti
+gli intervalli stiano nella collezione. Esce con codice diverso da zero se
+qualcosa non torna. Serve `playwright` e un Chromium.
+
+**La prova si porta una materia sua**: i grani all'apertura sono muti per
+costruzione — non c'è nessun suono in dotazione da granulare — quindi la prova
+sintetizza sei secondi di quattro toni, che sono riconoscibili e permettono di
+vedere se la testa si sposta.
 
 **La prova fissa l'ora e la stagione** (`ORA = 14`, `MESE = 9`). Senza,
 misurerebbe cose diverse a seconda di quando la si lancia — il calore, lo
@@ -279,16 +314,20 @@ Oltre Rada: i **timbri** (Rada ne aveva uno per classe, governato da un solo
 numero; qui sono otto e otto, e `calore` è quel numero rimasto al suo posto) e
 l'**esportazione deterministica**.
 
+Fatti anche i **grani**: l'archivio dei materiali, la cattura dal microfono via
+AudioWorklet, la nube attorno alla testa di lettura, l'intonazione sulla
+collezione.
+
 Da fare, in ordine:
 
-1. I **grani**: microfono e file propri, con la nube attorno alla testa di
-   lettura. È la funzione nuova che non viene da nessuna delle tre app.
-2. Il **registratore**: cattura del bus d'uscita e scrittura del wav. La
-   strada è l'AudioWorklet caricato da blob (vedi sopra); l'esportazione
+1. Il **registratore**: cattura del bus d'uscita e scrittura del wav. La
+   macchina della cattura è già in piedi — `apriCattura()` in `grani.js` prende
+   un NODO qualunque, non solo il microfono, apposta perché qui la sorgente
+   sarà l'uscita del banco. Manca la scrittura del wav. L'esportazione
    *deterministica* passa invece da `rendiOffline`, ed è già in piedi.
-3. La **tavola**: il disegno vero, che sostituisce l'impalcatura di
+2. La **tavola**: il disegno vero, che sostituisce l'impalcatura di
    `tavola.js`.
-4. Le **voci** e il **cielo**: il motore alla *In C* di Nuvole con l'archivio
+3. Le **voci** e il **cielo**: il motore alla *In C* di Nuvole con l'archivio
    delle 53 frasi, e il campo `fBm` che le sveglia. **Rimandati per scelta**:
    l'archivio attraversa tutti e dodici i gradi mentre gocce e tessuti stanno
    su una pentatonica anemitonica, e far entrare le voci vuol dire decidere

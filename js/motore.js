@@ -32,6 +32,7 @@ let banco = null;
 let running = false;
 let frasiOn = true;
 let tessutiOn = true;
+let graniOn = true;
 let timer = null;
 let ultimoGiro = 0;
 let sospensione = null;
@@ -155,6 +156,18 @@ function compensaTessuti(now) {
   banco.normalizza("tessuti", compensazione, now);
 }
 
+/* La stessa compensazione dei tessuti, applicata a una somma che qui si CONOSCE
+   invece di doverla sommare: quanti grani suonano insieme è densità per durata,
+   e sono due numeri che stanno in un cursore. Senza, alzare la densità
+   vorrebbe dire alzare il volume invece di infittire la nube — e la densità è
+   proprio il comando che si muove per cambiare la grana, non il livello. */
+let graniEmessi = 0;
+let compensaGraniValore = 1;
+function compensaGrani(now) {
+  compensaGraniValore = 1 / Math.sqrt(sovrapposizioneGrani());
+  banco.normalizza("grani", compensaGraniValore, now);
+}
+
 /* ------------------------------------------------------------------ il passo */
 function passo(now, nascosta) {
   if (nascosta) {
@@ -164,6 +177,11 @@ function passo(now, nascosta) {
     const ritardo = now - ultimoGiro;
     LOOKAHEAD = clamp(ritardo * 2.5, LOOKAHEAD_NASCOSTA, LOOKAHEAD_MAX);
   }
+  // Quanto tempo è passato davvero dal giro precedente. Serve alla testa di
+  // lettura dei grani, che è un accumulatore: dal vivo i giri sono a 25 ms,
+  // fuori tempo reale a 50, e la testa deve percorrere la stessa strada nei
+  // due casi. Il tetto a mezzo secondo difende dal primo giro e dai risvegli.
+  const dt = clamp(now - ultimoGiro, 0, 0.5);
   ultimoGiro = now;
 
   avanzaDeriva(now);
@@ -175,6 +193,8 @@ function passo(now, nascosta) {
   // avanzava e nessuno la ascoltava.
   effettiviFrasi();
   effettiviTessuti();
+  effettiviGrani();
+  avanzaTesta(dt);
   applicaEfficaci(now);
 
   const orizzonte = now + LOOKAHEAD;
@@ -185,7 +205,11 @@ function passo(now, nascosta) {
   prenota(frasi,   costruisciPiano, suonaGoccia, now, orizzonte, frasiOn);
   prenota(tessuti, costruisciTrama, suonaTenuta, now, orizzonte, tessutiOn);
 
+  contestoGrani(ctx);
+  graniEmessi += prenotaGrani(now, orizzonte, graniOn, banco.canali.grani.ingresso);
+
   compensaTessuti(now);
+  compensaGrani(now);
 
   // IL RINNOVO AL PASSO DI QUINTA: la scala grossa del ricambio. Quello fine
   // sostituisce una goccia per volta e non si nota mai; questo rifà tutte e
@@ -221,9 +245,13 @@ function passo(now, nascosta) {
    mossi abbastanza da sentirsi: `setTargetAtTime` a ogni passo su quattro
    parametri farebbe quaranta eventi d'automazione al secondo per niente, e
    fuori tempo reale li farebbe tutti in una volta. */
-const ultimo = { spazio: -1, colore: -1, livello: -1, tSpazio: -1 };
+const ultimo = { spazio: -1, colore: -1, livello: -1, tSpazio: -1, gSpazio: -1 };
 function applicaEfficaci(now) {
   if (!banco) return;
+  if (Math.abs(effGR.spazio - ultimo.gSpazio) > 0.5) {
+    ultimo.gSpazio = effGR.spazio;
+    banco.spazio("grani", effGR.spazio / 100);
+  }
   if (Math.abs(effG.spazio - ultimo.spazio) > 0.5) {
     ultimo.spazio = effG.spazio;
     banco.spazio("frasi", effG.spazio / 100);
@@ -310,6 +338,8 @@ function azzeraMemoria(L) {
 function avvia(now) {
   bookedUntil = 0;
   tenuteAperte.length = 0;
+  prossimoGrano = now;
+  graniEmessi = 0;
   frasi.forEach(azzeraMemoria);
   tessuti.forEach(azzeraMemoria);
   frasi.forEach((L, i) => {
@@ -336,9 +366,11 @@ function avvia(now) {
    come quello che si è ascoltato. */
 function tara() {
   banco.livello("frasi", -4);
-  ultimo.spazio = ultimo.colore = ultimo.livello = ultimo.tSpazio = -1;
+  banco.livello("grani", -6);
+  ultimo.spazio = ultimo.colore = ultimo.livello = ultimo.tSpazio = ultimo.gSpazio = -1;
   effettiviFrasi();
   effettiviTessuti();
+  effettiviGrani();
   applicaEfficaci(ctx.currentTime);
 }
 

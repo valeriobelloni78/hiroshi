@@ -131,6 +131,15 @@ cursore("densita",      "densita");
 cursore("addensamento", "addensamento");
 cursore("spazio",       "spazio");
 
+cursore("gtesta",      "gTesta");
+cursore("gcorsa",      "gCorsa");
+cursore("gnube",       "gNube");
+cursore("gdensita",    "gDensita");
+cursore("ggrano",      "gGrano", 0, (v) => Math.round(v) + " ms");
+cursore("galtezza",    "gAltezza", 0, (v) => (v > 0 ? "+" : "") + Math.round(v));
+cursore("gsparpaglio", "gSparpaglio");
+cursore("gspazio",     "gSpazio");
+
 cursore("tregistro", "tRegistro");
 cursore("intreccio", "tIntreccio");
 cursore("apertura",  "tApertura", 10, secondi);
@@ -138,6 +147,90 @@ cursore("chiusura",  "tChiusura", 10, secondi);
 cursore("passo",     "tPasso");
 cursore("livello",   "tLivello");
 cursore("tspazio",   "tSpazio");
+
+/* ------------------------------------------------------------------ i grani
+   Le due porte da cui entra la materia. Il microfono passa da «registra» e da
+   nessun'altra parte: non si granula un flusso dal vivo, si granula una
+   registrazione — la ragione sta in cima a `grani.js` e sono tre, tutte
+   strutturali. */
+el("graniOn").addEventListener("change", (e) => { graniOn = e.target.checked; });
+el("intonato").addEventListener("change", (e) => { graniIntonati = e.target.checked; });
+
+const selMateria = el("materia");
+function aggiornaMaterie() {
+  selMateria.innerHTML = "";
+  if (!materiali.length) {
+    const o = document.createElement("option");
+    o.value = "-1"; o.textContent = "— niente ancora —";
+    selMateria.appendChild(o);
+    return;
+  }
+  materiali.forEach((m, i) => {
+    const o = document.createElement("option");
+    o.value = String(i);
+    o.textContent = m.nome + " · " + numero(m.durata, 1) + " s";
+    if (i === materiale) o.selected = true;
+    selMateria.appendChild(o);
+  });
+}
+selMateria.addEventListener("change", () => {
+  materiale = Number(selMateria.value);
+  testaOra = 0;
+});
+
+/* Il contesto serve tanto per decodificare un file quanto per aprire il
+   microfono, e a quel punto tanto vale costruirlo tutto: l'uscita resta
+   chiusa finché non si preme Ascolta, quindi non si sente niente. */
+function assicuraContesto() { costruisciMotore(); return ctx; }
+
+el("file").addEventListener("change", async (e) => {
+  const f = e.target.files && e.target.files[0];
+  if (!f) return;
+  el("cattura").textContent = "leggo…";
+  try {
+    await caricaFile(assicuraContesto(), f);
+    aggiornaMaterie();
+    el("cattura").textContent = "";
+  } catch (err) {
+    el("cattura").textContent = "non riesco a leggerlo";
+  }
+  e.target.value = "";
+});
+
+const btnReg = el("registra");
+let presa = null, flusso = null, orologioPresa = null;
+btnReg.addEventListener("click", async () => {
+  if (presa) {
+    const buf = presa.chiudi();
+    presa = null;
+    clearInterval(orologioPresa);
+    if (flusso) { flusso.getTracks().forEach((t) => t.stop()); flusso = null; }
+    btnReg.textContent = "Registra";
+    btnReg.classList.remove("attivo");
+    if (buf && buf.length) {
+      aggiungiMateria("microfono " + (materiali.filter((m) => /^microfono/.test(m.nome)).length + 1), buf);
+      aggiornaMaterie();
+      el("cattura").textContent = "";
+    } else {
+      el("cattura").textContent = "non è arrivato niente";
+    }
+    return;
+  }
+  try {
+    const c = assicuraContesto();
+    if (c.state === "suspended") await c.resume();
+    flusso = await apriMicrofono();
+    presa = await apriCattura(c, c.createMediaStreamSource(flusso));
+    btnReg.textContent = "Ferma";
+    btnReg.classList.add("attivo");
+    orologioPresa = setInterval(() => {
+      if (presa) el("cattura").textContent = numero(presa.secondi, 1) + " s";
+    }, 200);
+  } catch (err) {
+    el("cattura").textContent = "microfono negato";
+    presa = null; flusso = null;
+  }
+});
 
 /* -------------------------------------------------------- i comandi per linea
    Tre per ciascuna delle otto: quanto dura il giro, se tace, e una idea nuova.
@@ -257,7 +350,8 @@ function due(cursore, efficace, d = 0) {
 
 function battito() {
   for (const k in GT) G[k] += (GT[k] - G[k]) * SMUSSO;
-  if (!ctx) { effettiviFrasi(); effettiviTessuti(); }   // a motore fermo li fa il ciclo
+  // A motore fermo li fa questo ciclo, così i cursori rispondono comunque.
+  if (!ctx) { effettiviFrasi(); effettiviTessuti(); effettiviGrani(); }
 
   if (Math.abs(effG.addensamento - ultimaTesta) > 0.3) {
     ultimaTesta = effG.addensamento;
@@ -285,8 +379,21 @@ function battito() {
     el("picco").textContent = isFinite(dB) ? numero(dB, 1) + " dB" : "—";
     el("riduzione").textContent = numero(banco.riduzione(), 1) + " dB";
   }
+  // La targa mostra la base VERA, cioè quella arrotondata quando il modo è
+  // intonato: dire «+2,7» mentre la nube suona a +3 sarebbe raccontare un
+  // numero che non sta suonando.
+  el("vGaltezza").textContent = due(G.gAltezza, baseGrani(), graniIntonati ? 0 : 1);
+
   el("voci").textContent = numero(sommaTessuti, 2);
   el("compenso").textContent = numero(20 * Math.log10(compensazione), 1) + " dB";
+  const mat = materiaCorrente();
+  el("testa").textContent = mat
+    ? numero(centroNube(), 2) + " s / " + numero(mat.durata, 1) + " s"
+    : "—";
+  el("nube").textContent = mat
+    ? graniEmessi + " · " + numero(sovrapposizioneGrani(), 1) + " insieme, " +
+      numero(20 * Math.log10(compensaGraniValore), 1) + " dB"
+    : "nessuna materia";
   el("tonalita").textContent = NOMI_NOTE[tonalita()];
   el("ora").textContent = tavolozzaOraria(oraCorrente()).nome +
                           " · " + Math.round(effG.colore) + " Hz";
@@ -297,4 +404,5 @@ function battito() {
 
 allinea();
 aggiornaRiallineo();
+aggiornaMaterie();
 battito();

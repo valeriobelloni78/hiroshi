@@ -89,6 +89,15 @@ body{
 .acceso input{accent-color:var(--inchiostro);width:12px;height:12px;margin:0}
 
 .due{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.acceso.solo{align-self:flex-start}
+
+/* Le due porte da cui entra la materia: un file scelto a mano e il microfono.
+   Sono l'unica parte dell'impalcatura in cui si tocca qualcosa che viene da
+   fuori dall'app. */
+.materia{display:flex;flex-direction:column;gap:12px}
+.prese{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.cmd.piccolo{font-size:9px;padding:8px 14px}
+.cmd.piccolo.attivo{background:var(--acuto)}
 
 /* Una linea: il suo numero, la durata del giro, e i due comandi. Le otto righe
    sono la sola parte della tavola in cui si tocca una linea sola. */

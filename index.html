@@ -135,6 +135,65 @@
       </label>
 
       <div class="linee" id="lineeTessuti"></div>
+
+      <!-- ============================================================ grani -->
+      <div class="titolo">04 · Grani <label class="acceso"><input type="checkbox" id="graniOn" checked> in campo</label></div>
+
+      <div class="materia">
+        <label class="campo">
+          <span class="mn">Materia</span>
+          <select id="materia"><option value="-1">— niente ancora —</option></select>
+        </label>
+        <div class="prese">
+          <label class="cmd piccolo" for="file">Carica un file</label>
+          <input id="file" type="file" accept="audio/*" hidden>
+          <button id="registra" class="cmd piccolo">Registra</button>
+          <span class="mn" id="cattura"></span>
+        </div>
+      </div>
+
+      <label class="campo">
+        <span class="mn">Testa <b id="vGtesta">0</b></span>
+        <input id="gtesta" type="range" min="0" max="100" step="1" value="0">
+      </label>
+
+      <label class="campo">
+        <span class="mn">Corsa <b id="vGcorsa">20</b></span>
+        <input id="gcorsa" type="range" min="-100" max="100" step="1" value="20">
+      </label>
+
+      <label class="campo">
+        <span class="mn">Nube <b id="vGnube">22</b></span>
+        <input id="gnube" type="range" min="0" max="100" step="1" value="22">
+      </label>
+
+      <label class="campo">
+        <span class="mn">Densità <b id="vGdensita">14</b></span>
+        <input id="gdensita" type="range" min="1" max="60" step="1" value="14">
+      </label>
+
+      <label class="campo">
+        <span class="mn">Grano <b id="vGgrano">120 ms</b></span>
+        <input id="ggrano" type="range" min="10" max="500" step="5" value="120">
+      </label>
+
+      <div class="due">
+        <label class="campo">
+          <span class="mn">Altezza <b id="vGaltezza">0</b></span>
+          <input id="galtezza" type="range" min="-24" max="24" step="1" value="0">
+        </label>
+        <label class="campo">
+          <span class="mn">Sparpaglio <b id="vGsparpaglio">30</b></span>
+          <input id="gsparpaglio" type="range" min="0" max="100" step="1" value="30">
+        </label>
+      </div>
+
+      <label class="campo">
+        <span class="mn">Spazio <b id="vGspazio">45</b></span>
+        <input id="gspazio" type="range" min="0" max="100" step="1" value="45">
+      </label>
+
+      <label class="acceso solo"><input type="checkbox" id="intonato" checked> intonato sulla collezione</label>
     </section>
 
     <section class="misure">
@@ -142,6 +201,8 @@
       <div class="riga"><span class="mn">Limitatore</span><span id="riduzione" class="val">—</span></div>
       <div class="riga"><span class="mn">Voci tenute</span><span id="voci" class="val">—</span></div>
       <div class="riga"><span class="mn">Compensazione</span><span id="compenso" class="val">—</span></div>
+      <div class="riga"><span class="mn">Testa di lettura</span><span id="testa" class="val">—</span></div>
+      <div class="riga"><span class="mn">Grani</span><span id="nube" class="val">—</span></div>
       <div class="riga"><span class="mn">Tonalità</span><span id="tonalita" class="val">—</span></div>
       <div class="riga"><span class="mn">Ora · colore</span><span id="ora" class="val">—</span></div>
       <div class="riga"><span class="mn">Stagione</span><span id="stagione" class="val">—</span></div>
@@ -155,6 +216,7 @@
 <script src="js/linee.js"></script>
 <script src="js/timbri.js"></script>
 <script src="js/tessuti.js"></script>
+<script src="js/grani.js"></script>
 <script src="js/mood.js"></script>
 <script src="js/banco.js"></script>
 <script src="js/motore.js"></script>

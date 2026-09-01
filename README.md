@@ -50,7 +50,22 @@ ciascuna classe ha il **modo del materiale**: in *deriva* le idee si rinnovano
 da sé, una alla volta e tutte insieme al passo di quinta; in *ancora* restano
 quelle che il mood ha scelto, mentre tutto il resto continua a muoversi.
 
-Grani e registratore sono i prossimi. Le voci alla *In C* di Nuvole aspettano
+**I grani** macinano registrazioni proprie: un file scelto a mano, o il
+microfono. Non c'è nessun suono in dotazione — questa sorgente tace finché non
+le si dà qualcosa, ed è il punto: la materia è il field recording di chi
+ascolta. Una testa di lettura scorre il materiale (o si ferma dentro, che è
+metà di quello che il granulare serve a fare) e attorno le si sparpaglia una
+nube di grani, ciascuno con la sua finestra, la sua altezza e il suo posto nel
+campo stereo. In modo **intonato** gli intervalli fra i grani sono quelli della
+stessa pentatonica di tutto il resto: la nube si accorda col pezzo anche
+partendo da un rumore di fondo.
+
+Il microfono entra da una porta sola — *registra* — e da lì in poi è materia
+come un file. Non si granula un flusso dal vivo: l'esportazione non potrebbe
+percorrerlo più in fretta del tempo reale, la testa non potrebbe fermarsi, e
+microfono più altoparlanti sono un anello.
+
+Il registratore della sessione è il prossimo. Le voci alla *In C* di Nuvole aspettano
 una decisione musicale: il loro archivio attraversa tutti e dodici i gradi,
 mentre gocce e tessuti stanno su una pentatonica dove nulla può stonare. La
 tavola disegnata — i due quadranti, le corone, la fascia dei grani, la deriva —
@@ -69,6 +84,7 @@ js/deriva.js      il tempo lungo: sei canali e il campo armonico. Non dipende da
 js/linee.js       lo stato: linee, idee, piani, ricambio
 js/timbri.js      gli otto suoni delle gocce
 js/tessuti.js     gli otto tenuti, e la finestra che li apre e li chiude
+js/grani.js       la materia registrata, la cattura dal microfono, la nube
 js/mood.js        i sedici stati dello strumento: parametri, periodi, timbro
 js/banco.js       l'uscita: mixer, riverbero, colore, equalizzatore, limitatore
 js/motore.js      lo scheduler e l'assemblaggio

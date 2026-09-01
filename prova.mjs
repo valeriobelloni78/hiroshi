@@ -29,6 +29,7 @@ const esito = await p.evaluate(async () => {
     return { rms: +Math.sqrt(somma / n).toFixed(5), picco: +picco.toFixed(4), primo: +primo.toFixed(3) };
   };
   const dB = (x) => (x > 0 ? +(20 * Math.log10(x)).toFixed(1) : -Infinity);
+  const numeroDb = (x) => (x > 0 ? "+" : "") + x.toFixed(2) + " dB";
 
   const R = { errori: [] };
 
@@ -281,6 +282,102 @@ const esito = await p.evaluate(async () => {
       if (m.picco >= 0.999) R.errori.push("il mood " + g + "+" + t + " clippa");
     }
     applicaMoodGocce("sereno"); applicaMoodTessuti("velo");
+  }
+
+  /* 7 · I GRANI.
+
+        All'apertura questa sorgente è muta per costruzione — non c'è nessun
+        suono in dotazione da granulare — quindi la prova si porta una materia
+        sua: sei secondi di quattro toni in successione, che è materiale
+        riconoscibile e permette di verificare che la testa di lettura si
+        muova davvero invece di macinare sempre lo stesso punto.
+
+        Si verificano quattro cose:
+         (a) che i grani suonino e non clippino, resi dal motore intero;
+         (b) che la TESTA SI MUOVA: a corsa zero la nube resta ferma, a corsa
+             piena percorre il materiale. È il difetto più facile da
+             introdurre — un accumulatore che non accumula — ed è muto: si
+             sente solo come una nube che non va da nessuna parte.
+         (c) che la compensazione segua la densità: raddoppiando i grani il
+             bus deve scendere di 3 dB, non salire;
+         (d) che in modo INTONATO tutti gli intervalli stiano nella collezione
+             — nessun semitono, che è la garanzia che il granulare non deve
+             rompere. */
+  {
+    const sr = 48000, sec = 6;
+    const c = new OfflineAudioContext(1, sr * sec, sr);
+    const mat = c.createBuffer(1, sr * sec, sr);
+    const d = mat.getChannelData(0);
+    for (let i = 0; i < d.length; i++) {
+      const f = [180, 240, 320, 430][Math.floor((i / sr / sec) * 4)];
+      d[i] = 0.5 * Math.sin((2 * Math.PI * f * i) / sr);
+    }
+    aggiungiMateria("prova", mat);
+
+    // (b) la testa
+    testaOra = 0; G.gCorsa = GT.gCorsa = 0; effettiviGrani();
+    for (let k = 0; k < 100; k++) avanzaTesta(0.05);
+    const ferma = testaOra;
+    G.gCorsa = GT.gCorsa = 100; effettiviGrani();
+    for (let k = 0; k < 100; k++) avanzaTesta(0.05);
+    const corsa = testaOra;
+    R.grani = { testaFerma: +ferma.toFixed(3), testaDopo5s: +corsa.toFixed(2) };
+    if (ferma !== 0) R.errori.push("a corsa zero la testa si muove lo stesso");
+    if (Math.abs(corsa - 5) > 0.3) R.errori.push("a corsa piena la testa ha fatto " +
+      corsa.toFixed(2) + " s invece di 5");
+
+    // (c) la compensazione
+    G.gDensita = GT.gDensita = 10; G.gGrano = GT.gGrano = 100; effettiviGrani();
+    const c1 = sovrapposizioneGrani();
+    G.gDensita = GT.gDensita = 20; effettiviGrani();
+    const c2 = sovrapposizioneGrani();
+    const scarto = 20 * Math.log10(Math.sqrt(c1) / Math.sqrt(c2));
+    R.grani.compensazione = numeroDb(scarto) + " raddoppiando la densità";
+    if (Math.abs(scarto + 3) > 0.4)
+      R.errori.push("la compensazione dei grani non segue la densità: " + scarto.toFixed(2) + " dB");
+
+    // (d) gli intervalli, in modo intonato. Quello che va verificato sono gli
+    //     INTERVALLI dentro la nube, non l'altezza assoluta: un materiale
+    //     registrato non ha una tonalità che si possa conoscere — un temporale
+    //     non ne ha affatto — quindi la trasposizione assoluta non vuol dire
+    //     niente, mentre gli intervalli fra un grano e l'altro si sentono
+    //     eccome. La promessa è che siano quelli della collezione: nessun
+    //     semitono, nessun tritono.
+    graniIntonati = true;
+    G.gSparpaglio = GT.gSparpaglio = 100; G.gAltezza = GT.gAltezza = 0;
+    effettiviGrani();
+    const base = baseGrani();
+    const classi = new Set();
+    let interi = true;
+    for (let k = 0; k < 3000; k++) {
+      const s = semitoniGrano() - base;
+      if (Math.abs(s - Math.round(s)) > 1e-9) { interi = false; break; }
+      classi.add(((Math.round(s) % 12) + 12) % 12);
+    }
+    R.grani.classi = [...classi].sort((a, b) => a - b);
+    if (!interi) R.errori.push("un intervallo intonato non cade su un semitono intero");
+    for (const q of classi) {
+      if (!GRADI.includes(q))
+        R.errori.push("in modo intonato esce una classe fuori dalla collezione: " + q);
+    }
+    // E che il reticolo non scivoli col baricentro: due basi diverse devono
+    // restare a distanza intera.
+    if (Math.abs(baseGrani() - Math.round(baseGrani())) > 1e-9)
+      R.errori.push("in modo intonato la base non è un semitono intero");
+
+    // (a) la resa, dal motore intero
+    G.gCorsa = GT.gCorsa = 20; G.gDensita = GT.gDensita = 18;
+    G.gNube = GT.gNube = 30; G.gSparpaglio = GT.gSparpaglio = 30;
+    effettiviGrani();
+    const prima = [frasiOn, tessutiOn];
+    frasiOn = false; tessutiOn = false;
+    const nube = await rendiOffline(12);
+    frasiOn = prima[0]; tessutiOn = prima[1];
+    R.grani.resa = misura(nube);
+    R.grani.emessi = graniEmessi;
+    if (R.grani.resa.rms < 0.002) R.errori.push("i grani non arrivano all'uscita");
+    if (R.grani.resa.picco >= 0.999) R.errori.push("i grani clippano");
+    if (graniEmessi < 100) R.errori.push("in dodici secondi sono usciti solo " + graniEmessi + " grani");
   }
 
   return R;
