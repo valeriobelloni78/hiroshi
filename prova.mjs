@@ -56,6 +56,37 @@ const esito = await p.evaluate(async () => {
     if (m.picco > 1.5) R.errori.push(nome + " esce troppo forte: " + dB(m.picco) + " dB");
   }
 
+  /* 2b · ogni tessuto, da solo. Tre tenute che si accavallano, come nell'uso
+         vero: un tenuto misurato da solo e in isolamento non direbbe niente di
+         quello che fa quando ce ne sono altri. */
+  R.tessuti = {};
+  for (const nome of TESSUTI) {
+    const c = new OfflineAudioContext(2, 48000 * 12, 48000);
+    const dest = c.createGain(); dest.connect(c.destination);
+    for (let k = 0; k < 3; k++) {
+      suonaTessuto(nome, {
+        ctx: c, when: 0.1 + k * 3.4, dur: 6, freq: 196 * Math.pow(2, k / 4),
+        vel: 0.9, pan: 0, dest, F: FORMA_T,
+      });
+    }
+    const m = misura(await c.startRendering());
+    R.tessuti[nome] = { rms: m.rms, dB: dB(m.picco) };
+    if (m.rms < 0.0005) R.errori.push(nome + " è muto");
+    if (m.picco > 1.5) R.errori.push(nome + " esce troppo forte: " + dB(m.picco) + " dB");
+  }
+
+  /* 2c · i tessuti dal motore intero, senza le gocce: che la seconda classe
+         arrivi davvero all'uscita e non solo ai suoi costruttori. */
+  {
+    const prima = frasiOn;
+    frasiOn = false;
+    const solo = await rendiOffline(25);
+    frasiOn = prima;
+    R.trama = misura(solo);
+    if (R.trama.rms < 0.002) R.errori.push("i tessuti non arrivano all'uscita");
+    if (R.trama.picco >= 0.999) R.errori.push("i tessuti da soli clippano");
+  }
+
   /* 3 · l'equalizzatore: una campana a −8 dB deve togliere otto decibel lì e
         lasciare in pace il resto */
   const c2 = new OfflineAudioContext(1, 128, 48000);
@@ -126,6 +157,56 @@ const esito = await p.evaluate(async () => {
   R.riverbero = { caduta: caduta + " dB fra 3,2 s e 5 s", squilibrio: squilibrio + " dB fra i lati" };
   if (tardi >= presto) R.errori.push("la coda del riverbero cresce invece di spegnersi");
   if (caduta > -12) R.errori.push("la coda scende troppo poco: " + caduta + " dB");
+
+  /* 5 · LA COMPENSAZIONE DEI TESSUTI, che è la ragione per cui questa classe
+        ha richiesto un meccanismo suo.
+
+        Quattro tenute già aperte; una quinta comincia ad aprirsi. Il bus
+        dev'essere compensato su √(somma degli inviluppi) e NON su √(numero di
+        voci): contando le teste, la compensazione salta di 20·log₁₀(√5/√4) =
+        0,97 dB nell'istante in cui la quinta voce comincia — cioè mentre è
+        ancora del tutto inudibile. Si sentirebbe l'intera trama abbassarsi per
+        far posto a qualcosa che non c'è.
+
+        La prova misura lo SCATTO MASSIMO fra due passi consecutivi dello
+        scheduler, nelle due versioni. Quella per inviluppi dev'essere liscia;
+        quella per teste dev'essere ruvida — e si verifica anche quello, perché
+        una prova che non sa distinguere i due casi non sta provando niente. */
+  {
+    const aperte = [];
+    for (let k = 0; k < 4; k++) aperte.push({ t0: -50, t1: 200, ap: 3, di: 3, amp: 1 });
+    const quinta = { t0: 10, t1: 60, ap: 3.2, di: 5.4, amp: 1 };
+    const tutte = aperte.concat([quinta]);
+
+    const perInviluppi = (t) => {
+      let s = 0;
+      for (const e of tutte) s += e.amp * finestra(t, e);
+      return s > 1 ? 1 / Math.sqrt(s) : 1;
+    };
+    const perTeste = (t) => {
+      let n = 0;
+      for (const e of tutte) if (t >= e.t0 && t < e.t1) n++;
+      return n > 1 ? 1 / Math.sqrt(n) : 1;
+    };
+
+    const scatto = (f) => {
+      let max = 0, prima = f(9);
+      for (let t = 9; t <= 15; t += 0.05) {
+        const v = f(t);
+        max = Math.max(max, Math.abs(v - prima));
+        prima = v;
+      }
+      return max;
+    };
+    const liscio = scatto(perInviluppi), ruvido = scatto(perTeste);
+    R.compensazione = {
+      perInviluppi: +liscio.toFixed(5),
+      perTeste: +ruvido.toFixed(5),
+      salto: dB(perTeste(10) / perTeste(9.99)) + " dB, contando le teste",
+    };
+    if (liscio > 0.01) R.errori.push("la compensazione per inviluppi scatta: " + liscio.toFixed(4));
+    if (ruvido < 0.02) R.errori.push("la prova non distingue i due casi: rivederla");
+  }
 
   return R;
 });

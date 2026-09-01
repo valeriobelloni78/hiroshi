@@ -79,6 +79,12 @@ body{
 .banco{display:flex;flex-direction:column;gap:20px;padding:26px 0}
 .campo{display:flex;flex-direction:column;gap:8px}
 
+/* Il numero della sezione e il suo nome, come sulla tavola. Il filo sopra
+   separa senza chiudere: una scatola qui direbbe che le due classi sono cose
+   diverse, e invece sono lo stesso pezzo visto da due parti. */
+.titolo{font-family:var(--mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;
+        color:var(--inchiostro);padding-top:14px;border-top:1px solid var(--filo)}
+
 .cmd{align-self:flex-start;font-family:var(--mono);font-size:10px;letter-spacing:.2em;
      text-transform:uppercase;color:var(--carta);background:var(--inchiostro);
      border:0;border-radius:0;padding:11px 22px;cursor:pointer}

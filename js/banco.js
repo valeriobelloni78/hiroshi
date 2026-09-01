@@ -229,17 +229,32 @@ function costruisciBanco(ctx, nomiCanali) {
   riverbero.uscita.connect(ritorno);
   ritorno.connect(somma);
 
-  // Un canale per sorgente: il punto d'ingresso, il suo livello, la sua mandata.
+  // Un canale per sorgente: il punto d'ingresso, la normalizzazione, il suo
+  // livello, la sua mandata.
+  //
+  // IL NORMALIZZATORE STA PRIMA DEL LIVELLO, e non è la stessa cosa. Il
+  // livello è del cursore, cioè di chi ascolta; il normalizzatore è della
+  // sorgente, che lo scrive per compensare quante voci ha aperto in quel
+  // momento. Se fossero un nodo solo, ogni compensazione automatica
+  // sposterebbe il cursore sotto le dita. Sta anche PRIMA della mandata,
+  // così il riverbero riceve il segnale già compensato: altrimenti la stanza
+  // si riempirebbe proprio quando il segnale diretto viene abbassato.
+  //
+  // Il banco non sa che cosa sia una voce: espone il nodo e lascia che sia la
+  // sorgente a dire di quanto. Le dipendenze scorrono in una direzione sola.
   const canali = {};
   for (const nome of nomiCanali) {
     const ingresso = ctx.createGain();
+    const normale = ctx.createGain();
     const livello = ctx.createGain();
     const mandata = ctx.createGain();
+    normale.gain.value = 1;
     livello.gain.value = 1;
     mandata.gain.value = 0;
-    ingresso.connect(livello); livello.connect(somma);
-    ingresso.connect(mandata); mandata.connect(riverbero.ingresso);
-    canali[nome] = { ingresso, livello, mandata };
+    ingresso.connect(normale);
+    normale.connect(livello); livello.connect(somma);
+    normale.connect(mandata); mandata.connect(riverbero.ingresso);
+    canali[nome] = { ingresso, normale, livello, mandata };
   }
 
   const eq = costruisciEq(ctx);
@@ -283,6 +298,16 @@ function costruisciBanco(ctx, nomiCanali) {
     livello(nome, dB) {
       const c = canali[nome]; if (!c) return;
       c.livello.gain.setTargetAtTime(dB <= -60 ? 0 : Math.pow(10, dB / 20), ctx.currentTime, 0.05);
+    },
+
+    /* La compensazione di somma di un canale, 0..1. La scrive la sorgente, non
+       chi ascolta. La costante di tempo è corta — 0,12 s — perché questo non è
+       un gesto ma un inseguimento: deve arrivare quando arriva l'energia, non
+       dopo. `quando` è un tempo assoluto, così la stessa chiamata vale dal vivo
+       e dentro un rendering fuori tempo reale. */
+    normalizza(nome, fattore, quando) {
+      const c = canali[nome]; if (!c) return;
+      c.normale.gain.setTargetAtTime(clamp(fattore, 0.02, 1), quando, 0.12);
     },
 
     /* La mandata al riverbero di un canale, 0..1. È «spazio» sulla corona. */

@@ -26,8 +26,10 @@
     <section class="banco">
       <button id="ascolto" class="cmd">Ascolta</button>
 
+      <div class="titolo">01 · Gocce</div>
+
       <label class="campo">
-        <span class="mn">Timbro delle gocce</span>
+        <span class="mn">Timbro</span>
         <select id="timbro"></select>
       </label>
 
@@ -50,11 +52,50 @@
         <span class="mn">Spazio <b id="vSpazio">35</b></span>
         <input id="spazio" type="range" min="0" max="100" step="1" value="35">
       </label>
+
+      <div class="titolo">02 · Tessuti</div>
+
+      <label class="campo">
+        <span class="mn">Timbro</span>
+        <select id="tessuto"></select>
+      </label>
+
+      <label class="campo">
+        <span class="mn">Intreccio <b id="vIntreccio">45</b></span>
+        <input id="intreccio" type="range" min="0" max="100" step="1" value="45">
+      </label>
+
+      <label class="campo">
+        <span class="mn">Registro <b id="vTregistro">50</b></span>
+        <input id="tregistro" type="range" min="0" max="100" step="1" value="50">
+      </label>
+
+      <label class="campo">
+        <span class="mn">Apertura <b id="vApertura">3,2 s</b></span>
+        <input id="apertura" type="range" min="4" max="90" step="1" value="32">
+      </label>
+
+      <label class="campo">
+        <span class="mn">Movimento <b id="vMovimento">55</b></span>
+        <input id="movimento" type="range" min="0" max="100" step="1" value="55">
+      </label>
+
+      <label class="campo">
+        <span class="mn">Passo <b id="vPasso">38</b></span>
+        <input id="passo" type="range" min="0" max="100" step="1" value="38">
+      </label>
+
+      <label class="campo">
+        <span class="mn">Spazio <b id="vTspazio">55</b></span>
+        <input id="tspazio" type="range" min="0" max="100" step="1" value="55">
+      </label>
     </section>
 
     <section class="misure">
       <div class="riga"><span class="mn">Picco</span><span id="picco" class="val">—</span></div>
       <div class="riga"><span class="mn">Limitatore</span><span id="riduzione" class="val">—</span></div>
+      <div class="riga"><span class="mn">Voci tenute</span><span id="voci" class="val">—</span></div>
+      <div class="riga"><span class="mn">Compensazione</span><span id="compenso" class="val">—</span></div>
       <div class="riga"><span class="mn">Tonalità</span><span id="tonalita" class="val">—</span></div>
       <div class="riga"><span class="mn">Riallineamento</span><span id="riallineo" class="val">—</span></div>
     </section>
@@ -65,6 +106,7 @@
 <script src="js/deriva.js"></script>
 <script src="js/linee.js"></script>
 <script src="js/timbri.js"></script>
+<script src="js/tessuti.js"></script>
 <script src="js/banco.js"></script>
 <script src="js/motore.js"></script>
 <script src="js/tavola.js"></script>

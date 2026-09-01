@@ -20,6 +20,16 @@ Non devono essere primi — 8, 9 e 25 sono composti e vanno benissimo. **Il
 vincolo da verificare è il massimo comun divisore, non la primalità**, e va
 verificato prima di toccare una serie, non dopo.
 
+**La somma dei tessuti si normalizza sugli INVILUPPI, mai su un conteggio di
+voci.** Sorgenti incoerenti si sommano in potenza, quindi il bus si divide per
+√N — ma sotto la radice va la somma degli inviluppi. Contando le teste, il bus
+scenderebbe di 3 dB nell'istante in cui una voce comincia ad aprirsi, cioè
+mentre è ancora inudibile: un buco che precede il suono. È possibile solo
+perché gli inviluppi sono noti in forma chiusa — `finestra()` in `tessuti.js` è
+la stessa funzione che scrive l'automazione dell'audio, e la compensazione la
+legge invece di misurare il bus. Misurare vorrebbe dire inseguire, e inseguire
+vuol dire arrivare dopo.
+
 **Nessuna libreria, né per il suono né per il disegno.** Web Audio API diretta,
 API 2D del browser. Nessun bundler, nessun npm, nessun passo di compilazione:
 si apre `index.html` e funziona, anche senza rete.
@@ -110,6 +120,17 @@ avvolge sulla testa del giro successivo.
 fasi.** `cycleStart` può essere nel futuro, e avvolgere la fase fa saltare
 gocce o interi giri.
 
+**`avvia()` deve azzerare anche la memoria degli eventi**, cioè `flash` e
+`fino`. Sono tempi assoluti, e quando il tempo riparte da zero — a ogni
+rendering fuori tempo reale — restano nel futuro: il periodo refrattario legge
+`t − flash` negativo e SALTA la nota, in silenzio, consumandone l'indice.
+Misurato: senza quell'azzeramento un'esportazione fatta dopo un ascolto
+restava senza tessuti per i primi ventun secondi, il tempo che serviva al
+tempo virtuale per superare le memorie del render precedente. Le gocce lo
+mascheravano perché si rinnovano in fretta. È un sintomo del punto aperto in
+fondo a questo file: finché il render percorre il modello che sta suonando,
+tutto ciò che è un tempo assoluto va azzerato all'avvio.
+
 **Il contesto nasce con `latencyHint: "playback"`.** Di suo un AudioContext è
 tarato per strumenti suonati dal vivo — buffer da 256 campioni — e su un
 telefono modesto non ce la fa: ogni buffer mancato è un raschio. Qui non si
@@ -139,7 +160,18 @@ display: non ascolta nulla.
 
 **I cursori scrivono sul bersaglio `GT`**, non su `G`. `G` ci arriva lisciato
 in `battito()`: un cursore che scrivesse su `G` farebbe uno scalino, e uno
-scalino su una frequenza di taglio si sente come un clic.
+scalino su una frequenza di taglio si sente come un clic. Fanno eccezione i
+filetti della FORMA — `FORMA` e `FORMA_T` — che scrivono diretto: la forma non
+entra in nessun suono già cominciato, la legge il costruttore quando la nota
+nasce, quindi non c'è nessuno scalino da lisciare.
+
+**Le due classi hanno cinque filetti diversi, e non è una svista.** Le gocce
+hanno `attacco · coda · inarm · brill · corpo`; i tessuti hanno
+`apertura · movimento · passo · brill · corpo`. Per un tenuto non esiste un
+attacco da misurare in millesimi e non esiste una coda — c'è una dissolvenza —
+mentre esiste una cosa che le gocce non hanno: il tipo e la velocità del
+movimento interno. Chi unificasse i due gruppi «per coerenza» toglierebbe ai
+tessuti l'unico comando che li distingue davvero.
 
 **I numeri che cambiano** usano cifre a larghezza fissa, altrimenti tremolano
 a ogni aggiornamento.
@@ -152,18 +184,26 @@ a ogni aggiornamento.
 `OfflineAudioContext` e misura quello che esce: che suoni, che non clippi, che
 ogni timbro esca dal silenzio senza esplodere, che l'equalizzatore muova
 davvero lo spettro, che uno stadio di passa-tutto abbia **guadagno unitario**,
-che i due lati del riverbero stiano **pari**, e che la coda **scenda** — che è
-il modo in cui una rete a retroazione sbaglia. Esce con codice diverso da zero
-se qualcosa non torna. Serve `playwright` e un Chromium.
+che i due lati del riverbero stiano **pari**, che la coda **scenda** — che è
+il modo in cui una rete a retroazione sbaglia — e che la compensazione dei
+tessuti sia **liscia** dove quella per conteggio di teste scatterebbe. Esce con
+codice diverso da zero se qualcosa non torna. Serve `playwright` e un Chromium.
+
+Quest'ultima prova verifica anche **sé stessa**: misura lo scatto nelle due
+versioni e fallisce se quella per teste NON è ruvida. Una prova che non sa
+distinguere il caso giusto da quello sbagliato non sta provando niente.
 
 **La prova va rifatta più volte, non una.** I difetti che sono costati di più
 non erano rotture ma oscillazioni: la stessa rete che rendeva numeri diversi a
 ogni costruzione. Tre corse di fila che danno le stesse cifre valgono più di
 una corsa sola che passa.
 
-**Chi aggiunge un timbro rifaccia la prova e scriva il peso che ne esce** in
-`PESO`, dentro `timbri.js`. Gli otto timbri sono pareggiati su misura a circa
-−17 dB di picco: senza quel pareggio, cambiare timbro sarebbe cambiare volume.
+**Chi aggiunge un timbro rifaccia la prova e scriva il peso che ne esce**, in
+`PESO` dentro `timbri.js` per le gocce e in `PESO_T` dentro `tessuti.js` per i
+tessuti. Le due serie sono pareggiate su misura: le gocce a circa −17 dB di
+picco, i tessuti a −18 — un decibel sotto, perché i tessuti si sovrappongono e
+la compensazione su √N tiene ferma la somma ma non regala margine. Senza quel
+pareggio, cambiare timbro sarebbe cambiare volume.
 
 Prima di ogni commit che tocchi il motore, verificare anche in locale aprendo
 `index.html`: che il suono parta entro un secondo e che i cursori non facciano
@@ -174,26 +214,28 @@ clic.
 ## Stato e prossimi passi
 
 Fatto: il **banco d'uscita** (mixer a quattro canali con mandata al riverbero,
-equalizzatore a otto bande, limitatore doppio, misuratori), la **deriva**
-trapiantata intatta da Rada Deriva, il **modello delle linee** con piani e
-ricambio, gli **otto timbri** delle gocce, lo **scheduler** e
+normalizzazione per canale, equalizzatore a otto bande, limitatore doppio,
+misuratori), la **deriva** trapiantata intatta da Rada Deriva, il **modello
+delle linee** con piani, trame e ricambio, gli **otto timbri** delle gocce, gli
+**otto tenuti** dei tessuti con la normalizzazione del bus, lo **scheduler** e
 l'**esportazione fuori tempo reale**.
+
+Gli otto tenuti stanno su due assi — dove stanno e che cosa si muove — e non
+sono materie come le gocce, sono modi di essere instabili. Il fatto che li
+regge sta in cima a `tessuti.js`: un tenuto perfettamente fermo, dopo pochi
+secondi, smette di essere un suono e diventa una proprietà della stanza.
 
 Da fare, in ordine:
 
-1. I **tessuti**: la seconda classe, con i suoi otto timbri e la
-   normalizzazione del bus su √N della somma degli inviluppi — non su un
-   conteggio di teste, che farebbe scendere il bus di 3 dB nell'istante in cui
-   un tessuto comincia ad aprirsi, cioè mentre è ancora inudibile.
-2. Le **voci**: il motore alla *In C* di Nuvole, con l'archivio delle 53 frasi
+1. Le **voci**: il motore alla *In C* di Nuvole, con l'archivio delle 53 frasi
    e le cerniere fra le regioni.
-3. Il **cielo**: il campo `fBm` che sveglia le voci.
-4. I **grani**: microfono e file propri, con la nube attorno alla testa di
+2. Il **cielo**: il campo `fBm` che sveglia le voci.
+3. I **grani**: microfono e file propri, con la nube attorno alla testa di
    lettura.
-5. Il **registratore**: cattura del bus d'uscita e scrittura del wav. La
+4. Il **registratore**: cattura del bus d'uscita e scrittura del wav. La
    strada è l'AudioWorklet caricato da blob (vedi sopra); l'esportazione
    *deterministica* passa invece da `rendiOffline`, ed è già in piedi.
-6. La **tavola**: il disegno vero, che sostituisce l'impalcatura di
+5. La **tavola**: il disegno vero, che sostituisce l'impalcatura di
    `tavola.js`.
 
 Aperti: `rendiOffline` percorre lo stesso modello che sta suonando, quindi

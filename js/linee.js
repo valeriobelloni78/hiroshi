@@ -35,14 +35,32 @@ function orizzonteSicuro(now) { return Math.max(now + LOOKAHEAD, bookedUntil); }
 /* ------------------------------------------------------------- i parametri
    G  è dove sta il cursore, effG è quello che sta davvero suonando: fra i due
    c'è la deriva. Dove differiscono, la tavola mostra due numeri. */
-const G  = { registro: 45, calore: 70, spazio: 60, densita: 5, addensamento: 34 };
+const G  = {
+  registro: 45, calore: 70, spazio: 60, densita: 5, addensamento: 34,
+  tRegistro: 50, tIntreccio: 45, tRespiro: 40,
+};
 const GT = { ...G };
-const effG = { registro: 45, densita: 5, addensamento: 34 };
+const effG  = { registro: 45, densita: 5, addensamento: 34 };
+const effGT = { registro: 50, intreccio: 45 };
 
 function effettiviFrasi() {
   effG.registro     = clamp(G.registro     + deriva.spread * 20, 0, 100);
   effG.densita      = clamp(G.densita      + deriva.dens   * 3.2, 1, 20);
   effG.addensamento = clamp(G.addensamento + deriva.head   * 12,  5, 100);
+}
+
+/* I tessuti pescano da canali della deriva DIVERSI da quelli delle gocce: due
+   classi tirate dagli stessi canali si muoverebbero all'unisono, e la deriva
+   si ridurrebbe a una manopola sola.
+
+   L'intreccio fa eccezione ed è voluto: pende dallo stesso canale
+   dell'addensamento delle gocce, ma CAMBIATO DI SEGNO. Quando le gocce si
+   stringono nella testa del giro, le trame si allentano. Le due classi si
+   scambiano la densità invece di accatastarsi, ed è l'unico accoppiamento fra
+   loro — dichiarato qui, in un posto solo. */
+function effettiviTessuti() {
+  effGT.registro  = clamp(G.tRegistro  + deriva.corpo * 20, 0, 100);
+  effGT.intreccio = clamp(G.tIntreccio - deriva.head  * 14, 0, 100);
 }
 
 /* ------------------------------------------------------------------ le linee */
@@ -86,6 +104,45 @@ function nuovaIdea() {
    rigenerazione disferebbe quello che il ricambio ha costruito. */
 function goccieVolute() { return clamp(Math.round((1 + effG.densita) / 2), 1, 20); }
 
+/* ------------------------------------------------------------ il materiale
+                                                                  dei tessuti
+   Una tenuta ha due campi che una goccia non ha. `lungo` è il moltiplicatore
+   della sua durata, perché quattro tenute tutte della stessa lunghezza si
+   sentono come un accordo che respira insieme. `fino` è l'istante in cui
+   finisce, e serve al ricambio: una tenuta che sta suonando NON si può
+   sostituire — la si sentirebbe cambiare a metà — e `raccogliLibere` la
+   riconosce proprio da quel campo. Le gocce non ce l'hanno affatto, e il
+   confronto con `undefined` è falso, che è la risposta giusta per loro. */
+function nuovaTenuta() {
+  return {
+    t: Math.random(),                 // 0..1 su TUTTO il giro, non nella testa
+    rel: Math.random() * 2 - 1,
+    vel: 0.6 + Math.random() * 0.4,
+    lungo: 0.55 + Math.random() * 0.9,
+    flash: -99,
+    fino: -99,
+  };
+}
+
+/* Quante tenute per giro. Al massimo due: con quattro linee fanno otto voci
+   tenute contemporanee, e ciascuna è una decina di nodi. Tre sarebbero dodici
+   voci, cioè centoventi nodi che si aprono e si chiudono di continuo. */
+function tenuteVolute() { return clamp(Math.round(1 + effGT.intreccio / 70), 1, 2); }
+
+function nuovaTrama() {
+  const n = tenuteVolute();
+  const v = [];
+  for (let k = 0; k < n; k++) v.push(nuovaTenuta());
+  return v.sort((a, b) => a.t - b.t);
+}
+
+/* Quanto dura una tenuta, in secondi. L'intreccio è letteralmente questo: a
+   zero le tenute stanno dentro il loro giro e fra l'una e l'altra c'è aria; a
+   cento durano più del giro e si accavallano con quelle che seguono. */
+function durataTenuta(L, ev) {
+  return clamp(L.period * (0.30 + effGT.intreccio / 100 * 0.95) * ev.lungo, 3, TENUTA_MAX);
+}
+
 /* ------------------------------------------------------------------ i piani
    Le gocce si concentrano nella TESTA del giro; tutto il resto è silenzio, e
    quel silenzio non è un riempitivo, è il meccanismo. La fase può scavalcare
@@ -105,6 +162,26 @@ function rigenera(L) {
   L.idx = 0;
 }
 
+/* La trama di un tessuto occupa TUTTO il giro, non la sua testa. È la
+   differenza strutturale fra le due classi, e non è una taratura: le gocce
+   sono eventi radi separati da silenzio — e quel silenzio è il meccanismo —
+   mentre i tessuti sono uno stato che dura. Addensare le tenute nella testa
+   del giro le farebbe entrare tutte insieme, cioè trasformerebbe uno sfondo
+   continuo in quattro accordi al minuto. */
+function costruisciTrama(L) {
+  L.planHead = 1;
+  L.plan = L.idea
+    .map((ev) => ({ ph: (L.offset + ev.t) % 1, ev }))
+    .sort((a, b) => a.ph - b.ph);
+}
+
+function rigeneraTrama(L) {
+  L.idea = nuovaTrama();
+  L.offset = Math.random();
+  costruisciTrama(L);
+  L.idx = 0;
+}
+
 /* Il confronto avviene su TEMPI ASSOLUTI, mai su fasi: cycleStart può essere
    nel futuro, e avvolgere la fase fa saltare gocce o interi giri. */
 function riposizionaIdx(L, orizzonte) {
@@ -115,6 +192,14 @@ function riposizionaIdx(L, orizzonte) {
 function ricostruisciPiani(now) {
   frasi.forEach((L) => {
     costruisciPiano(L);
+    if (now === null) { L.idx = 0; return; }
+    riposizionaIdx(L, orizzonteSicuro(now));
+  });
+}
+
+function ricostruisciTrame(now) {
+  tessuti.forEach((L) => {
+    costruisciTrama(L);
     if (now === null) { L.idx = 0; return; }
     riposizionaIdx(L, orizzonteSicuro(now));
   });
@@ -135,14 +220,18 @@ function raccogliLibere(L, orizzonte, now) {
   return libere;
 }
 
-function ricambia(L, now) {
-  costruisciPiano(L);                       // il piano va aggiornato PRIMA di toccarlo
+/* Il ricambio è uno solo per le due classi. Differiscono per che cosa nasce e
+   per come si colloca sul giro, non per come si rinnova — e due copie di
+   questa funzione divergerebbero al primo ritocco, esattamente come farebbero
+   due copie dello scheduler. */
+function ricambiaLinea(L, now, costruisci, quante, nuovo) {
+  costruisci(L);                            // il piano va aggiornato PRIMA di toccarlo
   const orizzonte = orizzonteSicuro(now);
   const lib = raccogliLibere(L, orizzonte, now);
-  const voluto = goccieVolute();
+  const voluto = quante();
 
   if (L.idea.length < voluto) {
-    L.idea.push(nuovaGoccia());
+    L.idea.push(nuovo());
   } else if (L.idea.length > voluto) {
     if (!lib.length) return false;
     L.idea.splice(L.idea.indexOf(lib[Math.floor(Math.random() * lib.length)]), 1);
@@ -150,20 +239,35 @@ function ricambia(L, now) {
     if (!lib.length) return false;
     // I campi si COPIANO dentro l'evento esistente invece di sostituire
     // l'oggetto: il piano e le code del disegno ne tengono il riferimento.
-    const ev = lib[Math.floor(Math.random() * lib.length)], n = nuovaGoccia();
+    const ev = lib[Math.floor(Math.random() * lib.length)], n = nuovo();
     for (const k in n) ev[k] = n[k];
   }
 
   L.idea.sort((a, b) => a.t - b.t);
-  costruisciPiano(L);
+  costruisci(L);
   riposizionaIdx(L, orizzonte);
   return true;
 }
 
+function ricambia(L, now) {
+  return ricambiaLinea(L, now, costruisciPiano, goccieVolute, nuovaGoccia);
+}
+function ricambiaTessuto(L, now) {
+  return ricambiaLinea(L, now, costruisciTrama, tenuteVolute, nuovaTenuta);
+}
+
 /* I tempi del ricambio stanno in rapporti irrazionali fra loro, come la
    deriva: quattro linee che si rinnovassero a tempi commensurabili
-   tornerebbero a rinnovarsi insieme. */
-const TEMPI_RICAMBIO = [1, Math.SQRT2, Math.sqrt(3), Math.sqrt(5)].map((r) => 26 * r);
+   tornerebbero a rinnovarsi insieme.
+
+   Le due serie usano radicali DIVERSI, e non lo stesso quartetto moltiplicato
+   per un altro numero: 26·√2 e 41·√2 stanno in rapporto 41/26, che è
+   razionale, e le due linee tornerebbero a rinnovarsi insieme ogni ventisei
+   minuti. Con radicali distinti il rapporto resta irrazionale e non tornano
+   mai. I tessuti si rinnovano più di rado perché durano di più: rinnovarne uno
+   ogni ventisei secondi vorrebbe dire non lasciarne finire nessuno. */
+const TEMPI_RICAMBIO   = [1, Math.SQRT2, Math.sqrt(3), Math.sqrt(5)].map((r) => 26 * r);
+const TEMPI_RICAMBIO_T = [Math.sqrt(7), Math.sqrt(11), Math.sqrt(13), Math.sqrt(19)].map((r) => 17 * r);
 
 /* Il tempo prima che le quattro frasi tornino nella stessa combinazione. */
 function gcd(a, b) { return b ? gcd(b, a % b) : a; }
@@ -174,6 +278,7 @@ function riallineamento(lista) {
   }, 1);
 }
 
-/* Il modello si popola da sé. Senza questa riga le frasi nascono vuote e
+/* Il modello si popola da sé. Senza queste righe le linee nascono vuote e
    l'app è muta all'apertura: è già successo, dividendo il file in moduli. */
 frasi.forEach(rigenera);
+tessuti.forEach(rigeneraTrama);

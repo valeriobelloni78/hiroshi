@@ -12,19 +12,30 @@ brano registrato: costruisce il suono in tempo reale, e lo registra.
 
 ## Dove siamo
 
-Il motore è alla sua prima spina. Suona la classe delle **frasi** — quattro
-linee di gocce con periodi coprimi 7 · 11 · 13 · 17 — attraverso il **banco
-d'uscita**: mixer a quattro canali, mandata a un riverbero condiviso,
-equalizzatore a otto bande, limitatore, misuratori.
+Suonano le due classi che fanno il collage. Le **frasi** — quattro linee di
+gocce, periodi 7 · 11 · 13 · 17 — e i **tessuti** — quattro linee tenute,
+periodi 8 · 9 · 19 · 25 — passano per il **banco d'uscita**: mixer a quattro
+canali, mandata a un riverbero condiviso, equalizzatore a otto bande,
+limitatore, misuratori. Gli otto periodi sono coprimi a due a due anche fra
+le due classi, quindi la combinazione completa non si ripete per ore.
 
-Le gocce hanno otto timbri: *Vetro, Legno, Onda, Soffio, Corda, Metallo,
-Canna, Sabbia*. Sono otto materie, non otto forme d'onda: a distinguerle è
-quasi tutto l'attacco e la lunghezza della coda.
+Le gocce hanno otto timbri — *Vetro, Legno, Onda, Soffio, Corda, Metallo,
+Canna, Sabbia* — e sono otto materie: a distinguerle è quasi tutto l'attacco e
+la lunghezza della coda.
 
-Tessuti, voci, cielo, grani e registratore sono i prossimi. La tavola
-disegnata — i due quadranti, le corone, la fascia dei grani, la deriva — è
-ferma nel progetto e arriva quando il motore è completo; per ora
-`index.html` è un'impalcatura che serve solo ad ascoltare.
+I tessuti ne hanno altri otto — *Bordone, Marea, Attrito, Frangia, Corrente,
+Cavo, Brina, Soglia* — e non sono materie: sono modi di essere instabili. Un
+tenuto perfettamente fermo, dopo pochi secondi, smette di essere un suono e
+diventa una proprietà della stanza, come il frigorifero; quindi a distinguere
+un tenuto dall'altro è **che cosa si muove mentre non accade niente** —
+un battimento, una deriva d'intonazione, una grana d'attrito, delle formanti
+che camminano — e in quale dei quattro registri sta: il fondo, il corpo,
+l'aria, il velo.
+
+Voci, cielo, grani e registratore sono i prossimi. La tavola disegnata — i due
+quadranti, le corone, la fascia dei grani, la deriva — è ferma nel progetto e
+arriva quando il motore è completo; per ora `index.html` è un'impalcatura che
+serve solo ad ascoltare.
 
 ## Come funziona
 
@@ -37,6 +48,7 @@ css/style.css     palette, tipografia, impaginazione
 js/deriva.js      il tempo lungo: sei canali e il campo armonico. Non dipende da nulla
 js/linee.js       lo stato: linee, idee, piani, ricambio
 js/timbri.js      gli otto suoni delle gocce
+js/tessuti.js     gli otto tenuti, e la finestra che li apre e li chiude
 js/banco.js       l'uscita: mixer, riverbero, equalizzatore, limitatore
 js/motore.js      lo scheduler e l'assemblaggio
 js/tavola.js      i comandi (provvisori)
@@ -59,16 +71,26 @@ quello che si ascolta.
 ciascuna classe, e due sorgenti devono poter stare l'una nell'ambiente e
 l'altra asciutta — ma la stanza resta una sola.
 
+**La somma dei tessuti si compensa sugli inviluppi.** Otto voci tenute che
+suonano insieme si sommano in potenza, quindi il bus si divide per √N. Ma
+sotto la radice sta la somma degli inviluppi, non un conteggio di voci:
+contando le voci, il bus scenderebbe di tre decibel nell'istante in cui una
+nuova voce comincia ad aprirsi — cioè mentre è ancora inudibile. Si sentirebbe
+la trama abbassarsi per far posto a qualcosa che non c'è ancora.
+
 ## Verifica
 
 ```bash
 node prova.mjs
 ```
 
-Rende venti secondi fuori tempo reale e misura che cosa esce: che suoni, che
-non clippi, che ogni timbro esca dal silenzio senza esplodere, che
-l'equalizzatore muova lo spettro e che la coda del riverbero scenda invece di
-crescere. Serve `playwright`.
+Rende il motore fuori tempo reale e misura che cosa esce: che suoni, che non
+clippi, che ogni timbro e ogni tenuto escano dal silenzio senza esplodere, che
+l'equalizzatore muova lo spettro, che un passa-tutto sia unitario, che i due
+lati del riverbero stiano pari, che la coda scenda invece di crescere e che la
+compensazione dei tessuti sia liscia dove quella per conteggio scatterebbe. Va
+rifatta più volte: i difetti che sono costati di più non erano rotture ma
+oscillazioni. Serve `playwright`.
 
 ## Licenza
 
