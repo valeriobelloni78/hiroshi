@@ -8,11 +8,12 @@
 </head>
 <body>
 
-<!-- Impalcatura provvisoria. La tavola vera — i due quadranti, il banco, i
-     grani, la deriva — arriva quando il motore è completo; per ora qui c'è
-     quel tanto che basta ad ascoltare, a girare i mood e a vedere che cosa
-     esce. I comandi sono elementi HTML nativi e restano tali anche dopo: il
-     disegno sarà puro display. -->
+<!-- La TAVOLA è un canvas e non ha nessun comando dentro: è puro display.
+     I comandi sono gli elementi nativi della colonna qui sotto, e funzionano
+     identici col puntatore, col dito, col tasto Tab e con un lettore di
+     schermo. Chi legge questa pagina con la voce non perde niente: il canvas
+     porta `aria-hidden`, perché quello che disegna è scritto anche in cifre
+     nelle letture in fondo. -->
 <div class="stage">
   <div class="wrap">
 
@@ -24,6 +25,10 @@
       </div>
       <div class="stato" id="stato">fermo</div>
     </header>
+
+    <div class="tela">
+      <canvas id="tavola" aria-hidden="true"></canvas>
+    </div>
 
     <section class="banco">
       <button id="ascolto" class="cmd">Ascolta</button>
@@ -137,7 +142,7 @@
       <div class="linee" id="lineeTessuti"></div>
 
       <!-- ============================================================ grani -->
-      <div class="titolo">04 · Grani <label class="acceso"><input type="checkbox" id="graniOn" checked> in campo</label></div>
+      <div class="titolo">03 · Grani <label class="acceso"><input type="checkbox" id="graniOn" checked> in campo</label></div>
 
       <div class="materia">
         <label class="campo">
@@ -194,6 +199,32 @@
       </label>
 
       <label class="acceso solo"><input type="checkbox" id="intonato" checked> intonato sulla collezione</label>
+
+      <!-- ===================================================== registratore -->
+      <div class="titolo">04 · Banco · registrazione</div>
+
+      <div class="materia">
+        <div class="prese">
+          <button id="presa" class="cmd piccolo">Registra la sessione</button>
+          <span class="mn" id="cronometro">—</span>
+        </div>
+        <p class="nota mn">Cattura l'uscita mentre suona, con dentro le mani: un cursore
+          mosso resta nel file. Al massimo quindici minuti, che stanno in memoria.</p>
+
+        <div class="prese">
+          <button id="esporta" class="cmd piccolo">Esporta</button>
+          <select id="durata">
+            <option value="60">1 minuto</option>
+            <option value="180">3 minuti</option>
+            <option value="300" selected>5 minuti</option>
+            <option value="600">10 minuti</option>
+            <option value="1200">20 minuti</option>
+          </select>
+          <span class="mn" id="esito"></span>
+        </div>
+        <p class="nota mn">Rende fuori tempo reale, molto più in fretta dell'ascolto:
+          nessuna mano dentro, e la sessione in corso non si accorge di niente.</p>
+      </div>
     </section>
 
     <section class="misure">
@@ -213,6 +244,7 @@
 </div>
 
 <script src="js/deriva.js"></script>
+<script src="js/cattura.js"></script>
 <script src="js/linee.js"></script>
 <script src="js/timbri.js"></script>
 <script src="js/tessuti.js"></script>
@@ -220,6 +252,8 @@
 <script src="js/mood.js"></script>
 <script src="js/banco.js"></script>
 <script src="js/motore.js"></script>
+<script src="js/registratore.js"></script>
+<script src="js/comandi.js"></script>
 <script src="js/tavola.js"></script>
 </body>
 </html>

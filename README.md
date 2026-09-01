@@ -65,12 +65,37 @@ come un file. Non si granula un flusso dal vivo: l'esportazione non potrebbe
 percorrerlo più in fretta del tempo reale, la testa non potrebbe fermarsi, e
 microfono più altoparlanti sono un anello.
 
-Il registratore della sessione è il prossimo. Le voci alla *In C* di Nuvole aspettano
-una decisione musicale: il loro archivio attraversa tutti e dodici i gradi,
-mentre gocce e tessuti stanno su una pentatonica dove nulla può stonare. La
-tavola disegnata — i due quadranti, le corone, la fascia dei grani, la deriva —
-arriva quando il motore è completo; per ora `index.html` è un'impalcatura che
-serve solo ad ascoltare.
+**Portarsi via la sessione** si fa in due modi, e non danno lo stesso file. La
+*presa dal vivo* cattura l'uscita mentre suona, con dentro le mani: un cursore
+mosso, un mood cambiato, una linea silenziata restano nel file perché sono
+successi. L'*esportazione* rende N minuti fuori tempo reale — molto più in
+fretta dell'ascolto — e non ha nessuna mano dentro: è il pezzo che
+l'apparecchio farebbe da solo, coi comandi dove stanno adesso. La prima è la
+registrazione di una seduta, la seconda è una tiratura. Tutte e due escono in
+wav a 24 bit stereo, e l'esportazione si può fare mentre si ascolta senza che
+la sessione se ne accorga.
+
+**La tavola** è il disegno di tutto questo, e non ha un comando dentro: legge
+il modello e basta, mentre i comandi restano elementi HTML nativi che
+funzionano col dito, col tasto Tab e con un lettore di schermo. Due letture del
+segno, una volta ciascuna: **il colore è l'altezza** — grave al blu, acuto al
+rosso mattone — e **la lunghezza è la durata**. Tutto il resto è inchiostro,
+perché il colore è già impegnato.
+
+Due quadranti, un anello per linea: la fase corre come una tacca, gli eventi
+stanno dove cadranno, una goccia è un arco corto che si spegne e una tenuta è
+un arco lungo che si apre e si chiude — con l'inviluppo vero, preso dalla
+stessa funzione che scrive l'automazione dell'audio. Attorno, una corona per
+classe: l'arco pieno dice dove sta la mano, la tacca dove sta l'efficace, e
+fra i due c'è la deriva. La fascia dei grani distende il materiale, ci fa
+correre sopra la testa di lettura e ci sparpaglia i grani. La corsia della
+deriva mostra dieci minuti di baricentro — cinque passati e **cinque futuri**,
+coi nomi delle collezioni che devono ancora arrivare: la deriva è una funzione
+del tempo, quindi il futuro si può disegnare.
+
+Le voci alla *In C* di Nuvole aspettano una decisione musicale: il loro
+archivio attraversa tutti e dodici i gradi, mentre gocce e tessuti stanno su
+una pentatonica dove nulla può stonare.
 
 ## Come funziona
 
@@ -81,6 +106,7 @@ Nessuna dipendenza da installare, nessun passaggio di compilazione: si apre
 index.html        lo strumento
 css/style.css     palette, tipografia, impaginazione
 js/deriva.js      il tempo lungo: sei canali e il campo armonico. Non dipende da nulla
+js/cattura.js     prendere il suono dal grafo, e scriverlo in un wav a 24 bit
 js/linee.js       lo stato: linee, idee, piani, ricambio
 js/timbri.js      gli otto suoni delle gocce
 js/tessuti.js     gli otto tenuti, e la finestra che li apre e li chiude
@@ -88,7 +114,9 @@ js/grani.js       la materia registrata, la cattura dal microfono, la nube
 js/mood.js        i sedici stati dello strumento: parametri, periodi, timbro
 js/banco.js       l'uscita: mixer, riverbero, colore, equalizzatore, limitatore
 js/motore.js      lo scheduler e l'assemblaggio
-js/tavola.js      i comandi (provvisori)
+js/registratore.js la presa dal vivo e l'esportazione fuori tempo reale
+js/comandi.js     le mani: tendine, cursori, pulsanti, le letture in cifre
+js/tavola.js      il disegno: due quadranti, i grani, la deriva, i misuratori
 prova.mjs         la verifica: rende il motore fuori tempo reale e lo misura
 ```
 
@@ -118,6 +146,10 @@ la trama abbassarsi per far posto a qualcosa che non c'è ancora.
 ## Verifica
 
 ```bash
+npm i -D playwright && npx playwright install chromium
+```
+
+```bash
 node prova.mjs
 ```
 
@@ -127,7 +159,8 @@ l'equalizzatore muova lo spettro, che un passa-tutto sia unitario, che i due
 lati del riverbero stiano pari, che la coda scenda invece di crescere e che la
 compensazione dei tessuti sia liscia dove quella per conteggio scatterebbe. Va
 rifatta più volte: i difetti che sono costati di più non erano rotture ma
-oscillazioni. Serve `playwright`.
+oscillazioni. Apre la pagina con `file://`, perché è il doppio clic la promessa
+da verificare.
 
 ## Licenza
 

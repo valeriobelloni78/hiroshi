@@ -1,0 +1,16 @@
+{
+  "name": "hiroshi",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Uno studio per fare musica d'ambiente nel browser. L'app non dipende da niente di quello che sta qui dentro: si apre index.html e funziona, anche senza rete. Playwright serve soltanto a prova.mjs.",
+  "scripts": {
+    "prova": "node prova.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.62.1"
+  },
+  "repository": { "type": "git", "url": "git+https://github.com/valeriobelloni78/hiroshi.git" },
+  "homepage": "https://github.com/valeriobelloni78/hiroshi#readme",
+  "author": "Valerio Belloni",
+  "license": "MIT"
+}

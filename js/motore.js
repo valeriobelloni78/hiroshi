@@ -402,8 +402,78 @@ async function accendi(acceso) {
    Con un OfflineAudioContext tutto va prenotato PRIMA di startRendering, e
    questo funziona solo perché ogni nota è collocata su un tempo assoluto: si
    percorre l'intero brano con la finestra spalancata e poi si rende. */
+/* ------------------------------------------------- l'istantanea del modello
+   `rendiOffline` percorre LO STESSO MODELLO che sta suonando, e lo percorre
+   ripartendo da zero: `avvia(0)` riporta l'origine dei giri a zero, la deriva
+   ricomincia il suo cammino, la testa dei grani torna dov'era. Fatto mentre si
+   ascolta, questo scardinerebbe la sessione in corso — i giri si troverebbero
+   con l'origine centinaia di secondi nel passato e lo scheduler ne rincorrerebbe
+   il recupero.
+
+   La strada giusta sarebbe dare al render un modello suo, e resta scritta fra
+   i punti aperti. Ma finché non c'è, si fa la cosa che costa venti righe e
+   risolve il problema vero: si fotografa lo stato prima e si rimette dopo. La
+   fotografia deve comprendere anche le variabili della DERIVA — passo di
+   quinta, contatori, valori correnti — che sono in un altro file e che nessuno
+   penserebbe di salvare: sono proprio quelle che, dimenticate, farebbero
+   ripartire l'armonia da un'altra parte a metà ascolto.
+
+   `idea` si copia evento per evento perché il render li rigenera: tenerne il
+   riferimento vorrebbe dire rimettere a posto degli oggetti che nel frattempo
+   sono stati riscritti. I piani non si salvano — si ricostruiscono, che è più
+   corto e non può divergere. */
+function istantaneaLinea(L) {
+  return {
+    period: L.period, target: L.target, cycleStart: L.cycleStart, idx: L.idx,
+    cycles: L.cycles.map((c) => ({ ...c })),
+    idea: L.idea.map((e) => ({ ...e })),
+    planHead: L.planHead, offset: L.offset, muted: L.muted,
+    prossimoRicambio: L.prossimoRicambio,
+  };
+}
+
+function istantaneaModello() {
+  return {
+    frasi: frasi.map(istantaneaLinea),
+    tessuti: tessuti.map(istantaneaLinea),
+    deriva: { ...deriva },
+    quinta, passiQuinta, passoN, prossimaQuinta, ultimaQuinta,
+    bookedUntil, LOOKAHEAD, ultimoGiro,
+    prossimoGrano, graniEmessi, testaOra,
+    tenute: tenuteAperte.slice(),
+    storia: storiaGocce.slice(),
+    storiaG: storiaGrani.slice(),
+  };
+}
+
+function ripristinaModello(s) {
+  const rimetti = (L, d, costruisci) => {
+    L.period = d.period; L.target = d.target; L.cycleStart = d.cycleStart;
+    L.cycles = d.cycles; L.idea = d.idea; L.planHead = d.planHead;
+    L.offset = d.offset; L.muted = d.muted; L.prossimoRicambio = d.prossimoRicambio;
+    costruisci(L);
+    L.idx = d.idx;                       // dopo il piano, che altrimenti lo azzera
+  };
+  frasi.forEach((L, i) => rimetti(L, s.frasi[i], costruisciPiano));
+  tessuti.forEach((L, i) => rimetti(L, s.tessuti[i], costruisciTrama));
+
+  Object.assign(deriva, s.deriva);
+  quinta = s.quinta; passiQuinta = s.passiQuinta; passoN = s.passoN;
+  prossimaQuinta = s.prossimaQuinta; ultimaQuinta = s.ultimaQuinta;
+  costruisciCampo();                     // la scala dipende dalla quinta rimessa
+
+  bookedUntil = s.bookedUntil; LOOKAHEAD = s.LOOKAHEAD; ultimoGiro = s.ultimoGiro;
+  prossimoGrano = s.prossimoGrano; graniEmessi = s.graniEmessi; testaOra = s.testaOra;
+  tenuteAperte.length = 0; for (const e of s.tenute) tenuteAperte.push(e);
+  storiaGocce.length = 0; for (const g of s.storia) storiaGocce.push(g);
+  storiaGrani.length = 0; for (const g of s.storiaG) storiaGrani.push(g);
+}
+
+let ultimoRender = null;      // che cosa conteneva l'ultima esportazione
+
 async function rendiOffline(secondi, sampleRate = 48000) {
   const salvato = { ctx, banco, running, LOOKAHEAD, bookedUntil };
+  const modello = istantaneaModello();
 
   ctx = new OfflineAudioContext(2, Math.ceil(secondi * sampleRate), sampleRate);
   banco = costruisciBanco(ctx, ["frasi", "tessuti", "voci", "grani"]);
@@ -417,8 +487,19 @@ async function rendiOffline(secondi, sampleRate = 48000) {
   for (let t = 0; t < secondi; t += 0.05) passo(t, false);
 
   const reso = await ctx.startRendering();
+  // Quello che il render ha prodotto va letto PRIMA di rimettere a posto il
+  // modello: i contatori sono stato della sessione, e il ripristino li riporta
+  // dov'erano — che è giusto, ma vuol dire che dopo non si sa più niente di
+  // quello che è appena stato reso.
+  ultimoRender = { secondi, grani: graniEmessi, gocce: storiaGocce.length };
 
   ctx = salvato.ctx; banco = salvato.banco; running = salvato.running;
   LOOKAHEAD = salvato.LOOKAHEAD; bookedUntil = salvato.bookedUntil;
+  ripristinaModello(modello);
+  // I bersagli del banco vivo sono rimasti quelli di prima, ma i valori con
+  // cui `applicaEfficaci` li confronta sono stati riscritti dal render: senza
+  // azzerarli, il primo passo dal vivo non riscriverebbe niente e il banco
+  // resterebbe con lo spazio e il colore dell'esportazione.
+  ultimo.spazio = ultimo.colore = ultimo.livello = ultimo.tSpazio = ultimo.gSpazio = -1;
   return reso;
 }

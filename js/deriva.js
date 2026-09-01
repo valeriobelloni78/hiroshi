@@ -132,6 +132,25 @@ let prossimaQuinta = PASSO_QUINTA;
    altre. Il doppio modulo serve perché `quinta` può essere negativa.      */
 function tonalita() { return ((quinta * 7) % 12 + 12) % 12; }
 
+/* Che tonalità sarà fra n passi — o che cos'era n passi fa, se n è negativo.
+   La parola sturmiana è deterministica e si percorre nei due versi: il passo
+   che ha portato QUI è `floor(passoN·α) − floor((passoN−1)·α)`, quindi
+   tornare indietro è sottrarre quello che si era sommato.
+
+   Serve alla corsia della deriva, che mostra il tempo lungo intorno all'ora:
+   il passo di quinta è regolare per scelta — un musicista deve poter contare
+   quanto manca — e una fascia che dicesse solo dove siamo racconterebbe metà
+   della promessa. Qui non si calcola nessuno stato: si legge un cammino che
+   esiste già, avanti e indietro. */
+function tonalitaFra(n) {
+  let q = quinta;
+  for (let k = 0; k < n; k++)
+    q += (Math.floor((passoN + k + 1) * ALFA) - Math.floor((passoN + k) * ALFA)) ? 1 : -1;
+  for (let k = 0; k > n; k--)
+    q -= (Math.floor((passoN + k) * ALFA) - Math.floor((passoN + k - 1) * ALFA)) ? 1 : -1;
+  return ((q * 7) % 12 + 12) % 12;
+}
+
 /* Venticinque frequenze, cinque ottave per cinque gradi, da 65 Hz a 1975 Hz.
    Erano venti su quattro ottave: la quinta ottava è lo spazio in cui il
    baricentro può scorrere senza che la selezione vada a sbattere contro gli

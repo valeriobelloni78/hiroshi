@@ -61,6 +61,17 @@ resterebbe senza testi al doppio clic. I dizionari sono oggetti JavaScript. I
 file dell'utente arrivano da un `<input type=file>` e passano per
 `decodeAudioData`: nessuna richiesta di rete.
 
+**`rendiOffline` fotografa il modello e lo rimette a posto.** Percorre lo
+stesso modello che sta suonando e riparte da zero, quindi senza la fotografia
+esportare mentre si ascolta riporterebbe l'origine dei giri a zero e farebbe
+ricominciare l'armonia da un'altra parte. La fotografia comprende anche le
+variabili della DERIVA — `quinta`, `passiQuinta`, `passoN`, `prossimaQuinta` —
+che stanno in un altro file e che nessuno penserebbe di salvare: sono proprio
+quelle che, dimenticate, si notano solo dopo. Conseguenza da tenere a mente:
+**i contatori tornano indietro insieme al resto**, quindi dopo un render
+`storiaGocce` e `graniEmessi` raccontano la sessione e non il render. Quello
+che il render conteneva si legge in `ultimoRender`.
+
 **Un AudioWorklet si carica da un `data:` URI, NON da un blob.** `addModule`
 di un percorso locale fallisce per il CORS — quello si sapeva — ma anche il
 blob fallisce: su `file://` `URL.createObjectURL` dà un `blob:null/…`, origine
@@ -75,17 +86,55 @@ processore. Il codice è in `preparaCattura()`, dentro `grani.js`, e il
 registratore userà lo stesso.
 
 **La palette è definita una volta sola**, nelle variabili CSS di
-`css/style.css`. Quando arriverà il disegno, anche il canvas le leggerà da lì.
-Non introdurre colori scritti direttamente nel JavaScript.
+`css/style.css`. Anche il canvas le legge da lì, al caricamento, con
+`getComputedStyle`. Non introdurre colori scritti direttamente nel JavaScript:
+nella tavola non ce n'è nessuno, e la prima eccezione sarebbe la fine della
+regola.
 
 **Due letture del segno, una volta ciascuna.** Sulla tavola *il colore è
 l'altezza* e *la lunghezza è la durata*. Non aggiungere una terza codifica
 della stessa grandezza e non spostare una di queste due senza spostare anche
-la chiave che le dichiara.
+la chiave che le dichiara. Conseguenza pratica: **lo stato è inchiostro** —
+acceso, spento, muto, dove sta la mano, dove sta la testa di lettura. Il
+colore è già impegnato e non può dire anche quello.
+
+**Gli estremi della rampa dell'altezza sono fissi e non sono quelli del
+campo.** `SCALE` va da 65 a 1975 Hz, ma la selezione ne prende due o tre ottave
+attorno al centro: tarando la rampa sul campo intero, tutto quello che si sente
+finirebbe nel verde di mezzo. Gli ancoraggi sono 100 e 1500 Hz, e chi esce
+dalla banda si appoggia sul blu pieno o sul rosso pieno — che per il fondo di
+«bordone» o il velo di «soglia» è la lettura giusta. Prenderli da `SCALE`
+sarebbe peggio ancora: la rampa si sposterebbe a ogni passo di quinta e il
+colore direbbe la tonalità invece dell'altezza.
+
+**Quello che la tavola disegna esce dalle stesse funzioni che scrivono
+l'audio.** Il colore di un evento da `altezza()`, la lunghezza di una tenuta da
+`durataTenuta()`, la sua opacità da `finestra()`, la coda di una goccia da
+`formaGocce()`. Una tavola che ridisegnasse a modo suo comincerebbe a mentire
+al primo ritocco, e mentirebbe piano.
 
 **Le dipendenze scorrono in una direzione sola:**
-`deriva ← linee ← timbri ← tessuti ← grani ← mood ← banco ← motore ← tavola`.
-Il modello non conosce l'audio; l'audio non conosce il disegno.
+`deriva ← cattura ← linee ← timbri ← tessuti ← grani ← mood ← banco ← motore ←
+registratore ← comandi ← tavola`. Il modello non conosce l'audio; l'audio non
+conosce il disegno.
+
+**I comandi e il disegno sono due file, e la separazione è la regola resa
+visibile.** `comandi.js` tocca il modello e non disegna un pixel; `tavola.js`
+legge il modello e non registra un ascoltatore. Non c'è un `addEventListener`
+in tutta la tavola e non deve arrivarcene uno: un cursore disegnato sarebbe un
+cursore che nessuno può usare senza vederlo. La tavola prende dai comandi una
+cosa sola — i dizionari dei nomi — e per quello l'arrow punta in quel verso.
+
+**La tavola si accorge da sé che una mano ha mosso qualcosa**, confrontando
+`GT` con la propria copia a ogni fotogramma. È il modo di reagire senza
+ascoltare, ed è quello che tiene in piedi la separazione qui sopra. Se un
+giorno servisse sapere altro dai comandi, la strada è guardare il modello, non
+farsi chiamare.
+
+**`cattura.js` sta in cima e non dipende da niente** tranne `clamp`, perché lo
+usano due file lontani fra loro: il microfono dei grani e il registratore della
+sessione. Sono lo stesso mestiere — portare fuori dal grafo una manciata di
+campioni — e due copie divergerebbero al primo ritocco.
 
 **`mood.js` è l'unico file che attraversa**, e ha un file suo proprio per
 dichiararlo. Un mood scrive insieme i parametri del modello, i periodi delle
@@ -209,6 +258,19 @@ percepisce. **Non rimetterlo com'era per «ridurre la latenza».**
 «Corda» è un dente di sega con il passa-basso che scende, cioè l'impressione
 della corda e non il modello.
 
+**In canvas l'opacità si moltiplica per quella che c'è già, e si rimette
+dov'era.** Un `globalAlpha = 1` alla fine di una primitiva sembra il modo
+giusto di ripulire e invece cancella l'opacità con cui il chiamante ha
+avvolto un gruppo intero: una classe spenta tornava a disegnarsi piena, e il
+difetto si vedeva solo togliendo la spunta a una classe mentre suonava. Il
+salvataggio vale anche per `T.save()`: dentro, `globalAlpha *=`, mai `=`.
+
+**`clearRect` non guarda l'opacità: cancella e basta.** È quello che serve per
+lo strappo nel filo dove sta il numero di una linea — il canvas è trasparente,
+quindi cancellare rimette la carta con la sua grana e non una toppa di colore —
+ma vuol dire anche che uno strappo dentro un gruppo dimezzato d'opacità
+cancella lo stesso.
+
 **Il modello si popola da sé.** In fondo a `linee.js` c'è
 `frasi.forEach(rigenera)`. Senza quella riga le frasi nascono vuote e l'app è
 muta all'apertura: è già successo, dividendo il file in moduli.
@@ -222,7 +284,15 @@ muta all'apertura: è già successo, dividendo il file in moduli.
 
 **I comandi sono elementi HTML nativi** e funzionano identici col puntatore,
 col dito, col tasto Tab e con un lettore di schermo. Il disegno è puro
-display: non ascolta nulla.
+display: non ascolta nulla, e il canvas porta `aria-hidden` perché quello che
+mostra è scritto anche in cifre nelle letture in fondo alla colonna.
+
+**Le corone non hanno etichette ferme.** Ne compare una, per due secondi e
+mezzo, sul settore che la mano ha appena mosso. Dodici parole scritte attorno a
+due cerchi si leggono una volta sola e poi si smette; il nome per esteso sta
+nella colonna, dove serve quando si cerca. Un mood scrive quindici bersagli in
+un colpo, e allora l'etichetta tace: non è una mano su un filetto, è uno
+scatto.
 
 **I cursori scrivono sul bersaglio `GT`**, non su `G`. `G` ci arriva lisciato
 in `battito()`: un cursore che scrivesse su `G` farebbe uno scalino, e uno
@@ -260,7 +330,24 @@ verifica che la testa di lettura si muova davvero (un accumulatore che non
 accumula è un difetto muto: si sente solo come una nube che non va da nessuna
 parte), che la compensazione segua la densità, e che in modo intonato tutti
 gli intervalli stiano nella collezione. Esce con codice diverso da zero se
-qualcosa non torna. Serve `playwright` e un Chromium.
+qualcosa non torna. Serve `playwright` e un Chromium — `npm i -D playwright`
+e `npx playwright install chromium`, una volta sola. La prova non ha percorsi
+scritti a mano: il browser è quello che playwright ha installato e la pagina si
+ricava da dove sta `prova.mjs`, aperta con `file://` perché è il doppio clic la
+promessa da verificare. `HIROSHI_CHROMIUM` resta per chi ha un Chromium suo.
+
+**La prova non guarda il disegno**, e non è una dimenticanza: la tavola non
+tocca il modello, quindi non può rompere il suono. Quello che la difende è che
+un errore nel disegno si vede — e che `prova.mjs` fallisce se la pagina scrive
+un solo errore in console, il che comprende quelli della tavola.
+
+**Il wav si verifica per ANDATA E RITORNO, non guardando l'intestazione.** I
+44 byte davanti non hanno nulla di negoziabile e, se un campo è sbagliato, il
+file non si apre e guardandolo non c'è modo di accorgersene. La prova scrive un
+buffer noto, lo ridà da decodificare al browser e confronta i campioni: a 24
+bit lo scarto atteso è il passo di quantizzazione, 2⁻²³ ≈ 1,2·10⁻⁷. Verifica
+anche che esportare **non sposti il modello della sessione**, prendendo
+un'impronta prima e dopo.
 
 **La prova si porta una materia sua**: i grani all'apertura sono muti per
 costruzione — non c'è nessun suono in dotazione da granulare — quindi la prova
@@ -314,27 +401,56 @@ Oltre Rada: i **timbri** (Rada ne aveva uno per classe, governato da un solo
 numero; qui sono otto e otto, e `calore` è quel numero rimasto al suo posto) e
 l'**esportazione deterministica**.
 
-Fatti anche i **grani**: l'archivio dei materiali, la cattura dal microfono via
-AudioWorklet, la nube attorno alla testa di lettura, l'intonazione sulla
-collezione.
+Fatti anche i **grani** (archivio dei materiali, cattura dal microfono, nube
+attorno alla testa di lettura, intonazione sulla collezione) e il
+**registratore**: la presa dal vivo sull'uscita del banco e l'esportazione
+fuori tempo reale, tutte e due in wav a 24 bit stereo. **IL MOTORE È
+COMPLETO.**
+
+**C'È ANCHE LA TAVOLA.** Il disegno ha sostituito l'impalcatura, e l'ha
+sostituita separandosi da lei: i comandi stanno in `comandi.js`, il canvas in
+`tavola.js`. Cinque sezioni, in unità logiche disposte da `disponi()` — che
+ricava l'ALTEZZA dalla larghezza, così il disegno non si deforma mai, cresce:
+
+- i **due quadranti**, un anello per linea, la fase come tacca d'inchiostro,
+  gli eventi come archi colorati per altezza e lunghi quanto durano, il lampo
+  su `flash` quando l'evento esce davvero, la zona attiva sulle sole gocce;
+- le **corone**, un settore per parametro, l'arco pieno dov'è la mano e la
+  tacca dov'è l'efficace — la stessa doppia lettura che la colonna scrive
+  come «45 → 61», detta in modo che si veda muovere;
+- la **fascia dei grani**: il materiale come profilo chiuso, la nube come
+  banda, la testa di lettura come verticale, i grani come quadratini colorati
+  per trasposizione e alti quanto il loro posto nel campo stereo;
+- la **corsia della deriva**: dieci minuti di baricentro, cinque passati e
+  cinque futuri, e sotto il cammino delle quinte coi nomi delle collezioni che
+  devono ancora arrivare. È la sola parte della tavola che mostra qualcosa che
+  non è ancora successo, e si può perché la deriva è una funzione del tempo;
+- i **misuratori**: due picchi con tenuta e il limitatore che mangia
+  all'indietro dalla cima.
+
+Sotto i 430 px i due quadranti si impilano invece di rimpicciolirsi; sopra i
+1040 la tavola sta a fianco della colonna e resta appesa in alto mentre quella
+scorre. Un fotogramma costa 0,24 ms misurati, cioè niente.
 
 Da fare, in ordine:
 
-1. Il **registratore**: cattura del bus d'uscita e scrittura del wav. La
-   macchina della cattura è già in piedi — `apriCattura()` in `grani.js` prende
-   un NODO qualunque, non solo il microfono, apposta perché qui la sorgente
-   sarà l'uscita del banco. Manca la scrittura del wav. L'esportazione
-   *deterministica* passa invece da `rendiOffline`, ed è già in piedi.
-2. La **tavola**: il disegno vero, che sostituisce l'impalcatura di
-   `tavola.js`.
-3. Le **voci** e il **cielo**: il motore alla *In C* di Nuvole con l'archivio
+1. **Rifinire la tavola sul vetro vero.** Il disegno è al primo passaggio
+   completo e la prova non lo guarda: quello che resta si vede solo aprendo
+   `index.html` e stando a guardare per qualche minuto — le proporzioni delle
+   corone, quanto pesa un anello di tessuti a intreccio alto, se il lampo si
+   legge ancora con otto linee che scattano insieme.
+2. Le **voci** e il **cielo**: il motore alla *In C* di Nuvole con l'archivio
    delle 53 frasi, e il campo `fBm` che le sveglia. **Rimandati per scelta**:
    l'archivio attraversa tutti e dodici i gradi mentre gocce e tessuti stanno
    su una pentatonica anemitonica, e far entrare le voci vuol dire decidere
    che cosa succede a quella garanzia. È una decisione musicale, non tecnica,
-   e non è ancora presa.
+   e non è ancora presa. Quando entreranno, sulla tavola sono un terzo
+   quadrante: la pianta è già fatta per accoglierlo.
 
 Aperti: `rendiOffline` percorre lo stesso modello che sta suonando, quindi
 esportare mentre si ascolta oggi disturberebbe la sessione in corso — va dato
 al render un modello suo. E `deriva.js` sorteggia le fasi al caricamento: per
-un'esportazione riproducibile servirà un seme.
+un'esportazione riproducibile servirà un seme. I **materiali dei grani non si
+conservano**: un file caricato o una registrazione vivono finché la pagina è
+aperta, e salvarli vorrebbe dire IndexedDB, cioè la prima cosa in tutto il
+progetto a scrivere sul disco di chi ascolta — da decidere se si vuole.

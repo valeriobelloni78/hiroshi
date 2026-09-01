@@ -1,15 +1,18 @@
 /* =============================================================================
    HIROSHI · style.css
 
-   Le variabili qui sotto sono l'UNICA fonte della palette: quando arriverà il
-   disegno, anche il canvas le leggerà da qui. Cambiarle qui cambia tutto.
+   Le variabili qui sotto sono l'UNICA fonte della palette: anche il canvas
+   della tavola le legge da qui, al caricamento. Cambiarle qui cambia tutto, e
+   non c'è un solo colore scritto nel JavaScript.
 
    La lingua visiva è quella dei disegni tecnici: inchiostro su carta, filo
    sottile, angoli vivi, molto vuoto. Niente scatole e niente pillole — su una
    tavola fatta di cerchi il tondo dei bottoni non dice più niente. L'unica
    forma tonda ammessa è il punto che pulsa, che è un segno e non un comando.
 
-   Impaginazione provvisoria: c'è quel tanto che serve a usare il motore.
+   Due impaginazioni. Stretta: la tavola in cima e i comandi sotto, una colonna
+   sola. Larga: la tavola a fianco e appesa in alto, perché girare un cursore
+   guardando il quadrante è metà del mestiere.
 ============================================================================= */
 
 :root{
@@ -98,6 +101,12 @@ body{
 .prese{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .cmd.piccolo{font-size:9px;padding:8px 14px}
 .cmd.piccolo.attivo{background:var(--acuto)}
+.cmd[disabled]{opacity:.4;cursor:default}
+.prese select{width:auto;font-size:13px}
+/* Una riga di prosa che spiega che cosa fa un comando. Sta sotto e non dentro:
+   un'etichetta dice il nome, una nota dice la conseguenza, e confonderle vuol
+   dire un bottone che si legge come un paragrafo. */
+.nota{margin:0;line-height:1.6;text-transform:none;letter-spacing:.02em;max-width:46ch}
 
 /* Una linea: il suo numero, la durata del giro, e i due comandi. Le otto righe
    sono la sola parte della tavola in cui si tocca una linea sola. */
@@ -136,3 +145,35 @@ input[type=range]::-moz-range-thumb{width:11px;height:11px;background:var(--inch
 .misure{display:flex;flex-direction:column;gap:9px;padding-top:18px;border-top:1px solid var(--filo)}
 .riga{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
 .val{font-family:var(--mono);font-size:10px;color:var(--inchiostro);font-variant-numeric:tabular-nums}
+
+/* ------------------------------------------------------------------ la tavola
+   Il canvas non ha stile suo: la sua altezza è una conseguenza della sua
+   larghezza e la scrive il disegno, che la ricava dalla pianta. Qui si dichiara
+   solo che è un blocco e che non deborda mai — `line-height:0` toglie i tre
+   pixel di discesa che un elemento in linea si porta dietro e che, su un fondo
+   con la grana, si vedono come una riga più chiara sotto il disegno. */
+.tela{margin:24px 0 4px;line-height:0}
+.tela canvas{display:block;max-width:100%}
+
+/* Su uno schermo largo la tavola sta a fianco dei comandi e non sopra: girare
+   un cursore mentre si guarda il quadrante è metà del mestiere, e con la
+   tavola in cima si guarderebbe sempre l'altra cosa. Resta appesa in alto
+   mentre la colonna scorre, perché la colonna è lunga e il disegno è uno solo.
+
+   Sotto questa soglia la colonna torna una sola e la tavola va in cima: due
+   colonne strette sono peggio di una larga, e il disegno si impila da sé —
+   i due quadranti si mettono uno sopra l'altro invece di rimpicciolirsi. */
+@media (min-width:1040px){
+  .wrap{
+    max-width:1100px;
+    display:grid;
+    grid-template-columns:minmax(360px,1fr) 400px;
+    grid-template-areas:"testa testa" "tela colonna" "tela letture";
+    column-gap:44px;
+    align-items:start;
+  }
+  .head{grid-area:testa}
+  .tela{grid-area:tela;position:sticky;top:34px;margin-top:26px}
+  .banco{grid-area:colonna}
+  .misure{grid-area:letture}
+}

@@ -29,9 +29,9 @@
 
    NIENTE `fetch`, come dappertutto qui. I file arrivano da un `<input
    type=file>` e passano per `decodeAudioData`: nessuna richiesta di rete,
-   quindi funziona anche aprendo `index.html` col doppio clic. L'AudioWorklet
-   della cattura è costruito come stringa e caricato da un blob, che è l'unica
-   strada che regge su `file://` — `addModule` di un percorso locale fallisce.
+   quindi funziona anche aprendo `index.html` col doppio clic. La cattura dal
+   microfono e la scrittura del wav stanno in `cattura.js`, perché sono la
+   stessa macchina che serve al registratore della sessione.
 ============================================================================= */
 
 /* ------------------------------------------------------------- i materiali
@@ -41,7 +41,7 @@
    c'è nessun suono in dotazione da granulare. */
 const materiali = [];
 let materiale = -1;
-const DURATA_MAX_CATTURA = 90;      // secondi: oltre, la memoria non vale la resa
+const MICROFONO_MAX = 90;           // secondi: oltre, la memoria non vale la resa
 
 function materiaCorrente() {
   return materiale >= 0 && materiali[materiale] ? materiali[materiale] : null;
@@ -62,134 +62,9 @@ async function caricaFile(ctx, file) {
   return aggiungiMateria(file.name.replace(/\.[^.]+$/, ""), buf);
 }
 
-/* ------------------------------------------------------------- la cattura
-   Un AudioWorklet costruito come stringa e caricato da un blob: su `file://`
-   `addModule` di un percorso locale fallisce per il CORS, e questa è l'unica
-   strada che regge. Il processore non fa nient'altro che spedire al thread
-   principale i blocchi che gli arrivano — la mescolanza a mono si fa qui,
-   dentro il thread audio, perché mandare due canali vorrebbe dire il doppio
-   dei messaggi per un materiale che poi verrebbe comunque letto a grani. */
-const CODICE_CATTURA = `
-class Cattura extends AudioWorkletProcessor {
-  process(ingressi) {
-    const inp = ingressi[0];
-    if (inp && inp.length && inp[0] && inp[0].length) {
-      const n = inp[0].length;
-      const b = new Float32Array(n);
-      if (inp.length > 1 && inp[1]) {
-        for (let i = 0; i < n; i++) b[i] = (inp[0][i] + inp[1][i]) * 0.5;
-      } else {
-        b.set(inp[0]);
-      }
-      this.port.postMessage(b, [b.buffer]);
-    }
-    return true;
-  }
-}
-registerProcessor("cattura", Cattura);
-`;
-
-/* IL MODULO SI CARICA DA UN `data:` URI, NON DA UN BLOB. Misurato in Chromium:
-   aprendo la pagina con un doppio clic, `URL.createObjectURL` restituisce un
-   `blob:null/…` — origine opaca — e `addModule` lo rifiuta con un AbortError
-   secco, «Unable to load a worklet's module». Da `http://` il blob funziona,
-   e questo è il modo in cui la cosa passa inosservata: si prova sul server,
-   va, e poi non va sul doppio clic, che è proprio il caso che questo progetto
-   promette di reggere.
-
-   Il `data:` URI invece regge in tutti e due i posti, verificato. È scritto
-   con `encodeURIComponent` e non con `btoa`, perché `btoa` non sa che farsene
-   di un carattere fuori dal Latin-1 e basterebbe un accento in un commento a
-   farlo esplodere — cioè un difetto che aspetta il primo che scrive una
-   parola in italiano dentro il processore.
-
-   Il blob resta come seconda strada e lo `ScriptProcessorNode` come terza:
-   deprecato da anni, ancora ovunque, e su una registrazione di qualche decina
-   di secondi il fatto che giri sul thread principale non si sente. */
-let modulozzoCaricato = false;
-async function preparaCattura(ctx) {
-  if (modulozzoCaricato || !ctx.audioWorklet) return modulozzoCaricato;
-  const strade = [
-    "data:text/javascript," + encodeURIComponent(CODICE_CATTURA),
-    URL.createObjectURL(new Blob([CODICE_CATTURA], { type: "text/javascript" })),
-  ];
-  for (const url of strade) {
-    try {
-      await ctx.audioWorklet.addModule(url);
-      modulozzoCaricato = true;
-      break;
-    } catch (e) { /* si prova la prossima */ }
-  }
-  try { URL.revokeObjectURL(strade[1]); } catch (e) {}
-  return modulozzoCaricato;
-}
-
-/* Attacca un catturatore a un nodo qualunque e restituisce come fermarlo.
-   Prende un NODO e non il microfono, perché la stessa macchina servirà al
-   registratore della sessione: lì la sorgente sarà l'uscita del banco.
-
-   Il ripiego è `ScriptProcessorNode`, deprecato da anni e ancora ovunque. Il
-   suo difetto — gira sul thread principale — qui pesa poco: si registra per
-   qualche decina di secondi, non per ore.
-
-   IL CATTURATORE VA COLLEGATO A QUALCOSA anche se non deve farsi sentire. Un
-   nodo il cui uscita non arriva alla destinazione può non essere percorso
-   affatto, e allora non gli arriva niente da catturare: perciò finisce in un
-   guadagno a zero. E a zero deve restare — un microfono che torna
-   dall'altoparlante è un anello. */
-async function apriCattura(ctx, sorgente) {
-  const blocchi = [];
-  let campioni = 0;
-  const silenzio = ctx.createGain();
-  silenzio.gain.value = 0;
-  silenzio.connect(ctx.destination);
-
-  const raccogli = (b) => {
-    if (campioni >= ctx.sampleRate * DURATA_MAX_CATTURA) return;
-    blocchi.push(b);
-    campioni += b.length;
-  };
-
-  let nodo;
-  if (await preparaCattura(ctx)) {
-    nodo = new AudioWorkletNode(ctx, "cattura", { numberOfOutputs: 1 });
-    nodo.port.onmessage = (e) => raccogli(e.data);
-  } else {
-    nodo = ctx.createScriptProcessor(4096, 1, 1);
-    nodo.onaudioprocess = (e) => raccogli(new Float32Array(e.inputBuffer.getChannelData(0)));
-  }
-  sorgente.connect(nodo);
-  nodo.connect(silenzio);
-
-  return {
-    get secondi() { return campioni / ctx.sampleRate; },
-    chiudi() {
-      try { sorgente.disconnect(nodo); } catch (e) {}
-      try { nodo.disconnect(); } catch (e) {}
-      try { silenzio.disconnect(); } catch (e) {}
-      if (nodo.port) nodo.port.onmessage = null;
-      nodo.onaudioprocess = null;
-      if (!campioni) return null;
-      const buf = ctx.createBuffer(1, campioni, ctx.sampleRate);
-      const d = buf.getChannelData(0);
-      let k = 0;
-      for (const b of blocchi) { d.set(b, k); k += b.length; }
-      return buf;
-    },
-  };
-}
-
-/* Il microfono. `echoCancellation` e compagnia vanno SPENTE: sono tarate per
-   la voce al telefono e su un field recording tolgono proprio ciò che si è
-   andati a registrare — il fondo, la stanza, il riverbero del posto. */
-async function apriMicrofono() {
-  return navigator.mediaDevices.getUserMedia({
-    audio: {
-      echoCancellation: false, noiseSuppression: false,
-      autoGainControl: false, channelCount: 1,
-    },
-  });
-}
+/* La cattura dal microfono sta in `cattura.js`, insieme alla scrittura del wav:
+   è la stessa macchina che serve al registratore della sessione, e due copie
+   divergerebbero al primo ritocco. Qui si usa e basta. */
 
 /* ------------------------------------------------------- la testa di lettura
    Dove si sta leggendo, in secondi dentro il materiale. È un accumulatore e
@@ -321,7 +196,20 @@ function suonaGrano({ ctx, when, buf, dentro, dur, rate, vel, pan, dest }) {
    basse si sente subito. */
 let prossimoGrano = 0;
 
+/* La memoria per il disegno: gli ultimi secondi di grani, con dove sono stati
+   pescati e a che velocità. È la sorella di `storiaGocce` in `motore.js`, e sta
+   qui per la stessa ragione per cui quella sta là — chi emette l'evento è
+   l'unico che ne conosce i campi, e farli ricostruire alla tavola vorrebbe dire
+   riscrivere la nube una seconda volta, in un altro file, con altri numeri.
+
+   Si pota per tempo e non per lunghezza: a densità sessanta i grani sono
+   sessanta al secondo, e una lista lunga a piacere diventerebbe un peso che
+   cresce con la seduta. */
+const FASCIA_GRANI = 2.0;
+const storiaGrani = [];
+
 function prenotaGrani(now, orizzonte, attiva, dest) {
+  while (storiaGrani.length && storiaGrani[0].t < now - FASCIA_GRANI) storiaGrani.shift();
   const m = materiaCorrente();
   if (!attiva || !m || !m.durata) { prossimoGrano = Math.max(prossimoGrano, now); return 0; }
   if (prossimoGrano < now) prossimoGrano = now;
@@ -333,18 +221,21 @@ function prenotaGrani(now, orizzonte, attiva, dest) {
   let quanti = 0, guardia = 0;
 
   while (prossimoGrano < orizzonte && guardia++ < 500) {
-    const rate = Math.pow(2, semitoniGrano() / 12);
+    const semi = semitoniGrano();
+    const rate = Math.pow(2, semi / 12);
     // Il grano deve stare dentro il materiale: se sfora, si riporta indietro
     // invece di accorciarlo. Un grano accorciato perde la coda della finestra
     // e torna a essere un taglio.
     const massimo = Math.max(0, m.durata - dur * rate - 0.001);
     const dentro = clamp(centro + (Math.random() * 2 - 1) * largo, 0, massimo);
+    const pan = (Math.random() * 2 - 1) * largoPan;
     suonaGrano({
       ctx: ctxGrani, when: prossimoGrano, buf: m.buffer, dentro, dur, rate,
       vel: 0.45 * (0.7 + Math.random() * 0.3),
-      pan: (Math.random() * 2 - 1) * largoPan,
+      pan,
       dest,
     });
+    storiaGrani.push({ t: prossimoGrano, dentro, semi, pan, dur });
     quanti++;
     prossimoGrano += (1 / effGR.densita) * (0.6 + Math.random() * 0.8);
   }

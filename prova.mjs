@@ -4,13 +4,23 @@
    che è il modo in cui una rete a retroazione sbaglia. */
 import { chromium } from 'playwright';
 
-const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
+/* Il browser e la pagina non hanno percorsi scritti a mano. Il Chromium è
+   quello che `npx playwright install chromium` ha messo dove playwright lo
+   cerca — un percorso fisso qui dentro vuol dire una prova che gira su una
+   macchina sola — e la pagina si ricava da DOVE STA QUESTO FILE, così la prova
+   funziona da qualunque cartella la si lanci. Si apre con `file://`, che è la
+   promessa dell'app: nessun server, nessuna rete.
+
+   `HIROSHI_CHROMIUM` resta per chi ha un Chromium suo e non vuole scaricarne
+   un altro. */
+const b = await chromium.launch(
+  process.env.HIROSHI_CHROMIUM ? { executablePath: process.env.HIROSHI_CHROMIUM } : {});
 const p = await b.newPage();
 const errori = [];
 p.on('console', (m) => { if (m.type() === 'error') errori.push(m.text()); });
 p.on('pageerror', (e) => errori.push('pageerror: ' + e.message));
 
-await p.goto('file:///home/claude/app/index.html');
+await p.goto(new URL('./index.html', import.meta.url).href);
 await p.waitForTimeout(400);
 
 const esito = await p.evaluate(async () => {
@@ -43,7 +53,11 @@ const esito = await p.evaluate(async () => {
   /* 1 · venti secondi di frasi, dal motore intero */
   const brano = await rendiOffline(20);
   R.brano = misura(brano);
-  R.brano.gocce = storiaGocce.length;
+  // Da `ultimoRender`, non da `storiaGocce`: l'esportazione rimette a posto il
+  // modello quando ha finito — compresa la storia — quindi il contatore vivo
+  // dopo un render non racconta il render, racconta la sessione.
+  R.brano.gocce = ultimoRender ? ultimoRender.gocce : 0;
+  if (R.brano.gocce < 5) R.errori.push("in venti secondi sono cadute solo " + R.brano.gocce + " gocce");
   if (R.brano.rms < 0.002) R.errori.push("il motore è muto");
   if (R.brano.picco >= 0.999) R.errori.push("l'uscita clippa");
 
@@ -374,10 +388,87 @@ const esito = await p.evaluate(async () => {
     const nube = await rendiOffline(12);
     frasiOn = prima[0]; tessutiOn = prima[1];
     R.grani.resa = misura(nube);
-    R.grani.emessi = graniEmessi;
+    // Il conteggio si legge da `ultimoRender` e non dal contatore vivo: il
+    // ripristino del modello rimette quest'ultimo dov'era prima — che è
+    // giusto, ma vuol dire che dopo un'esportazione non racconta più il render.
+    R.grani.emessi = ultimoRender ? ultimoRender.grani : 0;
     if (R.grani.resa.rms < 0.002) R.errori.push("i grani non arrivano all'uscita");
     if (R.grani.resa.picco >= 0.999) R.errori.push("i grani clippano");
-    if (graniEmessi < 100) R.errori.push("in dodici secondi sono usciti solo " + graniEmessi + " grani");
+    if (R.grani.emessi < 100) R.errori.push("in dodici secondi sono usciti solo " + R.grani.emessi + " grani");
+  }
+
+  /* 8 · IL WAV, ANDATA E RITORNO.
+
+        L'intestazione di un wav è di 44 byte e non ha nulla di negoziabile: se
+        un campo è sbagliato il file non si apre, e guardandolo non c'è modo di
+        accorgersene. Quindi non si controlla l'intestazione — si scrive un
+        buffer noto, lo si ridà da decodificare al browser e si confrontano i
+        campioni. Se il ritorno somiglia all'andata, l'intestazione è giusta per
+        costruzione. */
+  {
+    const sr = 48000, n = sr;                   // un secondo, stereo
+    const c = new OfflineAudioContext(2, n, sr);
+    const orig = c.createBuffer(2, n, sr);
+    const a = orig.getChannelData(0), b = orig.getChannelData(1);
+    for (let i = 0; i < n; i++) {
+      a[i] = 0.8 * Math.sin((2 * Math.PI * 440 * i) / sr);
+      b[i] = (i / n) * 2 - 1;                   // una rampa: prende tutti i valori
+    }
+    const blob = scriviWav(orig, 24);
+    const tornato = await c.decodeAudioData(await blob.arrayBuffer());
+
+    let peggio = 0;
+    const a2 = tornato.getChannelData(0), b2 = tornato.getChannelData(1);
+    for (let i = 0; i < n; i++) {
+      peggio = Math.max(peggio, Math.abs(a[i] - a2[i]), Math.abs(b[i] - b2[i]));
+    }
+    R.wav = {
+      byte: blob.size,
+      attesi: 44 + n * 2 * 3,
+      canali: tornato.numberOfChannels,
+      campioni: tornato.length,
+      scartoMax: +peggio.toExponential(1),
+    };
+    if (blob.size !== R.wav.attesi) R.errori.push("il wav è lungo " + blob.size + " byte invece di " + R.wav.attesi);
+    if (tornato.numberOfChannels !== 2) R.errori.push("il wav torna con " + tornato.numberOfChannels + " canali");
+    if (tornato.length !== n) R.errori.push("il wav torna con " + tornato.length + " campioni invece di " + n);
+    // A 24 bit il passo di quantizzazione è 2⁻²³ ≈ 1,2·10⁻⁷: qualunque cosa
+    // sopra 10⁻⁵ vuol dire che i byte non sono dove dovrebbero.
+    if (peggio > 1e-5) R.errori.push("il wav torna diverso da com'è andato: " + peggio.toExponential(2));
+  }
+
+  /* 9 · L'ESPORTAZIONE NON DEVE TOCCARE LA SESSIONE.
+
+        `rendiOffline` percorre lo stesso modello che sta suonando e riparte da
+        zero: senza la fotografia, esportare mentre si ascolta riporterebbe
+        l'origine dei giri a zero e farebbe ricominciare l'armonia da un'altra
+        parte. Qui si prende un'impronta dello stato, si esporta, e si guarda
+        se l'impronta è ancora quella. */
+  {
+    const impronta = () => JSON.stringify({
+      f: frasi.map((L) => [L.period, L.cycleStart, L.idx, L.idea.length, L.offset, L.prossimoRicambio]),
+      t: tessuti.map((L) => [L.period, L.cycleStart, L.idx, L.idea.length, L.offset, L.prossimoRicambio]),
+      d: [deriva.centro, deriva.dens, deriva.spread, deriva.head, deriva.corpo],
+      q: [quinta, passiQuinta, passoN, prossimaQuinta],
+      g: [prossimoGrano, testaOra],
+      s: SCALE.slice(0, 3),
+    });
+
+    // Si porta il modello in un punto qualunque, non all'origine: un'impronta
+    // presa a modello appena nato passerebbe anche se il ripristino non
+    // facesse niente. Le sorgenti si spengono mentre lo si porta avanti — lo
+    // scheduler consuma gli indici e fa girare i cicli lo stesso, che è tutto
+    // quello che serve, senza costruire quarantamila nodi da buttare.
+    costruisciMotore();
+    const acceso = [frasiOn, tessutiOn, graniOn];
+    frasiOn = tessutiOn = graniOn = false;
+    for (let t = 0; t < 40; t += 0.05) passo(t, false);
+    frasiOn = acceso[0]; tessutiOn = acceso[1]; graniOn = acceso[2];
+    const prima = impronta();
+    await rendiOffline(6);
+    const dopo = impronta();
+    R.esportazione = { intatta: prima === dopo };
+    if (prima !== dopo) R.errori.push("esportare ha spostato il modello della sessione");
   }
 
   return R;
