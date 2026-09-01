@@ -32,8 +32,28 @@ un battimento, una deriva d'intonazione, una grana d'attrito, delle formanti
 che camminano — e in quale dei quattro registri sta: il fondo, il corpo,
 l'aria, il velo.
 
-Voci, cielo, grani e registratore sono i prossimi. La tavola disegnata — i due
-quadranti, le corone, la fascia dei grani, la deriva — è ferma nel progetto e
+**Sedici mood** — otto per classe — cambiano insieme il timbro, i parametri e
+i quattro periodi, perché in Rada la configurazione temporale è parte del
+carattere quanto lo è il suono. Ogni timbro compare in un mood solo, così
+girando gli otto pulsanti si attraversano davvero tutti e otto i suoni.
+
+**Due influenze esterne, simmetriche.** L'ora del giorno inclina le gocce —
+calore del timbro, spazio, e il colore d'insieme, che a mezzanotte taglia a
+1200 Hz e alle tre del pomeriggio a 3441. La stagione inclina i tessuti —
+registro, e il respiro con cui si aprono e si chiudono. Nessuna delle due si
+sovrappone alla deriva: ogni parametro pende da una cosa sola. Chi apre l'app
+alle sei del mattino non sente la stessa cosa di chi la apre a mezzanotte, e
+non c'è nessun comando che glielo dica.
+
+Ogni linea ha i suoi tre comandi — durata del giro, silenzia, nuova idea — e
+ciascuna classe ha il **modo del materiale**: in *deriva* le idee si rinnovano
+da sé, una alla volta e tutte insieme al passo di quinta; in *ancora* restano
+quelle che il mood ha scelto, mentre tutto il resto continua a muoversi.
+
+Grani e registratore sono i prossimi. Le voci alla *In C* di Nuvole aspettano
+una decisione musicale: il loro archivio attraversa tutti e dodici i gradi,
+mentre gocce e tessuti stanno su una pentatonica dove nulla può stonare. La
+tavola disegnata — i due quadranti, le corone, la fascia dei grani, la deriva —
 arriva quando il motore è completo; per ora `index.html` è un'impalcatura che
 serve solo ad ascoltare.
 
@@ -49,7 +69,8 @@ js/deriva.js      il tempo lungo: sei canali e il campo armonico. Non dipende da
 js/linee.js       lo stato: linee, idee, piani, ricambio
 js/timbri.js      gli otto suoni delle gocce
 js/tessuti.js     gli otto tenuti, e la finestra che li apre e li chiude
-js/banco.js       l'uscita: mixer, riverbero, equalizzatore, limitatore
+js/mood.js        i sedici stati dello strumento: parametri, periodi, timbro
+js/banco.js       l'uscita: mixer, riverbero, colore, equalizzatore, limitatore
 js/motore.js      lo scheduler e l'assemblaggio
 js/tavola.js      i comandi (provvisori)
 prova.mjs         la verifica: rende il motore fuori tempo reale e lo misura

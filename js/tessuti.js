@@ -70,9 +70,28 @@
 
 const TESSUTI = ["bordone", "marea", "attrito", "frangia", "corrente", "cavo", "brina", "soglia"];
 
-/* La forma dei tenuti. Valori d'esordio: un'apertura di tre secondi buoni, un
-   movimento di poco sopra la metà, un passo lento. */
-const FORMA_T = { apertura: 3.2, movimento: 0.55, passo: 0.38, brill: 0.50, corpo: 0.50 };
+/* La forma dei tenuti. `apertura`, `chiusura` e `passo` sono BASI: quelle vere
+   arrivano da `effGT`, perché la stagione le inclina e un mood le scrive. Le
+   altre due — movimento e brill/corpo — non le tocca nessuno dall'esterno. */
+const FORMA_T = {
+  apertura: 3.0, chiusura: 4.3, movimento: 0.55, passo: 0.38,
+  brill: 0.50, corpo: 0.50,
+};
+
+/* La forma efficace: la base con dentro i valori che il modello ha già
+   inclinato. `apertura` e `chiusura` sono in secondi, `passo` è 0..1 — chi
+   scrive un cursore in 0..100 lo divide qui e non nei costruttori, così i
+   costruttori hanno un solo mondo di unità. */
+function formaTessuti() {
+  return {
+    apertura:  effGT.apertura,
+    chiusura:  effGT.chiusura,
+    movimento: FORMA_T.movimento,
+    passo:     effGT.passo / 100,
+    brill:     FORMA_T.brill,
+    corpo:     FORMA_T.corpo,
+  };
+}
 
 /* Il territorio di ciascuno, in hertz. Non è una trasposizione musicale: la
    nota che il campo ha scelto resta quella — si sposta solo di ottave, quindi
@@ -116,8 +135,12 @@ function nelTerritorio(f, banda) {
    senza misurarla: misurarla vorrebbe dire inseguirla, e inseguire vuol dire
    arrivare dopo. */
 function inviluppoDi(when, dur, F) {
-  let ap = clamp(F.apertura, 0.35, 9);
-  let di = ap * 1.7;
+  let ap = clamp(F.apertura, 0.3, 12);
+  let di = clamp(F.chiusura, 0.3, 15);
+  // Se non ci stanno, si riscalano ENTRAMBE dello stesso fattore invece di
+  // tagliare la più lunga: il rapporto fra apertura e chiusura è il carattere
+  // del tenuto — una cosa che arriva piano e se ne va prestissimo è un'altra
+  // cosa da una che fa il contrario — e una tenuta corta non deve cambiarlo.
   const spazio = dur * 0.95;
   if (ap + di > spazio) { const k = spazio / (ap + di); ap *= k; di *= k; }
   return { t0: when, t1: when + dur, ap, di };

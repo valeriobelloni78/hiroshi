@@ -36,31 +36,77 @@ function orizzonteSicuro(now) { return Math.max(now + LOOKAHEAD, bookedUntil); }
    G  è dove sta il cursore, effG è quello che sta davvero suonando: fra i due
    c'è la deriva. Dove differiscono, la tavola mostra due numeri. */
 const G  = {
-  registro: 45, calore: 70, spazio: 60, densita: 5, addensamento: 34,
-  tRegistro: 50, tIntreccio: 45, tRespiro: 40,
+  /* gocce */
+  registro: 45, calore: 70, spazio: 72, densita: 5, addensamento: 30,
+  /* tessuti */
+  tRegistro: 55, tIntreccio: 45, tApertura: 3.0, tChiusura: 4.3,
+  tPasso: 38, tLivello: 32, tSpazio: 55,
 };
 const GT = { ...G };
-const effG  = { registro: 45, densita: 5, addensamento: 34 };
-const effGT = { registro: 50, intreccio: 45 };
+const effG  = { registro: 45, calore: 70, spazio: 72, densita: 5, addensamento: 30, colore: 2500 };
+const effGT = { registro: 55, intreccio: 45, apertura: 3.0, chiusura: 4.3, passo: 38, livello: 32, spazio: 55 };
+
+/* ------------------------------------------------- le due influenze esterne
+   Sono simmetriche e non si toccano: **l'ora del giorno inclina le gocce, la
+   stagione inclina i tessuti**. Nessuna delle due si sovrappone alla deriva —
+   ciascun parametro pende da una cosa sola, altrimenti non si saprebbe più chi
+   lo sta muovendo.
+
+   Non sono un effetto: sono la presa che il pezzo ha sul mondo fuori dalla
+   finestra. Chi apre l'app alle sei del mattino non sente la stessa cosa di
+   chi la apre a mezzanotte, e non c'è nessun comando che glielo dica. */
+let ORA = null, MESE = null;              // se restano null si legge l'orologio
+
+function oraCorrente() { return ORA !== null ? ORA : new Date().getHours(); }
+function meseCorrente() { return MESE !== null ? MESE : new Date().getMonth(); }
+
+/* L'ora sposta il CALORE del timbro, lo SPAZIO, e il colore d'insieme. Il
+   colore non ha un cursore: dipende solo dall'ora, come in Rada. */
+function tavolozzaOraria(h) {
+  if (h >= 5  && h < 8)  return { nome: "alba",       tono:   6, calore:   6, spazio:   6 };
+  if (h >= 8  && h < 12) return { nome: "mattino",    tono:  14, calore:  -6, spazio:  -6 };
+  if (h >= 12 && h < 17) return { nome: "pomeriggio", tono:  18, calore: -10, spazio: -10 };
+  if (h >= 17 && h < 20) return { nome: "tramonto",   tono:   4, calore:   8, spazio:   6 };
+  if (h >= 20 && h < 23) return { nome: "sera",       tono: -10, calore:  12, spazio:  10 };
+  return                        { nome: "notturna",   tono: -20, calore:  18, spazio:  14 };
+}
+
+/* La stagione sposta il REGISTRO dei tessuti e il loro RESPIRO. Apertura e
+   chiusura si moltiplicano invece di sommarsi perché vivono su scale diverse —
+   0,3÷12 s e 0,3÷15 s — e una somma di dodici punti su una scala di secondi
+   non vuol dire niente. */
+function tavolozzaStagionale(m) {
+  if (m <= 1 || m === 11) return { nome: "inverno",   registro: -12, respiro: 1.25, passo:  -12 };
+  if (m <= 4)             return { nome: "primavera", registro:  10, respiro: 0.85, passo:   10 };
+  if (m <= 7)             return { nome: "estate",    registro:  16, respiro: 0.75, passo:   20 };
+  return                         { nome: "autunno",   registro:  -4, respiro: 1.15, passo:   -5 };
+}
 
 function effettiviFrasi() {
+  const ora = tavolozzaOraria(oraCorrente());
   effG.registro     = clamp(G.registro     + deriva.spread * 20, 0, 100);
   effG.densita      = clamp(G.densita      + deriva.dens   * 3.2, 1, 20);
   effG.addensamento = clamp(G.addensamento + deriva.head   * 12,  5, 100);
+  effG.calore       = clamp(G.calore + ora.calore, 0, 100);
+  effG.spazio       = clamp(G.spazio + ora.spazio, 0, 100);
+  // Il taglio è esponenziale perché l'orecchio sente le frequenze così: fra
+  // 600 e 9600 Hz ci sono quattro ottave, e la scala lineare le
+  // schiaccerebbe tutte nell'ultimo quarto della corsa.
+  effG.colore = 600 * Math.pow(16, clamp(45 + ora.tono, 0, 100) / 100);
 }
 
-/* I tessuti pescano da canali della deriva DIVERSI da quelli delle gocce: due
-   classi tirate dagli stessi canali si muoverebbero all'unisono, e la deriva
-   si ridurrebbe a una manopola sola.
-
-   L'intreccio fa eccezione ed è voluto: pende dallo stesso canale
-   dell'addensamento delle gocce, ma CAMBIATO DI SEGNO. Quando le gocce si
-   stringono nella testa del giro, le trame si allentano. Le due classi si
-   scambiano la densità invece di accatastarsi, ed è l'unico accoppiamento fra
-   loro — dichiarato qui, in un posto solo. */
+/* I tessuti pescano da un canale della deriva che le gocce non usano — il
+   `corpo` muove il loro LIVELLO, cioè quanto lo sfondo sta sotto al primo
+   piano. Tutto il resto glielo muove la stagione. */
 function effettiviTessuti() {
-  effGT.registro  = clamp(G.tRegistro  + deriva.corpo * 20, 0, 100);
-  effGT.intreccio = clamp(G.tIntreccio - deriva.head  * 14, 0, 100);
+  const st = tavolozzaStagionale(meseCorrente());
+  effGT.registro  = clamp(G.tRegistro + st.registro, 0, 100);
+  effGT.intreccio = clamp(G.tIntreccio, 0, 100);
+  effGT.apertura  = clamp(G.tApertura * st.respiro, 0.3, 12);
+  effGT.chiusura  = clamp(G.tChiusura * st.respiro, 0.3, 15);
+  effGT.passo     = clamp(G.tPasso + st.passo, 0, 100);
+  effGT.livello   = clamp(G.tLivello + deriva.corpo * 9, 8, 60);
+  effGT.spazio    = clamp(G.tSpazio, 0, 100);
 }
 
 /* ------------------------------------------------------------------ le linee */
@@ -80,7 +126,25 @@ function nuovaLinea(i, periodo, pan) {
 }
 
 const frasi = [7, 11, 13, 17].map((p, i) => nuovaLinea(i, p, ((i - 1.5) / 1.5) * 0.65));
-const tessuti = [8, 9, 19, 25].map((p, i) => nuovaLinea(i, p, ((1.5 - i) / 1.5) * 0.5));
+const tessuti = [9, 16, 25, 31].map((p, i) => nuovaLinea(i, p, ((1.5 - i) / 1.5) * 0.5));
+
+/* Quale timbro suona ciascuna classe. Sono STRINGHE e stanno qui, nel modello,
+   perché un mood le sceglie insieme ai periodi e ai parametri: il timbro è uno
+   stato dello strumento, non un pezzo della macchina del suono. Chi lo
+   trasforma in nodi sta più a valle e non è affar suo. */
+let timbroFrasi = "vetro";
+let timbroTessuti = "corrente";
+
+/* ------------------------------------------------------- il modo del materiale
+   **deriva** — il materiale si rinnova da sé: una goccia per volta ai tempi
+   incommensurabili, e tutte e quattro le linee al passo di quinta.
+   **ancora** — le idee restano quelle che il mood ha scelto.
+
+   In «ancora» non si ferma il pezzo: baricentro, armonia, fasi e valori
+   efficaci continuano a muoversi. Si ferma solo il RICAMBIO, cioè il rinnovo
+   del materiale. È la differenza fra un pezzo che cambia idea e uno che cambia
+   luce sulla stessa idea. */
+const MODI = { gocce: "deriva", tessuti: "deriva" };
 
 /* ------------------------------------------------------------- il materiale */
 function nuovaGoccia() {
@@ -276,6 +340,22 @@ function riallineamento(lista) {
     const p = Math.max(1, Math.round(L.target));
     return (m * p) / gcd(m, p);
   }, 1);
+}
+
+/* --------------------------------------------------------- il passo di quinta
+   Quando la deriva cambia collezione — una nota su cinque, ogni 150 secondi —
+   il materiale della classe in modo «deriva» si rinnova per intero. È la scala
+   grossa del ricambio: quella fine sostituisce una goccia per volta e non si
+   nota mai, questa arriva col cambio di luce e ci si nasconde dentro.
+
+   Il rilevatore sta qui e non nella deriva, perché `deriva.js` è trapiantato
+   intatto da Rada Deriva e non deve sapere che qualcuno lo sta guardando. */
+let ultimaQuinta = -1;
+function quintaScattata() {
+  if (ultimaQuinta < 0) { ultimaQuinta = passiQuinta; return false; }
+  if (passiQuinta === ultimaQuinta) return false;
+  ultimaQuinta = passiQuinta;
+  return true;
 }
 
 /* Il modello si popola da sé. Senza queste righe le linee nascono vuote e

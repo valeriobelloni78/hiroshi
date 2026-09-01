@@ -82,8 +82,27 @@ body{
 /* Il numero della sezione e il suo nome, come sulla tavola. Il filo sopra
    separa senza chiudere: una scatola qui direbbe che le due classi sono cose
    diverse, e invece sono lo stesso pezzo visto da due parti. */
-.titolo{font-family:var(--mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;
+.titolo{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+        font-family:var(--mono);font-size:9px;letter-spacing:.22em;text-transform:uppercase;
         color:var(--inchiostro);padding-top:14px;border-top:1px solid var(--filo)}
+.acceso{display:flex;align-items:center;gap:6px;color:var(--grigio);cursor:pointer}
+.acceso input{accent-color:var(--inchiostro);width:12px;height:12px;margin:0}
+
+.due{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+
+/* Una linea: il suo numero, la durata del giro, e i due comandi. Le otto righe
+   sono la sola parte della tavola in cui si tocca una linea sola. */
+.linee{display:flex;flex-direction:column;gap:7px;padding-top:4px}
+.linea{display:grid;grid-template-columns:14px 1fr 52px auto auto;align-items:center;gap:9px}
+.nomeLinea{font-variant-numeric:tabular-nums}
+.durata{font-size:9px;color:var(--grigio);text-align:right}
+.mini{font-family:var(--mono);font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;
+      color:var(--grigio);background:transparent;border:1px solid var(--filo);border-radius:0;
+      padding:3px 7px;cursor:pointer;line-height:1}
+.mini:hover{color:var(--inchiostro);border-color:var(--inchiostro)}
+/* Acceso vuol dire inchiostro pieno, mai un colore: sulla tavola il colore è
+   impegnato a dire l'altezza e non può dire anche lo stato. */
+.mini.attivo{background:var(--inchiostro);border-color:var(--inchiostro);color:var(--carta)}
 
 .cmd{align-self:flex-start;font-family:var(--mono);font-size:10px;letter-spacing:.2em;
      text-transform:uppercase;color:var(--carta);background:var(--inchiostro);

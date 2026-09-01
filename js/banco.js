@@ -257,8 +257,22 @@ function costruisciBanco(ctx, nomiCanali) {
     canali[nome] = { ingresso, normale, livello, mandata };
   }
 
+  // IL COLORE D'INSIEME sta PRIMA dell'equalizzatore, ed è di un altro
+  // padrone. L'equalizzatore è lo strumento di chi ascolta: otto aste che si
+  // muovono a mano e restano dove le si lascia. Il colore invece non ha
+  // cursore — dipende solo dall'ora del giorno — e vela tutto insieme, voci e
+  // coda dell'ambiente, come fa la luce in una stanza. Metterlo dopo l'EQ
+  // vorrebbe dire che una mano che alza gli acuti si trova davanti un muro
+  // che non vede; metterlo prima vuol dire che l'EQ lavora su quello che il
+  // giorno ha già colorato, che è la cosa giusta e anche l'ordine di Rada.
+  const colore = ctx.createBiquadFilter();
+  colore.type = "lowpass";
+  colore.frequency.value = 2500;
+  colore.Q.value = 0.6;
+  somma.connect(colore);
+
   const eq = costruisciEq(ctx);
-  somma.connect(eq.ingresso);
+  colore.connect(eq.ingresso);
 
   const compressore = ctx.createDynamicsCompressor();
   compressore.threshold.value = -1.5;
@@ -292,7 +306,14 @@ function costruisciBanco(ctx, nomiCanali) {
   const finestra = new Float32Array(1024);
 
   return {
-    canali, eq, uscita, compressore, riverbero,
+    canali, eq, uscita, compressore, riverbero, filtroColore: colore,
+
+    /* Il colore d'insieme, in hertz. Lo scrive l'ora del giorno. Costante di
+       tempo lunga — mezzo secondo — perché non è un gesto ma una luce che
+       cambia: uno scalino su una frequenza di taglio si sente come un clic. */
+    colore(hz, quando) {
+      colore.frequency.setTargetAtTime(clamp(hz, 200, 20000), quando, 0.5);
+    },
 
     /* Il livello di un canale, in dB. −Infinity spegne. */
     livello(nome, dB) {

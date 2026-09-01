@@ -9,8 +9,10 @@
 <body>
 
 <!-- Impalcatura provvisoria. La tavola vera — i due quadranti, il banco, i
-     grani, la deriva — arriva quando il motore suona; per ora qui c'è solo
-     quel tanto che basta ad ascoltare e a vedere che cosa esce. -->
+     grani, la deriva — arriva quando il motore è completo; per ora qui c'è
+     quel tanto che basta ad ascoltare, a girare i mood e a vedere che cosa
+     esce. I comandi sono elementi HTML nativi e restano tali anche dopo: il
+     disegno sarà puro display. -->
 <div class="stage">
   <div class="wrap">
 
@@ -26,11 +28,36 @@
     <section class="banco">
       <button id="ascolto" class="cmd">Ascolta</button>
 
-      <div class="titolo">01 · Gocce</div>
+      <!-- ============================================================ gocce -->
+      <div class="titolo">01 · Gocce <label class="acceso"><input type="checkbox" id="gocceOn" checked> in campo</label></div>
 
       <label class="campo">
-        <span class="mn">Timbro</span>
-        <select id="timbro"></select>
+        <span class="mn">Mood</span>
+        <select id="moodGocce"></select>
+      </label>
+
+      <div class="due">
+        <label class="campo">
+          <span class="mn">Timbro</span>
+          <select id="timbro"></select>
+        </label>
+        <label class="campo">
+          <span class="mn">Materiale</span>
+          <select id="modoGocce">
+            <option value="deriva">deriva</option>
+            <option value="ancora">ancora</option>
+          </select>
+        </label>
+      </div>
+
+      <label class="campo">
+        <span class="mn">Registro <b id="vRegistro">45</b></span>
+        <input id="registro" type="range" min="0" max="100" step="1" value="45">
+      </label>
+
+      <label class="campo">
+        <span class="mn">Calore <b id="vCalore">70</b></span>
+        <input id="calore" type="range" min="0" max="100" step="1" value="70">
       </label>
 
       <label class="campo">
@@ -39,45 +66,57 @@
       </label>
 
       <label class="campo">
-        <span class="mn">Addensamento <b id="vAddensamento">34</b></span>
-        <input id="addensamento" type="range" min="5" max="100" step="1" value="34">
+        <span class="mn">Addensamento <b id="vAddensamento">30</b></span>
+        <input id="addensamento" type="range" min="5" max="100" step="1" value="30">
       </label>
 
       <label class="campo">
-        <span class="mn">Registro <b id="vRegistro">45</b></span>
-        <input id="registro" type="range" min="0" max="100" step="1" value="45">
+        <span class="mn">Spazio <b id="vSpazio">72</b></span>
+        <input id="spazio" type="range" min="0" max="100" step="1" value="72">
+      </label>
+
+      <div class="linee" id="lineeGocce"></div>
+
+      <!-- ========================================================== tessuti -->
+      <div class="titolo">02 · Tessuti <label class="acceso"><input type="checkbox" id="tessutiOn" checked> in campo</label></div>
+
+      <label class="campo">
+        <span class="mn">Mood</span>
+        <select id="moodTessuti"></select>
+      </label>
+
+      <div class="due">
+        <label class="campo">
+          <span class="mn">Timbro</span>
+          <select id="tessuto"></select>
+        </label>
+        <label class="campo">
+          <span class="mn">Materiale</span>
+          <select id="modoTessuti">
+            <option value="deriva">deriva</option>
+            <option value="ancora">ancora</option>
+          </select>
+        </label>
+      </div>
+
+      <label class="campo">
+        <span class="mn">Registro <b id="vTregistro">55</b></span>
+        <input id="tregistro" type="range" min="0" max="100" step="1" value="55">
       </label>
 
       <label class="campo">
-        <span class="mn">Spazio <b id="vSpazio">35</b></span>
-        <input id="spazio" type="range" min="0" max="100" step="1" value="35">
-      </label>
-
-      <div class="titolo">02 · Tessuti</div>
-
-      <label class="campo">
-        <span class="mn">Timbro</span>
-        <select id="tessuto"></select>
+        <span class="mn">Intreccio <b id="vIntreccio">42</b></span>
+        <input id="intreccio" type="range" min="0" max="100" step="1" value="42">
       </label>
 
       <label class="campo">
-        <span class="mn">Intreccio <b id="vIntreccio">45</b></span>
-        <input id="intreccio" type="range" min="0" max="100" step="1" value="45">
+        <span class="mn">Apertura <b id="vApertura">3,0 s</b></span>
+        <input id="apertura" type="range" min="3" max="120" step="1" value="30">
       </label>
 
       <label class="campo">
-        <span class="mn">Registro <b id="vTregistro">50</b></span>
-        <input id="tregistro" type="range" min="0" max="100" step="1" value="50">
-      </label>
-
-      <label class="campo">
-        <span class="mn">Apertura <b id="vApertura">3,2 s</b></span>
-        <input id="apertura" type="range" min="4" max="90" step="1" value="32">
-      </label>
-
-      <label class="campo">
-        <span class="mn">Movimento <b id="vMovimento">55</b></span>
-        <input id="movimento" type="range" min="0" max="100" step="1" value="55">
+        <span class="mn">Chiusura <b id="vChiusura">4,3 s</b></span>
+        <input id="chiusura" type="range" min="3" max="150" step="1" value="43">
       </label>
 
       <label class="campo">
@@ -86,9 +125,16 @@
       </label>
 
       <label class="campo">
+        <span class="mn">Livello <b id="vLivello">32</b></span>
+        <input id="livello" type="range" min="8" max="60" step="1" value="32">
+      </label>
+
+      <label class="campo">
         <span class="mn">Spazio <b id="vTspazio">55</b></span>
         <input id="tspazio" type="range" min="0" max="100" step="1" value="55">
       </label>
+
+      <div class="linee" id="lineeTessuti"></div>
     </section>
 
     <section class="misure">
@@ -97,6 +143,8 @@
       <div class="riga"><span class="mn">Voci tenute</span><span id="voci" class="val">—</span></div>
       <div class="riga"><span class="mn">Compensazione</span><span id="compenso" class="val">—</span></div>
       <div class="riga"><span class="mn">Tonalità</span><span id="tonalita" class="val">—</span></div>
+      <div class="riga"><span class="mn">Ora · colore</span><span id="ora" class="val">—</span></div>
+      <div class="riga"><span class="mn">Stagione</span><span id="stagione" class="val">—</span></div>
       <div class="riga"><span class="mn">Riallineamento</span><span id="riallineo" class="val">—</span></div>
     </section>
 
@@ -107,6 +155,7 @@
 <script src="js/linee.js"></script>
 <script src="js/timbri.js"></script>
 <script src="js/tessuti.js"></script>
+<script src="js/mood.js"></script>
 <script src="js/banco.js"></script>
 <script src="js/motore.js"></script>
 <script src="js/tavola.js"></script>

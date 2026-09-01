@@ -12,13 +12,20 @@ testi dell'interfaccia sono in italiano.
 
 ## Regole da non violare
 
-**I periodi devono restare coprimi a due a due**, e non solo dentro la classe:
-i periodi dei tessuti devono essere coprimi **anche con quelli delle frasi**,
-altrimenti le due classi tornano insieme più spesso di quanto non facciano le
-quattro frasi fra loro. Oggi: frasi 7 · 11 · 13 · 17, tessuti 8 · 9 · 19 · 25.
-Non devono essere primi — 8, 9 e 25 sono composti e vanno benissimo. **Il
-vincolo da verificare è il massimo comun divisore, non la primalità**, e va
-verificato prima di toccare una serie, non dopo.
+**Dentro una serie i quattro periodi devono essere coprimi a due a due.** Non
+devono essere primi — 8, 9 e 25 sono composti e vanno benissimo: **il vincolo
+è il massimo comun divisore, non la primalità**, e va verificato prima di
+toccare una serie, non dopo.
+
+**Fra le due classi la coprimalità è un obiettivo, non una legge.** Le due
+tabelle di mood si scelgono indipendentemente e fanno 64 combinazioni: in
+alcune un periodo delle gocce condivide un divisore con uno dei tessuti —
+«carillon» ha 4, 9, 25 e «seta» ha 8, 9, 25. Quello che va difeso non è il
+gcd ma **il tempo di riallineamento**, cioè quando tutte e otto le linee
+tornano nella stessa combinazione; la coprimalità è una condizione
+*sufficiente* per tenerlo alto, non necessaria. Misurato su tutte e 64: il
+peggiore è **247 ore**, dieci giorni. `prova.mjs` rifà quel conto a ogni corsa
+e fallisce sotto le 24 ore.
 
 **La somma dei tessuti si normalizza sugli INVILUPPI, mai su un conteggio di
 voci.** Sorgenti incoerenti si sommano in potenza, quindi il bus si divide per
@@ -51,8 +58,34 @@ della stessa grandezza e non spostare una di queste due senza spostare anche
 la chiave che le dichiara.
 
 **Le dipendenze scorrono in una direzione sola:**
-`deriva ← linee ← timbri ← banco ← motore ← tavola`. Il modello non conosce
-l'audio; l'audio non conosce il disegno.
+`deriva ← linee ← timbri ← tessuti ← mood ← banco ← motore ← tavola`. Il
+modello non conosce l'audio; l'audio non conosce il disegno.
+
+**`mood.js` è l'unico file che attraversa**, e ha un file suo proprio per
+dichiararlo. Un mood scrive insieme i parametri del modello, i periodi delle
+linee e il nome del timbro, perché in Rada la configurazione temporale è parte
+del carattere quanto lo è il suono: un «vespro» coi periodi della «pioggia» non
+sarebbe un vespro più lento, sarebbe un'altra cosa. L'eccezione è una sola e
+sta in un posto.
+
+**Un mood scrive su `G` E su `GT`.** È l'unico punto del progetto in cui si
+tocca `G` direttamente: un mood è uno scatto, non un gesto. Lasciarlo lisciare
+da `battito()` vorrebbe dire sentire lo strumento scivolare verso il nuovo
+carattere per due o tre secondi, cioè un fondo che si dissolve — il contrario
+di un cambio di scena.
+
+**Ogni timbro compare una volta sola per tabella di mood.** Non è simmetria
+decorativa: è la garanzia che girando gli otto pulsanti si attraversino
+davvero tutti e otto i suoni invece di ritrovarsi tre volte nello stesso
+posto. La prova lo verifica.
+
+**L'ora del giorno inclina le gocce, la stagione inclina i tessuti**, e nessuna
+delle due si sovrappone alla deriva: ogni parametro pende da una cosa sola,
+altrimenti non si sa più chi lo sta muovendo. Oggi la deriva muove registro,
+densità e addensamento delle gocce e il livello dei tessuti; l'ora muove
+calore, spazio e il colore d'insieme; la stagione muove registro, apertura,
+chiusura e passo dei tessuti. Chi aggiunge un'influenza dica da quale casella
+la prende.
 
 **Il motore non sa da dove viene il tempo.** `passo(now)` è una funzione del
 tempo che le viene passato. Dal vivo la chiama un `setInterval`; per scrivere
@@ -120,6 +153,13 @@ avvolge sulla testa del giro successivo.
 fasi.** `cycleStart` può essere nel futuro, e avvolgere la fase fa saltare
 gocce o interi giri.
 
+**I valori efficaci si calcolano dentro `passo()`, non nel ciclo del disegno.**
+Il disegno gira solo quando c'è uno schermo davanti; il rendering fuori tempo
+reale non ne ha nessuno. Finché quel conto stava in `battito()`, un'esportazione
+usciva coi parametri congelati sull'ultimo fotogramma disegnato: la deriva
+avanzava e nessuno la ascoltava. Vale per qualunque cosa il motore debba
+sapere — se serve al suono, sta nel motore.
+
 **`avvia()` deve azzerare anche la memoria degli eventi**, cioè `flash` e
 `fino`. Sono tempi assoluti, e quando il tempo riparte da zero — a ogni
 rendering fuori tempo reale — restano nel futuro: il periodo refrattario legge
@@ -185,9 +225,16 @@ a ogni aggiornamento.
 ogni timbro esca dal silenzio senza esplodere, che l'equalizzatore muova
 davvero lo spettro, che uno stadio di passa-tutto abbia **guadagno unitario**,
 che i due lati del riverbero stiano **pari**, che la coda **scenda** — che è
-il modo in cui una rete a retroazione sbaglia — e che la compensazione dei
-tessuti sia **liscia** dove quella per conteggio di teste scatterebbe. Esce con
-codice diverso da zero se qualcosa non torna. Serve `playwright` e un Chromium.
+il modo in cui una rete a retroazione sbaglia — che la compensazione dei
+tessuti sia **liscia** dove quella per conteggio di teste scatterebbe, e che i
+sedici mood siano in regola: periodi coprimi dentro ogni serie, riallineamento
+sopra le 24 ore in tutte e 64 le combinazioni, ogni timbro una volta sola, e
+quattro accoppiate rese dal motore intero senza clippare. Esce con codice
+diverso da zero se qualcosa non torna. Serve `playwright` e un Chromium.
+
+**La prova fissa l'ora e la stagione** (`ORA = 14`, `MESE = 9`). Senza,
+misurerebbe cose diverse a seconda di quando la si lancia — il calore, lo
+spazio, il colore d'insieme e il respiro dei tessuti dipendono dall'orologio.
 
 Quest'ultima prova verifica anche **sé stessa**: misura lo scatto nelle due
 versioni e fallisce se quella per teste NON è ruvida. Una prova che non sa
@@ -213,11 +260,14 @@ clic.
 
 ## Stato e prossimi passi
 
-Fatto: il **banco d'uscita** (mixer a quattro canali con mandata al riverbero,
-normalizzazione per canale, equalizzatore a otto bande, limitatore doppio,
-misuratori), la **deriva** trapiantata intatta da Rada Deriva, il **modello
-delle linee** con piani, trame e ricambio, gli **otto timbri** delle gocce, gli
-**otto tenuti** dei tessuti con la normalizzazione del bus, lo **scheduler** e
+**Hiroshi è al pari di Rada Deriva, e in due punti oltre.** Fatto: il **banco
+d'uscita** (mixer a quattro canali con mandata al riverbero, normalizzazione
+per canale, colore d'insieme, equalizzatore a otto bande, limitatore doppio,
+misuratori), la **deriva** trapiantata intatta, il **modello delle linee** con
+piani, trame e ricambio, gli **otto timbri** delle gocce, gli **otto tenuti**
+dei tessuti con la normalizzazione del bus, i **sedici mood**, le **due
+influenze esterne**, i **comandi per linea**, il **modo del materiale** col
+rinnovo al passo di quinta, l'**accensione per classe**, lo **scheduler** e
 l'**esportazione fuori tempo reale**.
 
 Gli otto tenuti stanno su due assi — dove stanno e che cosa si muove — e non
@@ -225,18 +275,25 @@ sono materie come le gocce, sono modi di essere instabili. Il fatto che li
 regge sta in cima a `tessuti.js`: un tenuto perfettamente fermo, dopo pochi
 secondi, smette di essere un suono e diventa una proprietà della stanza.
 
+Oltre Rada: i **timbri** (Rada ne aveva uno per classe, governato da un solo
+numero; qui sono otto e otto, e `calore` è quel numero rimasto al suo posto) e
+l'**esportazione deterministica**.
+
 Da fare, in ordine:
 
-1. Le **voci**: il motore alla *In C* di Nuvole, con l'archivio delle 53 frasi
-   e le cerniere fra le regioni.
-2. Il **cielo**: il campo `fBm` che sveglia le voci.
-3. I **grani**: microfono e file propri, con la nube attorno alla testa di
-   lettura.
-4. Il **registratore**: cattura del bus d'uscita e scrittura del wav. La
+1. I **grani**: microfono e file propri, con la nube attorno alla testa di
+   lettura. È la funzione nuova che non viene da nessuna delle tre app.
+2. Il **registratore**: cattura del bus d'uscita e scrittura del wav. La
    strada è l'AudioWorklet caricato da blob (vedi sopra); l'esportazione
    *deterministica* passa invece da `rendiOffline`, ed è già in piedi.
-5. La **tavola**: il disegno vero, che sostituisce l'impalcatura di
+3. La **tavola**: il disegno vero, che sostituisce l'impalcatura di
    `tavola.js`.
+4. Le **voci** e il **cielo**: il motore alla *In C* di Nuvole con l'archivio
+   delle 53 frasi, e il campo `fBm` che le sveglia. **Rimandati per scelta**:
+   l'archivio attraversa tutti e dodici i gradi mentre gocce e tessuti stanno
+   su una pentatonica anemitonica, e far entrare le voci vuol dire decidere
+   che cosa succede a quella garanzia. È una decisione musicale, non tecnica,
+   e non è ancora presa.
 
 Aperti: `rendiOffline` percorre lo stesso modello che sta suonando, quindi
 esportare mentre si ascolta oggi disturberebbe la sessione in corso — va dato

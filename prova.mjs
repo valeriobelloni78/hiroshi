@@ -32,6 +32,13 @@ const esito = await p.evaluate(async () => {
 
   const R = { errori: [] };
 
+  /* 0 · L'ORA E LA STAGIONE SI FISSANO, altrimenti questa prova misura cose
+        diverse a seconda di quando la si lancia: l'ora del giorno inclina il
+        calore, lo spazio e il colore d'insieme, la stagione inclina il respiro
+        dei tessuti. Un'ora qualunque e un mese qualunque, purché sempre gli
+        stessi. */
+  ORA = 14; MESE = 9;                       // pomeriggio, autunno
+
   /* 1 · venti secondi di frasi, dal motore intero */
   const brano = await rendiOffline(20);
   R.brano = misura(brano);
@@ -206,6 +213,74 @@ const esito = await p.evaluate(async () => {
     };
     if (liscio > 0.01) R.errori.push("la compensazione per inviluppi scatta: " + liscio.toFixed(4));
     if (ruvido < 0.02) R.errori.push("la prova non distingue i due casi: rivederla");
+  }
+
+  /* 6 · I SEDICI MOOD.
+
+        (a) Dentro una serie i quattro periodi devono essere coprimi a due a
+        due: è il meccanismo stesso del collage.
+
+        (b) Fra le due serie la coprimalità NON si può pretendere — le due
+        tabelle si scelgono indipendentemente e fanno 64 combinazioni — quindi
+        si misura quello che quella regola difende davvero: il tempo prima che
+        tutte e otto le linee tornino nella stessa combinazione. La condizione
+        «coprimi» è sufficiente, non necessaria; il riallineamento è la cosa
+        vera, e sotto le 24 ore si fallisce.
+
+        (c) Ogni timbro compare una volta sola per tabella, così girando gli
+        otto pulsanti si attraversano davvero tutti e otto i suoni. */
+  {
+    const mcd = (a, b) => (b ? mcd(b, a % b) : a);
+    const mcm = (a, b) => (a / mcd(a, b)) * b;
+    const G8 = Object.entries(MOOD_GOCCE), T8 = Object.entries(MOOD_TESSUTI);
+
+    for (const [nome, m] of G8.concat(T8)) {
+      for (let i = 0; i < 4; i++) for (let j = i + 1; j < 4; j++) {
+        if (mcd(m.periodi[i], m.periodi[j]) > 1)
+          R.errori.push("dentro «" + nome + "» due periodi non sono coprimi: " +
+                        m.periodi[i] + " e " + m.periodi[j]);
+      }
+    }
+
+    let peggiore = Infinity, chi = "";
+    for (const [ng, mg] of G8) for (const [nt, mt] of T8) {
+      const ore = mg.periodi.concat(mt.periodi).reduce(mcm, 1) / 3600;
+      if (ore < peggiore) { peggiore = ore; chi = ng + " × " + nt; }
+    }
+    R.mood = {
+      combinazioni: G8.length * T8.length,
+      riallineoPeggiore: Math.round(peggiore) + " ore (" + chi + ")",
+    };
+    if (peggiore < 24)
+      R.errori.push("una combinazione di mood si riallinea in " +
+                    peggiore.toFixed(1) + " ore: " + chi);
+
+    const unaVolta = (tab, dove) => {
+      const visti = new Set();
+      for (const [nome, m] of Object.entries(tab)) {
+        if (visti.has(m.timbro))
+          R.errori.push("il timbro «" + m.timbro + "» compare due volte fra i mood " + dove +
+                        " (l'ultimo è «" + nome + "»)");
+        visti.add(m.timbro);
+      }
+      return visti.size;
+    };
+    R.mood.timbriGocce = unaVolta(MOOD_GOCCE, "delle gocce");
+    R.mood.timbriTessuti = unaVolta(MOOD_TESSUTI, "dei tessuti");
+
+    /* (d) Quattro mood scelti agli estremi, resi dal motore intero: che
+           nessuno sia muto e che nessuno clippi. «Nuvola» è quello che ci va
+           più vicino — quattordici gocce per idea e addensamento a 64. */
+    R.resa = {};
+    for (const [g, t] of [["sereno", "velo"], ["nuvola", "seta"],
+                          ["vespro", "fondale"], ["pioggia", "lino"]]) {
+      applicaMoodGocce(g); applicaMoodTessuti(t);
+      const m = misura(await rendiOffline(14));
+      R.resa[g + "+" + t] = { rms: m.rms, picco: m.picco };
+      if (m.rms < 0.002) R.errori.push("il mood " + g + "+" + t + " è muto");
+      if (m.picco >= 0.999) R.errori.push("il mood " + g + "+" + t + " clippa");
+    }
+    applicaMoodGocce("sereno"); applicaMoodTessuti("velo");
   }
 
   return R;

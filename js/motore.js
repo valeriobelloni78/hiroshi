@@ -36,10 +36,6 @@ let timer = null;
 let ultimoGiro = 0;
 let sospensione = null;
 
-/* Quali timbri suonano le due classi. */
-let timbroFrasi = "legno";
-let timbroTessuti = "bordone";
-
 /* La memoria per il disegno: gli ultimi trenta secondi di gocce. Si chiama
    così e non `history` perché quello ombreggerebbe window.history. */
 const FASCIA_SEC = 30;
@@ -98,7 +94,7 @@ function suonaGoccia(at, ev, L) {
     ctx, when: at, freq, vel: ev.vel,
     pan: clamp(L.pan + (Math.random() * 2 - 1) * 0.18, -1, 1),
     dest: banco.canali.frasi.ingresso,
-    F: FORMA,
+    F: formaGocce(effG.calore),
   });
   ev.flash = at;
   storiaGocce.push({ t: at, linea: L.i, rel: ev.rel });
@@ -114,7 +110,7 @@ function suonaTenuta(at, ev, L) {
     // sposta da un giro all'altro lo sfondo scivola.
     pan: clamp(L.pan + (Math.random() * 2 - 1) * 0.12, -1, 1),
     dest: banco.canali.tessuti.ingresso,
-    F: FORMA_T,
+    F: formaTessuti(),
   });
   ev.flash = at;
   ev.fino = at + dur;              // finché dura, il ricambio non la tocca
@@ -172,6 +168,15 @@ function passo(now, nascosta) {
 
   avanzaDeriva(now);
 
+  // I VALORI EFFICACI SI CALCOLANO QUI, non nel ciclo del disegno. Il disegno
+  // gira solo quando c'è uno schermo davanti; il rendering fuori tempo reale
+  // non ne ha nessuno, e finché questo conto stava là un'esportazione usciva
+  // con i parametri congelati sull'ultimo fotogramma disegnato — la deriva
+  // avanzava e nessuno la ascoltava.
+  effettiviFrasi();
+  effettiviTessuti();
+  applicaEfficaci(now);
+
   const orizzonte = now + LOOKAHEAD;
   if (orizzonte > bookedUntil) bookedUntil = orizzonte;   // monòtono: invecchia da sé
 
@@ -182,7 +187,21 @@ function passo(now, nascosta) {
 
   compensaTessuti(now);
 
-  for (const L of frasi) {
+  // IL RINNOVO AL PASSO DI QUINTA: la scala grossa del ricambio. Quello fine
+  // sostituisce una goccia per volta e non si nota mai; questo rifà tutte e
+  // quattro le idee di una classe, e arriva insieme al cambio di collezione —
+  // cioè si nasconde dentro il solo momento in cui la luce cambia comunque.
+  // L'indice va riposizionato subito dopo: `rigenera` lo azzera, e senza
+  // questo passaggio le note già prenotate si sentirebbero due volte.
+  if (quintaScattata()) {
+    const orizzonteQ = orizzonteSicuro(now);
+    if (MODI.gocce === "deriva")
+      frasi.forEach((L) => { rigenera(L); riposizionaIdx(L, orizzonteQ); });
+    if (MODI.tessuti === "deriva")
+      tessuti.forEach((L) => { rigeneraTrama(L); riposizionaIdx(L, orizzonteQ); });
+  }
+
+  if (MODI.gocce === "deriva") for (const L of frasi) {
     if (now < L.prossimoRicambio) continue;
     if (ricambia(L, now)) {
       // ±15 % di scarto: due linee con periodi vicini non devono rinnovarsi
@@ -190,11 +209,38 @@ function passo(now, nascosta) {
       L.prossimoRicambio = now + TEMPI_RICAMBIO[L.i] * (0.85 + Math.random() * 0.3);
     }
   }
-  for (const L of tessuti) {
+  if (MODI.tessuti === "deriva") for (const L of tessuti) {
     if (now < L.prossimoRicambio) continue;
     if (ricambiaTessuto(L, now)) {
       L.prossimoRicambio = now + TEMPI_RICAMBIO_T[L.i] * (0.85 + Math.random() * 0.3);
     }
+  }
+}
+
+/* I valori efficaci che vanno al banco. Si riscrivono solo quando si sono
+   mossi abbastanza da sentirsi: `setTargetAtTime` a ogni passo su quattro
+   parametri farebbe quaranta eventi d'automazione al secondo per niente, e
+   fuori tempo reale li farebbe tutti in una volta. */
+const ultimo = { spazio: -1, colore: -1, livello: -1, tSpazio: -1 };
+function applicaEfficaci(now) {
+  if (!banco) return;
+  if (Math.abs(effG.spazio - ultimo.spazio) > 0.5) {
+    ultimo.spazio = effG.spazio;
+    banco.spazio("frasi", effG.spazio / 100);
+  }
+  if (Math.abs(effG.colore - ultimo.colore) > 20) {
+    ultimo.colore = effG.colore;
+    banco.colore(effG.colore, now);
+  }
+  if (Math.abs(effGT.spazio - ultimo.tSpazio) > 0.5) {
+    ultimo.tSpazio = effGT.spazio;
+    banco.spazio("tessuti", effGT.spazio / 100);
+  }
+  if (Math.abs(effGT.livello - ultimo.livello) > 0.3) {
+    ultimo.livello = effGT.livello;
+    // 32 è il livello d'esordio, e a 32 il canale sta a −7 dB: la scala di
+    // Rada (8÷60) diventa una scala in decibel senza spostare il punto zero.
+    banco.livello("tessuti", 20 * Math.log10(effGT.livello / 32) - 7);
   }
 }
 
@@ -213,7 +259,7 @@ function costruisciMotore() {
     ctx = new (window.AudioContext || window.webkitAudioContext)();
   }
   banco = costruisciBanco(ctx, ["frasi", "tessuti", "voci", "grani"]);
-  tara(banco);
+  tara();
 
   avvia(ctx.currentTime);
 
@@ -288,11 +334,12 @@ function avvia(now) {
    dal vivo e il rendering fuori tempo reale devono partire dallo stesso punto:
    due copie di questi numeri vorrebbero dire un'esportazione che non suona
    come quello che si è ascoltato. */
-function tara(b) {
-  b.livello("frasi", -4);
-  b.spazio("frasi", 0.35);
-  b.livello("tessuti", -7);
-  b.spazio("tessuti", 0.55);
+function tara() {
+  banco.livello("frasi", -4);
+  ultimo.spazio = ultimo.colore = ultimo.livello = ultimo.tSpazio = -1;
+  effettiviFrasi();
+  effettiviTessuti();
+  applicaEfficaci(ctx.currentTime);
 }
 
 async function accendi(acceso) {
@@ -328,7 +375,7 @@ async function rendiOffline(secondi, sampleRate = 48000) {
 
   ctx = new OfflineAudioContext(2, Math.ceil(secondi * sampleRate), sampleRate);
   banco = costruisciBanco(ctx, ["frasi", "tessuti", "voci", "grani"]);
-  tara(banco);
+  tara();
   banco.uscita.gain.value = 0.9;
 
   bookedUntil = 0;

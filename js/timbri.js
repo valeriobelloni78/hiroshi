@@ -30,8 +30,33 @@
 const TIMBRI = ["vetro", "legno", "onda", "soffio", "corda", "metallo", "canna", "sabbia"];
 
 /* La forma del suono: i cinque filetti sotto la tendina. Valori d'esordio
-   uguali a quelli scritti sulla tavola. */
+   uguali a quelli scritti sulla tavola. Questa è la BASE; quella che arriva
+   ai costruttori è la base inclinata dal calore, qui sotto. */
 const FORMA = { attacco: 0.004, coda: 1.8, inarm: 0.22, brill: 0.58, corpo: 0.41 };
+
+/* ------------------------------------------------------------------ il calore
+   In Rada il timbro delle gocce aveva un comando solo, `warmth`, e quel numero
+   governava insieme il rapporto di modulazione, l'indice, il parziale campana
+   e la lunghezza della coda. Qui i timbri sono otto e la forma ne ha cinque,
+   ma il calore resta — perché è il comando che l'ora del giorno inclina, ed è
+   l'unico modo per cui «notturna» suona davvero più calda di «pomeriggio»
+   senza che nessuno tocchi niente.
+
+   Il calore muove QUATTRO dei cinque filetti nello stesso verso: caldo vuol
+   dire coda lunga, pochi parziali fuori posto, poca energia in alto e molta
+   fondamentale. L'attacco no: quello dice CHE STRUMENTO È, e un calore che lo
+   spostasse cambierebbe il timbro invece di scaldarlo — è la regola scritta in
+   cima a questo file, letta al contrario. */
+function formaGocce(calore) {
+  const c = clamp(calore, 0, 100) / 100;
+  return {
+    attacco: FORMA.attacco,
+    coda:    FORMA.coda * (0.5 + c * 1.1),
+    inarm:   clamp(FORMA.inarm + (0.5 - c) * 0.40, 0, 1),
+    brill:   clamp(FORMA.brill + (0.5 - c) * 0.60, 0, 1),
+    corpo:   clamp(FORMA.corpo + (c - 0.5) * 0.50, 0, 1),
+  };
+}
 
 /* Un solo buffer di rumore per contesto, riusato da tutti i timbri che ne
    hanno bisogno: crearne uno per nota costerebbe un'allocazione e una
