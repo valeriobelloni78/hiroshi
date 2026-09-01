@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hiroshi</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- Impalcatura provvisoria. La tavola vera — i due quadranti, il banco, i
+     grani, la deriva — arriva quando il motore suona; per ora qui c'è solo
+     quel tanto che basta ad ascoltare e a vedere che cosa esce. -->
+<div class="stage">
+  <div class="wrap">
+
+    <header class="head">
+      <div class="logo">
+        <div class="nome">Hiroshi</div>
+        <div class="filo"></div>
+        <div class="sotto"><span>rada</span><span class="punto"></span><span>studio</span></div>
+      </div>
+      <div class="stato" id="stato">fermo</div>
+    </header>
+
+    <section class="banco">
+      <button id="ascolto" class="cmd">Ascolta</button>
+
+      <label class="campo">
+        <span class="mn">Timbro delle gocce</span>
+        <select id="timbro"></select>
+      </label>
+
+      <label class="campo">
+        <span class="mn">Densità <b id="vDensita">5</b></span>
+        <input id="densita" type="range" min="1" max="20" step="1" value="5">
+      </label>
+
+      <label class="campo">
+        <span class="mn">Addensamento <b id="vAddensamento">34</b></span>
+        <input id="addensamento" type="range" min="5" max="100" step="1" value="34">
+      </label>
+
+      <label class="campo">
+        <span class="mn">Registro <b id="vRegistro">45</b></span>
+        <input id="registro" type="range" min="0" max="100" step="1" value="45">
+      </label>
+
+      <label class="campo">
+        <span class="mn">Spazio <b id="vSpazio">35</b></span>
+        <input id="spazio" type="range" min="0" max="100" step="1" value="35">
+      </label>
+    </section>
+
+    <section class="misure">
+      <div class="riga"><span class="mn">Picco</span><span id="picco" class="val">—</span></div>
+      <div class="riga"><span class="mn">Limitatore</span><span id="riduzione" class="val">—</span></div>
+      <div class="riga"><span class="mn">Tonalità</span><span id="tonalita" class="val">—</span></div>
+      <div class="riga"><span class="mn">Riallineamento</span><span id="riallineo" class="val">—</span></div>
+    </section>
+
+  </div>
+</div>
+
+<script src="js/deriva.js"></script>
+<script src="js/linee.js"></script>
+<script src="js/timbri.js"></script>
+<script src="js/banco.js"></script>
+<script src="js/motore.js"></script>
+<script src="js/tavola.js"></script>
+</body>
+</html>

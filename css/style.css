@@ -1,0 +1,104 @@
+/* =============================================================================
+   HIROSHI · style.css
+
+   Le variabili qui sotto sono l'UNICA fonte della palette: quando arriverà il
+   disegno, anche il canvas le leggerà da qui. Cambiarle qui cambia tutto.
+
+   La lingua visiva è quella dei disegni tecnici: inchiostro su carta, filo
+   sottile, angoli vivi, molto vuoto. Niente scatole e niente pillole — su una
+   tavola fatta di cerchi il tondo dei bottoni non dice più niente. L'unica
+   forma tonda ammessa è il punto che pulsa, che è un segno e non un comando.
+
+   Impaginazione provvisoria: c'è quel tanto che serve a usare il motore.
+============================================================================= */
+
+:root{
+  --carta:#e7e7e4;    /* il fondo, grigio chiarissimo appena caldo */
+  --inchiostro:#20211c;
+  --inchiostro-2:#55564c;
+  --grigio:#8f9084;   /* etichette tenui */
+  --filo:#c3c2b4;     /* linee di struttura */
+  --filo-2:#d8d7cc;   /* il filo più tenue */
+  --spento:#d2d1c5;   /* graduazione non raggiunta */
+
+  /* Lo spettro dell'altezza: grave al blu, acuto al rosso mattone. Tarato per
+     la carta — la stessa rampa pensata per un fondo scuro qui sparirebbe. */
+  --grave:#264a9e;
+  --medio:#2d8550;
+  --acuto:#ba3b26;
+
+  --sans:"Helvetica Neue",-apple-system,system-ui,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+}
+
+/* La grana della carta: rumore frattale generato dal browser, non un'immagine
+   da scaricare. È un SVG scritto qui dentro come data URI, quindi la pagina
+   continua ad aprirsi senza rete — che è una regola del progetto, non una
+   comodità. */
+:root{
+  --grana:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23g)' opacity='.08'/%3E%3C/svg%3E");
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{
+  background-color:var(--carta);
+  background-image:var(--grana);
+  color:var(--inchiostro);
+  font-family:var(--sans);
+  font-weight:300;
+  -webkit-font-smoothing:antialiased;
+}
+
+.stage{min-height:100vh;min-height:100dvh;display:flex;justify-content:center;padding:34px 24px 40px}
+.wrap{width:100%;max-width:560px}
+
+/* ------------------------------------------------------------------ marchio */
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;
+      padding-bottom:14px;border-bottom:1px solid var(--filo)}
+.logo{display:flex;flex-direction:column;gap:6px}
+.nome{font-size:19px;font-weight:300;letter-spacing:.62em;text-transform:uppercase;
+      line-height:1;margin-right:-.62em}
+.filo{height:1px;background:var(--filo)}
+.sotto{display:flex;align-items:center;justify-content:space-between;
+       font-size:13px;letter-spacing:.16em;color:var(--grigio);margin-right:-.16em}
+
+/* Il punto che pulsa: un respiro lento, non un lampeggio. */
+@keyframes pulsa{0%,100%{opacity:1}50%{opacity:.34}}
+.punto{width:7px;height:7px;border-radius:50%;flex:none;background:var(--acuto);
+       animation:pulsa 2.6s ease-in-out infinite}
+
+.stato{font-family:var(--mono);font-size:9px;letter-spacing:.2em;text-transform:uppercase;
+       color:var(--grigio);padding-bottom:3px}
+
+/* ------------------------------------------------------------------ comandi */
+.mn{font-family:var(--mono);font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--grigio)}
+.mn b{font-weight:400;color:var(--inchiostro);font-variant-numeric:tabular-nums}
+
+.banco{display:flex;flex-direction:column;gap:20px;padding:26px 0}
+.campo{display:flex;flex-direction:column;gap:8px}
+
+.cmd{align-self:flex-start;font-family:var(--mono);font-size:10px;letter-spacing:.2em;
+     text-transform:uppercase;color:var(--carta);background:var(--inchiostro);
+     border:0;border-radius:0;padding:11px 22px;cursor:pointer}
+.cmd:hover{background:var(--inchiostro-2)}
+
+select{font-family:var(--sans);font-size:15px;font-weight:300;color:var(--inchiostro);
+       background:transparent;border:0;border-bottom:1px solid var(--inchiostro);
+       border-radius:0;padding:5px 0;appearance:none;width:100%}
+
+/* Il cursore ha la corsa di un filo e il segno di un quadrato d'inchiostro:
+   la stessa coppia che sulla tavola sta sulle corone e nel banco. */
+input[type=range]{appearance:none;width:100%;height:14px;background:transparent;margin:0}
+input[type=range]::-webkit-slider-runnable-track{height:1px;background:var(--filo)}
+input[type=range]::-moz-range-track{height:1px;background:var(--filo)}
+input[type=range]::-webkit-slider-thumb{appearance:none;width:11px;height:11px;
+  background:var(--inchiostro);border:0;border-radius:0;margin-top:-5px}
+input[type=range]::-moz-range-thumb{width:11px;height:11px;background:var(--inchiostro);
+  border:0;border-radius:0}
+
+/* ------------------------------------------------------------------ letture */
+.misure{display:flex;flex-direction:column;gap:9px;padding-top:18px;border-top:1px solid var(--filo)}
+.riga{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.val{font-family:var(--mono);font-size:10px;color:var(--inchiostro);font-variant-numeric:tabular-nums}
