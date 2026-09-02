@@ -311,7 +311,7 @@ col dito, col tasto Tab e con un lettore di schermo. Il disegno è puro
 display: non ascolta nulla, e il canvas porta `aria-hidden` perché quello che
 mostra è scritto anche in cifre nelle letture in fondo alla colonna.
 
-**La corona mostra l'EFFICACE, il filetto sotto il quadrante mostra la MANO.**
+**La corona mostra l'EFFICACE, il filetto nella colonna mostra la MANO.**
 Sono due comandi che dicono la stessa grandezza in due punti, e non è una
 ripetizione: fra i due c'è la deriva, l'ora e la stagione, e vederli separati è
 l'unico modo di sapere chi sta muovendo un parametro. Chi togliesse una delle
@@ -359,10 +359,15 @@ velocità del movimento interno. Chi unificasse i due gruppi «per coerenza»
 toglierebbe ai tessuti l'unico comando che li distingue davvero.
 
 **I dieci comandi di una classe stanno in tre posti, e il posto dice che cosa
-sono.** Cinque filetti nella forma del suono (che cosa è il suono), due manopole
-nell'Insieme (dove sta), e le tracce della corona (come si dispone nel giro).
-Nelle gocce la corona ne ha tre — addensamento, densità, spazio; nei tessuti due
-— intreccio e spazio, perché il livello è un livello e sta nel mixer.
+sono.** Nella colonna: cinque filetti sotto «Forma del suono» — che cosa è il
+suono — e sotto «Insieme» quelli che sulla tavola sono le tracce della corona,
+tre per le gocce (addensamento, densità, spazio) e due per i tessuti (intreccio,
+spazio, perché il livello è un livello e sta nel mixer). SOTTO IL QUADRANTE, le
+due manopole: registro e calore per le gocce, registro e passo per i tessuti.
+Stanno lì e non in colonna perché sono la stessa figura del quadrante — un arco
+graduato con un quadrato che ci corre sopra — e la bocca della corona si apre in
+basso proprio verso di loro: si leggono come due satelliti del cerchio invece
+che come due comandi qualunque in fondo a una lista.
 
 **I numeri che cambiano** usano cifre a larghezza fissa, altrimenti tremolano
 a ogni aggiornamento.

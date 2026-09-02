@@ -109,7 +109,11 @@ function cursore(id, targaId, def) {
    cursore, quindi non c'è una seconda lista di nomi da tenere in pari. */
 const MANI = [];
 function segnaMano(input) {
-  const et = input.parentElement && input.parentElement.querySelector(".fl");
+  // Il nome sta accanto al filetto o sotto la manopola: si cerca in tutti e due
+  // i posti, o le due manopole di ogni classe non finirebbero mai in questa
+  // riga — e sono proprio quelle che si girano di più.
+  const cassa = input.closest(".filetto, .manopola");
+  const et = cassa && cassa.querySelector(".fl");
   if (!et) return;
   const nome = et.textContent.trim().toLowerCase();
   const k = MANI.indexOf(nome);

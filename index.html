@@ -85,26 +85,20 @@
             <input id="fCorpo" type="range" min="0" max="100" step="1" value="41"></label>
         </div>
 
-        <!-- Le manopole: il disegno è un arco graduato che il canvas mette
-             sotto, il comando è il cursore trasparente steso sopra l'arco. -->
+        <!-- I tre comandi che sulla tavola sono le tre tracce della corona.
+             Il filetto dice dove sta la mano, la corona dice che cosa sta
+             suonando: fra i due c'è la deriva, l'ora e la stagione. -->
         <div class="gruppo">
           <span class="et">Insieme</span>
-          <div class="manopole">
-            <div class="manopola">
-              <div class="quadro" data-manopola="registro">
-                <input id="registro" type="range" min="0" max="100" step="1" value="45"
-                       aria-label="Registro delle gocce">
-              </div>
-              <span class="fl">Registro</span><span class="vl" id="vRegistro">1,4 ott</span>
-            </div>
-            <div class="manopola">
-              <div class="quadro" data-manopola="calore">
-                <input id="calore" type="range" min="0" max="100" step="1" value="70"
-                       aria-label="Calore del timbro">
-              </div>
-              <span class="fl">Calore</span><span class="vl" id="vCalore">0,70</span>
-            </div>
-          </div>
+          <label class="filetto"><span class="fl">Addensamento</span>
+            <span class="vl" id="vAddensamento">0,30</span>
+            <input id="addensamento" type="range" min="5" max="100" step="1" value="30"></label>
+          <label class="filetto"><span class="fl">Densità</span>
+            <span class="vl" id="vDensita">5 / giro</span>
+            <input id="densita" type="range" min="1" max="20" step="1" value="5"></label>
+          <label class="filetto"><span class="fl">Spazio</span>
+            <span class="vl" id="vSpazio">0,72</span>
+            <input id="spazio" type="range" min="0" max="100" step="1" value="72"></label>
         </div>
 
         <div class="gruppo">
@@ -121,16 +115,27 @@
 
       <div class="quadrante gocce">
         <div class="tela-quadrante" data-quadro="gocce"></div>
+        <!-- Le due manopole stanno SOTTO il quadrante, dove il cerchio le
+             lascia stare: sono la stessa figura — un arco graduato con un
+             quadrato che ci corre sopra — e messe qui si leggono come due
+             satelliti del quadrante invece che come due comandi qualunque.
+             Il disegno lo fa il canvas; il comando è il cursore trasparente
+             steso sopra l'arco. -->
         <div class="sotto-quadrante">
-          <label class="filetto riga-lettura"><span class="fl">Addensamento</span>
-            <span class="vl" id="vAddensamento">0,30</span>
-            <input id="addensamento" type="range" min="5" max="100" step="1" value="30"></label>
-          <label class="filetto riga-lettura"><span class="fl">Densità</span>
-            <span class="vl" id="vDensita">5 / giro</span>
-            <input id="densita" type="range" min="1" max="20" step="1" value="5"></label>
-          <label class="filetto riga-lettura"><span class="fl">Spazio</span>
-            <span class="vl" id="vSpazio">0,72</span>
-            <input id="spazio" type="range" min="0" max="100" step="1" value="72"></label>
+          <div class="manopola">
+            <div class="quadro" data-manopola="registro">
+              <input id="registro" type="range" min="0" max="100" step="1" value="45"
+                     aria-label="Registro delle gocce">
+            </div>
+            <span class="fl">Registro</span><span class="vl" id="vRegistro">1,4 ott</span>
+          </div>
+          <div class="manopola">
+            <div class="quadro" data-manopola="calore">
+              <input id="calore" type="range" min="0" max="100" step="1" value="70"
+                     aria-label="Calore del timbro">
+            </div>
+            <span class="fl">Calore</span><span class="vl" id="vCalore">0,70</span>
+          </div>
         </div>
       </div>
 
@@ -139,12 +144,20 @@
       <div class="quadrante tessuti">
         <div class="tela-quadrante" data-quadro="tessuti"></div>
         <div class="sotto-quadrante">
-          <label class="filetto riga-lettura"><span class="fl">Intreccio</span>
-            <span class="vl" id="vIntreccio">0,45</span>
-            <input id="intreccio" type="range" min="0" max="100" step="1" value="45"></label>
-          <label class="filetto riga-lettura"><span class="fl">Spazio</span>
-            <span class="vl" id="vTspazio">0,55</span>
-            <input id="tspazio" type="range" min="0" max="100" step="1" value="55"></label>
+          <div class="manopola">
+            <div class="quadro" data-manopola="tregistro">
+              <input id="tregistro" type="range" min="0" max="100" step="1" value="55"
+                     aria-label="Registro dei tessuti">
+            </div>
+            <span class="fl">Registro</span><span class="vl" id="vTregistro">1,8 ott</span>
+          </div>
+          <div class="manopola">
+            <div class="quadro" data-manopola="passo">
+              <input id="passo" type="range" min="0" max="100" step="1" value="38"
+                     aria-label="Passo del movimento">
+            </div>
+            <span class="fl">Passo</span><span class="vl" id="vPasso">0,38</span>
+          </div>
         </div>
       </div>
 
@@ -183,22 +196,12 @@
 
         <div class="gruppo">
           <span class="et">Insieme</span>
-          <div class="manopole">
-            <div class="manopola">
-              <div class="quadro" data-manopola="tregistro">
-                <input id="tregistro" type="range" min="0" max="100" step="1" value="55"
-                       aria-label="Registro dei tessuti">
-              </div>
-              <span class="fl">Registro</span><span class="vl" id="vTregistro">1,8 ott</span>
-            </div>
-            <div class="manopola">
-              <div class="quadro" data-manopola="passo">
-                <input id="passo" type="range" min="0" max="100" step="1" value="38"
-                       aria-label="Passo del movimento">
-              </div>
-              <span class="fl">Passo</span><span class="vl" id="vPasso">0,38</span>
-            </div>
-          </div>
+          <label class="filetto"><span class="fl">Intreccio</span>
+            <span class="vl" id="vIntreccio">0,45</span>
+            <input id="intreccio" type="range" min="0" max="100" step="1" value="45"></label>
+          <label class="filetto"><span class="fl">Spazio</span>
+            <span class="vl" id="vTspazio">0,55</span>
+            <input id="tspazio" type="range" min="0" max="100" step="1" value="55"></label>
         </div>
 
         <div class="gruppo">
@@ -250,7 +253,7 @@
             <span class="mn">Traccia wav</span>
             <span class="misura" id="esito">5 minuti</span>
           </button>
-          <label class="filetto riga-lettura" style="max-width:none">
+          <label class="filetto">
             <span class="fl">Durata del reso</span><span class="vl" id="vDurata">5′</span>
             <input id="durata" type="range" min="1" max="20" step="1" value="5">
           </label>

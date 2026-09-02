@@ -336,14 +336,18 @@ function manopola(box, u) {
   if (!box) return;
   const R = Math.min(box.w, box.h) / 2 * 0.79;
   const cx = box.cx, cy = box.cy;
+  // Le lunghezze sono FRAZIONI del raggio e non pixel: la manopola può crescere
+  // senza che le graduazioni diventino unghie. Le proporzioni sono quelle del
+  // disegno, misurate su un arco di trentatré pixel.
   const fino = Math.round(clamp(u, 0, 1) * (MANOPOLA_TACCHE - 1));
   for (let k = 0; k < MANOPOLA_TACCHE; k++) {
     const g = MANOPOLA_DA + (k / (MANOPOLA_TACCHE - 1)) * MANOPOLA_QUANTO;
     const dentro = k <= fino;
-    tacca(cx, cy, g, R - (dentro ? 6.5 : 4), R, 1, tinta(dentro ? "inchiostro-2" : "spento"));
+    tacca(cx, cy, g, R - R * (dentro ? 0.197 : 0.121), R, 1,
+          tinta(dentro ? "inchiostro-2" : "spento"));
   }
-  quadrettoSuGiro(cx, cy, R - 3, MANOPOLA_DA + clamp(u, 0, 1) * MANOPOLA_QUANTO,
-                  6.6, tinta("inchiostro"), 1.7);
+  quadrettoSuGiro(cx, cy, R * 0.903, MANOPOLA_DA + clamp(u, 0, 1) * MANOPOLA_QUANTO,
+                  R * 0.2, tinta("inchiostro"), 1.7);
 }
 
 /* ------------------------------------------------------------- i misuratori
