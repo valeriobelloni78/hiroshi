@@ -88,10 +88,18 @@ function frazione(input) {
   return b > a ? (Number(input.value) - a) / (b - a) : 0;
 }
 
+/* LA TARGA DICE DOVE STA LA MANO, non che cosa sta suonando: legge il cursore,
+   non il modello. Fra i due c'è il lisciamento di `battito()` e c'è la deriva,
+   quindi leggendo `G` la targa mostrerebbe un numero che nell'istante in cui lo
+   si guarda non è né quello vecchio né quello nuovo — e non tornerebbe mai in
+   pari, perché si riscrive solo quando il cursore si muove. Quello che sta
+   suonando lo dicono la corona e le graduazioni delle manopole, che è
+   esattamente il posto giusto: due letture separate, e la distanza fra loro è
+   la deriva. */
 function cursore(id, targaId, def) {
   const input = el(id), targa = el(targaId);
   const mostra = () => {
-    targa.textContent = def.testo(def.leggi());
+    targa.textContent = def.testo(def.valore(Number(input.value)));
     input.style.setProperty("--u", frazione(input).toFixed(4));
   };
   const scrivi = () => { def.scrivi(Number(input.value)); mostra(); segnaMano(input); };
@@ -140,10 +148,10 @@ function allinea() {
 
 /* Le tre forme di cursore che bastano a tutta la tavola. */
 function suGT(chiave, k = 1) {
-  return { scrivi: (x) => { GT[chiave] = x / k; }, leggi: () => G[chiave], crudo: () => G[chiave] * k };
+  return { valore: (x) => x / k, scrivi: (x) => { GT[chiave] = x / k; }, crudo: () => G[chiave] * k };
 }
 function suOggetto(ogg, campo, k = 1) {
-  return { scrivi: (x) => { ogg[campo] = x / k; }, leggi: () => ogg[campo], crudo: () => ogg[campo] * k };
+  return { valore: (x) => x / k, scrivi: (x) => { ogg[campo] = x / k; }, crudo: () => ogg[campo] * k };
 }
 function con(def, testo) { return Object.assign({}, def, { testo }); }
 
@@ -461,7 +469,7 @@ btnPresa.addEventListener("click", async () => {
 });
 
 cursore("durata", "vDurata", {
-  scrivi: () => {}, leggi: () => Number(el("durata").value), crudo: () => Number(el("durata").value),
+  valore: (x) => x, scrivi: () => {}, crudo: () => Number(el("durata").value),
   testo: (v) => v + "′",
 });
 

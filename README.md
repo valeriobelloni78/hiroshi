@@ -93,9 +93,9 @@ e opaco quanto il suo inviluppo — quello vero, preso dalla stessa funzione che
 scrive l'automazione dell'audio. Attorno corre la corona, due o tre tracce
 graduate che mostrano quello che sta suonando mentre i filetti sotto il
 quadrante mostrano dove sta la mano: fra i due c'è la deriva. Il **banco** ha la
-registrazione, l'equalizzatore a otto bande con la sua curva vera e il mixer. I
-**grani** sono una tessera per grano, il tempo da sinistra a destra e l'altezza
-dal basso in alto. La **deriva** mostra la tonalità di adesso e quella che
+registrazione, l'equalizzatore a otto bande con la sua curva vera e il mixer. Dei **grani** si vede la materia intera, distesa per il
+lungo come un istogramma di quadratini grigi, e sopra la nube dei grani —
+colorati, nel punto esatto da cui ciascuno è stato ritagliato. La **deriva** mostra la tonalità di adesso e quella che
 viene, e quindici minuti di baricentro come istogramma a punti, con le colonne
 in cui la curva ha girato scritte a inchiostro pieno. Non tiene memoria di
 niente: la deriva è una funzione del tempo, quindi la corsia si ricostruisce a

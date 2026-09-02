@@ -198,8 +198,8 @@ function scritta(s, x, y, opz) {
    il quadrante si legge come si legge uno strumento, e la bocca in basso dice
    dove comincia e dove finisce la corsa.
 
-   La traccia mostra L'EFFICACE, cioè quello che sta suonando; il filetto sotto
-   il quadrante mostra dove sta la mano. Fra i due c'è la deriva, l'ora e la
+   La traccia mostra L'EFFICACE, cioè quello che sta suonando; il filetto in
+   colonna mostra dove sta la mano. Fra i due c'è la deriva, l'ora e la
    stagione — che è tutto il punto — e vederli separati è l'unico modo di sapere
    chi sta muovendo un parametro. */
 const CORONA_DA = 210 / 360, CORONA_QUANTO = 300 / 360, CORONA_TACCHE = 85;
@@ -329,17 +329,25 @@ function quadrante(box, dati, ora) {
 /* ------------------------------------------------------------------ la manopola
    Un arco graduato aperto in basso e un quadrato che ci corre sopra. Sotto —
    cioè sopra, nell'ordine dei livelli — c'è il cursore nativo trasparente: il
-   canvas la disegna, il browser la comanda. */
+   canvas la disegna, il browser la comanda.
+
+   DUE VALORI SU UNA FIGURA SOLA, come sulla corona: le GRADUAZIONI si riempiono
+   fino all'EFFICACE, il QUADRATO sta dove sta la MANO. Quando la deriva o l'ora
+   spingono il parametro, il quadrato resta dove l'hai lasciato e le tacche gli
+   scappano avanti o indietro: quella distanza è tutto quello che c'è da sapere
+   su chi sta muovendo il registro. Il quadrato deve seguire il dito — è un
+   comando — e le tacche devono dire il vero: qui non si può scegliere una cosa
+   sola. */
 const MANOPOLA_DA = 235 / 360, MANOPOLA_QUANTO = 250 / 360, MANOPOLA_TACCHE = 27;
 
-function manopola(box, u) {
+function manopola(box, u, efficace) {
   if (!box) return;
   const R = Math.min(box.w, box.h) / 2 * 0.79;
   const cx = box.cx, cy = box.cy;
   // Le lunghezze sono FRAZIONI del raggio e non pixel: la manopola può crescere
   // senza che le graduazioni diventino unghie. Le proporzioni sono quelle del
   // disegno, misurate su un arco di trentatré pixel.
-  const fino = Math.round(clamp(u, 0, 1) * (MANOPOLA_TACCHE - 1));
+  const fino = Math.round(clamp(efficace === undefined ? u : efficace, 0, 1) * (MANOPOLA_TACCHE - 1));
   for (let k = 0; k < MANOPOLA_TACCHE; k++) {
     const g = MANOPOLA_DA + (k / (MANOPOLA_TACCHE - 1)) * MANOPOLA_QUANTO;
     const dentro = k <= fino;
@@ -443,61 +451,148 @@ function zeroAste(box) {
 }
 
 /* ------------------------------------------------------- la fascia dei grani
-   Una tessera per grano: il TEMPO da sinistra a destra, l'ALTEZZA dal basso in
-   alto, e il colore che dice la stessa altezza una seconda volta — è l'unico
-   posto in cui le due letture coincidono, e coincidono apposta: su una materia
-   registrata l'altezza è una trasposizione, e una trasposizione senza un
-   riferimento non si legge.
+   LA MATERIA INTERA, distesa per il lungo: da sinistra a destra c'è tutto il
+   file, dal primo campione all'ultimo. Non è più una finestra che scorre — è
+   l'oggetto che si sta macinando, fermo, e sopra ci si vede passare la testa di
+   lettura. Chi granula ha bisogno di sapere DOVE sta dentro il suono, e per
+   saperlo deve vedere il suono per intero.
 
-   La traccia lunga la tiene la tavola e non il modello: è memoria del disegno,
-   e a pagina nascosta il disegno non gira — quindi un buco nella fascia vuol
-   dire che nessuno stava guardando, non che la nube si era fermata. */
-const FASCIA_MIN = 15 * 60;
-const traccia = [];
-let ultimoGrano = -1;
+   L'onda è un ISTOGRAMMA DI QUADRATINI IN SCALA DI GRIGI, e i due fatti contano
+   tutti e due. Quadratini perché è il segno di tutta la tavola — il quadrato
+   d'inchiostro dei cursori, delle fasi, delle punte del baricentro — e una
+   campitura piena qui peserebbe più del suono che descrive. In scala di grigi
+   perché IL COLORE È GIÀ IMPEGNATO: dice l'altezza, e sopra questa onda ci
+   cadono i grani, che sono colorati. Un'onda colorata e dei grani colorati
+   sarebbero due cose che si assomigliano e non vogliono dire lo stesso.
 
-function raccogliGrani(ora) {
-  for (const g of storiaGrani) {
-    if (g.t <= ultimoGrano) continue;
-    ultimoGrano = g.t;
-    traccia.push({ t: g.t, semi: g.semi, dur: g.dur });
+   I grani si disegnano DOVE VENGONO PRESI: la x è il punto del materiale da cui
+   il grano è stato ritagliato, la y è dove finisce nel campo stereo, il colore è
+   di quanto è stato trasposto. Così i due cursori che aprono la nube si vedono
+   per quello che fanno — «dispersione» la allarga per il lungo, «sparpaglio»
+   per l'alto — e la nube resta attaccata alla testa invece di essere un grafico
+   a parte. */
+const ALTEZZE_ONDA = 7;          // quanti quadratini per mezza altezza
+const PASSO_ONDA = 5.4;          // il passo delle colonne, come sul baricentro
+const LATO_ONDA = 3;
+const LATO_GRANO = 5;
+
+/* L'onda si calcola una volta per materiale e per riquadro, e si tiene disegnata
+   su una tela sua. Un file di novanta secondi sono quattro milioni di campioni e
+   duecentocinquanta colonne di quadratini: rifarli sessanta volte al secondo
+   sarebbe l'unica cosa in tutta la tavola capace di far saltare il suono. */
+let ondaTela = null, ondaChiave = "";
+
+function disegnaOnda(m, largo, alto) {
+  const chiave = m.nome + "|" + m.durata + "|" + Math.round(largo) + "|" + Math.round(alto);
+  if (ondaChiave === chiave && ondaTela) return ondaTela;
+
+  const n = Math.max(8, Math.floor(largo / PASSO_ONDA));
+  const d = m.buffer.getChannelData(0);
+  const picchi = new Float32Array(n);
+  const passo = d.length / n;
+  let massimo = 0;
+  for (let i = 0; i < n; i++) {
+    const a = Math.floor(i * passo), b = Math.min(d.length, Math.floor((i + 1) * passo));
+    let max = 0;
+    // Su buffer lunghi non serve guardarli tutti: un campione ogni tre dà lo
+    // stesso profilo a occhio e costa un terzo.
+    for (let k = a; k < b; k += 3) { const x = Math.abs(d[k]); if (x > max) max = x; }
+    picchi[i] = max;
+    if (max > massimo) massimo = max;
   }
-  while (traccia.length && traccia[0].t < ora - FASCIA_MIN) traccia.shift();
-  // Un tetto sul numero: a sessanta grani al secondo per quindici minuti sono
-  // cinquantaquattromila tessere, e nessuno schermo ha cinquantaquattromila
-  // pixel di larghezza da dedicarci.
-  if (traccia.length > 6000) traccia.splice(0, traccia.length - 6000);
+  // Si normalizza sul picco del materiale: una registrazione presa piano
+  // altrimenti sarebbe una riga piatta, e non si potrebbe mirare niente.
+  const scala = massimo > 1e-4 ? 1 / massimo : 0;
+
+  ondaTela = ondaTela || document.createElement("canvas");
+  ondaTela.width = Math.round(largo * DPR);
+  ondaTela.height = Math.round(alto * DPR);
+  const O = ondaTela.getContext("2d");
+  O.setTransform(DPR, 0, 0, DPR, 0, 0);
+  O.clearRect(0, 0, largo, alto);
+
+  const mezzo = alto / 2;
+  const salto = (alto / 2 - 2) / ALTEZZE_ONDA;
+  const largoCol = largo / n;
+  for (let i = 0; i < n; i++) {
+    const x = (i + 0.5) * largoCol - LATO_ONDA / 2;
+    const quanti = Math.round(clamp(picchi[i] * scala, 0, 1) * ALTEZZE_ONDA);
+    if (!quanti) {
+      // La colonna muta non sparisce: resta un segno chiarissimo sulla riga di
+      // mezzo. Una colonna vuota si leggerebbe come un buco nel file.
+      O.fillStyle = tinta("filo-2");
+      O.fillRect(x + 0.5, mezzo - 1, 2, 2);
+      continue;
+    }
+    for (let k = 1; k <= quanti; k++) {
+      // La scala di grigi: pieno vicino alla riga, sempre più tenue verso la
+      // punta. È il modo di dare un peso alla colonna senza annerirla tutta.
+      const u = (k - 1) / Math.max(1, ALTEZZE_ONDA - 1);
+      O.fillStyle = tinta(u < 0.45 ? "inchiostro-2" : u < 0.75 ? "grigio" : "spento",
+                          u < 0.45 ? 0.9 : 1);
+      O.fillRect(x, mezzo - k * salto - LATO_ONDA / 2, LATO_ONDA, LATO_ONDA);
+      O.fillRect(x, mezzo + k * salto - LATO_ONDA / 2, LATO_ONDA, LATO_ONDA);
+    }
+  }
+  ondaChiave = chiave;
+  return ondaTela;
 }
 
 function fasciaGrani(box, ora) {
   if (!box) return;
-  raccogliGrani(ora);
   const m = materiaCorrente();
-  if (!traccia.length) {
-    scritta(m ? "in attesa dei grani" : "nessuna materia: carica un suono, o apri il microfono",
-      box.cx, box.cy - 6, { dim: 9, sp: .4, all: "center", base: "middle" });
+
+  if (!m) {
+    ondaChiave = "";
+    riga(box.x, box.cy, box.x + box.w, box.cy, 1, tinta("filo-2"), [2, 5]);
+    scritta("nessuna materia: carica un suono, o apri il microfono",
+      box.cx, box.cy - 8, { dim: 9, sp: .4, all: "center", base: "middle" });
     return;
   }
 
-  let alto = 6, basso = -6;
-  for (const g of traccia) { if (g.semi > alto) alto = g.semi; if (g.semi < basso) basso = g.semi; }
-  alto = Math.ceil(alto); basso = Math.floor(basso);
-  const t0 = Math.min(traccia[0].t, ora - 20);
-  const durata = Math.max(20, ora - t0);
-  // Le due quote stanno a sinistra, fuori dal campo delle tessere: una cifra
-  // dentro la nube è una cifra che si legge una volta su tre.
-  const quote = 46, x0 = box.x + quote, largo = box.w - quote;
+  T.save();
+  if (!graniOn) T.globalAlpha = 0.4;
 
-  for (const g of traccia) {
-    const x = x0 + ((g.t - t0) / durata) * largo;
-    const y = box.y + box.h - ((g.semi - basso) / (alto - basso)) * box.h;
-    const l = 2 + Math.min(3, g.dur * 10);
-    T.fillStyle = coloreSpettro(0.5 + g.semi / 48, 0.85);
-    T.fillRect(x - l / 2, clamp(y - l / 2, box.y, box.y + box.h - l), l, l);
+  const perSec = box.w / m.durata;
+  const centro = centroNube();
+  const largoNube = (effGR.nube / 100) * 2.5;
+
+  // La nube prima dell'onda: è il fondo su cui si legge, non un velo sopra.
+  const nx0 = Math.max(box.x, box.x + (centro - largoNube) * perSec);
+  const nx1 = Math.min(box.x + box.w, box.x + (centro + largoNube) * perSec);
+  T.fillStyle = tinta("filo-2", 0.55);
+  T.fillRect(nx0, box.y, Math.max(1.5, nx1 - nx0), box.h);
+
+  T.drawImage(disegnaOnda(m, box.w, box.h), box.x, box.y, box.w, box.h);
+
+  /* I grani, dove sono stati presi. Sono gli ultimi due secondi e basta: la
+     nube è una cosa che succede adesso, e una scia lunga direbbe che i grani
+     restano dove sono caduti. */
+  for (const g of storiaGrani) {
+    const eta = ora - g.t;
+    if (eta > FASCIA_GRANI) continue;
+    const a = clamp(1 - eta / FASCIA_GRANI, 0, 1);
+    const x = box.x + g.dentro * perSec;
+    const y = box.cy + g.pan * (box.h / 2 - LATO_GRANO);
+    // Lo strappo: il grano cancella un filo di onda attorno a sé prima di
+    // posarsi. Senza, un quadratino colorato dentro un banco di quadratini
+    // grigi della stessa misura si perde — e la nube è la cosa da guardare.
+    T.save();
+    T.globalAlpha = 1;
+    quadretto(x, y, LATO_GRANO, coloreSpettro(0.5 + g.semi / 48, 0.35 + a * 0.65), 1.2);
+    T.restore();
   }
-  scritta((alto > 0 ? "+" : "") + alto + " st", box.x, box.y + 7, { dim: 7.5, sp: .6 });
-  scritta(basso + " st", box.x, box.y + box.h - 1, { dim: 7.5, sp: .6 });
-  riga(x0 - 10, box.y, x0 - 10, box.y + box.h, 1, tinta("filo-2"));
+
+  // La testa: dove si sta leggendo. Il quadratino sta fuori dall'onda, perché
+  // dentro si confonderebbe con un transiente.
+  const tx = box.x + centro * perSec;
+  riga(tx, box.y - 3, tx, box.y + box.h + 3, 1, tinta("inchiostro"));
+  quadretto(tx, box.y - 6, 5, tinta("inchiostro"), 0);
+
+  scritta("0″", box.x, box.y + box.h + 9, { dim: 7.5, sp: .6, base: "top" });
+  scritta(minsec(m.durata), box.x + box.w, box.y + box.h + 9,
+          { dim: 7.5, sp: .6, all: "right", base: "top" });
+  T.restore();
 }
 
 /* ------------------------------------------------------ il circolo delle quinte
@@ -652,10 +747,10 @@ function disegna() {
     },
   }, ora);
 
-  manopola(manopolaDi("registro"), G.registro / 100);
-  manopola(manopolaDi("calore"), G.calore / 100);
-  manopola(manopolaDi("tregistro"), G.tRegistro / 100);
-  manopola(manopolaDi("passo"), G.tPasso / 100);
+  manopola(manopolaDi("registro"),  G.registro / 100,  effG.registro / 100);
+  manopola(manopolaDi("calore"),    G.calore / 100,    effG.calore / 100);
+  manopola(manopolaDi("tregistro"), G.tRegistro / 100, effGT.registro / 100);
+  manopola(manopolaDi("passo"),     G.tPasso / 100,    effGT.passo / 100);
 
   misuratoreLR(quadro("misuratore"), orologio);
   spettro(quadro("spettro"));

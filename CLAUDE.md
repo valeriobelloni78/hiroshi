@@ -131,6 +131,15 @@ colonna non sparisce: resta un puntino più piccolo e più chiaro sulla linea
 dello zero, perché una colonna vuota si leggerebbe come un buco nei dati. Non
 serve nessuna memoria: `misto()` risponde per qualunque istante passato.
 
+**L'onda del materiale si disegna una volta sola, su una tela sua.** Un file di
+novanta secondi sono quattro milioni di campioni e duecentocinquanta colonne di
+quadratini: rifarli a ogni fotogramma sarebbe l'unica cosa in tutta la tavola
+capace di far saltare il suono. La chiave della cache comprende il nome, la
+durata e il riquadro, così basta cambiare materiale o ridimensionare la finestra
+perché si rifaccia. Si normalizza sul picco del materiale, altrimenti una
+registrazione presa piano sarebbe una riga piatta e non ci si potrebbe mirare
+niente.
+
 **Quello che la tavola disegna esce dalle stesse funzioni che scrivono
 l'audio.** Il colore di un evento da `altezza()`, la lunghezza di una tenuta da
 `durataTenuta()`, la sua opacità da `finestra()`, la coda di una goccia da
@@ -317,6 +326,20 @@ ripetizione: fra i due c'è la deriva, l'ora e la stagione, e vederli separati �
 l'unico modo di sapere chi sta muovendo un parametro. Chi togliesse una delle
 due lascerebbe la tavola senza il suo argomento principale.
 
+Sulle MANOPOLE le due letture stanno sulla stessa figura, perché il comando è
+l'arco: le graduazioni si riempiono fino all'EFFICACE, il quadrato sta dove sta
+la MANO. Il quadrato deve seguire il dito — è un comando — e le tacche devono
+dire il vero: qui non si può scegliere una cosa sola.
+
+**Una targa legge il CURSORE, mai `G`.** Fra i due c'è il lisciamento di
+`battito()` e c'è la deriva, e una targa che leggesse il modello mostrerebbe un
+numero che nell'istante in cui lo si guarda non è né quello vecchio né quello
+nuovo. Peggio: si riscrive solo quando il cursore si muove, quindi non tornerebbe
+mai in pari — misurato, muovendo «dispersione» la targa restava sul valore di
+prima. Quello che sta suonando lo dicono la corona e le graduazioni, che è il
+posto giusto. Fa eccezione l'asta dei tessuti nel mixer, che è il solo parametro
+senza una corona: là la cifra è l'efficace, e la riscrive `battito()`.
+
 **Il canvas sta sotto e i comandi sopra.** Un solo canvas, steso su tutto il
 foglio, `pointer-events:none`; i comandi nativi ci galleggiano sopra. Quello che
 sembra una manopola da girare è un `input[type=range]` trasparente disteso sopra
@@ -485,8 +508,12 @@ testata e un piede:
   esportazione (wav, la tavola in png, la scena che aspetta un seme),
   equalizzatore a otto aste con la curva vera sopra — chiesta ai filtri con
   `getFrequencyResponse` — e il mixer a cinque aste;
-- **04 · grani**: una tessera per grano, il tempo da sinistra a destra e
-  l'altezza dal basso in alto, con le due quote fuori dal campo; sotto, gli otto
+- **04 · grani**: LA MATERIA INTERA distesa per il lungo, come istogramma di
+  quadratini in scala di grigi — quadratini perché è il segno di tutta la
+  tavola, grigi perché il colore è già impegnato a dire l'altezza. Sopra ci
+  cadono i grani, colorati, NEL PUNTO DA CUI SONO STATI PRESI: la x è il posto
+  nel materiale, la y è il campo stereo, il colore è la trasposizione, e così i
+  due cursori che aprono la nube si vedono per quello che fanno. Sotto, gli otto
   filetti e la legenda della rampa;
 - **05 · deriva**: la tonalità, il circolo delle quinte con dove siamo e dove
   andremo, il baricentro su quindici minuti di passato e le sette voci che non
