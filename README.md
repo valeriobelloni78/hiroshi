@@ -14,7 +14,7 @@ brano registrato: costruisce il suono in tempo reale, e lo registra.
 
 Suonano le due classi che fanno il collage. Le **frasi** — quattro linee di
 gocce, periodi 7 · 11 · 13 · 17 — e i **tessuti** — quattro linee tenute,
-periodi 8 · 9 · 19 · 25 — passano per il **banco d'uscita**: mixer a quattro
+periodi 9 · 16 · 25 · 31 — passano per il **banco d'uscita**: mixer a quattro
 canali, mandata a un riverbero condiviso, equalizzatore a otto bande,
 limitatore, misuratori. Gli otto periodi sono coprimi a due a due anche fra
 le due classi, quindi la combinazione completa non si ripete per ore.
@@ -75,23 +75,29 @@ registrazione di una seduta, la seconda è una tiratura. Tutte e due escono in
 wav a 24 bit stereo, e l'esportazione si può fare mentre si ascolta senza che
 la sessione se ne accorga.
 
-**La tavola** è il disegno di tutto questo, e non ha un comando dentro: legge
-il modello e basta, mentre i comandi restano elementi HTML nativi che
-funzionano col dito, col tasto Tab e con un lettore di schermo. Due letture del
-segno, una volta ciascuna: **il colore è l'altezza** — grave al blu, acuto al
-rosso mattone — e **la lunghezza è la durata**. Tutto il resto è inchiostro,
-perché il colore è già impegnato.
+**La tavola** è il disegno di tutto questo, e non ha un comando dentro: un
+canvas solo, steso sotto tutto il foglio e senza eventi, mentre i comandi sono
+elementi nativi che ci galleggiano sopra. Anche quello che sembra una manopola
+da girare è un cursore trasparente disteso sopra il disegno dell'arco — il
+canvas la disegna, il browser la comanda — così tutto resta raggiungibile col
+dito, col tasto Tab e con un lettore di schermo.
 
-Due quadranti, un anello per linea: la fase corre come una tacca, gli eventi
-stanno dove cadranno, una goccia è un arco corto che si spegne e una tenuta è
-un arco lungo che si apre e si chiude — con l'inviluppo vero, preso dalla
-stessa funzione che scrive l'automazione dell'audio. Attorno, una corona per
-classe: l'arco pieno dice dove sta la mano, la tacca dove sta l'efficace, e
-fra i due c'è la deriva. La fascia dei grani distende il materiale, ci fa
-correre sopra la testa di lettura e ci sparpaglia i grani. La corsia della
-deriva mostra dieci minuti di baricentro — cinque passati e **cinque futuri**,
-coi nomi delle collezioni che devono ancora arrivare: la deriva è una funzione
-del tempo, quindi il futuro si può disegnare.
+Due letture del segno, una volta ciascuna: **il colore è l'altezza** — cinque
+fermate dal blu al rosso mattone — e **la lunghezza è la durata**. Tutto il
+resto è inchiostro, perché il colore è già impegnato.
+
+Cinque sezioni numerate. Le **due classi** stanno su due quadranti gemelli, un
+anello per linea: la fase corre come un quadratino, una goccia è una tacca
+radiale lunga quanto la sua coda, una tenuta è un arco lungo quanto sta in aria
+e opaco quanto il suo inviluppo — quello vero, preso dalla stessa funzione che
+scrive l'automazione dell'audio. Attorno corre la corona, due o tre tracce
+graduate che mostrano quello che sta suonando mentre i filetti sotto il
+quadrante mostrano dove sta la mano: fra i due c'è la deriva. Il **banco** ha la
+registrazione, l'equalizzatore a otto bande con la sua curva vera e il mixer. I
+**grani** sono una tessera per grano, il tempo da sinistra a destra e l'altezza
+dal basso in alto. La **deriva** mostra la tonalità di adesso e quella che
+viene, e quindici minuti di baricentro — dieci passati e **cinque futuri**,
+perché la deriva è una funzione del tempo e il futuro si può disegnare.
 
 Le voci alla *In C* di Nuvole aspettano una decisione musicale: il loro
 archivio attraversa tutti e dodici i gradi, mentre gocce e tessuti stanno su

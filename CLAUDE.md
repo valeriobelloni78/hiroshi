@@ -98,6 +98,19 @@ la chiave che le dichiara. Conseguenza pratica: **lo stato è inchiostro** —
 acceso, spento, muto, dove sta la mano, dove sta la testa di lettura. Il
 colore è già impegnato e non può dire anche quello.
 
+**L'INTERFACCIA SEGUE UN MOCKUP, e il mockup è la fonte.** Sta come canvas di
+design fra gli artifact di Claude — «Hiroshi · interfaccia», un'artboard 1440 ×
+1176 — e da lì vengono le misure, la scala tipografica, la geometria dei
+quadranti e le cinque fermate della rampa. Chi cambia l'impaginazione lo guardi
+prima: le colonne da 205, la luce di 1360, i quadranti da 420, gli anelli a
+82·108·134·160 su una corona a 178·189·200 e la sua bocca di sessanta gradi in
+basso non sono numeri scelti qui.
+
+Dove il mockup e il motore non coincidono, **vince il motore**: il disegno è
+stato fatto prima che i parametri fossero fermi, e mostra dei tessuti con
+«attacco, rilascio, parziali» che non esistono. La tavola ne prende la forma,
+non le etichette.
+
 **Gli estremi della rampa dell'altezza sono fissi e non sono quelli del
 campo.** `SCALE` va da 65 a 1975 Hz, ma la selezione ne prende due o tre ottave
 attorno al centro: tarando la rampa sul campo intero, tutto quello che si sente
@@ -287,12 +300,35 @@ col dito, col tasto Tab e con un lettore di schermo. Il disegno è puro
 display: non ascolta nulla, e il canvas porta `aria-hidden` perché quello che
 mostra è scritto anche in cifre nelle letture in fondo alla colonna.
 
-**Le corone non hanno etichette ferme.** Ne compare una, per due secondi e
-mezzo, sul settore che la mano ha appena mosso. Dodici parole scritte attorno a
-due cerchi si leggono una volta sola e poi si smette; il nome per esteso sta
-nella colonna, dove serve quando si cerca. Un mood scrive quindici bersagli in
-un colpo, e allora l'etichetta tace: non è una mano su un filetto, è uno
-scatto.
+**La corona mostra l'EFFICACE, il filetto sotto il quadrante mostra la MANO.**
+Sono due comandi che dicono la stessa grandezza in due punti, e non è una
+ripetizione: fra i due c'è la deriva, l'ora e la stagione, e vederli separati è
+l'unico modo di sapere chi sta muovendo un parametro. Chi togliesse una delle
+due lascerebbe la tavola senza il suo argomento principale.
+
+**Il canvas sta sotto e i comandi sopra.** Un solo canvas, steso su tutto il
+foglio, `pointer-events:none`; i comandi nativi ci galleggiano sopra. Quello che
+sembra una manopola da girare è un `input[type=range]` trasparente disteso sopra
+il disegno dell'arco: il canvas la disegna, il browser la comanda. È così che la
+tavola resta puro display mentre le manopole restano raggiungibili col dito, col
+tasto Tab e con un lettore di schermo — e la stessa cosa vale per le aste
+verticali dell'equalizzatore e del mixer, che sono cursori in `writing-mode:
+vertical-rl` e non rotazioni: una rotazione lascerebbe il rettangolo del fuoco
+dov'era.
+
+**Il disegno non ha misure sue.** Legge i RIQUADRI degli elementi marcati
+`[data-quadro]` e `[data-manopola]` e ci disegna dentro. L'impaginazione sta
+tutta nel CSS, quindi il disegno segue le colonne quando si riordinano su uno
+schermo stretto senza sapere niente di media query. Chi aggiunge una sezione
+disegnata aggiunga un riquadro nell'HTML, non una costante nel JavaScript.
+
+**I livelli del mixer e le otto bande stanno in `LIVELLI` e `EQ_DB`, dentro
+`motore.js`, e `tara()` li rilegge.** Il banco del rendering fuori tempo reale è
+un banco NUOVO, che nasce piatto: scritti solo nei nodi, un'esportazione uscirebbe
+con le tarature d'esordio invece che con quelle che si stanno ascoltando — cioè
+con un mixer diverso da quello appena regolato. Il livello dei tessuti fa
+eccezione e non sta lì: è `tLivello`, un parametro del modello che la deriva
+muove, e l'asta del mixer scrive là.
 
 **I cursori scrivono sul bersaglio `GT`**, non su `G`. `G` ci arriva lisciato
 in `battito()`: un cursore che scrivesse su `G` farebbe uno scalino, e uno
@@ -301,13 +337,21 @@ filetti della FORMA — `FORMA` e `FORMA_T` — che scrivono diretto: la forma n
 entra in nessun suono già cominciato, la legge il costruttore quando la nota
 nasce, quindi non c'è nessuno scalino da lisciare.
 
-**Le due classi hanno cinque filetti diversi, e non è una svista.** Le gocce
-hanno `attacco · coda · inarm · brill · corpo`; i tessuti hanno
-`apertura · movimento · passo · brill · corpo`. Per un tenuto non esiste un
-attacco da misurare in millesimi e non esiste una coda — c'è una dissolvenza —
-mentre esiste una cosa che le gocce non hanno: il tipo e la velocità del
-movimento interno. Chi unificasse i due gruppi «per coerenza» toglierebbe ai
-tessuti l'unico comando che li distingue davvero.
+**Le due classi hanno cinque filetti diversi, e non è una svista.** Nel
+riquadro «Forma del suono» le gocce hanno `attacco · coda · inarmonicità ·
+brillantezza · corpo`; i tessuti hanno `apertura · chiusura · movimento ·
+brillantezza · corpo`, e il `passo` — la velocità di quel movimento — sta fra le
+due manopole dell'Insieme, dove le gocce hanno il calore. Per un tenuto non
+esiste un attacco da misurare in millesimi e non esiste una coda — c'è una
+dissolvenza — mentre esiste una cosa che le gocce non hanno: il tipo e la
+velocità del movimento interno. Chi unificasse i due gruppi «per coerenza»
+toglierebbe ai tessuti l'unico comando che li distingue davvero.
+
+**I dieci comandi di una classe stanno in tre posti, e il posto dice che cosa
+sono.** Cinque filetti nella forma del suono (che cosa è il suono), due manopole
+nell'Insieme (dove sta), e le tracce della corona (come si dispone nel giro).
+Nelle gocce la corona ne ha tre — addensamento, densità, spazio; nei tessuti due
+— intreccio e spazio, perché il livello è un livello e sta nel mixer.
 
 **I numeri che cambiano** usano cifre a larghezza fissa, altrimenti tremolano
 a ogni aggiornamento.
@@ -407,45 +451,58 @@ attorno alla testa di lettura, intonazione sulla collezione) e il
 fuori tempo reale, tutte e due in wav a 24 bit stereo. **IL MOTORE È
 COMPLETO.**
 
-**C'È ANCHE LA TAVOLA.** Il disegno ha sostituito l'impalcatura, e l'ha
-sostituita separandosi da lei: i comandi stanno in `comandi.js`, il canvas in
-`tavola.js`. Cinque sezioni, in unità logiche disposte da `disponi()` — che
-ricava l'ALTEZZA dalla larghezza, così il disegno non si deforma mai, cresce:
+**C'È ANCHE LA TAVOLA, ed è quella del mockup.** Il disegno ha sostituito
+l'impalcatura, e l'ha sostituita separandosi da lei: i comandi in `comandi.js`,
+il canvas in `tavola.js`. Un foglio che scorre, cinque sezioni numerate fra una
+testata e un piede:
 
-- i **due quadranti**, un anello per linea, la fase come tacca d'inchiostro,
-  gli eventi come archi colorati per altezza e lunghi quanto durano, il lampo
-  su `flash` quando l'evento esce davvero, la zona attiva sulle sole gocce;
-- le **corone**, un settore per parametro, l'arco pieno dov'è la mano e la
-  tacca dov'è l'efficace — la stessa doppia lettura che la colonna scrive
-  come «45 → 61», detta in modo che si veda muovere;
-- la **fascia dei grani**: il materiale come profilo chiuso, la nube come
-  banda, la testa di lettura come verticale, i grani come quadratini colorati
-  per trasposizione e alti quanto il loro posto nel campo stereo;
-- la **corsia della deriva**: dieci minuti di baricentro, cinque passati e
-  cinque futuri, e sotto il cammino delle quinte coi nomi delle collezioni che
-  devono ancora arrivare. È la sola parte della tavola che mostra qualcosa che
-  non è ancora successo, e si può perché la deriva è una funzione del tempo;
-- i **misuratori**: due picchi con tenuta e il limitatore che mangia
-  all'indietro dalla cima.
+- la **testata**: le quattro sorgenti e il cielo come spunte quadrate, la
+  pausa, le lingue (una sola, per ora, e le altre lo dicono);
+- **01 · 02**, le due classi in cinque colonne — comandi, quadrante, filo,
+  quadrante, comandi. Ogni quadrante ha quattro anelli, uno per linea, numerati
+  sul raggio di sinistra col filo che si interrompe dov'è la cifra; una goccia è
+  una tacca radiale lunga quanto la sua coda, una tenuta è un arco lungo quanto
+  sta in aria e opaco quanto il suo inviluppo. Attorno, la corona: due o tre
+  tracce di graduazioni aperte in basso, che mostrano l'efficace mentre i
+  filetti sotto il quadrante mostrano la mano;
+- **03 · banco**: registrazione con cronometro e misuratori a tessere,
+  esportazione (wav, la tavola in png, la scena che aspetta un seme),
+  equalizzatore a otto aste con la curva vera sopra — chiesta ai filtri con
+  `getFrequencyResponse` — e il mixer a cinque aste;
+- **04 · grani**: una tessera per grano, il tempo da sinistra a destra e
+  l'altezza dal basso in alto, con le due quote fuori dal campo; sotto, gli otto
+  filetti e la legenda della rampa;
+- **05 · deriva**: la tonalità, il circolo delle quinte con dove siamo e dove
+  andremo, il baricentro su quindici minuti — dieci passati e cinque futuri,
+  perché la deriva è una funzione del tempo — e le sette voci che non ci sono
+  ancora;
+- il **piede**: lo stato, le due influenze esterne, e «a mano», cioè gli ultimi
+  tre filetti che qualcuno ha mosso. Una tavola che si muove da sé per tre
+  quarti ha bisogno di dire quale quarto è stato deciso.
 
-Sotto i 430 px i due quadranti si impilano invece di rimpicciolirsi; sopra i
-1040 la tavola sta a fianco della colonna e resta appesa in alto mentre quella
-scorre. Un fotogramma costa 0,24 ms misurati, cioè niente.
+Sotto i 1180 px le cinque colonne diventano due e i quadranti si impilano; sotto
+i 720 una sola. I quadranti non crescono oltre 460 px: un cerchio da mezzo metro
+con quattro anelli lontanissimi si legge peggio, non meglio.
 
 Da fare, in ordine:
 
 1. **Rifinire la tavola sul vetro vero.** Il disegno è al primo passaggio
-   completo e la prova non lo guarda: quello che resta si vede solo aprendo
-   `index.html` e stando a guardare per qualche minuto — le proporzioni delle
-   corone, quanto pesa un anello di tessuti a intreccio alto, se il lampo si
-   legge ancora con otto linee che scattano insieme.
+   completo sul mockup e la prova non lo guarda: quello che resta si vede solo
+   aprendo `index.html` e stando a guardare per qualche minuto — quanto pesa un
+   anello di tessuti a intreccio alto, se il lampo si legge ancora con otto
+   linee che scattano insieme, se la fascia dei grani regge un'ora di seduta.
+   Restano fuori dal mockup, e sono aggiunte consapevoli: le due tendine dei
+   **mood**, le quattro righe dei **comandi per linea** e il **microfono**, che
+   il disegno non prevedeva e senza i quali mancherebbe metà dello strumento.
 2. Le **voci** e il **cielo**: il motore alla *In C* di Nuvole con l'archivio
    delle 53 frasi, e il campo `fBm` che le sveglia. **Rimandati per scelta**:
    l'archivio attraversa tutti e dodici i gradi mentre gocce e tessuti stanno
    su una pentatonica anemitonica, e far entrare le voci vuol dire decidere
    che cosa succede a quella garanzia. È una decisione musicale, non tecnica,
-   e non è ancora presa. Quando entreranno, sulla tavola sono un terzo
-   quadrante: la pianta è già fatta per accoglierlo.
+   e non è ancora presa. La tavola le aspetta già in tre punti: la spunta
+   «voci» nella testata, l'asta del mixer, e le sette spie in fondo alla
+   deriva. Sono spente e lo dicono; il giorno che si accendono non c'è
+   impaginazione da rifare.
 
 Aperti: `rendiOffline` percorre lo stesso modello che sta suonando, quindi
 esportare mentre si ascolta oggi disturberebbe la sessione in corso — va dato

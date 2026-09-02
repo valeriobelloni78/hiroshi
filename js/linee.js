@@ -7,12 +7,15 @@
    insieme più spesso di quanto non facciano le quattro frasi fra loro.
 
        frasi    7 · 11 · 13 · 17     (primi)
-       tessuti  8 · 9 · 19 · 25      (2³, 3², 19, 5²)
+       tessuti  9 · 16 · 25 · 31     (3², 2⁴, 5², 31)
 
-   Il vincolo da verificare è il MASSIMO COMUN DIVISORE, non la primalità: 8, 9
-   e 25 sono composti e vanno benissimo, perché non condividono nulla né fra
+   Il vincolo da verificare è il MASSIMO COMUN DIVISORE, non la primalità: 9,
+   16 e 25 sono composti e vanno benissimo, perché non condividono nulla né fra
    loro né con 7·11·13·17. Chiunque tocchi queste serie calcoli i gcd prima di
-   toccarle, e non dopo.
+   toccarle, e non dopo. Questi otto sono i periodi D'ESORDIO, quelli con cui
+   l'app si apre: un mood li riscrive tutti e quattro insieme al timbro e ai
+   parametri, e le tabelle in `mood.js` hanno le loro serie, verificate una per
+   una dalla prova.
 
    Questo file non conosce né l'audio né il disegno. Le dipendenze scorrono in
    una direzione sola:  deriva ← linee ← motore ← tavola.

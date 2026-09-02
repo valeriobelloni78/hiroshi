@@ -360,13 +360,27 @@ function avvia(now) {
   });
 }
 
+/* I livelli del banco e le otto bande, in dB. Stanno QUI e non dentro il banco
+   perché `tara()` li rilegge a ogni costruzione — dal vivo e dentro un
+   rendering fuori tempo reale — e il banco del render è un banco nuovo, che
+   nasce piatto. Scritti nel banco e basta, un'esportazione uscirebbe con le
+   tarature d'esordio invece che con quelle che si stanno ascoltando: cioè con
+   un mixer diverso da quello che si è appena regolato.
+
+   Il livello dei tessuti non è qui: è `tLivello`, un parametro del modello che
+   la deriva muove. L'asta del mixer lo scrive lì. */
+const LIVELLI = { frasi: -4, voci: -12, grani: -6, uscita: -0.9 };
+const EQ_DB = [0, 0, 0, 0, 0, 0, 0, 0];
+
 /* La taratura d'esordio dei canali. Sta in una funzione sola perché il motore
    dal vivo e il rendering fuori tempo reale devono partire dallo stesso punto:
    due copie di questi numeri vorrebbero dire un'esportazione che non suona
    come quello che si è ascoltato. */
 function tara() {
-  banco.livello("frasi", -4);
-  banco.livello("grani", -6);
+  banco.livello("frasi", LIVELLI.frasi);
+  banco.livello("voci", LIVELLI.voci);
+  banco.livello("grani", LIVELLI.grani);
+  EQ_DB.forEach((dB, i) => banco.banda(i, dB));
   ultimo.spazio = ultimo.colore = ultimo.livello = ultimo.tSpazio = ultimo.gSpazio = -1;
   effettiviFrasi();
   effettiviTessuti();
@@ -384,7 +398,7 @@ async function accendi(acceso) {
     // a schermo bloccato: dichiararsi «playback» è la categoria della
     // riproduzione lunga. Va riaffermato a ogni ripresa.
     try { if (navigator.audioSession) navigator.audioSession.type = "playback"; } catch (e) {}
-    banco.uscita.gain.setTargetAtTime(0.9, ctx.currentTime, 0.4);
+    banco.uscita.gain.setTargetAtTime(Math.pow(10, LIVELLI.uscita / 20), ctx.currentTime, 0.4);
   } else {
     running = false;
     banco.uscita.gain.setTargetAtTime(0, ctx.currentTime, 0.25);
@@ -478,7 +492,7 @@ async function rendiOffline(secondi, sampleRate = 48000) {
   ctx = new OfflineAudioContext(2, Math.ceil(secondi * sampleRate), sampleRate);
   banco = costruisciBanco(ctx, ["frasi", "tessuti", "voci", "grani"]);
   tara();
-  banco.uscita.gain.value = 0.9;
+  banco.uscita.gain.value = Math.pow(10, LIVELLI.uscita / 20);
 
   bookedUntil = 0;
   LOOKAHEAD = 0.4;
