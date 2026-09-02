@@ -626,6 +626,12 @@ function battito() {
   el("quinteFatte").textContent = String(passiQuinta);
   el("prossima").textContent = minsec(Math.max(0, prossimaQuinta - t));
   el("tonalita").textContent = NOMI_NOTE[tonalita()];
+  /* Il baricentro si legge in GRADI della collezione, non nel −1..1 in cui la
+     deriva lo tiene: «+1,8» vuol dire che la finestra sul campo si è spostata
+     di quasi due gradi verso l'alto, ed è un numero che si può contare sulla
+     scala. Il fattore è lo stesso che usa `altezza()`. */
+  el("vBaricentro").textContent = (deriva.centro >= 0 ? "+" : "") +
+    numero(deriva.centro * AMPIEZZA_CENTRO, 1);
 
   el("piedeMano").textContent = MANI.length
     ? "a mano: " + MANI.join(", ")

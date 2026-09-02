@@ -120,6 +120,17 @@ dalla banda si appoggia sul blu pieno o sul rosso pieno — che per il fondo di
 sarebbe peggio ancora: la rampa si sposterebbe a ogni passo di quinta e il
 colore direbbe la tonalità invece dell'altezza.
 
+**Il baricentro è un ISTOGRAMMA A PUNTI, non una curva**, ed è il mockup a
+dirlo. Una linea continua su una fascia alta quaranta pixel diventa un filo che
+ondeggia e di cui non si legge più quanto sia salito; una colonna di punti si
+conta. Le colonne dove la curva ha girato — i massimi e i minimi in valore
+assoluto — si scrivono a inchiostro pieno: più colonne vicine arrotondano allo
+stesso numero di punti, e senza quel segno non si saprebbe quale delle tre è il
+momento in cui il baricentro ha smesso di salire. Dove il valore è nullo la
+colonna non sparisce: resta un puntino più piccolo e più chiaro sulla linea
+dello zero, perché una colonna vuota si leggerebbe come un buco nei dati. Non
+serve nessuna memoria: `misto()` risponde per qualunque istante passato.
+
 **Quello che la tavola disegna esce dalle stesse funzioni che scrivono
 l'audio.** Il colore di un evento da `altezza()`, la lunghezza di una tenuta da
 `durataTenuta()`, la sua opacità da `finestra()`, la coda di una goccia da
@@ -473,9 +484,8 @@ testata e un piede:
   l'altezza dal basso in alto, con le due quote fuori dal campo; sotto, gli otto
   filetti e la legenda della rampa;
 - **05 · deriva**: la tonalità, il circolo delle quinte con dove siamo e dove
-  andremo, il baricentro su quindici minuti — dieci passati e cinque futuri,
-  perché la deriva è una funzione del tempo — e le sette voci che non ci sono
-  ancora;
+  andremo, il baricentro su quindici minuti di passato e le sette voci che non
+  ci sono ancora;
 - il **piede**: lo stato, le due influenze esterne, e «a mano», cioè gli ultimi
   tre filetti che qualcuno ha mosso. Una tavola che si muove da sé per tre
   quarti ha bisogno di dire quale quarto è stato deciso.

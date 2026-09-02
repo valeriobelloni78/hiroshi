@@ -296,6 +296,7 @@ input[type=range].verticale::-moz-range-thumb{width:9px;height:7px}
 .deriva{display:grid;grid-template-columns:92px 1px minmax(0,1fr) 1px 250px 1px 126px;
         gap:0 22px;padding-top:12px;align-items:stretch}
 .deriva .cella{display:flex;flex-direction:column;gap:8px;justify-content:flex-start}
+.deriva .et{display:flex;justify-content:space-between;gap:10px}
 .tonalita{font-size:26px;font-weight:200;letter-spacing:.02em;line-height:1}
 .tela-quinte{width:100%;height:44px}
 .tela-baricentro{width:100%;height:44px}

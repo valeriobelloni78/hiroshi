@@ -522,33 +522,79 @@ function fasciaQuinte(box) {
 }
 
 /* ------------------------------------------------------------- il baricentro
-   Quindici minuti: dieci passati e cinque che devono ancora arrivare. Il futuro
-   si può disegnare perché la deriva è una funzione del tempo e non un accumulo
-   — `misto()` risponde per qualunque t. È la sola parte della tavola che mostra
-   qualcosa che non è ancora successo.
+   Quindici minuti di passato, e nessun futuro: la corsia dice DOVE SIAMO
+   ARRIVATI, che è una cosa che si guarda di sfuggita mentre si ascolta.
 
-   IL PASSATO È INCHIOSTRO, IL FUTURO È FILO: una curva sola direbbe che le due
-   metà hanno lo stesso statuto, e invece una è successa e l'altra è una
-   promessa che la mano può ancora rompere. */
-const DIETRO = 10 * 60, AVANTI = 5 * 60;
+   È un ISTOGRAMMA A PUNTI e non una curva, ed è la scelta del disegno: una
+   linea continua su una fascia alta quaranta pixel diventa un filo che
+   ondeggia e non si legge più di quanto sia salito; una colonna di punti si
+   conta. Il baricentro poi non è un segnale continuo che valga la pena
+   interpolare — è la finestra che guarda il campo, e si muove a gradi.
+
+   Non serve nessuna memoria per disegnarlo: la deriva è una funzione del
+   tempo, quindi `misto()` risponde per qualunque istante passato e la corsia
+   si ricostruisce a ogni fotogramma. Una sessione ripresa dopo una pausa non
+   ha buchi, e non c'è un secondo posto dove lo stato possa divergere.
+
+   QUANDO IL VALORE È NULLO LA COLONNA NON SPARISCE: resta un puntino più
+   piccolo e più chiaro sulla linea dello zero. Una colonna vuota si
+   leggerebbe come un buco nei dati, e invece è un momento in cui la finestra
+   stava esattamente in mezzo al campo. */
+const FINESTRA_BARICENTRO = 15 * 60;
+const PASSO_COLONNA = 5.43;      // dal disegno: 46 colonne su 250
+const PASSO_PUNTO = 5.6;
+const PUNTI_MAX = 3;
 
 function fasciaBaricentro(box, ora) {
   if (!box) return;
-  riga(box.x, box.cy, box.x + box.w, box.cy, 1, tinta("filo-2"), [2, 5]);
-  const n = Math.max(40, Math.round(box.w / 3));
-  const ampiezza = box.h / 2 - 3;
-  const ux = (ora - (ora - DIETRO)) / (DIETRO + AVANTI);
-  for (let i = 0; i <= n; i++) {
-    const u = i / n;
-    const t = ora - DIETRO + u * (DIETRO + AVANTI);
-    const y = box.cy - misto(t, 0, 3, 5) * ampiezza;
-    const x = box.x + u * box.w;
-    T.fillStyle = tinta(u <= ux ? "inchiostro-2" : "filo", u <= ux ? 0.9 : 1);
-    T.fillRect(Math.round(x), Math.round(y), 1.6, 1.6);
+  riga(box.x, box.cy, box.x + box.w, box.cy, 1, tinta("filo-2"));
+
+  const n = Math.max(12, Math.round(box.w / PASSO_COLONNA));
+  const passoX = box.w / n;
+  const alt = Math.min(PASSO_PUNTO, (box.h / 2 - 2) / PUNTI_MAX);
+
+  /* I valori prima, le colonne poi: servono i vicini per riconoscere le punte.
+     `misto()` è la stessa funzione che il motore chiama per muovere il campo —
+     la corsia non ha una sua idea del baricentro, ha la sua. */
+  const v = new Array(n), vivo = new Array(n);
+  for (let i = 0; i < n; i++) {
+    const t = ora - FINESTRA_BARICENTRO + ((i + 0.5) / n) * FINESTRA_BARICENTRO;
+    // Prima dell'accensione non c'è niente da mostrare. `misto()` risponderebbe
+    // lo stesso — è una funzione del tempo e il tempo negativo esiste — ma
+    // sarebbe un baricentro che non ha mai spostato una nota: la corsia si
+    // riempie da destra man mano che la seduta va avanti, e quel vuoto dice da
+    // quanto si sta ascoltando.
+    vivo[i] = t >= 0;
+    v[i] = misto(t, 0, 3, 5);
   }
-  const x = box.x + ux * box.w;
-  riga(x, box.y, x, box.y + box.h, 1, tinta("filo"));
-  quadretto(x, box.cy - deriva.centro * ampiezza, 5, tinta("inchiostro"), 1.6);
+
+  for (let i = 0; i < n; i++) {
+    if (!vivo[i]) continue;
+    const x = box.x + (i + 0.5) * passoX;
+    const quanti = Math.min(PUNTI_MAX, Math.round(Math.abs(v[i]) * (PUNTI_MAX + 0.4)));
+
+    if (!quanti) {
+      T.fillStyle = tinta("filo");
+      T.beginPath(); T.arc(x, box.cy, 1.1, 0, RADIANTI); T.fill();
+      continue;
+    }
+
+    /* LE PUNTE SI SCRIVONO A INCHIOSTRO PIENO: la colonna dove la curva ha
+       girato, in su o in giù. Più colonne vicine arrotondano allo stesso numero
+       di punti — tre punti sono tre punti — e senza questo segno non si saprebbe
+       quale delle tre è il momento in cui il baricentro ha smesso di salire.
+       È l'unica cosa che un istogramma perde rispetto a una curva, e costa un
+       confronto con i due vicini. */
+    const a = Math.abs(v[i]);
+    const punta = a >= Math.abs(v[i - 1] === undefined ? -1 : v[i - 1]) &&
+                  a >  Math.abs(v[i + 1] === undefined ? -1 : v[i + 1]);
+    T.fillStyle = punta ? tinta("inchiostro") : tinta("inchiostro-2", 0.7);
+    for (let k = 1; k <= quanti; k++) {
+      T.beginPath();
+      T.arc(x, box.cy - Math.sign(v[i]) * k * alt, 1.3, 0, RADIANTI);
+      T.fill();
+    }
+  }
 }
 
 /* ------------------------------------------------------------- il fotogramma

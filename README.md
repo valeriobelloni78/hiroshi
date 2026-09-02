@@ -96,8 +96,10 @@ quadrante mostrano dove sta la mano: fra i due c'è la deriva. Il **banco** ha l
 registrazione, l'equalizzatore a otto bande con la sua curva vera e il mixer. I
 **grani** sono una tessera per grano, il tempo da sinistra a destra e l'altezza
 dal basso in alto. La **deriva** mostra la tonalità di adesso e quella che
-viene, e quindici minuti di baricentro — dieci passati e **cinque futuri**,
-perché la deriva è una funzione del tempo e il futuro si può disegnare.
+viene, e quindici minuti di baricentro come istogramma a punti, con le colonne
+in cui la curva ha girato scritte a inchiostro pieno. Non tiene memoria di
+niente: la deriva è una funzione del tempo, quindi la corsia si ricostruisce a
+ogni fotogramma e una sessione ripresa dopo una pausa non ha buchi.
 
 Le voci alla *In C* di Nuvole aspettano una decisione musicale: il loro
 archivio attraversa tutti e dodici i gradi, mentre gocce e tessuti stanno su
