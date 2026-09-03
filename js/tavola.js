@@ -206,10 +206,9 @@ const CORONA_DA = 210 / 360, CORONA_QUANTO = 300 / 360, CORONA_TACCHE = 85;
 const CORONA_DENTRO = 0.89;
 
 function corona(cx, cy, R, voci) {
-  // Le tracce si spartiscono la fascia esterna, quante che siano: le gocce ne
-  // hanno tre, i tessuti due — il livello dei tessuti sta nel mixer, perché è
-  // là che vive un livello, e due comandi sullo stesso numero sarebbero due
-  // comandi che si contraddicono.
+  // Le tracce si spartiscono la fascia esterna, quante che siano — oggi tre per
+  // classe, e la più esterna è lo spazio da tutt'e due le parti: lo stesso
+  // parametro allo stesso raggio sui due quadranti.
   const passoR = voci.length > 1 ? (1 - CORONA_DENTRO) / (voci.length - 1) : 0;
   voci.forEach((v, i) => {
     const r = R * (CORONA_DENTRO + i * passoR);
@@ -711,6 +710,7 @@ const CORONA_GOCCE = [
 ];
 const CORONA_TESSUTI = [
   { min: 0, max: 100, eff: () => effGT.intreccio },
+  { min: 8, max: 60,  eff: () => effGT.livello },
   { min: 0, max: 100, eff: () => effGT.spazio },
 ];
 

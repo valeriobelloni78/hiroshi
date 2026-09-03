@@ -191,6 +191,13 @@ cursore("fTcorpo",    "vfTcorpo",     con(suOggetto(FORMA_T, "corpo", 100), fraz
 cursore("tregistro", "vTregistro", con(suGT("tRegistro"), ottave));
 cursore("passo",     "vPasso",     con(suGT("tPasso"), (v) => numero(v / 100, 2)));
 cursore("intreccio", "vIntreccio", con(suGT("tIntreccio"), (v) => numero(v / 100, 2)));
+/* Il livello dei tessuti è il terzo comando dell'Insieme, quello che nelle gocce
+   è la densità: quanto lo sfondo sta sotto al primo piano. Si legge in decibel
+   perché è quello che fa — 32 è l'esordio, e a 32 il canale sta a −7 dB. Non è
+   l'asta del mixer: quella scosta il canale, questo è il carattere della classe,
+   e la deriva muove solo questo. */
+cursore("livello", "vLivello", con(suGT("tLivello"),
+        (v) => dB(20 * Math.log10(clamp(v, 8, 60) / 32) - 7) + " dB"));
 cursore("tspazio",   "vTspazio",   con(suGT("tSpazio"), (v) => numero(v / 100, 2)));
 
 /* ------------------------------------------------------------------ 04 grani */
@@ -398,14 +405,14 @@ el("salvaProfilo").addEventListener("click", () => {
 elencaProfili();
 
 /* --------------------------------------------------------- 03 banco · mixer
-   Cinque aste. Quattro scrivono un livello del banco; quella dei tessuti no —
-   scrive `tLivello`, che è un parametro del modello e non un guadagno, perché
-   è là che la deriva lo muove. Due comandi sullo stesso numero sarebbero due
-   comandi che si contraddicono. */
+   Cinque aste, tutte e cinque un livello del banco. Quella dei tessuti SCOSTA il
+   canale: il guadagno vero è la somma fra questa e `tLivello`, che è il
+   carattere della classe e sta nella sua colonna. L'asta è il missaggio, il
+   filetto è la musica — un mood scrive il secondo e non tocca il primo. */
 const CANALI_MIXER = [
   { et: "Frasi",   dai: () => LIVELLI.frasi,  metti: (v) => { LIVELLI.frasi = v; if (banco) banco.livello("frasi", v); }, min: -24, max: 6 },
-  { et: "Tessuti", dai: () => 20 * Math.log10(clamp(G.tLivello, 8, 60) / 32) - 7,
-    metti: (v) => { GT.tLivello = clamp(32 * Math.pow(10, (v + 7) / 20), 8, 60); }, min: -19, max: -1.5 },
+  { et: "Tessuti", dai: () => LIVELLI.tessuti,
+    metti: (v) => { LIVELLI.tessuti = v; if (banco) rileggiTarature(); }, min: -24, max: 6 },
   { et: "Voci",    dai: () => LIVELLI.voci, metti: () => {}, min: -24, max: 6, spento: true },
   { et: "Grani",   dai: () => LIVELLI.grani,  metti: (v) => { LIVELLI.grani = v; if (banco) banco.livello("grani", v); }, min: -24, max: 6 },
   { et: "Uscita",  dai: () => LIVELLI.uscita, metti: (v) => { LIVELLI.uscita = v;
@@ -629,9 +636,6 @@ function battito() {
     el("picco").textContent = isFinite(picco) ? numero(picco, 1) + " dB" : "—";
     el("riduzione").textContent = numero(banco.riduzione(), 1) + " dB";
   }
-  // L'asta dei tessuti la muove anche la deriva: il numero segue.
-  CANALI_MIXER[1].mostra();
-
   const t = ctx ? ctx.currentTime : 0;
   if (running && avvioSessione === null) avvioSessione = t;
   el("sessione").textContent = mmss(running ? t - (avvioSessione || 0) : 0);

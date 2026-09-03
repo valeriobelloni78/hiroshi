@@ -268,8 +268,16 @@ function applicaEfficaci(now) {
     ultimo.livello = effGT.livello;
     // 32 è il livello d'esordio, e a 32 il canale sta a −7 dB: la scala di
     // Rada (8÷60) diventa una scala in decibel senza spostare il punto zero.
-    banco.livello("tessuti", 20 * Math.log10(effGT.livello / 32) - 7);
+    // Lo scostamento dell'asta del mixer si somma qui, in decibel.
+    banco.livello("tessuti", LIVELLI.tessuti + 20 * Math.log10(effGT.livello / 32) - 7);
   }
+}
+
+/* Rimette in discussione i valori con cui `applicaEfficaci` decide se vale la
+   pena riscrivere l'automazione. Serve a chi cambia una taratura dal mixer: il
+   modello non si è mosso, ma il numero che finisce nel banco sì. */
+function rileggiTarature() {
+  ultimo.spazio = ultimo.colore = ultimo.livello = ultimo.tSpazio = ultimo.gSpazio = -1;
 }
 
 /* ----------------------------------------------------------- l'assemblaggio */
@@ -367,9 +375,15 @@ function avvia(now) {
    tarature d'esordio invece che con quelle che si stanno ascoltando: cioè con
    un mixer diverso da quello che si è appena regolato.
 
-   Il livello dei tessuti non è qui: è `tLivello`, un parametro del modello che
-   la deriva muove. L'asta del mixer lo scrive lì. */
-const LIVELLI = { frasi: -4, voci: -12, grani: -6, uscita: -0.9 };
+   IL CANALE DEI TESSUTI HA DUE MANI SOPRA, e sono due cose diverse. `tLivello`
+   è un parametro del MODELLO — quanto lo sfondo sta sotto al primo piano — e la
+   deriva lo muove, un mood lo riscrive, la corona lo mostra. `LIVELLI.tessuti`
+   è l'asta del MIXER, cioè una decisione di missaggio come quella delle frasi o
+   dei grani. Il guadagno del canale è la loro SOMMA: l'asta scosta, il modello
+   respira. Sono due cose che si moltiplicano sullo stesso bus e vanno tenute
+   separate lo stesso, perché un mood deve poter scrivere il carattere senza
+   spostare il missaggio, e viceversa. */
+const LIVELLI = { frasi: -4, tessuti: 0, voci: -12, grani: -6, uscita: -0.9 };
 const EQ_DB = [0, 0, 0, 0, 0, 0, 0, 0];
 
 /* La taratura d'esordio dei canali. Sta in una funzione sola perché il motore

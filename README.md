@@ -90,9 +90,10 @@ Cinque sezioni numerate. Le **due classi** stanno su due quadranti gemelli, un
 anello per linea: la fase corre come un quadratino, una goccia è una tacca
 radiale lunga quanto la sua coda, una tenuta è un arco lungo quanto sta in aria
 e opaco quanto il suo inviluppo — quello vero, preso dalla stessa funzione che
-scrive l'automazione dell'audio. Attorno corre la corona, due o tre tracce
-graduate che mostrano quello che sta suonando mentre i filetti sotto il
-quadrante mostrano dove sta la mano: fra i due c'è la deriva. Il **banco** ha la
+scrive l'automazione dell'audio. Attorno corre la corona, tre tracce graduate
+che mostrano quello che sta suonando mentre i filetti in colonna mostrano dove
+sta la mano: fra i due c'è la deriva. Le due classi sono simmetriche comando per
+comando, e la traccia più esterna è lo spazio da tutt'e due le parti. Il **banco** ha la
 registrazione, l'equalizzatore a otto bande con la sua curva vera e il mixer. Dei **grani** si vede la materia intera, distesa per il
 lungo come un istogramma di quadratini grigi, e sopra la nube dei grani —
 colorati, nel punto esatto da cui ciascuno è stato ritagliato. La **deriva** mostra la tonalità di adesso e quella che

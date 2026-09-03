@@ -337,8 +337,7 @@ numero che nell'istante in cui lo si guarda non è né quello vecchio né quello
 nuovo. Peggio: si riscrive solo quando il cursore si muove, quindi non tornerebbe
 mai in pari — misurato, muovendo «dispersione» la targa restava sul valore di
 prima. Quello che sta suonando lo dicono la corona e le graduazioni, che è il
-posto giusto. Fa eccezione l'asta dei tessuti nel mixer, che è il solo parametro
-senza una corona: là la cifra è l'efficace, e la riscrive `battito()`.
+posto giusto.
 
 **Il canvas sta sotto e i comandi sopra.** Un solo canvas, steso su tutto il
 foglio, `pointer-events:none`; i comandi nativi ci galleggiano sopra. Quello che
@@ -360,9 +359,16 @@ disegnata aggiunga un riquadro nell'HTML, non una costante nel JavaScript.
 `motore.js`, e `tara()` li rilegge.** Il banco del rendering fuori tempo reale è
 un banco NUOVO, che nasce piatto: scritti solo nei nodi, un'esportazione uscirebbe
 con le tarature d'esordio invece che con quelle che si stanno ascoltando — cioè
-con un mixer diverso da quello appena regolato. Il livello dei tessuti fa
-eccezione e non sta lì: è `tLivello`, un parametro del modello che la deriva
-muove, e l'asta del mixer scrive là.
+con un mixer diverso da quello appena regolato.
+
+**Il canale dei tessuti ha due mani sopra, e sono due cose diverse.**
+`tLivello` è un parametro del MODELLO — quanto lo sfondo sta sotto al primo
+piano — e la deriva lo muove, un mood lo riscrive, la corona lo mostra.
+`LIVELLI.tessuti` è l'asta del MIXER, una decisione di missaggio come quella
+delle frasi o dei grani. Il guadagno del canale è la loro SOMMA in decibel:
+l'asta scosta, il modello respira. Tenerle separate è quello che permette a un
+mood di scrivere il carattere senza spostare il missaggio, e viceversa. Chi le
+unisse rimetterebbe due comandi sullo stesso numero.
 
 **I cursori scrivono sul bersaglio `GT`**, non su `G`. `G` ci arriva lisciato
 in `battito()`: un cursore che scrivesse su `G` farebbe uno scalino, e uno
@@ -383,14 +389,21 @@ toglierebbe ai tessuti l'unico comando che li distingue davvero.
 
 **I dieci comandi di una classe stanno in tre posti, e il posto dice che cosa
 sono.** Nella colonna: cinque filetti sotto «Forma del suono» — che cosa è il
-suono — e sotto «Insieme» quelli che sulla tavola sono le tracce della corona,
-tre per le gocce (addensamento, densità, spazio) e due per i tessuti (intreccio,
-spazio, perché il livello è un livello e sta nel mixer). SOTTO IL QUADRANTE, le
-due manopole: registro e calore per le gocce, registro e passo per i tessuti.
+suono — e tre sotto «Insieme», che sulla tavola sono le tre tracce della corona:
+addensamento · densità · spazio per le gocce, intreccio · livello · spazio per i
+tessuti. SOTTO IL QUADRANTE, le due manopole: registro e calore per le gocce, registro e passo per i tessuti.
 Stanno lì e non in colonna perché sono la stessa figura del quadrante — un arco
 graduato con un quadrato che ci corre sopra — e la bocca della corona si apre in
 basso proprio verso di loro: si leggono come due satelliti del cerchio invece
 che come due comandi qualunque in fondo a una lista.
+
+**LE DUE CLASSI SONO SIMMETRICHE, comando per comando**, e la simmetria è una
+cosa da difendere: cinque filetti, tre tracce di corona, due manopole, quattro
+righe di linee, il modo del materiale. La più esterna delle tre tracce è lo
+SPAZIO da tutt'e due le parti — lo stesso parametro allo stesso raggio sui due
+quadranti. Chi aggiunge un comando a una classe si chieda che cosa gli
+corrisponde nell'altra: se non c'è risposta, forse il comando è nel posto
+sbagliato.
 
 **I numeri che cambiano** usano cifre a larghezza fissa, altrimenti tremolano
 a ogni aggiornamento.
@@ -501,9 +514,9 @@ testata e un piede:
   quadrante, comandi. Ogni quadrante ha quattro anelli, uno per linea, numerati
   sul raggio di sinistra col filo che si interrompe dov'è la cifra; una goccia è
   una tacca radiale lunga quanto la sua coda, una tenuta è un arco lungo quanto
-  sta in aria e opaco quanto il suo inviluppo. Attorno, la corona: due o tre
-  tracce di graduazioni aperte in basso, che mostrano l'efficace mentre i
-  filetti sotto il quadrante mostrano la mano;
+  sta in aria e opaco quanto il suo inviluppo. Attorno, la corona: tre tracce di
+  graduazioni aperte in basso, che mostrano l'efficace mentre i filetti in
+  colonna mostrano la mano;
 - **03 · banco**: registrazione con cronometro e misuratori a tessere,
   esportazione (wav, la tavola in png, la scena che aspetta un seme),
   equalizzatore a otto aste con la curva vera sopra — chiesta ai filtri con
