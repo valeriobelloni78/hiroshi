@@ -105,15 +105,17 @@ da girare è un cursore trasparente disteso sopra il disegno dell'arco — il
 canvas la disegna, il browser la comanda — così tutto resta raggiungibile col
 dito, col tasto Tab e con un lettore di schermo.
 
-Due letture del segno, una volta ciascuna: **il colore è l'altezza** — cinque
-fermate dal blu al rosso mattone — e **la lunghezza è la durata**. Tutto il
-resto è inchiostro, perché il colore è già impegnato.
+C'è un accento solo, il rosso di Rada Deriva, e non dice che cosa: dice
+**adesso**. Quello che le cose sono lo dice la lunghezza — il registro di una
+goccia, la durata di una tenuta. Tutto il resto è inchiostro.
 
-Cinque sezioni numerate. Le **due classi** stanno su due quadranti gemelli, un
-anello per linea: la fase corre come un quadratino, una goccia è una tacca
-radiale lunga quanto la sua coda, una tenuta è un arco lungo quanto sta in aria
-e opaco quanto il suo inviluppo — quello vero, preso dalla stessa funzione che
-scrive l'automazione dell'audio. Attorno corre la corona, tre tracce graduate
+Cinque sezioni numerate. Le **due classi** stanno su due quadranti gemelli
+presi da Rada Deriva, un anello per linea, numerati in cifre romane, con le
+diagonali della crociera e il mirino nel mezzo che si accende quando una linea
+parla. La fase corre come un punto; una goccia è una tacca radiale lunga quanto
+è alta la sua nota; una tenuta è un arco lungo quanto sta in aria, tenue
+quando è passata, a inchiostro pieno mentre suona, in ambra solo l'ultima
+entrata. Attorno corre la corona, tre tracce graduate
 che mostrano quello che sta suonando mentre i filetti in colonna mostrano dove
 sta la mano: fra i due c'è la deriva. Le due classi sono simmetriche comando per
 comando, e la traccia più esterna è lo spazio da tutt'e due le parti. Il **banco** ha la

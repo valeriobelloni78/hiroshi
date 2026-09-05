@@ -32,7 +32,7 @@
 /* ------------------------------------------------------------------ la palette */
 const TINTE = {};
 const NOMI_TINTE = ["carta", "inchiostro", "inchiostro-2", "grigio", "muto",
-                    "filo", "filo-2", "spento", "grave", "ciano", "medio", "oro", "acuto"];
+                    "filo", "filo-2", "spento", "ambra"];
 let CARATTERE_MONO = "monospace";
 let CARATTERE_SANS = "sans-serif";
 
@@ -60,36 +60,18 @@ function tinta(k, a) {
     : "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + a.toFixed(3) + ")";
 }
 
-/* ------------------------------------------------------- lo spettro dell'altezza
-   Cinque fermate, le stesse cinque variabili che il CSS usa per la legenda
-   sotto la fascia del paesaggio. Gli estremi sono FISSI e non presi dal campo
-   corrente: prendendoli da `SCALE` la rampa si sposterebbe a ogni passo di
-   quinta, e il colore direbbe la tonalità invece dell'altezza.
+/* ------------------------------------------------------------------ un accento
+   Non c'è nessuna rampa. Sulla tavola il colore non dice l'altezza: dice
+   ADESSO, e lo dice in un colore solo — l'ambra di Rada Deriva. Tutto il resto
+   è inchiostro su carta.
 
-   Non sono nemmeno gli estremi del campo — 65 e 1975 Hz — ma quelli del
-   registro che si usa davvero: la selezione ne prende due o tre ottave attorno
-   al centro, e tarando la rampa sull'intero campo tutto quello che si sente
-   starebbe nel verde di mezzo. Chi esce dalla banda — il fondo di «bordone», il
-   velo di «soglia» — si appoggia sul blu pieno o sul rosso pieno, che per un
-   suono davvero al fondo o davvero in cima è la lettura giusta. */
-const RAMPA = ["grave", "ciano", "medio", "oro", "acuto"];
-const HZ_FONDO = Math.log2(100);
-const HZ_CIMA  = Math.log2(1500);
-
-function coloreSpettro(u, alfa) {
-  const v = clamp(u, 0, 1) * (RAMPA.length - 1);
-  const i = Math.min(RAMPA.length - 2, Math.floor(v));
-  const f = v - i;
-  const a = TINTE[RAMPA[i]], b = TINTE[RAMPA[i + 1]];
-  const c = [0, 1, 2].map((k) => Math.round(a[k] + (b[k] - a[k]) * f));
-  return alfa === undefined || alfa >= 1
-    ? "rgb(" + c[0] + "," + c[1] + "," + c[2] + ")"
-    : "rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + alfa.toFixed(3) + ")";
-}
-
-function coloreAltezza(hz, alfa) {
-  return coloreSpettro((Math.log2(Math.max(20, hz)) - HZ_FONDO) / (HZ_CIMA - HZ_FONDO), alfa);
-}
+   Prima l'altezza era un colore su cinque fermate, dal blu al rosso mattone.
+   Su due quadranti pieni di tacche erano cinque cose che chiedevano attenzione
+   insieme, e nessuna la otteneva; e per leggere un colore bisogna conoscere la
+   chiave, mentre per vedere che cosa si è appena acceso non serve saper
+   niente. L'altezza sui quadranti la dice adesso la LUNGHEZZA RADIALE di una
+   goccia: corta grave, lunga acuta — il profilo melodico di un'idea si legge
+   senza spendere un colore.
 
 /* ------------------------------------------------------------------- la tela */
 const tela = el("tavola");
@@ -226,103 +208,288 @@ function corona(cx, cy, R, voci) {
 }
 
 /* ------------------------------------------------------------------- gli anelli
-   Un anello è una linea: il giro intero è la circonferenza e la fase corrente è
-   il quadratino che ci scorre sopra. Quattro anelli concentrici sono le quattro
-   linee di una classe, nell'ordine in cui il modello le tiene — non in quello
-   dei periodi, che cambiano coi mood: un anello che si spostasse di posto a
-   ogni cambio di carattere non sarebbe più «la seconda linea».
+   Questi sono i quadranti di RADA DERIVA, ricopiati: la stessa lingua di segni,
+   la stessa aritmetica, un accento solo. Là gli otto anelli stanno su un
+   cerchio unico e le due classi le separa un vuoto; qui i cerchi sono due,
+   affacciati, e la separazione la fa il foglio. Il resto è lo stesso.
 
-   LA ZONA ATTIVA non si disegna. Quella che «addensamento» apre e chiude è la
-   testa del giro, e la si vede da dove cadono le tacche: disegnarla come una
-   fascia sull'anello vorrebbe dire coprire di grigio proprio le tacche che
-   sono la cosa da guardare, e dire due volte un numero che la corona ha già.
-   Nei tessuti non esiste affatto — la trama occupa il giro intero — ed è la
-   differenza strutturale fra le due classi. */
-const RAGGI_ANELLI = [0.41, 0.54, 0.67, 0.80];
+   COSA DICE COSA, e ognuna una volta sola:
 
-function anello(cx, cy, R, r, L, ora, opz) {
-  const muta = L.muted;
-  const alfa = muta ? 0.32 : 1;
+     · la LUNGHEZZA RADIALE di una tacca è il REGISTRO della goccia — corta
+       grave, lunga acuta. È così che il profilo melodico di un'idea si legge
+       senza spendere un colore;
+     · la LUNGHEZZA D'ARCO di una tenuta è la sua DURATA;
+     · l'AMBRA è ADESSO: una goccia che ha appena suonato, la tenuta entrata
+       per ultima, il punto che corre sul giro. Niente altro è colorato.
 
-  cerchio(cx, cy, r, 1, tinta(muta ? "filo-2" : "filo"), muta ? [2, 3] : null);
+   Le due lunghezze non si contraddicono perché stanno su due assi diversi —
+   una radiale e una angolare — e su due cerchi diversi. */
+const RAGGI_ANELLI = [0.30, 0.47, 0.64, 0.81];
 
+/* Lo spessore del tratto pieno, e sui due quadranti è LO STESSO NUMERO: la
+   zona attiva delle gocce — l'arco dentro cui le tacche cadono — e la tenuta
+   che sta suonando. I due cerchi sono separati e uno accanto all'altro, quindi
+   un arco più grasso da una parte si legge come «qui c'è più roba» invece che
+   come una classe diversa. Scritto due volte, prima o poi divergerebbe. */
+const SPESSORE_ARCO = 1.6;
+
+/* Quanto dura un lampo, in secondi. UN SOLO NUMERO per tutti gli attacchi,
+   perché sono lo stesso segno detto in posti diversi e tre valori diversi li
+   farebbero sembrare tre fenomeni. */
+const LAMPO = 0.45;
+
+const lerp = (a, b, t) => a + (b - a) * t;
+
+/* I numerali delle linee sono ROMANI come in Rada Deriva, e non arabi: sulla
+   tavola le cifre arabe dicono già quantità dappertutto — secondi, decibel,
+   hertz — e un «3» accanto a un anello si leggerebbe come una misura invece
+   che come un nome. */
+const NUMERI_ANELLO = ["I", "II", "III", "IV"];
+
+/* Il raggio del mirino, dove le quattro linee si incontrano. */
+const R_MIRINO = 0.045;
+/* Quanto resta il filo che lega una tenuta appena entrata al mirino. NON è
+   LAMPO, e la differenza è voluta: il lampo segna un istante e basta che si
+   veda, questo è un percorso che l'occhio deve seguire dal bordo al centro per
+   capire QUALE dei quattro anelli ha appena parlato. Mezzo secondo non basta a
+   farlo, e i due segni non sono la stessa cosa detta in due posti. */
+const FILO_TENUTA = 1;
+
+/* Il numerale della linea, FUORI dal proprio anello e dal lato della sua
+   colonna di comandi — le gocce a ovest, i tessuti a est. È il legame visivo
+   fra la riga che si tocca e l'anello che si guarda.
+
+   Fuori e non sopra: centrata sulla circonferenza, ogni cifra avrebbe un filo
+   che le passa in mezzo, e a corpo sette pixel un filo che attraversa una
+   cifra la cancella. Prima qui si strappava il filo con un `clearRect`; questa
+   è la soluzione di Rada Deriva, e non ha bisogno di bucare niente. */
+function etichettaAnello(testo, cx, cy, r, R, lato) {
+  const stacco = Math.max(3, R * 0.014);
+  scritta(testo, cx + lato * (r + stacco), cy - 7, {
+    dim: Math.max(7, r * 0.05), sp: 0, col: "grigio",
+    all: lato < 0 ? "right" : "left", sans: true,
+  });
+}
+
+/* L'indicatore di fase: un punto che percorre l'anello. Legge dalla coda dei
+   cicli UDIBILI, mai da `cycleStart` — lo scheduler corre avanti di un
+   orizzonte, e un punto che seguisse lui arriverebbe prima del suono.
+
+   Rada Deriva accorciava la coda da dentro il disegno; qui no. La tavola non
+   tocca il modello, nemmeno per potarlo: si scorre la coda e si prende
+   l'ultimo giro già cominciato. Il motore la tiene corta per conto suo. */
+function puntoDiFase(cx, cy, r, R, L, ora) {
+  let c = null;
+  for (const k of L.cycles) if (k.start <= ora) c = k;
+  if (!c || ora >= c.start + c.period) return;
+  const a = ang(clamp((ora - c.start) / c.period, 0, 1));
+  T.fillStyle = tinta("ambra");
+  T.beginPath();
+  T.arc(cx + Math.cos(a) * r, cy + Math.sin(a) * r, Math.max(2, R * 0.011), 0, RADIANTI);
+  T.fill();
+}
+
+/* ------------------------------------------------------------ l'anello di una
+                                                                 frase
+   La guida tenue, la zona attiva, le tacche, il punto.
+
+   LA ZONA ATTIVA si prende dal PIANO e non dal cursore: `planHead` è
+   l'addensamento con cui il piano è stato costruito, e quel che si vede
+   coincide con quel che suona.
+
+   DUE CAMPITURE E NON UNA PER TACCA. Un tracciato per goccia sono una
+   cinquantina di disegni per fotogramma, e ogni tracciato separato costa una
+   tassellatura e una chiamata di disegno. Le tacche hanno due soli stili —
+   accesa e spenta — quindi due passate sulla lista e due campiture. */
+function anelloFrase(cx, cy, R, r, L, ora, attiva) {
   const base = T.globalAlpha;
-  for (const p of L.plan) {
-    const ev = p.ev;
-    const col = coloreAltezza(opz.frequenza(ev), alfa);
-    T.globalAlpha = base * alfa;
-    opz.segno(cx, cy, r, R, p.ph, ev, L, col);
-    T.globalAlpha = base;
+  T.globalAlpha = base * ((L.muted || !attiva) ? 0.3 : 1);
 
-    /* IL LAMPO. Un evento che ha appena suonato si allarga e si spegne in un
-       secondo. È l'unico posto in cui il tempo del disegno e quello dell'audio
-       si toccano, e si toccano su `flash`, che è il campo che il motore scrive
-       quando prenota: non è una simulazione del suono, è il suono che dice
-       quando è uscito. */
-    const eta = ora - ev.flash;
-    if (!muta && eta >= -0.05 && eta < 1) {
-      const k = clamp(eta, 0, 1), a = ang(p.ph), l = 4 + k * 9;
-      T.save();
-      T.globalAlpha *= (1 - k) * 0.8;
-      T.translate(cx + Math.cos(a) * r, cy + Math.sin(a) * r);
-      T.rotate(a);
-      T.strokeStyle = col; T.lineWidth = 1;
-      T.strokeRect(-l / 2, -l / 2, l, l);
-      T.restore();
+  cerchio(cx, cy, r, 0.75, tinta("filo"));
+  arco(cx, cy, r, L.offset, L.planHead, SPESSORE_ARCO, tinta("inchiostro"));
+
+  T.lineCap = "round";
+  for (let acceso = 0; acceso < 2; acceso++) {
+    T.strokeStyle = acceso ? tinta("ambra") : tinta("inchiostro");
+    T.lineWidth = acceso ? 2.4 : 1.5;
+    T.beginPath();
+    for (const p of L.plan) {
+      const dt = ora - p.ev.flash;
+      const caldo = dt >= 0 && dt < LAMPO;
+      if (caldo !== !!acceso) continue;
+      const a = ang(p.ph);
+      const mezza = lerp(0.014, 0.042, (p.ev.rel + 1) / 2) * R * (caldo ? 1.35 : 1);
+      const ux = Math.cos(a), uy = Math.sin(a);
+      T.moveTo(cx + ux * (r - mezza), cy + uy * (r - mezza));
+      T.lineTo(cx + ux * (r + mezza), cy + uy * (r + mezza));
     }
+    T.stroke();
   }
+  T.lineCap = "butt";
 
-  // Dove siamo dentro il giro. Il periodo è quello IN CORSO (`period`), non
-  // quello scelto (`target`): la durata nuova entra al giro dopo, e un
-  // quadratino che corresse già col periodo nuovo direbbe una fase che non c'è.
-  const fase = (((ora - L.cycleStart) / L.period) % 1 + 1) % 1;
-  quadrettoSuGiro(cx, cy, r, fase, 5.6, tinta(muta ? "grigio" : "inchiostro"), 1.6);
-
-  // Il numero della linea, sul raggio di sinistra, col filo che si interrompe
-  // dov'è la cifra. Le quattro righe di comandi dicono «3 · 13,0″ · muta», e
-  // senza un numero sull'anello non ci sarebbe modo di sapere quale dei quattro
-  // cerchi si sta silenziando.
-  const a = ang(0.75);
-  const nx = cx + Math.cos(a) * r, ny = cy + Math.sin(a) * r;
-  T.clearRect(nx - 5, ny - 5.5, 10, 11);
-  scritta(String(L.i + 1), nx, ny, { dim: 7.5, sp: 0, col: muta ? "muto" : "grigio",
-                                     all: "center", base: "middle" });
-}
-
-/* Una goccia è una TACCA RADIALE lunga quanto la sua coda: un punto nel tempo
-   che risuona, e il tempo che risuona si misura verso fuori. Una tenuta è un
-   ARCO lungo quanto sta in aria, con l'opacità dell'inviluppo vero — la stessa
-   `finestra()` che scrive l'automazione dell'audio. Due segni diversi per due
-   cose diverse, e la stessa grandezza letta nello stesso modo. */
-function segnoGoccia(cx, cy, r, R, ph, ev, L, col) {
-  const l = clamp(codaGocce * ev.vel * (R * 0.055), 3, R * 0.13);
-  tacca(cx, cy, ph, r - l / 2, r + l / 2, 2, col);
-}
-
-function segnoTenuta(cx, cy, r, R, ph, ev, L, col) {
-  const dur = durataTenuta(L, ev);
-  const quanto = Math.min(dur / L.period, 0.985);
-  const inv = inviluppoDi(0, dur, { apertura: effGT.apertura, chiusura: effGT.chiusura });
-  const n = clamp(Math.round(quanto * 110), 3, 56), passo = quanto / n;
-  const base = T.globalAlpha;
-  for (let k = 0; k < n; k++) {
-    const a = 0.14 + 0.72 * finestra(((k + 0.5) / n) * quanto * L.period, inv);
-    T.globalAlpha = base * a;
-    arco(cx, cy, r, ph + k * passo, passo * 1.35, 3, col);
-  }
+  if (running && attiva && !L.muted) puntoDiFase(cx, cy, r, R, L, ora);
+  etichettaAnello(NUMERI_ANELLO[L.i], cx, cy, r, R, -1);
   T.globalAlpha = base;
 }
 
-/* ---------------------------------------------------------------- il quadrante */
-function quadrante(box, dati, ora) {
+/* ----------------------------------------------------------- l'anello di un
+                                                                tessuto
+   Nessuna zona attiva: le tenute si distribuiscono su tutto il giro, ed è la
+   differenza strutturale fra le due classi.
+
+   TRE STATI, quindi tre campiture. Una tenuta che suona sta a inchiostro pieno
+   per tutto il tempo in cui suona, ma l'AMBRA la prende solo LA PIÙ RECENTE: le
+   altre ancora aperte restano inchiostro pieno. È la misura fra due esigenze —
+   tenere acceso tutto ciò che suona riempirebbe di accento i quattro anelli,
+   e un lampo di mezzo secondo non direbbe nulla su che cosa stia suonando
+   adesso. Una sola dice quante linee sono attive e quale suono è entrato per
+   ultimo, e costa quattro archi. */
+function anelloTenuta(cx, cy, R, r, L, ora, attiva, recente) {
+  const base = T.globalAlpha;
+  const spento = L.muted || !attiva;
+  T.globalAlpha = base * (spento ? 0.3 : 1);
+
+  cerchio(cx, cy, r, 0.75, tinta("filo"));
+
+  for (let stile = 0; stile < 3; stile++) {
+    T.strokeStyle = stile === 2 ? tinta("ambra")
+                  : stile === 1 ? tinta("inchiostro") : tinta("inchiostro-2");
+    T.lineWidth = stile ? SPESSORE_ARCO : 1;
+    T.globalAlpha = base * (spento ? 0.3 : 1) * (stile ? 1 : 0.5);
+    T.beginPath();
+    let qualcosa = false;
+    for (const p of L.plan) {
+      const ev = p.ev;
+      const suo = ev === recente ? 2 : (ora >= ev.flash && ora < ev.fino) ? 1 : 0;
+      if (suo !== stile) continue;
+      const quanto = clamp(durataTenuta(L, ev) / L.period, 0.02, 1);
+      // `moveTo` prima di ogni arco, o il tracciato li lega con una corda.
+      const a0 = ang(p.ph);
+      T.moveTo(cx + Math.cos(a0) * r, cy + Math.sin(a0) * r);
+      T.arc(cx, cy, r, a0, ang(p.ph + quanto));
+      qualcosa = true;
+    }
+    if (qualcosa) T.stroke();
+  }
+  T.globalAlpha = base * (spento ? 0.3 : 1);
+
+  if (running && attiva && !L.muted) puntoDiFase(cx, cy, r, R, L, ora);
+  etichettaAnello(NUMERI_ANELLO[L.i], cx, cy, r, R, +1);
+  T.globalAlpha = base;
+}
+
+/* IL MIRINO: il punto in cui le quattro linee si incontrano. In Rada Deriva
+   sono due segni concentrici nello stesso posto, perché là le due classi
+   condividono il cerchio — il punto al centro si accende con qualunque goccia,
+   l'anello che lo circonda quando un tessuto si apre. Qui i cerchi sono due e
+   ognuno tiene il segno della propria classe: il punto sulle gocce, l'anello
+   sui tessuti.
+
+   L'anello lampeggia e non resta acceso: la tenuta accesa è già raccontata dal
+   suo arco, e qui interessa l'ISTANTE in cui entra — che altrimenti non
+   avrebbe nessun segno, perché un tessuto si apre troppo lentamente perché
+   l'orecchio ne colga il momento. */
+function mirino(cx, cy, R, acceso) {
+  T.strokeStyle = tinta(acceso === "anello" ? "ambra" : "filo");
+  T.lineWidth = acceso === "anello" ? 2 : 1;
+  T.beginPath();
+  T.arc(cx, cy, R_MIRINO * R, 0, RADIANTI);
+  T.stroke();
+  T.fillStyle = tinta(acceso === "punto" ? "ambra" : "filo");
+  T.beginPath();
+  T.arc(cx, cy, acceso === "punto" ? R * 0.020 : R * 0.012, 0, RADIANTI);
+  T.fill();
+}
+
+/* Le quattro diagonali, dal mirino quasi fino al bordo: non toccano né l'uno né
+   l'altro, così restano una guida e non una gabbia. */
+function crociera(cx, cy, R) {
+  T.strokeStyle = tinta("filo");
+  T.lineWidth = 0.75;
+  T.beginPath();
+  for (let k = 0; k < 4; k++) {
+    const a = Math.PI / 4 + (k * Math.PI) / 2;
+    T.moveTo(cx + Math.cos(a) * R * 0.10, cy + Math.sin(a) * R * 0.10);
+    T.lineTo(cx + Math.cos(a) * R * 0.94, cy + Math.sin(a) * R * 0.94);
+  }
+  T.stroke();
+}
+
+/* La tenuta entrata per ultima fra tutte e quattro le linee. Si cerca una volta
+   per fotogramma e non una per anello: la scansione è la stessa, e farne
+   quattro per la stessa domanda sarebbe lavoro moltiplicato per niente. */
+function tenutaPiuRecente(ora) {
+  const q = { ev: null, angolo: 0, raggio: 0, appena: false };
+  if (!tessutiOn) return q;
+  tessuti.forEach((L, i) => {
+    if (L.muted) return;
+    for (const p of L.plan) {
+      const ev = p.ev;
+      if (!(ora >= ev.flash && ora < ev.fino)) continue;
+      if (ora - ev.flash < LAMPO) q.appena = true;
+      if (!q.ev || ev.flash > q.ev.flash) {
+        q.ev = ev;
+        // La metà esatta dell'arco, con la stessa formula che lo disegna:
+        // scritta due volte in due modi, il filo prima o poi punterebbe altrove.
+        const quanto = clamp(durataTenuta(L, ev) / L.period, 0.02, 1);
+        q.angolo = ang(p.ph + quanto / 2);
+        q.raggio = RAGGI_ANELLI[i];
+      }
+    }
+  });
+  return q;
+}
+
+/* Vero nei LAMPO secondi che seguono una goccia qualunque: lo legge il punto
+   del mirino. */
+function gocciaAppena(ora) {
+  if (!frasiOn) return false;
+  for (const L of frasi) {
+    if (L.muted) continue;
+    for (const p of L.plan) {
+      const dt = ora - p.ev.flash;
+      if (dt >= 0 && dt < LAMPO) return true;
+    }
+  }
+  return false;
+}
+
+/* Il filo che lega la tenuta appena entrata al mirino. Non è un accento in più:
+   è LO STESSO della tenuta ambra, prolungato fino al centro — e la tenuta ambra
+   in tutta la tavola è una sola. Svanisce col quadrato del tempo e non
+   linearmente: un filo che attraversa mezzo quadrante resta visibile a lungo
+   anche molto tenue, e con la dissolvenza lineare l'ultimo terzo di secondo si
+   trascinerebbe. */
+function filoAlMirino(cx, cy, R, q, ora) {
+  if (!q.ev || ora - q.ev.flash >= FILO_TENUTA) return;
+  const t = (ora - q.ev.flash) / FILO_TENUTA;
+  const co = Math.cos(q.angolo), si = Math.sin(q.angolo);
+  const base = T.globalAlpha;
+  T.globalAlpha = base * (1 - t) * (1 - t);
+  T.strokeStyle = tinta("ambra");
+  T.lineWidth = 1;
+  T.beginPath();
+  T.moveTo(cx + co * R_MIRINO * R, cy + si * R_MIRINO * R);
+  T.lineTo(cx + co * q.raggio * R, cy + si * q.raggio * R);
+  T.stroke();
+  T.globalAlpha = base;
+}
+
+/* ---------------------------------------------------------------- il quadrante
+   La corona attorno e quattro anelli dentro. La corona è nostra e non di Rada
+   Deriva — là fuori dagli anelli ci stanno le dodici tacche delle quinte e
+   l'arco della tonica, che qui hanno una fascia tutta loro in fondo al foglio.
+
+   La classe spenta non spegne il quadrante intero: si spengono gli anelli, a
+   tre decimi, e la corona resta accesa. I parametri continuano a valere anche
+   quando la classe tace, e mostrarli spenti direbbe che non valgono più. */
+function quadrante(box, voci, linee, anello, ora, centro) {
   if (!box) return;
   const R = Math.min(box.w, box.h) / 2 - 2;
-  const cx = box.cx, cy = box.cy;
-  T.save();
-  if (!dati.attiva) T.globalAlpha = 0.34;
-  corona(cx, cy, R, dati.corona);
-  dati.linee.forEach((L, i) => anello(cx, cy, R, R * RAGGI_ANELLI[i], L, ora, dati.anello));
-  T.restore();
+  crociera(box.cx, box.cy, R);
+  corona(box.cx, box.cy, R, voci);
+  linee.forEach((L, i) => anello(box.cx, box.cy, R, R * RAGGI_ANELLI[i], L, ora));
+  centro(box.cx, box.cy, R);
 }
 
 /* ------------------------------------------------------------------ la manopola
@@ -702,7 +869,6 @@ const CORONA_TESSUTI = [
   { min: 0, max: 100, eff: () => effGT.spazio },
 ];
 
-let codaGocce = 1.8;
 
 function disegna() {
   const ora = ctx ? ctx.currentTime : 0;
@@ -715,25 +881,18 @@ function disegna() {
   T.clearRect(0, 0, LARGO, ALTO);
   T.lineCap = "butt";
 
-  codaGocce = formaGocce(effG.calore).coda;
-  quadrante(quadro("gocce"), {
-    attiva: frasiOn, linee: frasi, corona: CORONA_GOCCE,
-    anello: {
-      frequenza: (ev) => altezza(ev.rel, effG.registro / 100),
-      segno: segnoGoccia,
-    },
-  }, ora);
+  const goccia = gocciaAppena(ora);
+  quadrante(quadro("gocce"), CORONA_GOCCE, frasi,
+            (cx, cy, R, r, L, t) => anelloFrase(cx, cy, R, r, L, t, frasiOn), ora,
+            (cx, cy, R) => mirino(cx, cy, R, goccia ? "punto" : ""));
 
-  const banda = TERRITORIO[timbroTessuti];
-  quadrante(quadro("tessuti"), {
-    attiva: tessutiOn, linee: tessuti, corona: CORONA_TESSUTI,
-    anello: {
-      // Il territorio conta: la stessa nota suonata da «bordone» sta due ottave
-      // sotto quella di «brina», e sulla tavola dev'essere blu.
-      frequenza: (ev) => nelTerritorio(altezza(ev.rel, effGT.registro / 100), banda),
-      segno: segnoTenuta,
-    },
-  }, ora);
+  const recente = tenutaPiuRecente(ora);
+  quadrante(quadro("tessuti"), CORONA_TESSUTI, tessuti,
+            (cx, cy, R, r, L, t) => anelloTenuta(cx, cy, R, r, L, t, tessutiOn, recente.ev), ora,
+            (cx, cy, R) => {
+              filoAlMirino(cx, cy, R, recente, ora);
+              mirino(cx, cy, R, recente.appena ? "anello" : "");
+            });
 
   manopola(manopolaDi("registro"),  G.registro / 100,  effG.registro / 100);
   manopola(manopolaDi("calore"),    G.calore / 100,    effG.calore / 100);

@@ -186,34 +186,62 @@ registratore userà lo stesso.
 nella tavola non ce n'è nessuno, e la prima eccezione sarebbe la fine della
 regola.
 
-**Due letture del segno, una volta ciascuna.** Sulla tavola *il colore è
-l'altezza* e *la lunghezza è la durata*. Non aggiungere una terza codifica
-della stessa grandezza e non spostare una di queste due senza spostare anche
-la chiave che le dichiara. Conseguenza pratica: **lo stato è inchiostro** —
-acceso, spento, muto, dove sta la mano, dove sta la testa di lettura. Il
-colore è già impegnato e non può dire anche quello.
+**LA LUNGHEZZA CODIFICA, L'AMBRA NO.** C'è un accento solo su tutta la tavola —
+`--ambra`, il rosso di Rada Deriva — e non dice *che cosa*: dice *adesso*. La
+goccia scattata nell'ultimo mezzo secondo, la tenuta entrata per ultima, il
+punto di fase, il filo che la lega al mirino. Quello che le cose SONO lo dice
+la geometria, una grandezza per classe: sulle gocce la lunghezza RADIALE della
+tacca è il registro, sui tessuti la lunghezza dell'ARCO è la durata. Tutto il
+resto è inchiostro — acceso, spento, muto, dove sta la mano, dove sta la testa
+di lettura.
+
+Prima il colore era l'altezza, su una rampa a cinque fermate ancorata a 100 e
+1500 Hz, e la rampa è stata tolta insieme ai due quadranti di Rada Deriva. Due
+ragioni, e la seconda vale più della prima: cinque tinte su una tacca larga un
+pixel e mezzo non si distinguono l'una dall'altra; e una tavola con cinque
+colori addosso non ha più un accento, perché se tutto è colorato niente
+lampeggia. Chi rimettesse l'altezza nel colore si riprenderebbe tutti e due i
+problemi.
 
 **L'INTERFACCIA SEGUE UN MOCKUP, e il mockup è la fonte.** Sta come canvas di
 design fra gli artifact di Claude — «Hiroshi · interfaccia», un'artboard 1440 ×
-1176 — e da lì vengono le misure, la scala tipografica, la geometria dei
-quadranti e le cinque fermate della rampa. Chi cambia l'impaginazione lo guardi
-prima: le colonne da 205, la luce di 1360, i quadranti da 420, gli anelli a
-82·108·134·160 su una corona a 178·189·200 e la sua bocca di sessanta gradi in
-basso non sono numeri scelti qui.
+1176 — e da lì vengono le misure, la scala tipografica e la geometria delle
+sezioni. Chi cambia l'impaginazione lo guardi prima: le colonne da 205, la luce
+di 1360, i quadranti da 420 e la corona a 178·189·200 con la sua bocca di
+sessanta gradi in basso non sono numeri scelti qui. Fanno eccezione gli anelli,
+che il mockup metteva a 82·108·134·160 e che oggi seguono Rada Deriva.
 
 Dove il mockup e il motore non coincidono, **vince il motore**: il disegno è
 stato fatto prima che i parametri fossero fermi, e mostra dei tessuti con
 «attacco, rilascio, parziali» che non esistono. La tavola ne prende la forma,
 non le etichette.
 
-**Gli estremi della rampa dell'altezza sono fissi e non sono quelli del
-campo.** `SCALE` va da 65 a 1975 Hz, ma la selezione ne prende due o tre ottave
-attorno al centro: tarando la rampa sul campo intero, tutto quello che si sente
-finirebbe nel verde di mezzo. Gli ancoraggi sono 100 e 1500 Hz, e chi esce
-dalla banda si appoggia sul blu pieno o sul rosso pieno — che per il fondo di
-«bordone» o il velo di «soglia» è la lettura giusta. Prenderli da `SCALE`
-sarebbe peggio ancora: la rampa si sposterebbe a ogni passo di quinta e il
-colore direbbe la tonalità invece dell'altezza.
+**I DUE QUADRANTI VENGONO DA RADA DERIVA, non dal mockup**, ed è l'unico posto
+della tavola dove il mockup non è la fonte. Là le otto linee stanno in un
+cerchio solo; qui sono due cerchi separati, gocce da una parte e tessuti
+dall'altra, ma il linguaggio è quello, copiato segno per segno: quattro anelli
+a **0,30 · 0,47 · 0,64 · 0,81** del raggio, i numerali **romani** fuori
+dall'anello e dalla parte della propria colonna — le gocce a ovest, i tessuti a
+est — le quattro diagonali della crociera, il punto di fase che percorre
+l'anello, e al centro il **mirino**: un punto che si accende con una goccia sul
+quadrante delle gocce, un cerchietto che si accende quando una tenuta entra su
+quello dei tessuti.
+
+**Lo spessore del tratto pieno è lo stesso sui due quadranti** — `1.6`, un
+numero solo in `SPESSORE_ARCO` — e vale sia per la zona attiva delle gocce, cioè
+l'arco dentro cui le tacche cadono, sia per la tenuta che sta suonando. I due
+cerchi stanno uno accanto all'altro: un arco più grasso da una parte non si
+legge come «un'altra classe», si legge come «qui c'è più roba». Quello che
+distingue una tenuta passata da una che suona è l'opacità, non il peso.
+
+I numerali sono romani e non arabi perché sulla tavola le cifre arabe dicono già
+quantità dappertutto — secondi, decibel, hertz — e un «3» accanto a un anello si
+leggerebbe come una misura invece che come un nome.
+
+Il filo che lega la tenuta appena entrata al mirino dura **un secondo** e non
+mezzo come il lampo, e i due tempi non vanno pareggiati: un lampo segna un
+istante e basta che si veda, un filo è un percorso che l'occhio deve seguire dal
+bordo al centro per capire QUALE dei quattro anelli ha parlato.
 
 **Il baricentro è un ISTOGRAMMA A PUNTI, non una curva**, ed è il mockup a
 dirlo. Una linea continua su una fascia alta quaranta pixel diventa un filo che
@@ -628,10 +656,11 @@ testata e un piede:
 - la **testata**: le quattro sorgenti e il cielo come spunte quadrate, la
   pausa, le lingue (una sola, per ora, e le altre lo dicono);
 - **01 · 02**, le due classi in cinque colonne — comandi, quadrante, filo,
-  quadrante, comandi. Ogni quadrante ha quattro anelli, uno per linea, numerati
-  sul raggio di sinistra col filo che si interrompe dov'è la cifra; una goccia è
-  una tacca radiale lunga quanto la sua coda, una tenuta è un arco lungo quanto
-  sta in aria e opaco quanto il suo inviluppo. Attorno, la corona: tre tracce di
+  quadrante, comandi. Ogni quadrante è un cerchio di Rada Deriva: quattro anelli,
+  uno per linea, con la crociera e il mirino al centro e il numerale romano fuori
+  dall'anello. Una goccia è una tacca radiale lunga quanto è alta la sua nota;
+  una tenuta è un arco lungo quanto sta in aria, tenue finché è passata, a
+  inchiostro pieno mentre suona, in ambra solo l'ultima entrata. Attorno, la corona: tre tracce di
   graduazioni aperte in basso, che mostrano l'efficace mentre i filetti in
   colonna mostrano la mano;
 - **03 · banco**: registrazione con cronometro e misuratori a tessere,
