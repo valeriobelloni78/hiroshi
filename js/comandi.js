@@ -200,20 +200,44 @@ cursore("livello", "vLivello", con(suGT("tLivello"),
         (v) => dB(20 * Math.log10(clamp(v, 8, 60) / 32) - 7) + " dB"));
 cursore("tspazio",   "vTspazio",   con(suGT("tSpazio"), (v) => numero(v / 100, 2)));
 
-/* ------------------------------------------------------------------ 04 grani */
-cursore("gtesta", "vGtesta", con(suGT("gTesta"), (v) => {
-  const m = materiaCorrente();
-  return m ? numero((v / 100) * m.durata, 1) + " s" : numero(v / 100, 2);
-}));
-cursore("gcorsa",      "vGcorsa",      con(suGT("gCorsa"), (v) => numero(v / 100, 2) + "×"));
-cursore("gdensita",    "vGdensita",    con(suGT("gDensita"), (v) => Math.round(v) + "/s"));
-cursore("ggrano",      "vGgrano",      con(suGT("gGrano"), (v) => Math.round(v) + " ms"));
-cursore("gnube",       "vGnube",       con(suGT("gNube"), (v) => "±" + Math.round((v / 100) * 2500) + " ms"));
-cursore("galtezza",    "vGaltezza",    con(suGT("gAltezza"), (v) => (v > 0 ? "+" : "") + Math.round(v) + " st"));
-cursore("gsparpaglio", "vGsparpaglio", con(suGT("gSparpaglio"), (v) => numero(v / 100, 2)));
-cursore("gspazio",     "vGspazio",     con(suGT("gSpazio"), (v) => numero(v / 100, 2)));
+/* -------------------------------------------------------------- 04 paesaggio
+   Le due maniglie del segmento non hanno una targa loro: la coppia si legge in
+   cifre nel capo della sezione, «3″ → 1′ 15″», perché un inizio senza la sua
+   fine non dice niente e due targhe separate costringerebbero a fare la
+   sottrazione a mente. */
+cursore("pRallenta",   "vRallenta",    con(suGT("pRallenta"), (v) => Math.round(v) + "×"));
+cursore("pVelo",       "vVelo",        con(suGT("pVelo"), (v) => Math.round(v) + " ms"));
+cursore("pSparpaglio", "vPsparpaglio", con(suGT("pSparpaglio"), (v) => numero(v / 100, 2)));
+/* L'accordatura dosa fra il paesaggio crudo e quello intonato; il fuoco è
+   quanto sono stretti i risonatori. Sono due domande diverse — quanto, e che
+   cosa — e per questo sono due cursori. */
+cursore("pAccordatura","vAccordatura", con(suGT("pAccordatura"), (v) => numero(v / 100, 2)));
+cursore("pFuoco",      "vFuoco",       con(suGT("pFuoco"), (v) => String(Math.round(v))));
+cursore("pCoda",       "vCoda",        con(suGT("pCoda"), (v) => numero(v, 1) + " s"));
+cursore("pTono",       "vTono",        con(suGT("pTono"), (v) => numero(v / 1000, 1) + " kHz"));
+cursore("pRiverbero",  "vRiverbero",   con(suGT("pRiverbero"), (v) => numero(v / 100, 2)));
 
-el("intonato").addEventListener("change", (e) => { graniIntonati = e.target.checked; });
+/* Il segmento scrive DIRETTO su `G` oltre che su `GT`, ed è l'unica eccezione
+   fuori dai mood. Una maniglia lisciata da `battito()` si trascinerebbe dietro
+   il disegno con un decimo di secondo di ritardo — e trascinare un bordo che
+   arriva dopo il dito è la sola cosa che un'interfaccia diretta non può
+   permettersi. Il segmento poi non entra in nessun suono già cominciato: lo
+   legge la testa al giro dopo, quindi non c'è nessuno scalino da lisciare. */
+function maniglia(id) {
+  const input = el(id);
+  const chiaveG = id;
+  const scrivi = () => {
+    G[chiaveG] = GT[chiaveG] = Number(input.value);
+    input.style.setProperty("--u", frazione(input).toFixed(4));
+    segnaMano(input);
+  };
+  input.addEventListener("input", scrivi);
+  CURSORI.push({ input, def: { crudo: () => G[chiaveG], testo: () => "" },
+                 mostra: () => input.style.setProperty("--u", frazione(input).toFixed(4)) });
+  scrivi();
+}
+maniglia("pInizio");
+maniglia("pFine");
 
 /* -------------------------------------------------------------------- i mood
    Un mood scrive su `G` E su `GT`: è uno scatto, non un gesto. Lasciarlo
@@ -247,7 +271,7 @@ document.addEventListener("keydown", (e) => {
 
 el("gocceOn").addEventListener("change", (e) => { frasiOn = e.target.checked; });
 el("tessutiOn").addEventListener("change", (e) => { tessutiOn = e.target.checked; });
-el("graniOn").addEventListener("change", (e) => { graniOn = e.target.checked; });
+el("paesaggioOn").addEventListener("change", (e) => { paesaggioOn = e.target.checked; });
 
 /* -------------------------------------------------------- i comandi per linea
    Tre per ciascuna delle otto: quanto dura il giro, se tace, e una idea nuova.
@@ -414,7 +438,8 @@ const CANALI_MIXER = [
   { et: "Tessuti", dai: () => LIVELLI.tessuti,
     metti: (v) => { LIVELLI.tessuti = v; if (banco) rileggiTarature(); }, min: -24, max: 6 },
   { et: "Voci",    dai: () => LIVELLI.voci, metti: () => {}, min: -24, max: 6, spento: true },
-  { et: "Grani",   dai: () => LIVELLI.grani,  metti: (v) => { LIVELLI.grani = v; if (banco) banco.livello("grani", v); }, min: -24, max: 6 },
+  { et: "Paesaggio", dai: () => LIVELLI.paesaggio,
+    metti: (v) => { LIVELLI.paesaggio = v; if (banco) banco.livello("paesaggio", v); }, min: -24, max: 6 },
   { et: "Uscita",  dai: () => LIVELLI.uscita, metti: (v) => { LIVELLI.uscita = v;
       if (banco && running) banco.uscita.gain.setTargetAtTime(Math.pow(10, v / 20), ctx.currentTime, 0.1); },
     min: -24, max: 0 },
@@ -514,11 +539,10 @@ el("esportaPng").addEventListener("click", () => {
   }, "image/png");
 });
 
-/* ------------------------------------------------------------ 04 grani · materia
-   Le due porte da cui entra la materia. Il microfono passa da «registra» e da
-   nessun'altra parte: non si granula un flusso dal vivo, si granula una
-   registrazione — la ragione sta in cima a `grani.js` e sono tre, tutte
-   strutturali. */
+/* -------------------------------------------------------- 04 paesaggio · materia
+   Le due porte da cui entra la materia: un file scelto a mano e il microfono.
+   Da qui in poi sono la stessa cosa — un buffer con un nome — e il paesaggio
+   non sa da quale delle due sia arrivato. */
 const selMateria = el("materia");
 function aggiornaMaterie() {
   selMateria.innerHTML = "";
@@ -619,7 +643,7 @@ let avvioSessione = null;
 function battito() {
   for (const k in GT) G[k] += (GT[k] - G[k]) * SMUSSO;
   // A motore fermo li fa questo ciclo, così i cursori rispondono comunque.
-  if (!ctx) { effettiviFrasi(); effettiviTessuti(); effettiviGrani(); }
+  if (!ctx) { effettiviFrasi(); effettiviTessuti(); effettiviPaesaggio(); }
 
   if (Math.abs(effG.addensamento - ultimaTesta) > 0.3) {
     ultimaTesta = effG.addensamento;
@@ -642,6 +666,15 @@ function battito() {
   el("quinteFatte").textContent = String(passiQuinta);
   el("prossima").textContent = minsec(Math.max(0, prossimaQuinta - t));
   el("tonalita").textContent = NOMI_NOTE[tonalita()];
+
+  const mat = materiaCorrente();
+  if (mat) {
+    const seg = segmento();
+    el("vSegmento").textContent = minsec(seg.a) + " → " + minsec(seg.b) +
+      "  ·  " + numero(seg.durata * effGP.rallenta / 60, 1) + "′ di velo";
+  } else {
+    el("vSegmento").textContent = "—";
+  }
   /* Il baricentro si legge in GRADI della collezione, non nel −1..1 in cui la
      deriva lo tiene: «+1,8» vuol dire che la finestra sul campo si è spostata
      di quasi due gradi verso l'alto, ed è un numero che si può contare sulla

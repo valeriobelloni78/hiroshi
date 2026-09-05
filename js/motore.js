@@ -32,7 +32,7 @@ let banco = null;
 let running = false;
 let frasiOn = true;
 let tessutiOn = true;
-let graniOn = true;
+let paesaggioOn = true;
 let timer = null;
 let ultimoGiro = 0;
 let sospensione = null;
@@ -102,8 +102,14 @@ function suonaGoccia(at, ev, L) {
 }
 
 function suonaTenuta(at, ev, L) {
-  const freq = altezza(ev.rel, effGT.registro / 100);
   const dur = durataTenuta(L, ev);
+  /* Una tenuta che arriva oltre il prossimo passo di quinta sceglie un grado
+     che sopravvive al passo: la ragione per esteso sta accanto ad
+     `altezzaCheResta` in `deriva.js`. Il conto si fa qui e non là perché solo
+     qui si sa quanto durerà questa nota. */
+  const freq = at + dur > prossimaQuinta
+    ? altezzaCheResta(ev.rel, effGT.registro / 100)
+    : altezza(ev.rel, effGT.registro / 100);
   const e = suonaTessuto(timbroTessuti, {
     ctx, when: at, dur, freq, vel: ev.vel,
     // Lo scarto casuale del panorama è metà di quello delle gocce: una goccia
@@ -157,15 +163,13 @@ function compensaTessuti(now) {
 }
 
 /* La stessa compensazione dei tessuti, applicata a una somma che qui si CONOSCE
-   invece di doverla sommare: quanti grani suonano insieme è densità per durata,
-   e sono due numeri che stanno in un cursore. Senza, alzare la densità
-   vorrebbe dire alzare il volume invece di infittire la nube — e la densità è
-   proprio il comando che si muove per cambiare la grana, non il livello. */
-let graniEmessi = 0;
-let compensaGraniValore = 1;
-function compensaGrani(now) {
-  compensaGraniValore = 1 / Math.sqrt(sovrapposizioneGrani());
-  banco.normalizza("grani", compensaGraniValore, now);
+   invece di doverla sommare: quanti strati suonano insieme è la sovrapposizione
+   del velo, e quella è una costante. Senza dividere per √N, allargare la
+   finestra vorrebbe dire alzare il volume invece di distendere il suono. */
+let compensaPaesaggioValore = 1;
+function compensaPaesaggio(now) {
+  compensaPaesaggioValore = 1 / Math.sqrt(sovrapposizionePaesaggio());
+  banco.normalizza("paesaggio", compensaPaesaggioValore, now);
 }
 
 /* ------------------------------------------------------------------ il passo */
@@ -178,7 +182,7 @@ function passo(now, nascosta) {
     LOOKAHEAD = clamp(ritardo * 2.5, LOOKAHEAD_NASCOSTA, LOOKAHEAD_MAX);
   }
   // Quanto tempo è passato davvero dal giro precedente. Serve alla testa di
-  // lettura dei grani, che è un accumulatore: dal vivo i giri sono a 25 ms,
+  // lettura del paesaggio, che è un accumulatore: dal vivo i giri sono a 25 ms,
   // fuori tempo reale a 50, e la testa deve percorrere la stessa strada nei
   // due casi. Il tetto a mezzo secondo difende dal primo giro e dai risvegli.
   const dt = clamp(now - ultimoGiro, 0, 0.5);
@@ -193,7 +197,7 @@ function passo(now, nascosta) {
   // avanzava e nessuno la ascoltava.
   effettiviFrasi();
   effettiviTessuti();
-  effettiviGrani();
+  effettiviPaesaggio();
   avanzaTesta(dt);
   applicaEfficaci(now);
 
@@ -205,11 +209,11 @@ function passo(now, nascosta) {
   prenota(frasi,   costruisciPiano, suonaGoccia, now, orizzonte, frasiOn);
   prenota(tessuti, costruisciTrama, suonaTenuta, now, orizzonte, tessutiOn);
 
-  contestoGrani(ctx);
-  graniEmessi += prenotaGrani(now, orizzonte, graniOn, banco.canali.grani.ingresso);
+  contestoPaesaggio(ctx);
+  prenotaVelo(now, orizzonte, paesaggioOn, banco.canali.paesaggio.ingresso);
 
   compensaTessuti(now);
-  compensaGrani(now);
+  compensaPaesaggio(now);
 
   // IL RINNOVO AL PASSO DI QUINTA: la scala grossa del ricambio. Quello fine
   // sostituisce una goccia per volta e non si nota mai; questo rifà tutte e
@@ -245,13 +249,12 @@ function passo(now, nascosta) {
    mossi abbastanza da sentirsi: `setTargetAtTime` a ogni passo su quattro
    parametri farebbe quaranta eventi d'automazione al secondo per niente, e
    fuori tempo reale li farebbe tutti in una volta. */
-const ultimo = { spazio: -1, colore: -1, livello: -1, tSpazio: -1, gSpazio: -1 };
+/* Il paesaggio non compare qui: la sua mandata alla stanza dello studio resta
+   a zero, perché la sua stanza se la porta dietro. È l'unica sorgente che non
+   ha uno «spazio», e la ragione sta in cima a `paesaggio.js`. */
+const ultimo = { spazio: -1, colore: -1, livello: -1, tSpazio: -1 };
 function applicaEfficaci(now) {
   if (!banco) return;
-  if (Math.abs(effGR.spazio - ultimo.gSpazio) > 0.5) {
-    ultimo.gSpazio = effGR.spazio;
-    banco.spazio("grani", effGR.spazio / 100);
-  }
   if (Math.abs(effG.spazio - ultimo.spazio) > 0.5) {
     ultimo.spazio = effG.spazio;
     banco.spazio("frasi", effG.spazio / 100);
@@ -277,7 +280,7 @@ function applicaEfficaci(now) {
    pena riscrivere l'automazione. Serve a chi cambia una taratura dal mixer: il
    modello non si è mosso, ma il numero che finisce nel banco sì. */
 function rileggiTarature() {
-  ultimo.spazio = ultimo.colore = ultimo.livello = ultimo.tSpazio = ultimo.gSpazio = -1;
+  ultimo.spazio = ultimo.colore = ultimo.livello = ultimo.tSpazio = -1;
 }
 
 /* ----------------------------------------------------------- l'assemblaggio */
@@ -294,7 +297,7 @@ function costruisciMotore() {
   } catch (e) {
     ctx = new (window.AudioContext || window.webkitAudioContext)();
   }
-  banco = costruisciBanco(ctx, ["frasi", "tessuti", "voci", "grani"]);
+  banco = costruisciBanco(ctx, ["frasi", "tessuti", "voci", "paesaggio"]);
   tara();
 
   avvia(ctx.currentTime);
@@ -346,8 +349,8 @@ function azzeraMemoria(L) {
 function avvia(now) {
   bookedUntil = 0;
   tenuteAperte.length = 0;
-  prossimoGrano = now;
-  graniEmessi = 0;
+  prossimoVelo = now;
+  veliEmessi = 0;
   frasi.forEach(azzeraMemoria);
   tessuti.forEach(azzeraMemoria);
   frasi.forEach((L, i) => {
@@ -379,11 +382,11 @@ function avvia(now) {
    è un parametro del MODELLO — quanto lo sfondo sta sotto al primo piano — e la
    deriva lo muove, un mood lo riscrive, la corona lo mostra. `LIVELLI.tessuti`
    è l'asta del MIXER, cioè una decisione di missaggio come quella delle frasi o
-   dei grani. Il guadagno del canale è la loro SOMMA: l'asta scosta, il modello
+   del paesaggio. Il guadagno del canale è la loro SOMMA: l'asta scosta, il modello
    respira. Sono due cose che si moltiplicano sullo stesso bus e vanno tenute
    separate lo stesso, perché un mood deve poter scrivere il carattere senza
    spostare il missaggio, e viceversa. */
-const LIVELLI = { frasi: -4, tessuti: 0, voci: -12, grani: -6, uscita: -0.9 };
+const LIVELLI = { frasi: -4, tessuti: 0, voci: -12, paesaggio: -6, uscita: -0.9 };
 const EQ_DB = [0, 0, 0, 0, 0, 0, 0, 0];
 
 /* La taratura d'esordio dei canali. Sta in una funzione sola perché il motore
@@ -393,12 +396,12 @@ const EQ_DB = [0, 0, 0, 0, 0, 0, 0, 0];
 function tara() {
   banco.livello("frasi", LIVELLI.frasi);
   banco.livello("voci", LIVELLI.voci);
-  banco.livello("grani", LIVELLI.grani);
+  banco.livello("paesaggio", LIVELLI.paesaggio);
   EQ_DB.forEach((dB, i) => banco.banda(i, dB));
-  ultimo.spazio = ultimo.colore = ultimo.livello = ultimo.tSpazio = ultimo.gSpazio = -1;
+  ultimo.spazio = ultimo.colore = ultimo.livello = ultimo.tSpazio = -1;
   effettiviFrasi();
   effettiviTessuti();
-  effettiviGrani();
+  effettiviPaesaggio();
   applicaEfficaci(ctx.currentTime);
 }
 
@@ -433,7 +436,7 @@ async function accendi(acceso) {
 /* ------------------------------------------------- l'istantanea del modello
    `rendiOffline` percorre LO STESSO MODELLO che sta suonando, e lo percorre
    ripartendo da zero: `avvia(0)` riporta l'origine dei giri a zero, la deriva
-   ricomincia il suo cammino, la testa dei grani torna dov'era. Fatto mentre si
+   ricomincia il suo cammino, la testa del paesaggio torna dov'era. Fatto mentre si
    ascolta, questo scardinerebbe la sessione in corso — i giri si troverebbero
    con l'origine centinaia di secondi nel passato e lo scheduler ne rincorrerebbe
    il recupero.
@@ -467,10 +470,9 @@ function istantaneaModello() {
     deriva: { ...deriva },
     quinta, passiQuinta, passoN, prossimaQuinta, ultimaQuinta,
     bookedUntil, LOOKAHEAD, ultimoGiro,
-    prossimoGrano, graniEmessi, testaOra,
+    prossimoVelo, veliEmessi, testaOra,
     tenute: tenuteAperte.slice(),
     storia: storiaGocce.slice(),
-    storiaG: storiaGrani.slice(),
   };
 }
 
@@ -491,10 +493,9 @@ function ripristinaModello(s) {
   costruisciCampo();                     // la scala dipende dalla quinta rimessa
 
   bookedUntil = s.bookedUntil; LOOKAHEAD = s.LOOKAHEAD; ultimoGiro = s.ultimoGiro;
-  prossimoGrano = s.prossimoGrano; graniEmessi = s.graniEmessi; testaOra = s.testaOra;
+  prossimoVelo = s.prossimoVelo; veliEmessi = s.veliEmessi; testaOra = s.testaOra;
   tenuteAperte.length = 0; for (const e of s.tenute) tenuteAperte.push(e);
   storiaGocce.length = 0; for (const g of s.storia) storiaGocce.push(g);
-  storiaGrani.length = 0; for (const g of s.storiaG) storiaGrani.push(g);
 }
 
 let ultimoRender = null;      // che cosa conteneva l'ultima esportazione
@@ -504,7 +505,7 @@ async function rendiOffline(secondi, sampleRate = 48000) {
   const modello = istantaneaModello();
 
   ctx = new OfflineAudioContext(2, Math.ceil(secondi * sampleRate), sampleRate);
-  banco = costruisciBanco(ctx, ["frasi", "tessuti", "voci", "grani"]);
+  banco = costruisciBanco(ctx, ["frasi", "tessuti", "voci", "paesaggio"]);
   tara();
   banco.uscita.gain.value = Math.pow(10, LIVELLI.uscita / 20);
 
@@ -519,7 +520,7 @@ async function rendiOffline(secondi, sampleRate = 48000) {
   // modello: i contatori sono stato della sessione, e il ripristino li riporta
   // dov'erano — che è giusto, ma vuol dire che dopo non si sa più niente di
   // quello che è appena stato reso.
-  ultimoRender = { secondi, grani: graniEmessi, gocce: storiaGocce.length };
+  ultimoRender = { secondi, veli: veliEmessi, gocce: storiaGocce.length };
 
   ctx = salvato.ctx; banco = salvato.banco; running = salvato.running;
   LOOKAHEAD = salvato.LOOKAHEAD; bookedUntil = salvato.bookedUntil;
@@ -528,6 +529,6 @@ async function rendiOffline(secondi, sampleRate = 48000) {
   // cui `applicaEfficaci` li confronta sono stati riscritti dal render: senza
   // azzerarli, il primo passo dal vivo non riscriverebbe niente e il banco
   // resterebbe con lo spazio e il colore dell'esportazione.
-  ultimo.spazio = ultimo.colore = ultimo.livello = ultimo.tSpazio = ultimo.gSpazio = -1;
+  ultimo.spazio = ultimo.colore = ultimo.livello = ultimo.tSpazio = -1;
   return reso;
 }

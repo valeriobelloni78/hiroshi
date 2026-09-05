@@ -33,7 +33,7 @@
         <label class="chip"><input type="checkbox" id="gocceOn" checked> Frasi</label>
         <label class="chip"><input type="checkbox" id="tessutiOn" checked> Tessuti</label>
         <label class="chip"><input type="checkbox" id="vociOn" disabled> Voci</label>
-        <label class="chip"><input type="checkbox" id="graniOn" checked> Grani</label>
+        <label class="chip"><input type="checkbox" id="paesaggioOn" checked> Paesaggio</label>
         <label class="chip"><input type="checkbox" id="cieloOn" disabled> Cielo</label>
       </div>
 
@@ -279,15 +279,16 @@
       </div>
     </section>
 
-    <!-- =========================================================== 04 grani -->
+    <!-- ======================================================= 04 paesaggio -->
     <section class="banda">
       <div class="capo">
         <span class="titolo">
           <span class="num">04</span>
-          <span class="voce">Grani</span>
-          <span class="dida">una tessera per grano · il colore è l'altezza</span>
+          <span class="voce">Paesaggio</span>
+          <span class="dida">una registrazione tenuta ferma sotto una lente</span>
           <span class="divisore"></span>
-          <label class="chip"><input type="checkbox" id="intonato" checked> intonato</label>
+          <span class="fl">Segmento</span>
+          <span class="vl" id="vSegmento">—</span>
         </span>
         <span class="letture">
           <span class="et">SORGENTE</span>
@@ -304,29 +305,34 @@
         </span>
       </div>
 
-      <div class="fascia-grani" data-quadro="grani"></div>
+      <!-- Le due maniglie del segmento sono due cursori nativi trasparenti stesi
+           sopra il disegno dell'onda: quella in alto è l'inizio, quella in basso
+           la fine. Il canvas le disegna, il browser le comanda — e col tasto Tab
+           compare il filo di messa a fuoco. -->
+      <div class="fascia-paesaggio" data-quadro="paesaggio">
+        <input id="pInizio" class="maniglia alto" type="range" min="0" max="100" step="0.1"
+               value="0" aria-label="Inizio del segmento, in centesimi del materiale">
+        <input id="pFine" class="maniglia basso" type="range" min="0" max="100" step="0.1"
+               value="100" aria-label="Fine del segmento, in centesimi del materiale">
+      </div>
 
-      <div class="comandi-grani">
-        <label class="filetto"><span class="fl">Posizione</span><span class="vl" id="vGtesta">0″</span>
-          <input id="gtesta" type="range" min="0" max="100" step="1" value="0"></label>
-        <label class="filetto"><span class="fl">Corsa</span><span class="vl" id="vGcorsa">0,20×</span>
-          <input id="gcorsa" type="range" min="-100" max="100" step="1" value="20"></label>
-        <label class="filetto"><span class="fl">Densità</span><span class="vl" id="vGdensita">14/s</span>
-          <input id="gdensita" type="range" min="1" max="60" step="1" value="14"></label>
-        <label class="filetto"><span class="fl">Grana</span><span class="vl" id="vGgrano">120 ms</span>
-          <input id="ggrano" type="range" min="10" max="500" step="5" value="120"></label>
-        <label class="filetto"><span class="fl">Dispersione</span><span class="vl" id="vGnube">±550 ms</span>
-          <input id="gnube" type="range" min="0" max="100" step="1" value="22"></label>
-        <label class="filetto"><span class="fl">Altezza</span><span class="vl" id="vGaltezza">0 st</span>
-          <input id="galtezza" type="range" min="-24" max="24" step="1" value="0"></label>
-        <label class="filetto"><span class="fl">Sparpaglio</span><span class="vl" id="vGsparpaglio">0,30</span>
-          <input id="gsparpaglio" type="range" min="0" max="100" step="1" value="30"></label>
-        <label class="filetto"><span class="fl">Spazio</span><span class="vl" id="vGspazio">0,45</span>
-          <input id="gspazio" type="range" min="0" max="100" step="1" value="45"></label>
-        <div class="legenda">
-          <div class="righe"><span class="fl">Grave</span><span class="fl">Acuto</span></div>
-          <div class="rampa"></div>
-        </div>
+      <div class="comandi-paesaggio">
+        <label class="filetto"><span class="fl">Rallentamento</span><span class="vl" id="vRallenta">8×</span>
+          <input id="pRallenta" type="range" min="1" max="64" step="1" value="8"></label>
+        <label class="filetto"><span class="fl">Velo</span><span class="vl" id="vVelo">700 ms</span>
+          <input id="pVelo" type="range" min="80" max="2000" step="10" value="700"></label>
+        <label class="filetto"><span class="fl">Sparpaglio</span><span class="vl" id="vPsparpaglio">0,35</span>
+          <input id="pSparpaglio" type="range" min="0" max="100" step="1" value="35"></label>
+        <label class="filetto"><span class="fl">Accordatura</span><span class="vl" id="vAccordatura">0,55</span>
+          <input id="pAccordatura" type="range" min="0" max="100" step="1" value="55"></label>
+        <label class="filetto"><span class="fl">Fuoco</span><span class="vl" id="vFuoco">18</span>
+          <input id="pFuoco" type="range" min="8" max="80" step="1" value="18"></label>
+        <label class="filetto"><span class="fl">Coda</span><span class="vl" id="vCoda">12,0 s</span>
+          <input id="pCoda" type="range" min="1" max="40" step="1" value="12"></label>
+        <label class="filetto"><span class="fl">Tono</span><span class="vl" id="vTono">2,0 kHz</span>
+          <input id="pTono" type="range" min="300" max="12000" step="100" value="2000"></label>
+        <label class="filetto"><span class="fl">Riverbero</span><span class="vl" id="vRiverbero">0,70</span>
+          <input id="pRiverbero" type="range" min="0" max="100" step="1" value="70"></label>
       </div>
     </section>
 
@@ -372,6 +378,10 @@
 
     <footer class="piede">
       <span id="piedeStato">fermo</span>
+      <span class="legenda chiave">
+        <span class="righe"><span class="fl">Grave</span><span class="fl">Acuto</span></span>
+        <span class="rampa"></span>
+      </span>
       <span id="piedeMano">il colore è l'altezza, la lunghezza la durata</span>
     </footer>
 
@@ -383,9 +393,9 @@
 <script src="js/linee.js"></script>
 <script src="js/timbri.js"></script>
 <script src="js/tessuti.js"></script>
-<script src="js/grani.js"></script>
 <script src="js/mood.js"></script>
 <script src="js/banco.js"></script>
+<script src="js/paesaggio.js"></script>
 <script src="js/motore.js"></script>
 <script src="js/registratore.js"></script>
 <script src="js/comandi.js"></script>

@@ -120,13 +120,24 @@ function passatutto(ctx, sorgente, ms, g) {
   return uscita;
 }
 
-function costruisciRiverbero(ctx) {
+/* La rete si costruisce su misura: la stanza dello studio tiene le tarature di
+   Rada, il PAESAGGIO se ne fa una sua, più grande e più lunga. Non è una
+   seconda stanza per le altre sorgenti — quelle continuano a stare tutte
+   nell'unica, e «spazio» resta una mandata: è che per un drone il riverbero
+   non è un ambiente in cui il suono sta, è metà del suono, e va dove sta la
+   sorgente invece che in fondo al banco. */
+function costruisciRiverbero(ctx, opz) {
+  const conf = Object.assign({
+    t60: RIV_T60, smorzamento: RIV_SMORZAMENTO,
+    pettini: RIV_PETTINI, passatutto: RIV_PASSATUTTO,
+  }, opz || {});
+
   const ingresso = ctx.createGain();
   ingresso.channelCount = 1;
   ingresso.channelCountMode = "explicit";
 
   const somma = ctx.createGain();
-  somma.gain.value = 1 / RIV_PETTINI.length;
+  somma.gain.value = 1 / conf.pettini.length;
 
   // I pettini sono CONDIVISI fra i due canali, non sdoppiati: sdoppiandoli si
   // misura uno squilibrio di 6 dB fra i lati, perché un anello più corto torna
@@ -138,23 +149,42 @@ function costruisciRiverbero(ctx) {
   // all'altra.
   const campione = ctx.createBiquadFilter();
   campione.type = "lowpass";
-  campione.frequency.value = RIV_SMORZAMENTO;
+  campione.frequency.value = conf.smorzamento;
   campione.Q.value = Math.SQRT1_2;
-  const picco = piccoDi(ctx, campione);
 
-  for (const ms of RIV_PETTINI) {
-    const ritardo = ctx.createDelay(0.1);
+  const massimo = Math.max(...conf.pettini) / 1000;
+  const pettini = [];
+  for (const ms of conf.pettini) {
+    const ritardo = ctx.createDelay(Math.max(0.1, massimo * 1.5));
     ritardo.delayTime.value = ms / 1000;
     const smorza = ctx.createBiquadFilter();
     smorza.type = "lowpass";
-    smorza.frequency.value = RIV_SMORZAMENTO;
+    smorza.frequency.value = conf.smorzamento;
     smorza.Q.value = Math.SQRT1_2;
     const anello = ctx.createGain();
-    anello.gain.value = Math.pow(10, -3 * (ms / 1000) / RIV_T60) / picco;
     ingresso.connect(ritardo);
     ritardo.connect(smorza); smorza.connect(anello); anello.connect(ritardo);
     ritardo.connect(somma);
+    pettini.push({ ms, smorza, anello });
   }
+
+  /* La taratura, e si rifà TUTTA ogni volta che si tocca uno dei due numeri.
+     Il picco si RIMISURA sul filtro col nuovo smorzamento invece di riusare
+     quello di prima: il guadagno d'anello ci si divide dentro, e riusare un
+     picco vecchio è il modo per cui una rete a retroazione smette di scendere
+     e comincia a crescere. Costa una risposta in frequenza — sincrona, e
+     nessun rendering. */
+  function tara(t60, smorzamento) {
+    conf.t60 = clamp(t60, 0.2, 60);
+    conf.smorzamento = clamp(smorzamento, 200, 18000);
+    campione.frequency.value = conf.smorzamento;
+    const picco = piccoDi(ctx, campione);
+    for (const p of pettini) {
+      p.smorza.frequency.value = conf.smorzamento;
+      p.anello.gain.value = Math.pow(10, -3 * (p.ms / 1000) / conf.t60) / picco;
+    }
+  }
+  tara(conf.t60, conf.smorzamento);
 
   // Un filo di continua a 10⁻¹⁵ tiene i valori sopra la soglia dei denormali,
   // che su molti processori costano decine di volte tanto proprio quando la
@@ -167,13 +197,13 @@ function costruisciRiverbero(ctx) {
   }
 
   const unione = ctx.createChannelMerger(2);
-  RIV_PASSATUTTO.forEach((catena, canale) => {
+  conf.passatutto.forEach((catena, canale) => {
     let nodo = somma;
     for (const ms of catena) nodo = passatutto(ctx, nodo, ms, 0.5);
     nodo.connect(unione, 0, canale);
   });
 
-  return { ingresso, uscita: unione };
+  return { ingresso, uscita: unione, tara };
 }
 
 /* ------------------------------------------------------------ l'equalizzatore

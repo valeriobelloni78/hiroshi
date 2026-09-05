@@ -62,7 +62,7 @@ function tinta(k, a) {
 
 /* ------------------------------------------------------- lo spettro dell'altezza
    Cinque fermate, le stesse cinque variabili che il CSS usa per la legenda
-   sotto la fascia dei grani. Gli estremi sono FISSI e non presi dal campo
+   sotto la fascia del paesaggio. Gli estremi sono FISSI e non presi dal campo
    corrente: prendendoli da `SCALE` la rampa si sposterebbe a ogni passo di
    quinta, e il colore direbbe la tonalità invece dell'altezza.
 
@@ -449,31 +449,23 @@ function zeroAste(box) {
   }
 }
 
-/* ------------------------------------------------------- la fascia dei grani
+/* --------------------------------------------------------- la fascia del paesaggio
    LA MATERIA INTERA, distesa per il lungo: da sinistra a destra c'è tutto il
-   file, dal primo campione all'ultimo. Non è più una finestra che scorre — è
-   l'oggetto che si sta macinando, fermo, e sopra ci si vede passare la testa di
-   lettura. Chi granula ha bisogno di sapere DOVE sta dentro il suono, e per
-   saperlo deve vedere il suono per intero.
+   file, dal primo campione all'ultimo. Chi sceglie un segmento ha bisogno di
+   vedere il suono per intero, e di vedere dove sta il pezzo che ha scelto.
 
-   L'onda è un ISTOGRAMMA DI QUADRATINI IN SCALA DI GRIGI, e i due fatti contano
-   tutti e due. Quadratini perché è il segno di tutta la tavola — il quadrato
-   d'inchiostro dei cursori, delle fasi, delle punte del baricentro — e una
-   campitura piena qui peserebbe più del suono che descrive. In scala di grigi
-   perché IL COLORE È GIÀ IMPEGNATO: dice l'altezza, e sopra questa onda ci
-   cadono i grani, che sono colorati. Un'onda colorata e dei grani colorati
-   sarebbero due cose che si assomigliano e non vogliono dire lo stesso.
+   L'onda è un ISTOGRAMMA DI QUADRATINI IN SCALA DI GRIGI, e i quadratini
+   PARTONO DALLA RIGA DI MEZZO: il primo ci sta sopra, non accanto. Una colonna
+   che cominciasse un salto più in là lascerebbe una riga vuota in mezzo a tutta
+   la fascia, e quella riga si legge come un taglio nel materiale invece che
+   come il suo asse.
 
-   I grani si disegnano DOVE VENGONO PRESI: la x è il punto del materiale da cui
-   il grano è stato ritagliato, la y è dove finisce nel campo stereo, il colore è
-   di quanto è stato trasposto. Così i due cursori che aprono la nube si vedono
-   per quello che fanno — «dispersione» la allarga per il lungo, «sparpaglio»
-   per l'alto — e la nube resta attaccata alla testa invece di essere un grafico
-   a parte. */
+   Fuori dal segmento la carta si posa sopra: il materiale resta visibile — è
+   quello che si sta scegliendo, e sceglierlo alla cieca non si può — ma
+   arretra, e quello che si sente resta in primo piano. */
 const ALTEZZE_ONDA = 7;          // quanti quadratini per mezza altezza
 const PASSO_ONDA = 5.4;          // il passo delle colonne, come sul baricentro
 const LATO_ONDA = 3;
-const LATO_GRANO = 5;
 
 /* L'onda si calcola una volta per materiale e per riquadro, e si tiene disegnata
    su una tela sua. Un file di novanta secondi sono quattro milioni di campioni e
@@ -500,7 +492,7 @@ function disegnaOnda(m, largo, alto) {
     if (max > massimo) massimo = max;
   }
   // Si normalizza sul picco del materiale: una registrazione presa piano
-  // altrimenti sarebbe una riga piatta, e non si potrebbe mirare niente.
+  // altrimenti sarebbe una riga piatta, e non ci si potrebbe mirare niente.
   const scala = massimo > 1e-4 ? 1 / massimo : 0;
 
   ondaTela = ondaTela || document.createElement("canvas");
@@ -513,6 +505,12 @@ function disegnaOnda(m, largo, alto) {
   const mezzo = alto / 2;
   const salto = (alto / 2 - 2) / ALTEZZE_ONDA;
   const largoCol = largo / n;
+  const grigio = (k) => {
+    // La scala di grigi: pieno sulla riga, sempre più tenue verso la punta. È
+    // il modo di dare un peso alla colonna senza annerirla tutta.
+    const u = k / Math.max(1, ALTEZZE_ONDA - 1);
+    return u < 0.45 ? tinta("inchiostro-2", 0.9) : u < 0.75 ? tinta("grigio") : tinta("spento");
+  };
   for (let i = 0; i < n; i++) {
     const x = (i + 0.5) * largoCol - LATO_ONDA / 2;
     const quanti = Math.round(clamp(picchi[i] * scala, 0, 1) * ALTEZZE_ONDA);
@@ -523,12 +521,11 @@ function disegnaOnda(m, largo, alto) {
       O.fillRect(x + 0.5, mezzo - 1, 2, 2);
       continue;
     }
-    for (let k = 1; k <= quanti; k++) {
-      // La scala di grigi: pieno vicino alla riga, sempre più tenue verso la
-      // punta. È il modo di dare un peso alla colonna senza annerirla tutta.
-      const u = (k - 1) / Math.max(1, ALTEZZE_ONDA - 1);
-      O.fillStyle = tinta(u < 0.45 ? "inchiostro-2" : u < 0.75 ? "grigio" : "spento",
-                          u < 0.45 ? 0.9 : 1);
+    // Il primo quadratino sta SULLA riga, gli altri salgono e scendono da lì.
+    O.fillStyle = grigio(0);
+    O.fillRect(x, mezzo - LATO_ONDA / 2, LATO_ONDA, LATO_ONDA);
+    for (let k = 1; k < quanti; k++) {
+      O.fillStyle = grigio(k);
       O.fillRect(x, mezzo - k * salto - LATO_ONDA / 2, LATO_ONDA, LATO_ONDA);
       O.fillRect(x, mezzo + k * salto - LATO_ONDA / 2, LATO_ONDA, LATO_ONDA);
     }
@@ -537,12 +534,19 @@ function disegnaOnda(m, largo, alto) {
   return ondaTela;
 }
 
-function fasciaGrani(box, ora) {
+/* La maniglia di un capo del segmento: un quadrato d'inchiostro fuori
+   dall'onda, sul bordo dove sta il cursore che lo comanda, e la verticale che
+   scende a dire dov'è il taglio. */
+function maniglia(x, box, sopra) {
+  riga(x, box.y - 4, x, box.y + box.h + 4, 1, tinta("inchiostro"));
+  quadretto(x, sopra ? box.y - 7 : box.y + box.h + 7, 7, tinta("inchiostro"), 0);
+}
+
+function fasciaPaesaggio(box, ora) {
   if (!box) return;
   const m = materiaCorrente();
 
   if (!m) {
-    ondaChiave = "";
     riga(box.x, box.cy, box.x + box.w, box.cy, 1, tinta("filo-2"), [2, 5]);
     scritta("nessuna materia: carica un suono, o apri il microfono",
       box.cx, box.cy - 8, { dim: 9, sp: .4, all: "center", base: "middle" });
@@ -550,43 +554,27 @@ function fasciaGrani(box, ora) {
   }
 
   T.save();
-  if (!graniOn) T.globalAlpha = 0.4;
+  if (!paesaggioOn) T.globalAlpha = 0.4;
 
   const perSec = box.w / m.durata;
-  const centro = centroNube();
-  const largoNube = (effGR.nube / 100) * 2.5;
-
-  // La nube prima dell'onda: è il fondo su cui si legge, non un velo sopra.
-  const nx0 = Math.max(box.x, box.x + (centro - largoNube) * perSec);
-  const nx1 = Math.min(box.x + box.w, box.x + (centro + largoNube) * perSec);
-  T.fillStyle = tinta("filo-2", 0.55);
-  T.fillRect(nx0, box.y, Math.max(1.5, nx1 - nx0), box.h);
-
+  const seg = segmento();
   T.drawImage(disegnaOnda(m, box.w, box.h), box.x, box.y, box.w, box.h);
 
-  /* I grani, dove sono stati presi. Sono gli ultimi due secondi e basta: la
-     nube è una cosa che succede adesso, e una scia lunga direbbe che i grani
-     restano dove sono caduti. */
-  for (const g of storiaGrani) {
-    const eta = ora - g.t;
-    if (eta > FASCIA_GRANI) continue;
-    const a = clamp(1 - eta / FASCIA_GRANI, 0, 1);
-    const x = box.x + g.dentro * perSec;
-    const y = box.cy + g.pan * (box.h / 2 - LATO_GRANO);
-    // Lo strappo: il grano cancella un filo di onda attorno a sé prima di
-    // posarsi. Senza, un quadratino colorato dentro un banco di quadratini
-    // grigi della stessa misura si perde — e la nube è la cosa da guardare.
-    T.save();
-    T.globalAlpha = 1;
-    quadretto(x, y, LATO_GRANO, coloreSpettro(0.5 + g.semi / 48, 0.35 + a * 0.65), 1.2);
-    T.restore();
-  }
+  // La carta si posa su quello che sta fuori dal segmento.
+  const x0 = box.x + seg.a * perSec, x1 = box.x + seg.b * perSec;
+  T.fillStyle = tinta("carta", 0.66);
+  T.fillRect(box.x, box.y, Math.max(0, x0 - box.x), box.h);
+  T.fillRect(x1, box.y, Math.max(0, box.x + box.w - x1), box.h);
 
-  // La testa: dove si sta leggendo. Il quadratino sta fuori dall'onda, perché
-  // dentro si confonderebbe con un transiente.
-  const tx = box.x + centro * perSec;
-  riga(tx, box.y - 3, tx, box.y + box.h + 3, 1, tinta("inchiostro"));
-  quadretto(tx, box.y - 6, 5, tinta("inchiostro"), 0);
+  // La finestra che si sta leggendo adesso, larga quanto il velo.
+  const testa = testaPaesaggio();
+  const tx = box.x + testa * perSec;
+  T.fillStyle = tinta("filo-2", 0.75);
+  T.fillRect(tx, box.y, Math.max(1.5, seg.velo * perSec), box.h);
+
+  maniglia(x0, box, true);
+  maniglia(x1, box, false);
+  riga(tx, box.y, tx, box.y + box.h, 1, tinta("inchiostro"));
 
   scritta("0″", box.x, box.y + box.h + 9, { dim: 7.5, sp: .6, base: "top" });
   scritta(minsec(m.durata), box.x + box.w, box.y + box.h + 9,
@@ -755,7 +743,7 @@ function disegna() {
   misuratoreLR(quadro("misuratore"), orologio);
   spettro(quadro("spettro"));
   zeroAste(quadro("aste"));
-  fasciaGrani(quadro("grani"), ora);
+  fasciaPaesaggio(quadro("paesaggio"), ora);
   fasciaQuinte(quadro("quinte"));
   fasciaBaricentro(quadro("baricentro"), ora);
 }

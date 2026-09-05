@@ -161,17 +161,27 @@ function tonalitaFra(n) {
    fissa il contenuto non ha più ragione di cambiare fra un passo e l'altro.
    Prima si ricostruiva due volte al secondo perché la tonica scivolava.   */
 const SCALE = new Array(25);
+/* La classe d'altezza di ciascun grado, 0÷11 sopra il do. Si tiene in
+   parallelo invece di ricavarla con un logaritmo a ogni lettura: serve a
+   sapere quali gradi sopravvivono al prossimo passo di quinta, e quella
+   domanda si fa una volta per tenuta lunga. */
+const CLASSI = new Array(25);
 const MEZZA_CAMPATA  = 8;   // semi-apertura massima della selezione, in gradi
 const AMPIEZZA_CENTRO = 4;  // di quanto scorre il baricentro, in gradi
 const CENTRO_BASE     = 12; // il grado di mezzo, fra i venticinque
 
 function costruisciCampo() {
   const q = tonalita();
-  let n = 0;
+  const v = [];
   for (let oct = -2; oct <= 2; oct++)
-    for (const g of GRADI)
-      SCALE[n++] = TONICA_BASE * Math.pow(2, (oct * 12 + (g + q) % 12) / 12);
-  SCALE.sort((a, b) => a - b);
+    for (const g of GRADI) {
+      const classe = (g + q) % 12;
+      v.push({ hz: TONICA_BASE * Math.pow(2, (oct * 12 + classe) / 12), classe });
+    }
+  // Si ordina la coppia e non il solo vettore delle frequenze: la classe deve
+  // restare attaccata alla sua altezza, o `CLASSI` racconterebbe un'altra scala.
+  v.sort((a, b) => a.hz - b.hz);
+  for (let i = 0; i < v.length; i++) { SCALE[i] = v[i].hz; CLASSI[i] = v[i].classe; }
 }
 
 /* --- IL BARICENTRO ---------------------------------------------------------
@@ -188,10 +198,56 @@ function costruisciCampo() {
    se il baricentro muovesse solo il primo piano lo sfondo resterebbe indietro.
    Il `rel` dell'evento e l'apertura del cursore decidono dove cade rispetto
    al centro, esattamente come prima.                                      */
-function altezza(rel, spread) {
+function indiceDi(rel, spread) {
   const centro = CENTRO_BASE + deriva.centro * AMPIEZZA_CENTRO;
-  const i = Math.round(centro + rel * spread * MEZZA_CAMPATA);
-  return SCALE[clamp(i, 0, SCALE.length - 1)];
+  return clamp(Math.round(centro + rel * spread * MEZZA_CAMPATA), 0, SCALE.length - 1);
+}
+
+function altezza(rel, spread) {
+  return SCALE[indiceDi(rel, spread)];
+}
+
+/* --- l'altezza che sopravvive al passo -------------------------------------
+   UNA TENUTA VIENE INTONATA UNA VOLTA SOLA, quando viene prenotata, e tiene
+   quella frequenza fino in fondo: sessanta secondi, al massimo. Se nel
+   frattempo scatta la quinta e il grado che aveva scelto è proprio quello che
+   se ne va, resta fuori dalla collezione con una nota sola di scarto — e una
+   nota sola di scarto, su una pentatonica anemitonica, è l'unica dissonanza
+   che questo strumento sappia produrre. Misurato prima della correzione: fra
+   le tenute che attraversano un passo, il 22% finiva fuori.
+
+   La correzione è piccola perché il passo di quinta è piccolo: fra una
+   pentatonica e la sua quinta CAMBIA UNA NOTA SU CINQUE, quindi quattro gradi
+   su cinque valgono in tutte e due le collezioni. Basta scegliere fra quelli,
+   e si sceglie il PIÙ VICINO a quello che si voleva — così la tenuta non
+   salta di ottava e la trama non se ne accorge.
+
+   Vale per le tenute e non per le gocce: la coda di una goccia dura pochi
+   secondi e sta già scendendo quando il passo arriva, mentre un tenuto sta
+   ancora aprendosi. E vale in tutti e due i modi del materiale: non dipende
+   dal ricambio ma dal fatto che una nota lunga attraversa un cambio d'armonia. */
+let COMUNI = null, comuniPer = -1;
+
+function classiCheRestano() {
+  if (COMUNI && comuniPer === passiQuinta) return COMUNI;
+  const q = tonalita(), p = tonalitaFra(1);
+  const dopo = new Set(GRADI.map((g) => (g + p) % 12));
+  COMUNI = new Set(GRADI.map((g) => (g + q) % 12).filter((c) => dopo.has(c)));
+  comuniPer = passiQuinta;
+  return COMUNI;
+}
+
+function altezzaCheResta(rel, spread) {
+  const i = indiceDi(rel, spread);
+  const restano = classiCheRestano();
+  if (restano.has(CLASSI[i])) return SCALE[i];
+  for (let d = 1; d < SCALE.length; d++) {
+    for (const k of [i - d, i + d]) {
+      if (k < 0 || k >= SCALE.length) continue;
+      if (restano.has(CLASSI[k])) return SCALE[k];
+    }
+  }
+  return SCALE[i];                       // non può succedere: quattro su cinque restano
 }
 
 /* --- l'avanzamento --------------------------------------------------------

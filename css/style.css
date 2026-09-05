@@ -126,7 +126,7 @@ body{
 .banda{border-top:1px solid var(--filo);margin-top:16px;padding-top:12px}
 .banda.classi{border-top:0;margin-top:0;padding-top:14px}
 .capo{display:flex;align-items:baseline;justify-content:space-between;gap:20px}
-.capo .titolo{display:flex;align-items:baseline;gap:12px}
+.capo .titolo{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
 .capo .num{font-family:var(--mono);font-size:13px;font-weight:200;color:var(--muto)}
 .capo .voce{font-size:11px;font-weight:400;letter-spacing:.30em;text-transform:uppercase}
 .capo .dida{font-family:var(--mono);font-size:8px;letter-spacing:.10em;color:var(--grigio)}
@@ -283,11 +283,24 @@ input[type=range].verticale::-moz-range-thumb{width:9px;height:7px}
 .fader .fl{font-size:7px;letter-spacing:.10em}
 .fader .vl{font-size:7.5px}
 
-/* ------------------------------------------------------------------- i grani */
-.fascia-grani{width:100%;height:82px;position:relative;margin-top:10px}
-.comandi-grani{display:grid;grid-template-columns:repeat(8,minmax(0,1fr)) 150px;
-               gap:0 26px;padding-top:26px}
+/* --------------------------------------------------------------- il paesaggio
+   La fascia porta sopra due cursori nativi trasparenti: l'inizio del segmento
+   sul bordo di sopra, la fine su quello di sotto. Stanno uno per lato e non
+   sovrapposti perché due cursori distesi sullo stesso rettangolo se li
+   prenderebbe sempre quello davanti. */
+.fascia-paesaggio{width:100%;height:82px;position:relative;margin-top:10px}
+.fascia-paesaggio .maniglia{position:absolute;left:0;width:100%;height:18px;
+                            appearance:none;background:transparent;opacity:0;cursor:ew-resize}
+.fascia-paesaggio .maniglia.alto{top:-5px}
+.fascia-paesaggio .maniglia.basso{bottom:-5px}
+.fascia-paesaggio .maniglia:focus-visible{opacity:1;outline:1px solid var(--acuto)}
+.comandi-paesaggio{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));
+                   gap:0 26px;padding-top:26px}
 .legenda{display:flex;flex-direction:column;gap:5px;align-self:end}
+/* La chiave della rampa sta nel piede, non in una sezione: il colore dice
+   l'altezza su tutta la tavola, e una chiave dentro un riquadro direbbe che
+   vale solo lì. */
+.legenda.chiave{width:150px;flex:none}
 .legenda .righe{display:flex;justify-content:space-between}
 .legenda .rampa{height:6px;background:linear-gradient(90deg,var(--grave),var(--ciano),
                 var(--medio),var(--oro),var(--acuto))}
@@ -325,7 +338,7 @@ input[type=range].verticale::-moz-range-thumb{width:9px;height:7px}
   .banco{grid-template-columns:205px minmax(0,1fr);gap:22px 24px}
   .banco .mixer{grid-column:1/-1}
   .faders{max-width:420px}
-  .comandi-grani{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 26px}
+  .comandi-paesaggio{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 26px}
   .legenda{grid-column:1/-1;max-width:220px}
   .deriva{grid-template-columns:minmax(0,1fr) 1px 250px;gap:16px 22px}
   .deriva .filoV:nth-of-type(1){display:none}
@@ -335,7 +348,7 @@ input[type=range].verticale::-moz-range-thumb{width:9px;height:7px}
   .classi{grid-template-columns:minmax(0,1fr)}
   .classi .colonna.destra .intesta{flex-direction:row;justify-content:flex-start;text-align:left}
   .banco{grid-template-columns:minmax(0,1fr)}
-  .comandi-grani{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .comandi-paesaggio{grid-template-columns:repeat(2,minmax(0,1fr))}
   .deriva{grid-template-columns:minmax(0,1fr)}
   .deriva .filoV{display:none}
   .testata{height:auto;flex-wrap:wrap;gap:14px;padding-bottom:12px}

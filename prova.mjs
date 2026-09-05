@@ -298,25 +298,81 @@ const esito = await p.evaluate(async () => {
     applicaMoodGocce("sereno"); applicaMoodTessuti("velo");
   }
 
-  /* 7 · I GRANI.
+  /* 6b · LE TENUTE CHE ATTRAVERSANO UN PASSO DI QUINTA.
+
+         Una tenuta viene intonata una volta sola, quando viene prenotata, e
+         tiene quella frequenza fino in fondo — sessanta secondi al massimo.
+         Se nel frattempo la collezione scatta e il grado che aveva scelto è
+         proprio quello che se ne va, resta fuori: una nota sola di scarto, che
+         su una pentatonica anemitonica è l'unica dissonanza che questo
+         strumento sappia produrre. Misurato prima della correzione: il 22%
+         delle tenute che attraversano un passo finiva fuori.
+
+         `altezzaCheResta` sceglie fra i quattro gradi su cinque che valgono in
+         tutte e due le collezioni, e prende il più vicino a quello voluto.
+         Qui si verifica che non ne esca nemmeno una fuori, e che il rimedio
+         non sia peggio del male: la nota si sposta di un grado, non di
+         un'ottava. */
+  {
+    const classe = (hz) =>
+      ((Math.round(12 * Math.log2(hz / (440 * Math.pow(2, -9 / 12)))) % 12) + 12) % 12;
+    let fuoriPrima = 0, fuoriDopo = 0, spostate = 0, saltoMax = 0;
+    const PROVE = 600;
+    for (let k = 0; k < PROVE; k++) {
+      const rel = Math.random() * 2 - 1, spread = effGT.registro / 100;
+      const senza = altezza(rel, spread);
+      const con = altezzaCheResta(rel, spread);
+      if (senza !== con) {
+        spostate++;
+        saltoMax = Math.max(saltoMax, Math.abs(12 * Math.log2(con / senza)));
+      }
+      prossimaQuinta = 0; avanzaDeriva(k + 1);          // fa scattare la collezione
+      const dopo = new Set(SCALE.map(classe));
+      if (!dopo.has(classe(senza))) fuoriPrima++;
+      if (!dopo.has(classe(con))) fuoriDopo++;
+    }
+    R.tenuteAlPasso = {
+      senzaCorrezione: fuoriPrima + " su " + PROVE,
+      conCorrezione: fuoriDopo + " su " + PROVE,
+      spostate: spostate + " su " + PROVE,
+      saltoMassimo: +saltoMax.toFixed(1) + " semitoni",
+    };
+    if (fuoriDopo)
+      R.errori.push("una tenuta che attraversa il passo resta fuori dalla collezione: " +
+                    fuoriDopo + " su " + PROVE);
+    if (fuoriPrima === 0)
+      R.errori.push("la prova non sa più distinguere il caso sbagliato: senza correzione " +
+                    "nessuna tenuta finisce fuori, e allora non sta provando niente");
+    if (saltoMax > 4)
+      R.errori.push("la correzione sposta la nota di " + saltoMax.toFixed(1) +
+                    " semitoni: doveva prendere il grado vicino, non saltare");
+  }
+
+  /* 7 · IL PAESAGGIO.
 
         All'apertura questa sorgente è muta per costruzione — non c'è nessun
-        suono in dotazione da granulare — quindi la prova si porta una materia
+        suono in dotazione da percorrere — quindi la prova si porta una materia
         sua: sei secondi di quattro toni in successione, che è materiale
-        riconoscibile e permette di verificare che la testa di lettura si
-        muova davvero invece di macinare sempre lo stesso punto.
+        riconoscibile e permette di verificare che la testa si muova davvero
+        invece di stare ferma sullo stesso punto.
 
-        Si verificano quattro cose:
-         (a) che i grani suonino e non clippino, resi dal motore intero;
-         (b) che la TESTA SI MUOVA: a corsa zero la nube resta ferma, a corsa
-             piena percorre il materiale. È il difetto più facile da
-             introdurre — un accumulatore che non accumula — ed è muto: si
-             sente solo come una nube che non va da nessuna parte.
-         (c) che la compensazione segua la densità: raddoppiando i grani il
-             bus deve scendere di 3 dB, non salire;
-         (d) che in modo INTONATO tutti gli intervalli stiano nella collezione
-             — nessun semitono, che è la garanzia che il granulare non deve
-             rompere. */
+        Si verificano cinque cose:
+         (a) che il drone suoni e non clippi, reso dal motore intero;
+         (b) che LA TESTA CAMMINI AL PASSO GIUSTO: con un rallentamento di N il
+             segmento deve durare N volte tanto. È il difetto più facile da
+             introdurre — un accumulatore che non accumula, o che accumula alla
+             velocità sbagliata — ed è muto: si sente solo come un paesaggio che
+             non va da nessuna parte;
+         (c) che il SEGMENTO tenga: la testa non deve mai uscire dai due estremi,
+             comunque li si metta, e nemmeno rovesciandoli;
+         (d) che L'ALTEZZA NON CAMBI col rallentamento — è tutto il punto del
+             velo: la materia si distende senza traslocare — e per dirlo si
+             misura dove sta l'energia dello spettro con due rallentamenti
+             diversi;
+         (e) che il riverbero del paesaggio SCENDA invece di crescere, che è il
+             modo in cui una rete a retroazione sbaglia, e che ritararlo non lo
+             faccia esplodere: la coda e il tono si muovono, e ogni volta il
+             picco del filtro va rimisurato. */
   {
     const sr = 48000, sec = 6;
     const c = new OfflineAudioContext(1, sr * sec, sr);
@@ -328,73 +384,191 @@ const esito = await p.evaluate(async () => {
     }
     aggiungiMateria("prova", mat);
 
-    // (b) la testa
-    testaOra = 0; G.gCorsa = GT.gCorsa = 0; effettiviGrani();
-    for (let k = 0; k < 100; k++) avanzaTesta(0.05);
-    const ferma = testaOra;
-    G.gCorsa = GT.gCorsa = 100; effettiviGrani();
-    for (let k = 0; k < 100; k++) avanzaTesta(0.05);
-    const corsa = testaOra;
-    R.grani = { testaFerma: +ferma.toFixed(3), testaDopo5s: +corsa.toFixed(2) };
-    if (ferma !== 0) R.errori.push("a corsa zero la testa si muove lo stesso");
-    if (Math.abs(corsa - 5) > 0.3) R.errori.push("a corsa piena la testa ha fatto " +
-      corsa.toFixed(2) + " s invece di 5");
-
-    // (c) la compensazione
-    G.gDensita = GT.gDensita = 10; G.gGrano = GT.gGrano = 100; effettiviGrani();
-    const c1 = sovrapposizioneGrani();
-    G.gDensita = GT.gDensita = 20; effettiviGrani();
-    const c2 = sovrapposizioneGrani();
-    const scarto = 20 * Math.log10(Math.sqrt(c1) / Math.sqrt(c2));
-    R.grani.compensazione = numeroDb(scarto) + " raddoppiando la densità";
-    if (Math.abs(scarto + 3) > 0.4)
-      R.errori.push("la compensazione dei grani non segue la densità: " + scarto.toFixed(2) + " dB");
-
-    // (d) gli intervalli, in modo intonato. Quello che va verificato sono gli
-    //     INTERVALLI dentro la nube, non l'altezza assoluta: un materiale
-    //     registrato non ha una tonalità che si possa conoscere — un temporale
-    //     non ne ha affatto — quindi la trasposizione assoluta non vuol dire
-    //     niente, mentre gli intervalli fra un grano e l'altro si sentono
-    //     eccome. La promessa è che siano quelli della collezione: nessun
-    //     semitono, nessun tritono.
-    graniIntonati = true;
-    G.gSparpaglio = GT.gSparpaglio = 100; G.gAltezza = GT.gAltezza = 0;
-    effettiviGrani();
-    const base = baseGrani();
-    const classi = new Set();
-    let interi = true;
-    for (let k = 0; k < 3000; k++) {
-      const s = semitoniGrano() - base;
-      if (Math.abs(s - Math.round(s)) > 1e-9) { interi = false; break; }
-      classi.add(((Math.round(s) % 12) + 12) % 12);
+    // (b) e (c) la testa dentro il segmento
+    G.pInizio = GT.pInizio = 20; G.pFine = GT.pFine = 80;
+    G.pRallenta = GT.pRallenta = 10; G.pVelo = GT.pVelo = 500;
+    effettiviPaesaggio();
+    const seg = segmento();
+    testaOra = seg.a;
+    let fuori = 0;
+    for (let k = 0; k < 200; k++) {
+      avanzaTesta(0.05);                       // dieci secondi di tempo vero
+      if (testaOra < seg.a - 1e-6 || testaOra > seg.a + seg.corsa + 1e-6) fuori++;
     }
-    R.grani.classi = [...classi].sort((a, b) => a - b);
-    if (!interi) R.errori.push("un intervallo intonato non cade su un semitono intero");
-    for (const q of classi) {
-      if (!GRADI.includes(q))
-        R.errori.push("in modo intonato esce una classe fuori dalla collezione: " + q);
-    }
-    // E che il reticolo non scivoli col baricentro: due basi diverse devono
-    // restare a distanza intera.
-    if (Math.abs(baseGrani() - Math.round(baseGrani())) > 1e-9)
-      R.errori.push("in modo intonato la base non è un semitono intero");
+    R.paesaggio = {
+      segmento: [+seg.a.toFixed(2), +seg.b.toFixed(2)],
+      corsa: +seg.corsa.toFixed(2),
+      dopo10s: +(testaOra - seg.a).toFixed(2),
+    };
+    if (fuori) R.errori.push("la testa esce dal segmento " + fuori + " volte su 200");
+    // dieci secondi veri a rallentamento dieci fanno un secondo di materiale
+    if (Math.abs((testaOra - seg.a) - 1) > 0.15)
+      R.errori.push("la testa non cammina al passo del rallentamento: " +
+                    (testaOra - seg.a).toFixed(2) + " s di materiale in dieci di tempo");
+    // rovesciando le maniglie il segmento non sparisce, si specchia
+    G.pInizio = GT.pInizio = 80; G.pFine = GT.pFine = 20;
+    effettiviPaesaggio();
+    const rovescio = segmento();
+    if (Math.abs(rovescio.a - seg.a) > 1e-6 || Math.abs(rovescio.b - seg.b) > 1e-6)
+      R.errori.push("rovesciando le maniglie il segmento non è lo stesso");
+    G.pInizio = GT.pInizio = 0; G.pFine = GT.pFine = 100;
 
     // (a) la resa, dal motore intero
-    G.gCorsa = GT.gCorsa = 20; G.gDensita = GT.gDensita = 18;
-    G.gNube = GT.gNube = 30; G.gSparpaglio = GT.gSparpaglio = 30;
-    effettiviGrani();
+    G.pRallenta = GT.pRallenta = 8; G.pRiverbero = GT.pRiverbero = 70;
+    G.pCoda = GT.pCoda = 12; G.pTono = GT.pTono = 2000;
+    effettiviPaesaggio();
     const prima = [frasiOn, tessutiOn];
     frasiOn = false; tessutiOn = false;
-    const nube = await rendiOffline(12);
+    const drone = await rendiOffline(8);
+    R.paesaggio.resa = misura(drone);
+    R.paesaggio.veli = ultimoRender ? ultimoRender.veli : 0;
+    if (R.paesaggio.resa.rms < 0.002) R.errori.push("il paesaggio non arriva all'uscita");
+    if (R.paesaggio.resa.picco >= 0.999) R.errori.push("il paesaggio clippa");
+    if (R.paesaggio.veli < 20)
+      R.errori.push("in otto secondi sono usciti solo " + R.paesaggio.veli + " strati");
+
+    // (d) il rallentamento non trasporta: il baricentro spettrale resta dov'è
+    const baricentroDi = async (rallenta) => {
+      G.pRallenta = GT.pRallenta = rallenta; effettiviPaesaggio();
+      const buf = await rendiOffline(4);
+      const n = 16384;
+      const x = buf.getChannelData(0).slice(sr, sr + n);
+      // Una DFT rada basta: si cerca dove sta l'energia, non lo spettro esatto.
+      let somma = 0, peso = 0;
+      for (let k = 4; k < 400; k++) {
+        const f = (k * sr) / n;
+        let re = 0, im = 0;
+        for (let i = 0; i < n; i += 4) {
+          const a = (2 * Math.PI * k * i) / n;
+          re += x[i] * Math.cos(a); im -= x[i] * Math.sin(a);
+        }
+        const e = re * re + im * im;
+        somma += e * f; peso += e;
+      }
+      return peso > 0 ? somma / peso : 0;
+    };
+    const lento = await baricentroDi(4), lentissimo = await baricentroDi(32);
+    R.paesaggio.altezza = { a4: Math.round(lento), a32: Math.round(lentissimo) };
+    const scarto = Math.abs(lento - lentissimo) / Math.max(1, lento);
+    if (scarto > 0.2)
+      R.errori.push("il rallentamento trasporta: il baricentro passa da " +
+                    Math.round(lento) + " a " + Math.round(lentissimo) + " Hz");
     frasiOn = prima[0]; tessutiOn = prima[1];
-    R.grani.resa = misura(nube);
-    // Il conteggio si legge da `ultimoRender` e non dal contatore vivo: il
-    // ripristino del modello rimette quest'ultimo dov'era prima — che è
-    // giusto, ma vuol dire che dopo un'esportazione non racconta più il render.
-    R.grani.emessi = ultimoRender ? ultimoRender.grani : 0;
-    if (R.grani.resa.rms < 0.002) R.errori.push("i grani non arrivano all'uscita");
-    if (R.grani.resa.picco >= 0.999) R.errori.push("i grani clippano");
-    if (R.grani.emessi < 100) R.errori.push("in dodici secondi sono usciti solo " + R.grani.emessi + " grani");
+    G.pRallenta = GT.pRallenta = 8; effettiviPaesaggio();
+
+    // (e) la coda del riverbero del paesaggio, ritarata due volte
+    {
+      const p = new OfflineAudioContext(2, sr * 8, sr);
+      const riv = costruisciRiverbero(p, { t60: 6, smorzamento: 3000,
+                                           pettini: PETTINI_PAESAGGIO,
+                                           passatutto: PASSATUTTO_PAESAGGIO });
+      riv.tara(24, 900);                        // coda lunga e tono scuro
+      riv.tara(9, 5200);                        // e ancora, per rimisurare
+      const imp = p.createBufferSource();
+      const b1 = p.createBuffer(1, 64, sr);
+      b1.getChannelData(0)[0] = 1;
+      imp.buffer = b1;
+      imp.connect(riv.ingresso); riv.uscita.connect(p.destination);
+      imp.start(0);
+      const coda = await p.startRendering();
+      const rmsFra = (buf, da, a) => {
+        let s2 = 0, n = 0;
+        for (let ch = 0; ch < buf.numberOfChannels; ch++) {
+          const x = buf.getChannelData(ch);
+          for (let i = Math.floor(da * sr); i < Math.floor(a * sr); i++) { s2 += x[i] * x[i]; n++; }
+        }
+        return Math.sqrt(s2 / Math.max(1, n));
+      };
+      const presto = rmsFra(coda, 1, 2), tardi = rmsFra(coda, 6, 7);
+      R.paesaggio.riverbero = { caduta: numeroDb(dB(tardi) - dB(presto)) + " fra 1 s e 6 s" };
+      if (!(tardi < presto))
+        R.errori.push("la coda del paesaggio non scende dopo due ritarature");
+    }
+
+    /* (f) L'ACCORDATURA. Il paesaggio non ha un'altezza da trasporre — una
+           registrazione ha la sua, che nessuno conosce, e un temporale non ne
+           ha affatto — quindi non si tocca il materiale: un banco di
+           passa-banda accordati sui gradi della collezione lo filtra, e quello
+           che esce canta le note del campo qualunque cosa sia entrata. Si prova
+           sul caso peggiore per qualunque altro metodo e migliore per questo:
+           RUMORE BIANCO.
+
+           Si misura l'energia SUI GRADI contro quella un SEMITONO più su. Il
+           semitono e non un quarto di tono, per due ragioni: la pentatonica non
+           ha semitoni, quindi quella frequenza è per costruzione una nota che la
+           collezione non contiene; e un quarto di tono starebbe ancora dentro la
+           banda passante, quindi la misura direbbe che il banco non fa niente.
+
+           Si verifica anche il contrario — che il materiale crudo NON mostri
+           nessuna preferenza. Una misura che trovasse i gradi già accesi senza
+           il banco non starebbe misurando il banco. */
+    {
+      const rumore = c.createBuffer(1, sr * sec, sr);
+      const r = rumore.getChannelData(0);
+      for (let i = 0; i < r.length; i++) r[i] = (Math.random() * 2 - 1) * 0.4;
+      aggiungiMateria("rumore", rumore);
+
+      // Goertzel: l'energia a una frequenza sola, senza costruire uno spettro.
+      const energia = (x, f) => {
+        const k = 2 * Math.cos((2 * Math.PI * f) / sr);
+        let s0 = 0, s1 = 0, s2 = 0;
+        for (let i = 0; i < x.length; i++) { s0 = x[i] + k * s1 - s2; s2 = s1; s1 = s0; }
+        return s1 * s1 + s2 * s2 - k * s1 * s2;
+      };
+      const suiGradi = (buf) => {
+        const x = buf.getChannelData(0).slice(sr * 2, sr * 4);
+        let sui = 0, fra = 0;
+        for (let i = 0; i < SCALE.length; i++) {
+          if (SCALE[i] < 150 || SCALE[i] > 1200) continue;
+          for (const d of [-1.5, 0, 1.5]) {
+            sui += energia(x, SCALE[i] + d);
+            fra += energia(x, SCALE[i] * Math.pow(2, 1 / 12) + d);
+          }
+        }
+        return 10 * Math.log10(sui / fra);
+      };
+
+      /* Le altre due classi vanno spente, e non è un dettaglio: gocce e tessuti
+         stanno GIÀ sui gradi della collezione per costruzione, quindi lasciarle
+         accese vorrebbe dire misurare loro. Misurato: con le classi accese il
+         materiale crudo mostrava +24 dB di preferenza per i gradi, cioè la
+         prova diceva che il banco funziona anche quando è spento. */
+      const acceseQui = [frasiOn, tessutiOn];
+      frasiOn = false; tessutiOn = false;
+      G.pRiverbero = GT.pRiverbero = 0;        // si misura il segnale, non la stanza
+      G.pFuoco = GT.pFuoco = 24;
+      const rendiCon = async (quanto) => {
+        G.pAccordatura = GT.pAccordatura = quanto;
+        effettiviPaesaggio();
+        const buf = await rendiOffline(6);
+        return { sui: suiGradi(buf), m: misura(buf) };
+      };
+      const crudo = await rendiCon(0);
+      const intonato = await rendiCon(100);
+
+      R.paesaggio.accordatura = {
+        crudo: +crudo.sui.toFixed(1) + " dB sui gradi",
+        intonato: +intonato.sui.toFixed(1) + " dB sui gradi",
+        livello: numeroDb(dB(intonato.m.rms) - dB(crudo.m.rms)),
+      };
+      if (intonato.sui < crudo.sui + 4)
+        R.errori.push("l'accordatura non intona: sui gradi " + intonato.sui.toFixed(1) +
+                      " dB contro " + crudo.sui.toFixed(1) + " dB del crudo");
+      if (Math.abs(crudo.sui) > 3)
+        R.errori.push("la prova dell'accordatura non sa distinguere: il materiale crudo " +
+                      "mostra già " + crudo.sui.toFixed(1) + " dB di preferenza per i gradi");
+      if (Math.abs(dB(intonato.m.rms) - dB(crudo.m.rms)) > 3)
+        R.errori.push("accendere l'accordatura sposta il livello di " +
+                      (dB(intonato.m.rms) - dB(crudo.m.rms)).toFixed(1) + " dB");
+      if (intonato.m.picco >= 0.999) R.errori.push("l'accordatura fa clippare il paesaggio");
+
+      frasiOn = acceseQui[0]; tessutiOn = acceseQui[1];
+      G.pRiverbero = GT.pRiverbero = 70;
+      G.pAccordatura = GT.pAccordatura = 55;
+      G.pFuoco = GT.pFuoco = 18;
+      effettiviPaesaggio();
+      materiale = 0;                            // si torna ai quattro toni
+    }
   }
 
   /* 8 · IL WAV, ANDATA E RITORNO.
@@ -450,7 +624,7 @@ const esito = await p.evaluate(async () => {
       t: tessuti.map((L) => [L.period, L.cycleStart, L.idx, L.idea.length, L.offset, L.prossimoRicambio]),
       d: [deriva.centro, deriva.dens, deriva.spread, deriva.head, deriva.corpo],
       q: [quinta, passiQuinta, passoN, prossimaQuinta],
-      g: [prossimoGrano, testaOra],
+      g: [prossimoVelo, testaOra],
       s: SCALE.slice(0, 3),
     });
 
@@ -460,10 +634,10 @@ const esito = await p.evaluate(async () => {
     // scheduler consuma gli indici e fa girare i cicli lo stesso, che è tutto
     // quello che serve, senza costruire quarantamila nodi da buttare.
     costruisciMotore();
-    const acceso = [frasiOn, tessutiOn, graniOn];
-    frasiOn = tessutiOn = graniOn = false;
+    const acceso = [frasiOn, tessutiOn, paesaggioOn];
+    frasiOn = tessutiOn = paesaggioOn = false;
     for (let t = 0; t < 40; t += 0.05) passo(t, false);
-    frasiOn = acceso[0]; tessutiOn = acceso[1]; graniOn = acceso[2];
+    frasiOn = acceso[0]; tessutiOn = acceso[1]; paesaggioOn = acceso[2];
     const prima = impronta();
     await rendiOffline(6);
     const dopo = impronta();

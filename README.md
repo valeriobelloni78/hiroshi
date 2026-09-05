@@ -50,20 +50,43 @@ ciascuna classe ha il **modo del materiale**: in *deriva* le idee si rinnovano
 da sé, una alla volta e tutte insieme al passo di quinta; in *ancora* restano
 quelle che il mood ha scelto, mentre tutto il resto continua a muoversi.
 
-**I grani** macinano registrazioni proprie: un file scelto a mano, o il
-microfono. Non c'è nessun suono in dotazione — questa sorgente tace finché non
-le si dà qualcosa, ed è il punto: la materia è il field recording di chi
-ascolta. Una testa di lettura scorre il materiale (o si ferma dentro, che è
-metà di quello che il granulare serve a fare) e attorno le si sparpaglia una
-nube di grani, ciascuno con la sua finestra, la sua altezza e il suo posto nel
-campo stereo. In modo **intonato** gli intervalli fra i grani sono quelli della
-stessa pentatonica di tutto il resto: la nube si accorda col pezzo anche
-partendo da un rumore di fondo.
+**Il paesaggio** tira un drone continuo da una registrazione propria: un file
+scelto a mano, o il microfono. Non c'è nessun suono in dotazione — questa
+sorgente tace finché non le si dà qualcosa, ed è il punto: la materia è il field
+recording di chi ascolta. Si sceglie un pezzo dell'onda con due maniglie, e da
+quel pezzo lo strumento tira fuori la stessa materia percorsa molto più piano di
+com'è stata registrata, con dentro una stanza grande.
+
+**Si rallenta senza trasporre**, ed è tutto il pezzo. Non si legge il buffer più
+piano — quello abbassa anche l'altezza, e a un ottavo della velocità una voce
+diventa un mostro. Si legge a velocità naturale, in finestre che si
+sovrappongono quattro volte, e si fa camminare piano il punto da cui le finestre
+vengono prese: l'altezza resta quella del materiale, la durata si dilata quanto
+si vuole. Uno scarto casuale su dove ciascuna finestra comincia è quello che lo
+rende un paesaggio e non un nastro — finestre tutte allineate sarebbero lo
+stesso campione ripetuto a distanza fissa, cioè un filtro a pettine.
+
+**Il paesaggio si intona per risonanza.** Una registrazione ha un'altezza sua
+che nessuno conosce, e un temporale non ne ha affatto: trasporla su una nota
+vorrebbe dire prima indovinarla. Quindi non si tocca il materiale — gli si mette
+dietro un banco di passa-banda accordati sui gradi della collezione, e la sua
+energia a banda larga li eccita. Quello che esce canta le note del campo
+qualunque cosa sia entrata, e funziona meglio proprio sui materiali che
+un'altezza non ce l'hanno. I filtri seguono il campo: quando la collezione
+scatta ci scivolano sopra, e siccome cambia una nota su cinque il cambio non ha
+un bordo. Due cursori: *accordatura* dosa fra il crudo e l'intonato, *fuoco* è
+quanto sono stretti i filtri — cioè la strada fra la registrazione con dentro le
+note del campo e un pad che del luogo non ha più niente.
+
+Il riverbero, qui, non è una mandata: sta dentro la sorgente, con la sua coda e
+il suo tono, e prende le note già intonate. Per un drone la coda non è l'ambiente in cui il suono si trova, è
+metà del suono — e cambiarne la lunghezza è comporre, non missare.
 
 Il microfono entra da una porta sola — *registra* — e da lì in poi è materia
-come un file. Non si granula un flusso dal vivo: l'esportazione non potrebbe
-percorrerlo più in fretta del tempo reale, la testa non potrebbe fermarsi, e
-microfono più altoparlanti sono un anello.
+come un file. Non si percorre un flusso dal vivo: l'esportazione non potrebbe
+percorrerlo più in fretta del tempo reale, la testa non potrebbe camminare a un
+sessantaquattresimo, e microfono più altoparlanti con dentro una coda di venti
+secondi sono un fischio.
 
 **Portarsi via la sessione** si fa in due modi, e non danno lo stesso file. La
 *presa dal vivo* cattura l'uscita mentre suona, con dentro le mani: un cursore
@@ -94,9 +117,9 @@ scrive l'automazione dell'audio. Attorno corre la corona, tre tracce graduate
 che mostrano quello che sta suonando mentre i filetti in colonna mostrano dove
 sta la mano: fra i due c'è la deriva. Le due classi sono simmetriche comando per
 comando, e la traccia più esterna è lo spazio da tutt'e due le parti. Il **banco** ha la
-registrazione, l'equalizzatore a otto bande con la sua curva vera e il mixer. Dei **grani** si vede la materia intera, distesa per il
-lungo come un istogramma di quadratini grigi, e sopra la nube dei grani —
-colorati, nel punto esatto da cui ciascuno è stato ritagliato. La **deriva** mostra la tonalità di adesso e quella che
+registrazione, l'equalizzatore a otto bande con la sua curva vera e il mixer. Del **paesaggio** si vede la materia intera, distesa per il lungo come un
+istogramma di quadratini grigi che partono dalla riga di mezzo, con il segmento
+scelto in chiaro e il resto sotto un velo di carta. La **deriva** mostra la tonalità di adesso e quella che
 viene, e quindici minuti di baricentro come istogramma a punti, con le colonne
 in cui la curva ha girato scritte a inchiostro pieno. Non tiene memoria di
 niente: la deriva è una funzione del tempo, quindi la corsia si ricostruisce a
@@ -119,13 +142,13 @@ js/cattura.js     prendere il suono dal grafo, e scriverlo in un wav a 24 bit
 js/linee.js       lo stato: linee, idee, piani, ricambio
 js/timbri.js      gli otto suoni delle gocce
 js/tessuti.js     gli otto tenuti, e la finestra che li apre e li chiude
-js/grani.js       la materia registrata, la cattura dal microfono, la nube
 js/mood.js        i sedici stati dello strumento: parametri, periodi, timbro
 js/banco.js       l'uscita: mixer, riverbero, colore, equalizzatore, limitatore
+js/paesaggio.js   la materia registrata, il segmento, il velo, la sua stanza
 js/motore.js      lo scheduler e l'assemblaggio
 js/registratore.js la presa dal vivo e l'esportazione fuori tempo reale
 js/comandi.js     le mani: tendine, cursori, pulsanti, le letture in cifre
-js/tavola.js      il disegno: due quadranti, i grani, la deriva, i misuratori
+js/tavola.js      il disegno: due quadranti, il paesaggio, la deriva, i misuratori
 prova.mjs         la verifica: rende il motore fuori tempo reale e lo misura
 ```
 

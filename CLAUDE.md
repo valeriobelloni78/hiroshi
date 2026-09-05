@@ -2,7 +2,7 @@
 
 Uno studio per fare musica d'ambiente nel browser. Riunisce ed estende Rada,
 Rada Deriva e Nuvole: otto linee sfasate, un campo continuo che chiama le
-voci, il granulare su registrazioni proprie, e un banco d'uscita che registra
+voci, il paesaggio tirato da registrazioni proprie, e un banco d'uscita che registra
 ed esporta.
 
 **Rispondi sempre in italiano.** Commenti nel codice, messaggi di commit e
@@ -27,23 +27,118 @@ tornano nella stessa combinazione; la coprimalità è una condizione
 peggiore è **247 ore**, dieci giorni. `prova.mjs` rifà quel conto a ogni corsa
 e fallisce sotto le 24 ore.
 
-**Il microfono non si granula dal vivo: si registra, e si granula la
+**IL PAESAGGIO SI RALLENTA SENZA TRASPORRE, e questo è tutto il pezzo.** Non
+si legge il buffer più piano — quello abbassa anche l'altezza, e a un ottavo
+della velocità una voce diventa un mostro. Si legge la materia a velocità
+NATURALE, in finestre che si sovrappongono, e si fa camminare piano il punto da
+cui le finestre vengono prese. L'altezza resta quella del materiale, la durata
+si dilata quanto si vuole. La prova lo verifica misurando dove sta l'energia
+dello spettro con due rallentamenti diversi: se il baricentro si sposta di più
+di un quinto, il velo sta trasportando e non distendendo.
+
+**Quattro strati per finestra, e non è una taratura.** È la ragione per cui non
+si sentono i confini: ogni istante è coperto quattro volte da campane sfasate, e
+la somma non ha buchi. Con due si sente respirare, con uno è un loop che sbatte.
+
+**Lo sparpaglio è quello che lo rende un paesaggio e non un nastro.** Finestre
+che partissero tutte dallo stesso punto sarebbero lo stesso identico campione
+ripetuto a distanza fissa, cioè un filtro a pettine: si sente come un tubo. Uno
+scarto casuale su dove ciascuna comincia rompe la periodicità e lascia solo la
+materia.
+
+**Il riverbero del paesaggio sta DENTRO la sorgente, e altrove è il contrario.**
+Per le altre tre classi vale la regola di Rada — il riverbero è una mandata, non
+un inserto, e la stanza resta una sola. Qui no: per un drone la coda non è
+l'ambiente in cui il suono si trova, è metà del suono, e cambiarne la lunghezza
+è comporre e non missare. Quindi il paesaggio si porta la sua rete dietro, con
+la sua coda e il suo tono, e la mandata alla stanza dello studio resta a zero —
+è la sola sorgente senza uno «spazio».
+
+**IL PAESAGGIO SI INTONA PER RISONANZA, non per trasposizione.** Una
+registrazione ha un'altezza sua che nessuno conosce, e un temporale non ne ha
+affatto: trasporla su un grado vorrebbe dire prima indovinarla, e su pioggia,
+folla o vento non c'è niente da indovinare. Quindi non si tocca il materiale —
+gli si mette dietro un banco di passa-banda accordati sui gradi della
+collezione, e la sua energia a banda larga li eccita. Funziona MEGLIO proprio
+sui materiali che non hanno un'altezza da rilevare, e non può fallire su
+nessuno. Misurato su rumore bianco: senza banco l'energia sui gradi è a ±1,5 dB
+da quella sul semitono accanto — cioè nessuna preferenza; col banco a fuoco 24
+sale di **nove-dieci decibel**, e il livello complessivo non si muove di più di
+un decibel.
+
+Il banco tiene gli INDICI del campo, non le frequenze: quando la quinta scatta
+`SCALE[i]` dà la nota nuova e i filtri ci scivolano sopra con una costante
+lunga. Quattro filtri su cinque riscrivono lo stesso numero, quindi il cambio
+non ha un bordo — la stessa promessa delle altre classi.
+
+Due cursori e non uno. ACCORDATURA dosa fra il paesaggio crudo e quello
+intonato; FUOCO è quanto sono stretti i filtri, cioè la strada fra «la
+registrazione con dentro le note del campo» e «un pad che del luogo non ha più
+niente». Sono due domande diverse — quanto, e che cosa — e con un cursore solo
+se ne potrebbe rispondere una. **Il fuoco non deve girare il volume**: un
+passa-banda lascia passare una fetta larga f/Q, quindi il guadagno del banco
+cresce col fuoco (esponente 0,6, non 0,5: a fuoco largo i filtri si accavallano
+e la somma è più coerente della teoria incoerente). Il fuoco non scende sotto
+otto — misurato, sotto quella soglia i filtri non distinguono più un grado dal
+semitono accanto, e sarebbe un terzo di corsa che non fa quello che l'etichetta
+promette.
+
+**L'accordatura sta PRIMA del riverbero.** La coda deve prendere le note già
+intonate: al contrario la stanza si riempirebbe del materiale crudo mentre
+davanti canta il campo, cioè due paesaggi diversi nello stesso posto.
+
+**Ritarare una rete a retroazione vuol dire RIMISURARE il picco del filtro.**
+`costruisciRiverbero` restituisce una `tara(t60, smorzamento)` che rifà i
+guadagni d'anello, e ogni volta richiama `piccoDi()` sul filtro col nuovo
+smorzamento invece di riusare il picco di prima. Riusarlo è il modo per cui una
+coda smette di scendere e comincia a crescere — vedi i +600 dB fra le insidie.
+La misura è sincrona e non costa un rendering.
+
+**Il microfono non si percorre dal vivo: si registra, e si percorre la
 registrazione.** Tre ragioni, tutte strutturali. L'ESPORTAZIONE: `passo(now)`
 percorre il tempo più in fretta del tempo reale, e un flusso dal microfono non
 si può percorrere più in fretta del tempo reale — renderebbe silenzio nel wav,
 cioè romperebbe la promessa che il file suoni come quello che si è ascoltato.
 LA TESTA DI LETTURA: su un flusso si può solo guardare indietro di un ritardo
-fisso, mentre su una registrazione la testa si ferma, torna, va al contrario —
-e «fermarsi dentro un suono» è metà di quello che il granulare serve a fare.
-IL RIENTRO: microfono aperto e altoparlanti accesi sono un anello, e un anello
-con dentro un granulare è un fischio.
+fisso, mentre su una registrazione la testa si ferma, torna, cammina a un
+sessantaquattresimo — e tenere ferma una materia sotto una lente è tutto quello
+che il paesaggio serve a fare. IL RIENTRO: microfono aperto e altoparlanti
+accesi sono un anello, e un anello con dentro una coda di venti secondi è un
+fischio.
+
+**Una tenuta che attraversa il passo di quinta sceglie un grado che
+sopravvive.** È l'unica dissonanza che questo strumento sapesse produrre, e non
+veniva dal materiale né dai modi: una tenuta viene intonata UNA VOLTA SOLA,
+quando viene prenotata, e tiene quella frequenza fino a sessanta secondi. Se nel
+frattempo la collezione scatta e il grado scelto è quello che se ne va, la nota
+resta fuori. Misurato prima della correzione: il **22%** delle tenute che
+attraversano un passo finiva fuori collezione, cioè circa una per passo, per
+qualche secondo.
+
+Il rimedio è piccolo perché il passo è piccolo: fra una pentatonica e la sua
+quinta cambia una nota su cinque, quindi quattro gradi su cinque valgono in
+tutte e due le collezioni. `altezzaCheResta()` in `deriva.js` sceglie fra quelli
+il più vicino a quello voluto — misurato, sposta il 20% delle tenute lunghe di
+tre semitoni al massimo, mai di un'ottava. Non tocca le gocce: la coda di una
+goccia sta già scendendo quando il passo arriva, mentre un tenuto sta ancora
+aprendosi. Non dipende dal modo del materiale: «ancora» e «deriva» non c'entrano
+niente, il problema è una nota lunga che attraversa un cambio d'armonia.
+
+**Un evento non contiene nessuna frequenza, contiene una POSIZIONE NEL CAMPO.**
+`rel` sta in −1÷1 e diventa un'altezza solo al momento della prenotazione, con
+`altezza()`, che legge il campo di quell'istante. È la ragione per cui un'idea
+congelata in «ancora» non può stonare: quando la collezione scatta, cinque
+indici su venticinque cambiano nota e l'idea ferma li segue senza saperlo. E le
+due classi leggono lo STESSO campo — un `SCALE` solo, un baricentro solo — con
+la sola differenza di quanto larga è la forbice, più un ripiegamento per ottave
+sui tessuti che conserva la classe d'altezza. Non esiste un modo per cui una
+classe si trovi in una tonalità diversa dall'altra.
 
 **La somma dei tessuti si normalizza sugli INVILUPPI, mai su un conteggio di
-voci.** Vale anche per i **grani**, dove però la somma si conosce senza
-sommarla: quanti grani suonano insieme è densità per durata, due numeri che
-stanno in un cursore. Senza dividere per √N, alzare la densità vorrebbe dire
-alzare il volume invece di infittire la nube — e la densità è proprio il
-comando che si muove per cambiare la grana. Sorgenti incoerenti si sommano in potenza, quindi il bus si divide per
+voci.** Vale anche per il **paesaggio**, dove però la somma si conosce senza
+sommarla: quanti strati suonano insieme è la sovrapposizione del velo, che è una
+costante. Senza dividere per √N, allargare la finestra vorrebbe dire alzare il
+volume invece di distendere il suono. Sorgenti incoerenti si sommano in potenza, quindi il bus si divide per
 √N — ma sotto la radice va la somma degli inviluppi. Contando le teste, il bus
 scenderebbe di 3 dB nell'istante in cui una voce comincia ad aprirsi, cioè
 mentre è ancora inudibile: un buco che precede il suono. È possibile solo
@@ -69,7 +164,7 @@ variabili della DERIVA — `quinta`, `passiQuinta`, `passoN`, `prossimaQuinta` �
 che stanno in un altro file e che nessuno penserebbe di salvare: sono proprio
 quelle che, dimenticate, si notano solo dopo. Conseguenza da tenere a mente:
 **i contatori tornano indietro insieme al resto**, quindi dopo un render
-`storiaGocce` e `graniEmessi` raccontano la sessione e non il render. Quello
+`storiaGocce` e `veliEmessi` raccontano la sessione e non il render. Quello
 che il render conteneva si legge in `ultimoRender`.
 
 **Un AudioWorklet si carica da un `data:` URI, NON da un blob.** `addModule`
@@ -82,7 +177,7 @@ proprio il caso che questo progetto promette di reggere. La strada è
 `"data:text/javascript," + encodeURIComponent(codice)`, verificata su tutti e
 due. Si usa `encodeURIComponent` e non `btoa` perché `btoa` non regge un
 carattere fuori dal Latin-1: basterebbe un accento in un commento dentro il
-processore. Il codice è in `preparaCattura()`, dentro `grani.js`, e il
+processore. Il codice è in `preparaCattura()`, dentro `cattura.js`, e il
 registratore userà lo stesso.
 
 **La palette è definita una volta sola**, nelle variabili CSS di
@@ -147,8 +242,10 @@ l'audio.** Il colore di un evento da `altezza()`, la lunghezza di una tenuta da
 al primo ritocco, e mentirebbe piano.
 
 **Le dipendenze scorrono in una direzione sola:**
-`deriva ← cattura ← linee ← timbri ← tessuti ← grani ← mood ← banco ← motore ←
-registratore ← comandi ← tavola`. Il modello non conosce l'audio; l'audio non
+`deriva ← cattura ← linee ← timbri ← tessuti ← mood ← banco ← paesaggio ←
+motore ← registratore ← comandi ← tavola`. Il paesaggio viene DOPO il banco, e
+non è un caso: è l'unica sorgente che si costruisce una rete di riverbero, e la
+rete la sa fare il banco. Il modello non conosce l'audio; l'audio non
 conosce il disegno.
 
 **I comandi e il disegno sono due file, e la separazione è la regola resa
@@ -165,7 +262,7 @@ giorno servisse sapere altro dai comandi, la strada è guardare il modello, non
 farsi chiamare.
 
 **`cattura.js` sta in cima e non dipende da niente** tranne `clamp`, perché lo
-usano due file lontani fra loro: il microfono dei grani e il registratore della
+usano due file lontani fra loro: il microfono del paesaggio e il registratore della
 sessione. Sono lo stesso mestiere — portare fuori dal grafo una manciata di
 campioni — e due copie divergerebbero al primo ritocco.
 
@@ -268,8 +365,8 @@ usciva coi parametri congelati sull'ultimo fotogramma disegnato: la deriva
 avanzava e nessuno la ascoltava. Vale per qualunque cosa il motore debba
 sapere — se serve al suono, sta nel motore.
 
-**`avvia()` deve azzerare anche la memoria degli eventi**, cioè `flash` e
-`fino`. Sono tempi assoluti, e quando il tempo riparte da zero — a ogni
+**`avvia()` deve azzerare anche la memoria degli eventi**, cioè `flash`,
+`fino` e `ultimaSpiga`. Sono tempi assoluti, e quando il tempo riparte da zero — a ogni
 rendering fuori tempo reale — restano nel futuro: il periodo refrattario legge
 `t − flash` negativo e SALTA la nota, in silenzio, consumandone l'indice.
 Misurato: senza quell'azzeramento un'esportazione fatta dopo un ascolto
@@ -365,7 +462,7 @@ con un mixer diverso da quello appena regolato.
 `tLivello` è un parametro del MODELLO — quanto lo sfondo sta sotto al primo
 piano — e la deriva lo muove, un mood lo riscrive, la corona lo mostra.
 `LIVELLI.tessuti` è l'asta del MIXER, una decisione di missaggio come quella
-delle frasi o dei grani. Il guadagno del canale è la loro SOMMA in decibel:
+delle frasi o del paesaggio. Il guadagno del canale è la loro SOMMA in decibel:
 l'asta scosta, il modello respira. Tenerle separate è quello che permette a un
 mood di scrivere il carattere senza spostare il missaggio, e viceversa. Chi le
 unisse rimetterebbe due comandi sullo stesso numero.
@@ -418,14 +515,26 @@ ogni timbro esca dal silenzio senza esplodere, che l'equalizzatore muova
 davvero lo spettro, che uno stadio di passa-tutto abbia **guadagno unitario**,
 che i due lati del riverbero stiano **pari**, che la coda **scenda** — che è
 il modo in cui una rete a retroazione sbaglia — che la compensazione dei
-tessuti sia **liscia** dove quella per conteggio di teste scatterebbe, e che i
+tessuti sia **liscia** dove quella per conteggio di teste scatterebbe, che
+nessuna tenuta che attraversa un passo di quinta resti fuori collezione, e che i
 sedici mood siano in regola: periodi coprimi dentro ogni serie, riallineamento
 sopra le 24 ore in tutte e 64 le combinazioni, ogni timbro una volta sola, e
-quattro accoppiate rese dal motore intero senza clippare. Sui **grani**
-verifica che la testa di lettura si muova davvero (un accumulatore che non
-accumula è un difetto muto: si sente solo come una nube che non va da nessuna
-parte), che la compensazione segua la densità, e che in modo intonato tutti
-gli intervalli stiano nella collezione. Esce con codice diverso da zero se
+quattro accoppiate rese dal motore intero senza clippare. Sul **paesaggio**
+verifica che la testa cammini AL PASSO DEL RALLENTAMENTO (un accumulatore che
+accumula alla velocità sbagliata è un difetto muto: si sente solo come un
+paesaggio che non va da nessuna parte), che non esca mai dal segmento nemmeno
+rovesciandone le maniglie, che il drone arrivi all'uscita senza clippare, che
+**il rallentamento non trasporti** — il baricentro dello spettro deve restare
+dov'è fra un rallentamento di quattro e uno di trentadue — e che la coda del suo
+riverbero scenda anche dopo due ritarature. E che **l'accordatura intoni**: su
+rumore bianco l'energia deve spostarsi sui gradi della collezione di almeno
+quattro decibel rispetto al semitono accanto — il semitono e non un quarto di
+tono, perché la pentatonica non ha semitoni e un quarto di tono starebbe ancora
+dentro la banda passante. Quella prova verifica anche sé stessa: fallisce se il
+materiale crudo mostra già una preferenza per i gradi, il che vorrebbe dire che
+sta misurando qualcos'altro — misurato, succedeva lasciando accese le altre due
+classi, che sui gradi ci stanno per costruzione.
+Esce con codice diverso da zero se
 qualcosa non torna. Serve `playwright` e un Chromium — `npm i -D playwright`
 e `npx playwright install chromium`, una volta sola. La prova non ha percorsi
 scritti a mano: il browser è quello che playwright ha installato e la pagina si
@@ -445,10 +554,10 @@ bit lo scarto atteso è il passo di quantizzazione, 2⁻²³ ≈ 1,2·10⁻⁷. 
 anche che esportare **non sposti il modello della sessione**, prendendo
 un'impronta prima e dopo.
 
-**La prova si porta una materia sua**: i grani all'apertura sono muti per
-costruzione — non c'è nessun suono in dotazione da granulare — quindi la prova
+**La prova si porta una materia sua**: il paesaggio all'apertura è muto per
+costruzione — non c'è nessun suono in dotazione da percorrere — quindi la prova
 sintetizza sei secondi di quattro toni, che sono riconoscibili e permettono di
-vedere se la testa si sposta.
+vedere se la testa si sposta e se l'altezza resta dov'era.
 
 **La prova fissa l'ora e la stagione** (`ORA = 14`, `MESE = 9`). Senza,
 misurerebbe cose diverse a seconda di quando la si lancia — il calore, lo
@@ -457,6 +566,13 @@ spazio, il colore d'insieme e il respiro dei tessuti dipendono dall'orologio.
 Quest'ultima prova verifica anche **sé stessa**: misura lo scatto nelle due
 versioni e fallisce se quella per teste NON è ruvida. Una prova che non sa
 distinguere il caso giusto da quello sbagliato non sta provando niente.
+
+**Una prova non deve mai confrontare due stati diversi.** Una verifica dei
+grani, prima che diventassero un paesaggio, misurava un render e lo confrontava
+con un valore letto DOPO: ma durante un render il baricentro cammina e il
+modello viene poi rimesso a posto, quindi i due numeri appartenevano a due
+momenti diversi e la prova falliva una corsa su tre. Quello che si verifica è la
+promessa, non un numero solo.
 
 **La prova va rifatta più volte, non una.** I difetti che sono costati di più
 non erano rotture ma oscillazioni: la stessa rete che rendeva numeri diversi a
@@ -497,8 +613,9 @@ Oltre Rada: i **timbri** (Rada ne aveva uno per classe, governato da un solo
 numero; qui sono otto e otto, e `calore` è quel numero rimasto al suo posto) e
 l'**esportazione deterministica**.
 
-Fatti anche i **grani** (archivio dei materiali, cattura dal microfono, nube
-attorno alla testa di lettura, intonazione sulla collezione) e il
+Fatto anche il **paesaggio** (archivio dei materiali, cattura dal microfono,
+segmento scelto sull'onda, velo che distende senza trasporre, riverbero proprio)
+e il
 **registratore**: la presa dal vivo sull'uscita del banco e l'esportazione
 fuori tempo reale, tutte e due in wav a 24 bit stereo. **IL MOTORE È
 COMPLETO.**
@@ -521,13 +638,15 @@ testata e un piede:
   esportazione (wav, la tavola in png, la scena che aspetta un seme),
   equalizzatore a otto aste con la curva vera sopra — chiesta ai filtri con
   `getFrequencyResponse` — e il mixer a cinque aste;
-- **04 · grani**: LA MATERIA INTERA distesa per il lungo, come istogramma di
-  quadratini in scala di grigi — quadratini perché è il segno di tutta la
-  tavola, grigi perché il colore è già impegnato a dire l'altezza. Sopra ci
-  cadono i grani, colorati, NEL PUNTO DA CUI SONO STATI PRESI: la x è il posto
-  nel materiale, la y è il campo stereo, il colore è la trasposizione, e così i
-  due cursori che aprono la nube si vedono per quello che fanno. Sotto, gli otto
-  filetti e la legenda della rampa;
+- **04 · paesaggio**: LA MATERIA INTERA distesa per il lungo, come istogramma
+  di quadratini in scala di grigi che PARTONO DALLA RIGA DI MEZZO — il primo ci
+  sta sopra, non accanto, o resterebbe una riga vuota in mezzo alla fascia che
+  si legge come un taglio. Sopra ci stanno le due maniglie del segmento, che
+  sono due cursori nativi trasparenti — l'inizio sul bordo di sopra, la fine su
+  quello di sotto, uno per lato perché due cursori distesi sullo stesso
+  rettangolo se li prenderebbe sempre quello davanti. Fuori dal segmento la
+  carta si posa sopra; dentro, la finestra che si sta leggendo è una banda
+  chiara che cammina. Sotto, i sei filetti;
 - **05 · deriva**: la tonalità, il circolo delle quinte con dove siamo e dove
   andremo, il baricentro su quindici minuti di passato e le sette voci che non
   ci sono ancora;
@@ -545,7 +664,7 @@ Da fare, in ordine:
    completo sul mockup e la prova non lo guarda: quello che resta si vede solo
    aprendo `index.html` e stando a guardare per qualche minuto — quanto pesa un
    anello di tessuti a intreccio alto, se il lampo si legge ancora con otto
-   linee che scattano insieme, se la fascia dei grani regge un'ora di seduta.
+   linee che scattano insieme, se la fascia del paesaggio regge un'ora di seduta.
    Restano fuori dal mockup, e sono aggiunte consapevoli: le due tendine dei
    **mood**, le quattro righe dei **comandi per linea** e il **microfono**, che
    il disegno non prevedeva e senza i quali mancherebbe metà dello strumento.
@@ -562,7 +681,7 @@ Da fare, in ordine:
 Aperti: `rendiOffline` percorre lo stesso modello che sta suonando, quindi
 esportare mentre si ascolta oggi disturberebbe la sessione in corso — va dato
 al render un modello suo. E `deriva.js` sorteggia le fasi al caricamento: per
-un'esportazione riproducibile servirà un seme. I **materiali dei grani non si
+un'esportazione riproducibile servirà un seme. I **materiali del paesaggio non si
 conservano**: un file caricato o una registrazione vivono finché la pagina è
 aperta, e salvarli vorrebbe dire IndexedDB, cioè la prima cosa in tutto il
 progetto a scrivere sul disco di chi ascolta — da decidere se si vuole.

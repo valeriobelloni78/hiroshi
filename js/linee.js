@@ -44,14 +44,15 @@ const G  = {
   /* tessuti */
   tRegistro: 55, tIntreccio: 45, tApertura: 3.0, tChiusura: 4.3,
   tPasso: 38, tLivello: 32, tSpazio: 55,
-  /* grani */
-  gTesta: 0, gCorsa: 20, gNube: 22, gDensita: 14, gGrano: 120,
-  gAltezza: 0, gSparpaglio: 30, gSpazio: 45,
+  /* paesaggio */
+  pInizio: 0, pFine: 100, pRallenta: 8, pVelo: 700, pSparpaglio: 35,
+  pAccordatura: 55, pFuoco: 18, pCoda: 12, pTono: 2000, pRiverbero: 70,
 };
 const GT = { ...G };
 const effG  = { registro: 45, calore: 70, spazio: 72, densita: 5, addensamento: 30, colore: 2500 };
 const effGT = { registro: 55, intreccio: 45, apertura: 3.0, chiusura: 4.3, passo: 38, livello: 32, spazio: 55 };
-const effGR = { testa: 0, corsa: 20, nube: 22, densita: 14, grano: 120, altezza: 0, sparpaglio: 30, spazio: 45 };
+const effGP = { inizio: 0, fine: 100, rallenta: 8, velo: 700, sparpaglio: 35,
+                accordatura: 55, fuoco: 18, coda: 12, tono: 2000, riverbero: 70 };
 
 /* ------------------------------------------------- le due influenze esterne
    Sono simmetriche e non si toccano: **l'ora del giorno inclina le gocce, la
@@ -105,21 +106,27 @@ function effettiviFrasi() {
 /* I tessuti pescano da un canale della deriva che le gocce non usano — il
    `corpo` muove il loro LIVELLO, cioè quanto lo sfondo sta sotto al primo
    piano. Tutto il resto glielo muove la stagione. */
-/* I grani non hanno né un'ora né una stagione: hanno il BARICENTRO, lo stesso
-   che fa salire e scendere le gocce e i tessuti. Non è una terza lettura della
-   stessa grandezza — è la stessa, applicata a una sorgente in più: quando la
-   musica sale, sale anche la nube. Cinque semitoni di escursione, perché su un
-   materiale registrato una trasposizione grande si sente come un difetto di
-   velocità, non come un registro. */
-function effettiviGrani() {
-  effGR.testa      = clamp(G.gTesta, 0, 100);
-  effGR.corsa      = clamp(G.gCorsa, -100, 100);
-  effGR.nube       = clamp(G.gNube, 0, 100);
-  effGR.densita    = clamp(G.gDensita, 0.5, 80);
-  effGR.grano      = clamp(G.gGrano, 10, 500);
-  effGR.altezza    = clamp(G.gAltezza + deriva.centro * 5, -24, 24);
-  effGR.sparpaglio = clamp(G.gSparpaglio, 0, 100);
-  effGR.spazio     = clamp(G.gSpazio, 0, 100);
+/* IL PAESAGGIO NON PENDE DA NIENTE. Non ha un'ora, non ha una stagione e non ha
+   la deriva, e non è una dimenticanza: le altre tre sorgenti sono strumenti che
+   suonano un pezzo, e il pezzo cambia luce col passare del tempo. Questo è un
+   LUOGO — una registrazione tenuta ferma sotto una lente — e un luogo non
+   deriva: si sposta solo se qualcuno ci cammina dentro. Il movimento ce l'ha
+   già, ed è la testa che percorre il segmento.
+
+   I due estremi si mettono in ordine qui e non nei comandi: le due maniglie
+   sono indipendenti, e trascinandone una oltre l'altra il segmento si rovescia
+   invece di sparire. */
+function effettiviPaesaggio() {
+  effGP.inizio     = clamp(Math.min(G.pInizio, G.pFine), 0, 100);
+  effGP.fine       = clamp(Math.max(G.pInizio, G.pFine), 0, 100);
+  effGP.rallenta   = clamp(G.pRallenta, 1, 64);
+  effGP.velo       = clamp(G.pVelo, 80, 2000);
+  effGP.sparpaglio = clamp(G.pSparpaglio, 0, 100);
+  effGP.accordatura = clamp(G.pAccordatura, 0, 100);
+  effGP.fuoco      = clamp(G.pFuoco, 8, 80);
+  effGP.coda       = clamp(G.pCoda, 0.5, 40);
+  effGP.tono       = clamp(G.pTono, 300, 12000);
+  effGP.riverbero  = clamp(G.pRiverbero, 0, 100);
 }
 
 function effettiviTessuti() {
