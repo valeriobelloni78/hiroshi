@@ -620,6 +620,21 @@ sbagliato.
 **I numeri che cambiano** usano cifre a larghezza fissa, altrimenti tremolano
 a ogni aggiornamento.
 
+**Il marchio si allarga con la SPAZIATURA, non col corpo**, e `margin-right` è
+sempre l'opposto di `letter-spacing`. Le sette lettere restano di diciassette
+pixel — il peso del nome rispetto alle sezioni numerate è quello — mentre il
+vuoto fra l'una e l'altra si apre fin dove serve: a 1,04 em il blocco misura
+172 px contro i 129 di prima. Il margine negativo toglie il vuoto che
+`letter-spacing` mette anche DOPO l'ultima lettera, e senza di lui il filo
+sotto il nome sporgerebbe di una spaziatura intera oltre la I finale. Chi tocca
+uno dei due numeri tocchi anche l'altro.
+
+**La testata va a capo da sé**, con `flex-wrap` e un'altezza minima invece che
+fissa: la riga resta di cinquantanove pixel finché ci sta e si spezza quando non
+ci sta più. Non c'è nessuna larghezza scritta da tenere in pari col marchio o
+con quante sorgenti ci sono — e con una media query al posto suo, allargare il
+marchio di un terzo faceva sbordare la pagina fra i 760 e i 950 px.
+
 ---
 
 ## Verifica
@@ -701,6 +716,19 @@ con un valore letto DOPO: ma durante un render il baricentro cammina e il
 modello viene poi rimesso a posto, quindi i due numeri appartenevano a due
 momenti diversi e la prova falliva una corsa su tre. Quello che si verifica è la
 promessa, non un numero solo.
+
+**Una misura su del rumore va MEDIATA, e il rumore va SEMINATO.** L'energia a
+una frequenza sola su del rumore bianco è una variabile aleatoria con la coda
+lunga: la verifica dell'accordatura la prendeva tre volte per grado, su una
+fetta sola, con un rumore diverso a ogni corsa — e il suo controllo su sé stessa
+(che il materiale crudo non mostri preferenze, soglia ±3 dB) è arrivato a
+misurare −3,1 e a fallire senza che niente fosse rotto. Quello che la calma non
+è guardare più a lungo — una finestra doppia dà una riga più stretta, non una
+stima più ferma — ma mediare più stime INDIPENDENTI: adesso sono quattro fette
+da un secondo per sette prese, ventotto invece di tre, e il rumore esce da un
+seme fisso. Misurato su cinque corse: da −2,3÷+1,1 a −0,9÷+1,2. La soglia non si
+è allargata, si è resa vera la misura — allargarla sarebbe stato togliere il
+controllo invece di ripararlo.
 
 **La prova va rifatta più volte, non una.** I difetti che sono costati di più
 non erano rotture ma oscillazioni: la stessa rete che rendeva numeri diversi a

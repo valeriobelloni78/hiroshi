@@ -695,9 +695,19 @@ const esito = await p.evaluate(async () => {
            nessuna preferenza. Una misura che trovasse i gradi già accesi senza
            il banco non starebbe misurando il banco. */
     {
+      /* Il rumore è SORTEGGIATO CON UN SEME, non con `Math.random`. Con un
+         rumore diverso a ogni corsa la misura qui sotto ballava di un decibel
+         buono e il controllo su sé stessa — che il crudo non mostri
+         preferenze — falliva una corsa ogni tanto senza che niente fosse
+         rotto. Un seme non rende la prova più debole: il rumore bianco è
+         bianco comunque, e questo è sempre lo stesso. */
       const rumore = c.createBuffer(1, sr * sec, sr);
       const r = rumore.getChannelData(0);
-      for (let i = 0; i < r.length; i++) r[i] = (Math.random() * 2 - 1) * 0.4;
+      let seme = 20260905;
+      for (let i = 0; i < r.length; i++) {
+        seme = (seme * 1103515245 + 12345) & 0x7fffffff;
+        r[i] = (seme / 0x3fffffff - 1) * 0.4;
+      }
       aggiungiMateria("rumore", rumore);
 
       // Goertzel: l'energia a una frequenza sola, senza costruire uno spettro.
@@ -707,14 +717,28 @@ const esito = await p.evaluate(async () => {
         for (let i = 0; i < x.length; i++) { s0 = x[i] + k * s1 - s2; s2 = s1; s1 = s0; }
         return s1 * s1 + s2 * s2 - k * s1 * s2;
       };
+      const PRESE = [-6, -4, -2, 0, 2, 4, 6];
+      const FETTE = [1, 2, 3, 4];
       const suiGradi = (buf) => {
-        const x = buf.getChannelData(0).slice(sr * 2, sr * 4);
+        const d0 = buf.getChannelData(0);
         let sui = 0, fra = 0;
-        for (let i = 0; i < SCALE.length; i++) {
-          if (SCALE[i] < 150 || SCALE[i] > 1200) continue;
-          for (const d of [-1.5, 0, 1.5]) {
-            sui += energia(x, SCALE[i] + d);
-            fra += energia(x, SCALE[i] * Math.pow(2, 1 / 12) + d);
+        // QUATTRO FETTE da un secondo invece di una da due, e sette prese per
+        // grado invece di tre. L'energia a una frequenza sola su del rumore è
+        // una variabile aleatoria con la coda lunga: quello che la calma non è
+        // guardare più a lungo — una finestra doppia dà una riga più stretta,
+        // non una stima più ferma — ma MEDIARE PIÙ STIME INDIPENDENTI. Ventotto
+        // per grado invece di tre. Le sette prese stanno su dodici hertz, cioè
+        // dentro la banda passante (a fuoco 24 un filtro su 400 Hz è largo
+        // diciassette) mentre il semitono accanto, che dista il sei per cento,
+        // ne sta comodamente fuori.
+        for (const t of FETTE) {
+          const x = d0.slice(sr * t, sr * (t + 1));
+          for (let i = 0; i < SCALE.length; i++) {
+            if (SCALE[i] < 150 || SCALE[i] > 1200) continue;
+            for (const d of PRESE) {
+              sui += energia(x, SCALE[i] + d);
+              fra += energia(x, SCALE[i] * Math.pow(2, 1 / 12) + d);
+            }
           }
         }
         return 10 * Math.log10(sui / fra);
