@@ -168,6 +168,7 @@ js/motore.js      lo scheduler e l'assemblaggio
 js/registratore.js la presa dal vivo e l'esportazione fuori tempo reale
 js/comandi.js     le mani: tendine, cursori, pulsanti, le letture in cifre
 js/tavola.js      il disegno: due quadranti, il paesaggio, la deriva, i misuratori
+tavolo.mjs        rifà il canvas di design prendendolo dall'app che gira
 prova.mjs         la verifica: rende il motore fuori tempo reale e lo misura
 ```
 

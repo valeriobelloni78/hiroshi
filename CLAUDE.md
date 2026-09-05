@@ -723,6 +723,29 @@ scritti a mano: il browser è quello che playwright ha installato e la pagina si
 ricava da dove sta `prova.mjs`, aperta con `file://` perché è il doppio clic la
 promessa da verificare. `HIROSHI_CHROMIUM` resta per chi ha un Chromium suo.
 
+**IL CANVAS DI DESIGN SI RIFÀ CON `node tavolo.mjs`, e non si ridisegna.**
+Apre `index.html`, la lascia suonare finché i quadranti hanno qualcosa dentro, e
+porta via quello che c'è: i comandi come MARKUP VERO — gli stessi elementi
+dell'app, col suo foglio di stile attaccato — e il disegno come un'immagine,
+perché un canvas 2D non si esporta in vettori senza riscriverlo. Escono due
+artboard, chiaro e scuro, dentro `tavolo/`; la fonte che resta è
+`tavolo/canvas.json`, il resto è prodotto.
+
+Prima al suo posto c'erano seicento righe di Python che rifacevano il foglio in
+SVG, e vivevano fuori dal repository. Due difetti, e il secondo è il peggiore:
+era una COPIA — in una sola sessione si è trovata con gli anelli al raggio
+vecchio, senza gli inserti e col marchio in Times per una virgoletta di troppo,
+tre bugie che nessuno vedeva perché il confronto con l'originale non lo faceva
+nessuno — ed era FUORI DALL'ALBERO, quindi il giorno che la cartella temporanea
+è stata svuotata è sparita. Uno strumento che tiene in pari il progetto sta nel
+progetto.
+
+Il disegno esce in **webp a qualità 0,95** e non in png: è un foglio quasi vuoto
+attraversato da fili sottili, 194 KB di rumore d'antialiasing in png contro 86
+in webp, e il senza-perdite è la scelta peggiore delle tre — 685 KB — perché su
+tratti sfumati fa il contrario di quello che promette. Sotto 0,9 comincia a
+sfrangiare i capelli, e i capelli sono tutto il disegno.
+
 **La prova non guarda il disegno**, e non è una dimenticanza: la tavola non
 tocca il modello, quindi non può rompere il suono. Quello che la difende è che
 un errore nel disegno si vede — e che `prova.mjs` fallisce se la pagina scrive

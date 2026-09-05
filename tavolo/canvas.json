@@ -1,0 +1,15 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",  "x": 0,    "y": 0, "w": 1440, "h": 1500, "title": "Hiroshi · chiaro" },
+    { "file": "Scuro.dc.html", "x": 1560, "y": 0, "w": 1440, "h": 1500, "title": "Hiroshi · scuro" }
+  ],
+  "annotations": [
+    { "id": "come-e-fatto", "x": 3120, "y": 0, "w": 320,
+      "text": "QUESTA È UNA PRESA DALL'APP, NON UN DISEGNO\n\nI due artboard non sono ridisegnati: si apre index.html, la si lascia suonare finché i quadranti hanno qualcosa dentro, e si porta via quello che c'è.\n\nI COMANDI sono markup vero — gli stessi elementi dell'app, con il suo foglio di stile attaccato — quindi non possono essere sbagliati, e qui si spostano e si riscrivono.\n\nIL DISEGNO è un'immagine. Un canvas 2D non si esporta in vettori senza riscriverlo, ed è la parte che sul mockup non si ritocca: quella si cambia in js/tavola.js e si rigenera.\n\nPrima al posto di tutto questo c'erano seicento righe di Python che rifacevano il foglio in SVG. Era una copia, e una copia diverge: in una sola sessione si è trovata con gli anelli al raggio vecchio, senza gli inserti, e col marchio in Times per una virgoletta di troppo." },
+    { "id": "dove-sta-cosa", "x": 3120, "y": 470, "w": 320,
+      "text": "DOVE STA COSA, NEL CODICE\n\nL'impaginazione, la palette e la scala tipografica: css/style.css. Le variabili in cima sono l'unica fonte dei colori — anche il canvas le legge da lì, e il tema scuro scambia i due estremi tenendo i rapporti di contrasto.\n\nI comandi (tendine, filetti, manopole, aste, pulsanti): index.html per la struttura, js/comandi.js per quello che fanno.\n\nTutto quello che qui è nell'immagine — i due quadranti con corone, anelli, mirino e fili, le manopole ad arco, i misuratori, la curva dell'equalizzatore, la fascia del paesaggio, il circolo delle quinte, l'istogramma del baricentro — nell'app lo dipinge un canvas solo, js/tavola.js, che legge i riquadri marcati [data-quadro] e [data-manopola] e ci disegna dentro.\n\nGli effetti dell'inserto — eco, tremolo, coro, filtro — stanno in js/effetti.js; il banco li monta sul canale della classe." },
+    { "id": "cosa-e-vero", "x": 3120, "y": 1010, "w": 320,
+      "text": "QUANTO C'È DI VERO\n\nOgni numero, ogni etichetta, ogni posizione di cursore è quella che l'app aveva nell'istante della presa. Le uniche cose preparate a mano sono tre, perché altrimenti non ci sarebbe niente da vedere: una materia nel paesaggio (l'app all'apertura è muta), un effetto scelto su ciascuna classe, e un equalizzatore non piatto.\n\nL'AMBRA non dice una grandezza: dice dove guardare. Adesso, sui cerchi — la goccia appena scattata, la tenuta appena entrata, i fili che le legano al mirino. Il valore, nelle colonne e nella curva dell'equalizzatore. Il punto dove la deriva ha girato. E il numero di una sezione.\n\nÈ la proporzione a farla funzionare: l'accento indica finché resta una minoranza." }
+  ],
+  "launch": { "view": "canvas" }
+}

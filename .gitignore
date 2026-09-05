@@ -1,2 +1,9 @@
 node_modules/
 .DS_Store
+
+# Gli artboard del tavolo di lavoro: li rifà `node tavolo.mjs` dall'app che
+# gira, quindi sono un prodotto e non una fonte. La fonte è canvas.json, che
+# resta.
+tavolo/*.dc.html
+tavolo/*.webp
+tavolo/hiroshi-la-tavola.html
