@@ -47,6 +47,13 @@ const G  = {
   /* paesaggio */
   pInizio: 0, pFine: 100, pRallenta: 8, pVelo: 700, pSparpaglio: 35,
   pAccordatura: 55, pFuoco: 18, pCoda: 12, pTono: 2000, pRiverbero: 70,
+  /* le tre manopole dell'inserto, una terna per classe. Stanno in 0÷100 e
+     basta: che cosa vogliano dire lo decide l'effetto scelto, e la conversione
+     nell'unità vera sta in `effetti.js`. Chi le mettesse in unità reali
+     dovrebbe riscriverle a ogni cambio di effetto — cioè spostare le manopole
+     sotto le dita di chi ha appena girato la tendina. */
+  gE1: 40, gE2: 30, gE3: 30,
+  tE1: 40, tE2: 30, tE3: 30,
 };
 const GT = { ...G };
 const effG  = { registro: 45, calore: 70, spazio: 72, densita: 5, addensamento: 30, colore: 2500 };
@@ -176,6 +183,12 @@ let timbroTessuti = "corrente";
    del materiale. È la differenza fra un pezzo che cambia idea e uno che cambia
    luce sulla stessa idea. */
 const MODI = { gocce: "deriva", tessuti: "deriva" };
+
+/* L'effetto inserito su ciascuna classe. È una scelta discreta come il timbro
+   e come il modo, quindi non passa da `GT`: non c'è niente da lisciare fra
+   «eco» e «coro». La dissolvenza che evita il clic la fa il banco, dove stanno
+   i nodi. */
+const EFFETTO = { gocce: "niente", tessuti: "niente" };
 
 /* ------------------------------------------------------------- il materiale */
 function nuovaGoccia() {

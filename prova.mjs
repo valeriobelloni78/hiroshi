@@ -348,6 +348,198 @@ const esito = await p.evaluate(async () => {
                     " semitoni: doveva prendere il grado vicino, non saltare");
   }
 
+  /* 6c · GLI INSERTI DELLE DUE CLASSI.
+
+         NON si confrontano due render. Il modello sorteggia le idee mentre
+         il render cammina, quindi due passate a inserto vuoto danno già uno
+         scarto quadratico di 0,075 — grande quanto quello di un effetto
+         acceso — e una prova che li sottraesse starebbe misurando il sorteggio.
+         È la stessa regola che ha già fatto cadere una verifica dei grani:
+         quello che si verifica è la PROMESSA, non un numero.
+
+         Quindi ogni effetto viene costruito da solo, dentro un contesto suo,
+         con un segnale noto in ingresso, e gli si chiede quello che dichiara di
+         fare: l'eco che le ripetizioni arrivino a distanza giusta e SCENDANO,
+         il tremolo che il guadagno scavi e che i due lati siano in controfase,
+         il coro che allarghi i due lati, il filtro che tolga l'acuto. Ognuna
+         verifica anche sé stessa, girando la manopola che dovrebbe spegnerla.
+
+         Dal motore intero si chiede solo il resto: che arrivi all'uscita e che
+         non clippi. */
+  {
+    const sr = 48000;
+
+    /* Un effetto da solo: ingresso, effetto, uscita, e la sorgente che il
+       chiamante attacca. I valori si scrivono con `t = 0`, cioè adesso, come
+       fa il banco al montaggio: con la costante di lisciamento il primo
+       secondo sarebbe una salita e non una misura. */
+    const soloEffetto = async (nome, manopole, sorgente, secondi) => {
+      const c = new OfflineAudioContext(2, Math.round(secondi * sr), sr);
+      const ing = c.createGain(), usc = c.createGain();
+      const e = EFFETTI[nome].costruisci(c, ing, usc);
+      e.scrivi(EFFETTI[nome].param.map((par, i) => par.da(manopole[i])), 0, 0);
+      usc.connect(c.destination);
+      sorgente(c, ing);
+      return c.startRendering();
+    };
+    const colpo = (c, dove) => {
+      const b = c.createBuffer(1, 64, sr);
+      b.getChannelData(0)[0] = 1;
+      const s = c.createBufferSource(); s.buffer = b;
+      s.connect(dove); s.start(0);
+    };
+    // Rumore IDENTICO sui due canali: la larghezza che si misura dopo dev'essere
+    // tutta dell'effetto, e con due rumori diversi ci sarebbe già in partenza.
+    const rumore = (secondi) => (c, dove) => {
+      const n = Math.round(secondi * sr);
+      const b = c.createBuffer(2, n, sr);
+      let x = 12345;
+      for (let i = 0; i < n; i++) {
+        x = (x * 1103515245 + 12345) & 0x7fffffff;
+        const v = (x / 0x3fffffff - 1) * 0.3;
+        b.getChannelData(0)[i] = v; b.getChannelData(1)[i] = v;
+      }
+      const s = c.createBufferSource(); s.buffer = b;
+      s.connect(dove); s.start(0);
+    };
+    const piccoFra = (buf, da, a) => {
+      let m = 0;
+      for (let ch = 0; ch < buf.numberOfChannels; ch++) {
+        const x = buf.getChannelData(ch);
+        for (let i = Math.floor(da * sr); i < Math.min(buf.length, Math.floor(a * sr)); i++)
+          if (Math.abs(x[i]) > m) m = Math.abs(x[i]);
+      }
+      return m;
+    };
+    // Il correlatore fra due serie, −1 ÷ +1.
+    const correla = (a, b) => {
+      let ma = 0, mb = 0;
+      for (let i = 0; i < a.length; i++) { ma += a[i]; mb += b[i]; }
+      ma /= a.length; mb /= b.length;
+      let ab = 0, aa = 0, bb = 0;
+      for (let i = 0; i < a.length; i++) {
+        const u = a[i] - ma, v = b[i] - mb;
+        ab += u * v; aa += u * u; bb += v * v;
+      }
+      return aa > 0 && bb > 0 ? ab / Math.sqrt(aa * bb) : 0;
+    };
+    // L'inviluppo a blocchi di 25 ms: quello che il tremolo scava.
+    const inviluppo = (buf, ch) => {
+      const x = buf.getChannelData(ch), passo = Math.round(0.025 * sr), v = [];
+      for (let i = 0; i + passo <= x.length; i += passo) {
+        let s2 = 0;
+        for (let k = 0; k < passo; k++) s2 += x[i + k] * x[i + k];
+        v.push(Math.sqrt(s2 / passo));
+      }
+      return v;
+    };
+    // Quanto acuto c'è: la differenza prima di un rumore bianco vale √2 volte
+    // il rumore stesso, e dopo un passa-basso stretto quasi niente. Non serve
+    // una trasformata per una domanda che ha una risposta sola.
+    const acuto = (buf) => {
+      const x = buf.getChannelData(0);
+      let d2 = 0, x2 = 0;
+      for (let i = 1; i < x.length; i++) { const d = x[i] - x[i - 1]; d2 += d * d; x2 += x[i] * x[i]; }
+      return x2 > 0 ? Math.sqrt(d2 / x2) : 0;
+    };
+
+    R.effetti = {};
+
+    /* L'ECO: quantità al massimo, cioè solo bagnato, così quello che si misura
+       sono le ripetizioni e non la somma col secco. */
+    {
+      const T = EFFETTI.eco.param[0].da(50);
+      const buf = await soloEffetto("eco", [50, 100, 100], colpo, 6);
+      const p = [];
+      for (let k = 1; k <= 6; k++) p.push(piccoFra(buf, k * T, (k + 1) * T));
+      const muto = await soloEffetto("eco", [50, 0, 100], colpo, 6);
+      R.effetti.eco = { tempo: Math.round(T * 1000) + " ms",
+                        ripetizioni: p.map((v) => +v.toFixed(3)) };
+      if (p[0] < 0.1) R.errori.push("l'eco non ripete: la prima ripetizione è " + p[0].toFixed(3));
+      for (let k = 1; k < p.length; k++)
+        if (p[k] >= p[k - 1])
+          R.errori.push("l'anello dell'eco non scende: la ripetizione " + (k + 1) +
+                        " è " + p[k].toFixed(3) + " contro " + p[k - 1].toFixed(3));
+      if (piccoFra(muto, 2 * T, 3 * T) > 0.02)
+        R.errori.push("la prova non sa distinguere il caso sbagliato: a ritorni zero " +
+                      "l'eco ripete lo stesso");
+    }
+
+    /* IL TREMOLO: profondità piena e i due lati a mezzo giro l'uno dall'altro. */
+    {
+      const buf = await soloEffetto("tremolo", [70, 100, 100], rumore(5), 5);
+      const eL = inviluppo(buf, 0), eR = inviluppo(buf, 1);
+      const max = Math.max(...eL), min = Math.min(...eL);
+      const scava = (max - min) / Math.max(1e-9, max);
+      const contro = correla(eL, eR);
+      const fermo = await soloEffetto("tremolo", [70, 0, 100], rumore(5), 5);
+      const fL = inviluppo(fermo, 0);
+      const piatto = (Math.max(...fL) - Math.min(...fL)) / Math.max(1e-9, Math.max(...fL));
+      R.effetti.tremolo = { scava: +scava.toFixed(2), lati: +contro.toFixed(2),
+                            aProfonditaZero: +piatto.toFixed(2) };
+      if (scava < 0.8) R.errori.push("il tremolo a profondità piena scava solo " + scava.toFixed(2));
+      if (contro > -0.5)
+        R.errori.push("i due lati del tremolo non sono in controfase: correlazione " +
+                      contro.toFixed(2));
+      if (piatto > 0.25)
+        R.errori.push("la prova non sa distinguere il caso sbagliato: a profondità zero " +
+                      "l'inviluppo si muove lo stesso");
+    }
+
+    /* IL CORO: quello che deve fare è SFASCIARE i due lati, e in ingresso sono
+       lo stesso identico rumore. */
+    {
+      const buf = await soloEffetto("coro", [50, 100, 100], rumore(4), 4);
+      const largo = correla(buf.getChannelData(0), buf.getChannelData(1));
+      const secco = await soloEffetto("coro", [50, 100, 0], rumore(4), 4);
+      const stretto = correla(secco.getChannelData(0), secco.getChannelData(1));
+      R.effetti.coro = { lati: +largo.toFixed(2), aQuantitaZero: +stretto.toFixed(3) };
+      if (largo > 0.7) R.errori.push("il coro non allarga: i due lati stanno a " + largo.toFixed(2));
+      if (stretto < 0.99)
+        R.errori.push("la prova non sa distinguere il caso sbagliato: a quantità zero " +
+                      "i due lati sono già diversi");
+    }
+
+    /* IL FILTRO: taglio basso e nessun movimento, così la misura non insegue
+       una frequenza che cammina. */
+    {
+      const buf = await soloEffetto("filtro", [20, 100, 0], rumore(3), 3);
+      const nudo = await soloEffetto("niente", [], rumore(3), 3);
+      R.effetti.filtro = { taglio: Math.round(EFFETTI.filtro.param[0].da(20)) + " Hz",
+                           acuto: +acuto(buf).toFixed(3), crudo: +acuto(nudo).toFixed(3) };
+      if (acuto(nudo) < 1)
+        R.errori.push("la prova non sa distinguere il caso sbagliato: il rumore in " +
+                      "ingresso non ha acuti da togliere");
+      if (acuto(buf) > acuto(nudo) / 3)
+        R.errori.push("il filtro non toglie l'acuto: " + acuto(buf).toFixed(3) +
+                      " contro " + acuto(nudo).toFixed(3) + " crudo");
+    }
+
+    /* E dal motore intero, per tutti e quattro: che arrivino all'uscita e che
+       non clippino, spinti nel loro angolo. */
+    {
+      const salva = { g: EFFETTO.gocce, t: EFFETTO.tessuti,
+                      m: ["gE1", "gE2", "gE3", "tE1", "tE2", "tE3"].map((k) => G[k]) };
+      const ANGOLI = { eco: [50, 100, 100], tremolo: [50, 100, 100],
+                       coro: [50, 100, 100], filtro: [20, 100, 100] };
+      R.effetti.resa = {};
+      for (const nome of EFFETTI_NOMI) {
+        if (nome === "niente") continue;
+        EFFETTO.gocce = EFFETTO.tessuti = nome;
+        ANGOLI[nome].forEach((v, i) => {
+          G["gE" + (i + 1)] = GT["gE" + (i + 1)] = v;
+          G["tE" + (i + 1)] = GT["tE" + (i + 1)] = v;
+        });
+        const m = misura(await rendiOffline(8));
+        R.effetti.resa[nome] = { rms: m.rms, picco: dB(m.picco) + " dB" };
+        if (m.rms < 0.002) R.errori.push("con «" + nome + "» non arriva niente all'uscita");
+        if (m.picco >= 0.999) R.errori.push("«" + nome + "» clippa");
+      }
+      EFFETTO.gocce = salva.g; EFFETTO.tessuti = salva.t;
+      ["gE1", "gE2", "gE3", "tE1", "tE2", "tE3"].forEach((k, i) => { G[k] = GT[k] = salva.m[i]; });
+    }
+  }
+
   /* 7 · IL PAESAGGIO.
 
         All'apertura questa sorgente è muta per costruzione — non c'è nessun

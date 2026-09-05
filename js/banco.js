@@ -249,6 +249,22 @@ function curvaTangente(k = 1.6, n = 2048) {
 }
 
 /* ================================================================ il banco */
+/* Trenta millesimi bastano a non sentire il taglio e sono pochi abbastanza da
+   non sembrare un ripensamento: cambiare effetto deve rispondere subito. */
+const DISSOLVENZA = 0.03;
+
+/* Smonta quello che c'è e monta quello che serve, poi ci scrive i tre valori.
+   I valori si scrivono QUI e non dal chiamante: fra il montaggio e il primo
+   passo dello scheduler ci sono fino a cinquanta millesimi, e un'eco che
+   nasce con i ritorni a zero si sentirebbe entrare in ritardo. */
+function montaInserto(ctx, c, quale, valori) {
+  staccaEffetto(c.inserto);
+  c.presa.disconnect();
+  c.quale = EFFETTI[quale] ? quale : "niente";
+  c.inserto = EFFETTI[c.quale].costruisci(ctx, c.presa, c.ritorno);
+  if (valori && valori.length) c.inserto.scrivi(valori, ctx.currentTime, 0);
+}
+
 function costruisciBanco(ctx, nomiCanali) {
   const somma = ctx.createGain();
   somma.gain.value = 1;
@@ -272,19 +288,32 @@ function costruisciBanco(ctx, nomiCanali) {
   //
   // Il banco non sa che cosa sia una voce: espone il nodo e lascia che sia la
   // sorgente a dire di quanto. Le dipendenze scorrono in una direzione sola.
+  //
+  // Fra il normalizzatore e la coppia livello/mandata c'è L'INSERTO: due nodi
+  // fissi — `presa` e `ritorno` — con in mezzo l'effetto scelto dalla tendina,
+  // che si monta e si smonta senza toccare il resto del canale. Il perché di
+  // questo punto della catena sta in cima a `effetti.js`.
   const canali = {};
   for (const nome of nomiCanali) {
     const ingresso = ctx.createGain();
     const normale = ctx.createGain();
+    const presa = ctx.createGain();
+    const ritorno = ctx.createGain();
     const livello = ctx.createGain();
     const mandata = ctx.createGain();
     normale.gain.value = 1;
+    presa.gain.value = 1;
+    ritorno.gain.value = 1;
     livello.gain.value = 1;
     mandata.gain.value = 0;
     ingresso.connect(normale);
-    normale.connect(livello); livello.connect(somma);
-    normale.connect(mandata); mandata.connect(riverbero.ingresso);
-    canali[nome] = { ingresso, normale, livello, mandata };
+    normale.connect(presa);
+    ritorno.connect(livello); livello.connect(somma);
+    ritorno.connect(mandata); mandata.connect(riverbero.ingresso);
+    const c = { ingresso, normale, presa, ritorno, livello, mandata,
+                quale: null, inserto: null };
+    montaInserto(ctx, c, "niente", []);
+    canali[nome] = c;
   }
 
   // IL COLORE D'INSIEME sta PRIMA dell'equalizzatore, ed è di un altro
@@ -365,6 +394,41 @@ function costruisciBanco(ctx, nomiCanali) {
     spazio(nome, quanto) {
       const c = canali[nome]; if (!c) return;
       c.mandata.gain.setTargetAtTime(clamp(quanto, 0, 1), ctx.currentTime, 0.2);
+    },
+
+    /* L'EFFETTO INSERITO su un canale. `valori` sono già nell'unità
+       dell'effetto: il banco non sa che cosa voglia dire una manopola.
+
+       `dissolvi` distingue i due soli casi che esistono. Alla costruzione —
+       `tara()`, dal vivo e dentro un rendering fuori tempo reale — si monta e
+       basta, perché non c'è ancora niente da interrompere; dal vivo, quando
+       qualcuno gira la tendina, si scende a zero, si smonta, si rimonta e si
+       risale, o il taglio netto fra due catene diverse è un clic. La
+       dissolvenza usa un `setTimeout` e per questo NON può essere la strada
+       della costruzione: fuori tempo reale il rendering finirebbe prima che il
+       timer scatti, e l'effetto non ci sarebbe mai. */
+    inserto(nome, quale, valori, dissolvi) {
+      const c = canali[nome]; if (!c || c.quale === quale) return;
+      if (!dissolvi) { montaInserto(ctx, c, quale, valori); return; }
+      const t = ctx.currentTime;
+      c.ritorno.gain.cancelScheduledValues(t);
+      c.ritorno.gain.setValueAtTime(c.ritorno.gain.value, t);
+      c.ritorno.gain.linearRampToValueAtTime(0, t + DISSOLVENZA);
+      setTimeout(() => {
+        montaInserto(ctx, c, quale, valori);
+        const t2 = ctx.currentTime;
+        c.ritorno.gain.cancelScheduledValues(t2);
+        c.ritorno.gain.setValueAtTime(0, t2);
+        c.ritorno.gain.linearRampToValueAtTime(1, t2 + DISSOLVENZA);
+      }, DISSOLVENZA * 1000 + 20);
+    },
+
+    /* I tre parametri dell'effetto montato, nell'unità dell'effetto. `quando`
+       è un tempo assoluto, così la stessa chiamata vale dal vivo e dentro un
+       rendering. */
+    parametriInserto(nome, valori, quando) {
+      const c = canali[nome];
+      if (c && c.inserto) c.inserto.scrivi(valori, quando, 1);
     },
 
     /* Una banda dell'equalizzatore, in dB dentro la corsa dichiarata. */

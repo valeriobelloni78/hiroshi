@@ -43,6 +43,46 @@
 
   --sans:"Helvetica Neue",-apple-system,system-ui,"Segoe UI",Roboto,Arial,sans-serif;
   --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+
+  /* `color-scheme` non dipinge niente di quello che si vede qui — ogni comando
+     è ridisegnato con le variabili — ma dice al browser di che colore fare
+     quello che disegna LUI: il menù che si apre da una tendina, la barra di
+     scorrimento, il rettangolo del fuoco. Senza, in tema scuro si aprirebbe un
+     menù bianco in mezzo a una tavola nera. */
+  color-scheme:light;
+}
+
+/* ------------------------------------------------------------ chiaro e scuro
+   IL TEMA SCURO SCAMBIA I DUE ESTREMI: la carta diventa l'inchiostro e
+   l'inchiostro diventa la carta, gli stessi due colori di prima. I sei toni in
+   mezzo non sono scelti a occhio — stanno sulla retta fra i due nuovi estremi,
+   ciascuno nel punto in cui il suo RAPPORTO DI CONTRASTO con il fondo è quello
+   che aveva sulla carta chiara. Misurati: 6,01 · 2,61 · 1,63 · 1,45 · 1,17 ·
+   1,24, gli stessi a due cifre. È per questo che il tema scuro non è più
+   contrastato né più piatto dell'altro: è lo stesso foglio girato.
+
+   L'AMBRA NON SI TOCCA, ed è il punto di tutto: l'accento dice ADESSO, e se
+   cambiasse tinta col tema smetterebbe di essere una cosa sola. Sul fondo
+   scuro il suo contrasto scende da 3,54 a 2,72 — ma è l'unica cosa colorata di
+   tutta la tavola, e su una pagina di soli grigi un arancio non ha bisogno di
+   luminanza per farsi vedere.
+
+   NON SI SCRIVE DA NESSUNA PARTE quale tema si è scelto: all'apertura si
+   chiede al sistema operativo con `prefers-color-scheme` e si parte da lì.
+   Scrivere una preferenza vorrebbe dire toccare il disco di chi ascolta, che
+   in questo progetto è una decisione non ancora presa (vedi i materiali del
+   paesaggio) e non la si prende per un colore. */
+:root[data-tema="scuro"]{
+  color-scheme:dark;
+  --carta:#20211c;
+  --inchiostro:#e7e7e4;
+  --inchiostro-2:#9e9e9b;
+  --grigio:#61615f;
+  --muto:#434340;
+  --filo:#3b3b38;
+  --filo-2:#2c2d29;
+  --spento:#30312e;
+  --retino:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='7'%3E%3Ccircle cx='3.5' cy='3.5' r='1.05' fill='%23393936'/%3E%3C/svg%3E");
 }
 
 /* La grana della carta: rumore frattale generato dal browser, non un'immagine
@@ -118,6 +158,14 @@ body{
 .lingua{font-family:var(--mono);font-size:8px;letter-spacing:.18em;color:var(--muto);
         background:none;border:0;padding:0;cursor:default}
 .lingua[aria-current=true]{color:var(--inchiostro)}
+
+/* Il selettore del tema: due parole, come le lingue, ma sono due PULSANTI veri
+   — si prendono col tasto Tab e un lettore di schermo dice quale è premuto.
+   La parola è l'opzione, non lo stato di adesso: qui l'etichetta è l'azione. */
+.temi{display:flex;gap:14px}
+.tema{cursor:pointer}
+.tema[aria-pressed=true]{color:var(--inchiostro)}
+.tema:focus-visible{outline:1px solid var(--ambra);outline-offset:3px}
 
 /* -------------------------------------------------------------------- le bande */
 .banda{border-top:1px solid var(--filo);margin-top:16px;padding-top:12px}
@@ -210,6 +258,20 @@ input[type=range]:focus-visible{outline:1px solid var(--ambra);outline-offset:3p
    non due comandi qualunque messi in fondo alla colonna. La bocca della corona
    si apre in basso proprio verso di loro. */
 .sotto-quadrante{display:flex;justify-content:center;gap:56px;margin-top:2px}
+/* Le tre dell'inserto stanno più strette: tre manopole da cento pixel con lo
+   stesso respiro delle due di sopra uscirebbero dal quadrante, che non cresce
+   oltre 460. */
+.sotto-quadrante.tre{gap:18px}
+
+/* ------------------------------------------------------------------ l'inserto
+   La linea che separa i due livelli sotto il quadrante: sopra le manopole che
+   stanno DENTRO il suono — registro, calore, passo — sotto quelle che stanno
+   DOPO di lui. Senza la linea sarebbero cinque comandi in fila e non si
+   capirebbe perché tre cambiano nome quando si tocca una tendina. */
+.filoH{height:1px;background:var(--filo);margin:16px auto 12px;max-width:420px;width:100%}
+.inserto{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:2px}
+.inserto .et{margin:0}
+.inserto .tendina{width:150px}
 
 /* ------------------------------------------------------------------ le manopole
    Un arco graduato e un quadrato che ci corre sopra. Il disegno lo fa il
@@ -221,6 +283,10 @@ input[type=range]:focus-visible{outline:1px solid var(--ambra);outline-offset:3p
                         transform:translateY(-50%);opacity:0;cursor:ew-resize}
 .manopola .quadro input:focus-visible{opacity:1}
 .manopola .fl{text-align:center}
+/* Una manopola che l'effetto scelto non usa: il disegno la spegne da sé, qui si
+   spengono le due scritte e il cursore smette di prendere il fuoco. */
+.manopola.spenta .fl,.manopola.spenta .vl{color:var(--muto)}
+.manopola.spenta .quadro input{cursor:default}
 .manopola .vl{font-size:8.5px}
 
 /* --------------------------------------------------------------- le otto linee

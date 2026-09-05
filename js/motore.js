@@ -200,6 +200,9 @@ function passo(now, nascosta) {
   effettiviPaesaggio();
   avanzaTesta(dt);
   applicaEfficaci(now);
+  // Dal vivo con la dissolvenza: l'unico modo perché la scelta cambi qui è che
+  // qualcuno abbia girato la tendina, e fuori tempo reale la tendina non c'è.
+  applicaInserti(now, true);
 
   const orizzonte = now + LOOKAHEAD;
   if (orizzonte > bookedUntil) bookedUntil = orizzonte;   // monòtono: invecchia da sé
@@ -276,11 +279,56 @@ function applicaEfficaci(now) {
   }
 }
 
+/* ------------------------------------------------------------- gli inserti
+   Le tre manopole di un inserto NON passano per `effG`, e non è una
+   dimenticanza: `effG` esiste perché fra il cursore e il suono ci sono la
+   deriva, l'ora e la stagione, e su queste tre non c'è nessuna di quelle
+   influenze. Un parametro pende da una cosa sola; questi pendono dalla mano, e
+   `G` è già il valore lisciato da `battito()`.
+
+   Il confronto con l'ultima terna si fa sui NUMERI DELLA MANOPOLA, in 0÷100,
+   non su quelli convertiti: mezzo punto di manopola vuol dire la stessa cosa
+   per tutti e quattro gli effetti, mentre mezzo hertz e mezzo millesimo di
+   secondo no. */
+const INSERTI = [
+  { canale: "frasi",   classe: "gocce",   chiavi: ["gE1", "gE2", "gE3"] },
+  { canale: "tessuti", classe: "tessuti", chiavi: ["tE1", "tE2", "tE3"] },
+];
+const ultimoInserto = {
+  frasi:   { quale: null, p: [-1, -1, -1] },
+  tessuti: { quale: null, p: [-1, -1, -1] },
+};
+
+function applicaInserti(now, dissolvi) {
+  if (!banco) return;
+  for (const s of INSERTI) {
+    const quale = EFFETTI[EFFETTO[s.classe]] ? EFFETTO[s.classe] : "niente";
+    const u = ultimoInserto[s.canale];
+    const spec = EFFETTI[quale].param;
+    const manopole = s.chiavi.map((k) => G[k]);
+    const reali = spec.map((par, i) => par.da(manopole[i]));
+    if (u.quale !== quale) {
+      u.quale = quale;
+      u.p = manopole;
+      banco.inserto(s.canale, quale, reali, dissolvi);
+      continue;
+    }
+    if (!spec.length) continue;
+    if (manopole.every((x, i) => Math.abs(x - u.p[i]) < 0.5)) continue;
+    u.p = manopole;
+    banco.parametriInserto(s.canale, reali, now);
+  }
+}
+
 /* Rimette in discussione i valori con cui `applicaEfficaci` decide se vale la
    pena riscrivere l'automazione. Serve a chi cambia una taratura dal mixer: il
    modello non si è mosso, ma il numero che finisce nel banco sì. */
 function rileggiTarature() {
   ultimo.spazio = ultimo.colore = ultimo.livello = ultimo.tSpazio = -1;
+  // Solo la terna, non la scelta: azzerare anche `quale` rimonterebbe
+  // l'effetto — con la sua dissolvenza — perché qualcuno ha mosso un'asta del
+  // mixer.
+  for (const k in ultimoInserto) ultimoInserto[k].p = [-1, -1, -1];
 }
 
 /* ----------------------------------------------------------- l'assemblaggio */
@@ -399,10 +447,15 @@ function tara() {
   banco.livello("paesaggio", LIVELLI.paesaggio);
   EQ_DB.forEach((dB, i) => banco.banda(i, dB));
   ultimo.spazio = ultimo.colore = ultimo.livello = ultimo.tSpazio = -1;
+  // Il banco è NUOVO e non ha nessun inserto montato: `quale` torna a null
+  // perché la scelta va rifatta valere su questi nodi, non su quelli di prima.
+  // Senza dissolvenza — vedi `inserto()` in `banco.js`.
+  for (const k in ultimoInserto) ultimoInserto[k] = { quale: null, p: [-1, -1, -1] };
   effettiviFrasi();
   effettiviTessuti();
   effettiviPaesaggio();
   applicaEfficaci(ctx.currentTime);
+  applicaInserti(ctx.currentTime, false);
 }
 
 async function accendi(acceso) {
@@ -530,5 +583,6 @@ async function rendiOffline(secondi, sampleRate = 48000) {
   // azzerarli, il primo passo dal vivo non riscriverebbe niente e il banco
   // resterebbe con lo spazio e il colore dell'esportazione.
   ultimo.spazio = ultimo.colore = ultimo.livello = ultimo.tSpazio = -1;
+  for (const k in ultimoInserto) ultimoInserto[k].p = [-1, -1, -1];
   return reso;
 }

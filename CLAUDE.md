@@ -54,6 +54,51 @@ l'ambiente in cui il suono si trova, è metà del suono, e cambiarne la lunghezz
 la sua coda e il suo tono, e la mandata alla stanza dello studio resta a zero —
 è la sola sorgente senza uno «spazio».
 
+**OGNI CLASSE HA UN INSERTO, E IL RIVERBERO NON CI STA DENTRO.** Sotto il
+quadrante, oltre la linea, ci sono una tendina e tre manopole: l'effetto scelto
+sta sul canale della classe, fra il normalizzatore e la coppia livello/mandata
+— `ingresso → normale → presa → [effetto] → ritorno → { livello, mandata }`.
+Prima del normalizzatore l'effetto lavorerebbe su un segnale che sale e scende
+con quante voci sono aperte; dopo la mandata, la stanza sentirebbe il secco
+mentre davanti canta l'eco, cioè due sorgenti diverse nello stesso posto.
+
+Gli effetti sono ECO, TREMOLO, CORO e FILTRO, più «niente». **Il riverbero non
+c'è perché c'è già**: «spazio», la terza traccia della corona di ogni classe, è
+la mandata alla stanza dello studio. Metterlo anche qui vorrebbe dire due
+comandi sulla stessa grandezza e due stanze invece di una, contro la regola qui
+sopra. Quello che il riverbero non sa fare, e che qui mancava davvero, è l'eco:
+ripetizioni che si contano invece di una coda che si spalma.
+
+**TRE PARAMETRI PER EFFETTO, e le tre manopole ci sono sempre.** Se ogni effetto
+ne portasse quanti gliene servono, cambiare effetto vorrebbe dire veder saltare
+l'impaginazione, e la simmetria fra le due classi durerebbe finché le due
+tendine dicono la stessa cosa. A inserto vuoto le tre si spengono davvero —
+`disabled` — perché un comando che si muove e non fa niente è peggio di un
+comando che dice di no. **La terna è UNA SOLA PER CLASSE**, non una per
+effetto: cambiando effetto le manopole restano dove sono e il nuovo le legge a
+modo suo, come su un pannello vero, dove le manopole stanno fuori dall'effetto.
+Stanno in `G` in 0÷100 e la conversione nell'unità vera è dentro `effetti.js`:
+in unità reali andrebbero riscritte a ogni cambio di effetto, cioè spostate
+sotto le dita di chi ha appena girato la tendina.
+
+**L'anello di retroazione dell'eco VA BENE, e quello del passa-tutto no.** La
+differenza non è il rischio, è a che cosa serve l'anello: nel passa-tutto due
+prese devono cancellarsi, e i 128 campioni che Web Audio infila in ogni ciclo le
+scollavano (vedi fra le insidie); qui una strada sola torna indietro più tardi, e
+il blocco si somma al tempo di ritardo — 2,7 ms su un'eco da mezzo secondo. I
+ritorni non passano 0,8 e nell'anello c'è un passa-basso: senza, la ventesima
+ripetizione suonerebbe come la prima, che non è un'eco ma un loop.
+
+**Cambiare effetto dal vivo passa per una dissolvenza, la costruzione no.**
+Trenta millesimi giù, si smonta e si rimonta, trenta su: il taglio netto fra due
+catene diverse è un clic. La dissolvenza usa un `setTimeout` e per questo NON
+può essere la strada della costruzione — `tara()`, che vale anche dentro un
+rendering fuori tempo reale, dove il render finirebbe prima che il timer scatti
+e l'effetto non ci sarebbe mai. Al montaggio i tre valori si scrivono con la
+costante di lisciamento a ZERO (`scrivi(v, quando, 0)`): un effetto appena
+costruito non ha un valore vecchio da cui scivolare, e un tempo di ritardo che
+sale da zero non è un'entrata, è una glissata.
+
 **IL PAESAGGIO SI INTONA PER RISONANZA, non per trasposizione.** Una
 registrazione ha un'altezza sua che nessuno conosce, e un temporale non ne ha
 affatto: trasporla su un grado vorrebbe dire prima indovinarla, e su pioggia,
@@ -186,6 +231,41 @@ registratore userà lo stesso.
 nella tavola non ce n'è nessuno, e la prima eccezione sarebbe la fine della
 regola.
 
+**IL TEMA SCURO È LO STESSO FOGLIO GIRATO, non una seconda palette.** Carta e
+inchiostro si SCAMBIANO — gli stessi due colori — e i sei toni in mezzo stanno
+sulla retta fra i due nuovi estremi, ciascuno nel punto in cui il suo rapporto
+di contrasto col fondo è quello che aveva sulla carta chiara: 6,01 · 2,61 ·
+1,63 · 1,45 · 1,17 · 1,24, gli stessi a due cifre. È per questo che il tema
+scuro non è più contrastato né più piatto dell'altro. Chi aggiunge una tinta
+alla palette la calcoli così e scriva il numero, o il tema scuro comincerà a
+essere un'altra tavola.
+
+**L'ambra non cambia col tema**, ed è il punto: l'accento dice ADESSO, e un
+accento che cambiasse tinta smetterebbe di essere una cosa sola. Sul fondo scuro
+il suo contrasto scende da 3,54 a 2,72, ma è l'unica cosa colorata di tutta la
+tavola e su una pagina di soli grigi un arancio non ha bisogno di luminanza per
+farsi vedere.
+
+**Il tema sta in un attributo sulla radice, e la tavola se ne accorge da sé.**
+`data-tema="scuro"` sull'elemento radice, scritto dai comandi; il CSS ci appende
+la palette e `tavola.js` confronta l'attributo con la propria copia a ogni
+fotogramma — lo stesso modo in cui si accorge che una mano ha mosso un cursore,
+e la ragione per cui non c'è un `addEventListener` in tutto quel file. Con la
+palette cade anche l'ONDA IN CACHE, che è disegnata coi grigi del tema:
+`ondaChiave = ""`, o resterebbe la scala di prima fino al cambio di materiale.
+
+**Il tema non si scrive da nessuna parte.** All'apertura si chiede al sistema
+con `prefers-color-scheme` e si continua ad ascoltarlo finché nessuno ha scelto
+a mano; dopo la scelta comanda chi l'ha fatta. È l'unico modo di ritrovare il
+proprio tema senza toccare il disco di chi ascolta — che in questo progetto è
+una decisione non ancora presa (vedi i materiali del paesaggio) e non la si
+prende per un colore.
+
+`color-scheme` non dipinge niente di quello che si vede — ogni comando è
+ridisegnato con le variabili — ma dice al browser di che colore fare quello che
+disegna lui: il menù che si apre da una tendina, la barra di scorrimento. Senza,
+in tema scuro si aprirebbe un menù bianco in mezzo a una tavola nera.
+
 **LA LUNGHEZZA CODIFICA, L'AMBRA NO.** C'è un accento solo su tutta la tavola —
 `--ambra`, il rosso di Rada Deriva — e non dice *che cosa*: dice *adesso*. La
 goccia scattata nell'ultimo mezzo secondo, la tenuta entrata per ultima, il
@@ -270,8 +350,11 @@ l'audio.** Il colore di un evento da `altezza()`, la lunghezza di una tenuta da
 al primo ritocco, e mentirebbe piano.
 
 **Le dipendenze scorrono in una direzione sola:**
-`deriva ← cattura ← linee ← timbri ← tessuti ← mood ← banco ← paesaggio ←
-motore ← registratore ← comandi ← tavola`. Il paesaggio viene DOPO il banco, e
+`deriva ← cattura ← linee ← timbri ← tessuti ← mood ← effetti ← banco ←
+paesaggio ← motore ← registratore ← comandi ← tavola`. Gli effetti vengono PRIMA
+del banco perché è il banco a montarli sui canali, e loro non sanno niente di
+lui: un effetto riceve due nodi e ci costruisce in mezzo. Il paesaggio viene
+DOPO il banco, e
 non è un caso: è l'unica sorgente che si costruisce una rete di riverbero, e la
 rete la sa fare il banco. Il modello non conosce l'audio; l'audio non
 conosce il disegno.
@@ -512,7 +595,7 @@ dissolvenza — mentre esiste una cosa che le gocce non hanno: il tipo e la
 velocità del movimento interno. Chi unificasse i due gruppi «per coerenza»
 toglierebbe ai tessuti l'unico comando che li distingue davvero.
 
-**I dieci comandi di una classe stanno in tre posti, e il posto dice che cosa
+**I comandi di una classe stanno in quattro posti, e il posto dice che cosa
 sono.** Nella colonna: cinque filetti sotto «Forma del suono» — che cosa è il
 suono — e tre sotto «Insieme», che sulla tavola sono le tre tracce della corona:
 addensamento · densità · spazio per le gocce, intreccio · livello · spazio per i
@@ -520,11 +603,15 @@ tessuti. SOTTO IL QUADRANTE, le due manopole: registro e calore per le gocce, re
 Stanno lì e non in colonna perché sono la stessa figura del quadrante — un arco
 graduato con un quadrato che ci corre sopra — e la bocca della corona si apre in
 basso proprio verso di loro: si leggono come due satelliti del cerchio invece
-che come due comandi qualunque in fondo a una lista.
+che come due comandi qualunque in fondo a una lista. SOTTO LA LINEA, la tendina
+dell'effetto e le sue tre manopole: la linea separa quello che sta DENTRO il
+suono da quello che gli viene DOPO, e senza di lei sarebbero cinque manopole in
+fila senza una ragione per cui tre cambiano nome quando si tocca una tendina.
 
 **LE DUE CLASSI SONO SIMMETRICHE, comando per comando**, e la simmetria è una
-cosa da difendere: cinque filetti, tre tracce di corona, due manopole, quattro
-righe di linee, il modo del materiale. La più esterna delle tre tracce è lo
+cosa da difendere: cinque filetti, tre tracce di corona, due manopole, la
+tendina dell'effetto con le sue tre manopole, quattro righe di linee, il modo
+del materiale. La più esterna delle tre tracce è lo
 SPAZIO da tutt'e due le parti — lo stesso parametro allo stesso raggio sui due
 quadranti. Chi aggiunge un comando a una classe si chieda che cosa gli
 corrisponde nell'altra: se non c'è risposta, forse il comando è nel posto
@@ -547,7 +634,20 @@ tessuti sia **liscia** dove quella per conteggio di teste scatterebbe, che
 nessuna tenuta che attraversa un passo di quinta resti fuori collezione, e che i
 sedici mood siano in regola: periodi coprimi dentro ogni serie, riallineamento
 sopra le 24 ore in tutte e 64 le combinazioni, ogni timbro una volta sola, e
-quattro accoppiate rese dal motore intero senza clippare. Sul **paesaggio**
+quattro accoppiate rese dal motore intero senza clippare. Sugli **inserti**
+verifica ogni effetto DA SOLO, in un contesto suo e con un segnale noto — l'eco
+che ripeta alla distanza giusta e scenda, il tremolo che scavi e tenga i due lati
+in controfase, il coro che allarghi due canali identici, il filtro che tolga
+l'acuto — e ciascuna di quelle misure verifica anche sé stessa, girando la
+manopola che dovrebbe spegnere l'effetto. Dal motore intero chiede solo il
+resto: che arrivino all'uscita e che non clippino, spinti nel loro angolo.
+
+**Gli effetti NON si provano sottraendo due render.** Il modello sorteggia le
+idee mentre il render cammina, quindi due passate a inserto vuoto danno già uno
+scarto quadratico di **0,075** — grande quanto quello di un effetto acceso — e
+una prova che li sottraesse starebbe misurando il sorteggio. Misurato, e la
+prova lo diceva da sé: fallivano tutti e quattro insieme, che è la firma di una
+misura sbagliata e non di quattro difetti. Sul **paesaggio**
 verifica che la testa cammini AL PASSO DEL RALLENTAMENTO (un accumulatore che
 accumula alla velocità sbagliata è un difetto muto: si sente solo come un
 paesaggio che non va da nessuna parte), che non esca mai dal segmento nemmeno
@@ -662,7 +762,9 @@ testata e un piede:
   una tenuta è un arco lungo quanto sta in aria, tenue finché è passata, a
   inchiostro pieno mentre suona, in ambra solo l'ultima entrata. Attorno, la corona: tre tracce di
   graduazioni aperte in basso, che mostrano l'efficace mentre i filetti in
-  colonna mostrano la mano;
+  colonna mostrano la mano. Sotto il cerchio due manopole — registro e calore,
+  registro e passo — poi una linea, poi la tendina dell'**effetto** con le sue
+  tre manopole;
 - **03 · banco**: registrazione con cronometro e misuratori a tessere,
   esportazione (wav, la tavola in png, la scena che aspetta un seme),
   equalizzatore a otto aste con la curva vera sopra — chiesta ai filtri con
@@ -679,6 +781,8 @@ testata e un piede:
 - **05 · deriva**: la tonalità, il circolo delle quinte con dove siamo e dove
   andremo, il baricentro su quindici minuti di passato e le sette voci che non
   ci sono ancora;
+  In alto a destra, dopo le lingue, il selettore **chiaro/scuro**: due pulsanti
+  veri, non due parole, perché si prendono col tasto Tab;
 - il **piede**: lo stato, le due influenze esterne, e «a mano», cioè gli ultimi
   tre filetti che qualcuno ha mosso. Una tavola che si muove da sé per tre
   quarti ha bisogno di dire quale quarto è stato deciso.

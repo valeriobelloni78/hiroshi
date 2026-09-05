@@ -105,7 +105,12 @@ da girare è un cursore trasparente disteso sopra il disegno dell'arco — il
 canvas la disegna, il browser la comanda — così tutto resta raggiungibile col
 dito, col tasto Tab e con un lettore di schermo.
 
-C'è un accento solo, il rosso di Rada Deriva, e non dice che cosa: dice
+In alto a destra si sceglie fra **chiaro e scuro**, e il tema scuro è lo stesso
+foglio girato: carta e inchiostro si scambiano, gli stessi due colori, e i sei
+toni in mezzo tengono il rapporto di contrasto che avevano. All'apertura si
+chiede al sistema; non si scrive niente da nessuna parte.
+
+C'è un accento solo, il rosso di Rada Deriva, e non cambia col tema — dice
 **adesso**. Quello che le cose sono lo dice la lunghezza — il registro di una
 goccia, la durata di una tenuta. Tutto il resto è inchiostro.
 
@@ -118,7 +123,11 @@ quando è passata, a inchiostro pieno mentre suona, in ambra solo l'ultima
 entrata. Attorno corre la corona, tre tracce graduate
 che mostrano quello che sta suonando mentre i filetti in colonna mostrano dove
 sta la mano: fra i due c'è la deriva. Le due classi sono simmetriche comando per
-comando, e la traccia più esterna è lo spazio da tutt'e due le parti. Il **banco** ha la
+comando, e la traccia più esterna è lo spazio da tutt'e due le parti. Sotto ogni
+cerchio, oltre una linea, c'è un **inserto**: una tendina — eco, tremolo, coro,
+filtro — e tre manopole che cambiano nome insieme a lei. Il riverbero non è fra
+gli effetti perché c'è già, ed è «spazio»: una stanza sola per tutto lo studio,
+com'era in Rada. Il **banco** ha la
 registrazione, l'equalizzatore a otto bande con la sua curva vera e il mixer. Del **paesaggio** si vede la materia intera, distesa per il lungo come un
 istogramma di quadratini grigi che partono dalla riga di mezzo, con il segmento
 scelto in chiaro e il resto sotto un velo di carta. La **deriva** mostra la tonalità di adesso e quella che
@@ -145,6 +154,7 @@ js/linee.js       lo stato: linee, idee, piani, ricambio
 js/timbri.js      gli otto suoni delle gocce
 js/tessuti.js     gli otto tenuti, e la finestra che li apre e li chiude
 js/mood.js        i sedici stati dello strumento: parametri, periodi, timbro
+js/effetti.js     gli inserti di classe: eco, tremolo, coro, filtro
 js/banco.js       l'uscita: mixer, riverbero, colore, equalizzatore, limitatore
 js/paesaggio.js   la materia registrata, il segmento, il velo, la sua stanza
 js/motore.js      lo scheduler e l'assemblaggio

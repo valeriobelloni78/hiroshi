@@ -104,11 +104,39 @@ function cursore(id, targaId, def) {
   };
   const scrivi = () => { def.scrivi(Number(input.value)); mostra(); segnaMano(input); };
   input.addEventListener("input", scrivi);
-  CURSORI.push({ input, def, mostra });
+  const voce = { input, def, mostra };
+  CURSORI.push(voce);
   def.scrivi(Number(input.value));
   mostra();
-  return input;
+  return voce;
 }
+
+/* --------------------------------------------------------- chiaro e scuro
+   Il tema sta in un attributo sull'elemento radice, e basta quello: il CSS ci
+   appende la palette scura, e la tavola se ne accorge da sé confrontandolo con
+   la propria copia a ogni fotogramma — lo stesso modo in cui si accorge che
+   una mano ha mosso un cursore. Nessun ascoltatore nel disegno, nessuna
+   chiamata dai comandi al disegno.
+
+   All'apertura si CHIEDE AL SISTEMA con `prefers-color-scheme`. È l'unico modo
+   di ritrovare il proprio tema senza scrivere niente da nessuna parte, e in un
+   progetto che non ha ancora deciso se toccare il disco di chi ascolta non lo
+   si decide per un colore. Il seguito lo si ascolta: se il sistema cambia idea
+   a metà seduta — perché è calato il sole — la tavola lo segue, ma solo finché
+   nessuno ha scelto a mano, perché dopo la scelta è di chi l'ha fatta. */
+const TEMI = { chiaro: el("temaChiaro"), scuro: el("temaScuro") };
+let temaAMano = false;
+
+function scegliTema(quale) {
+  document.documentElement.dataset.tema = quale;
+  for (const k in TEMI) TEMI[k].setAttribute("aria-pressed", String(k === quale));
+}
+for (const k in TEMI) TEMI[k].addEventListener("click", () => { temaAMano = true; scegliTema(k); });
+
+const SCURO = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)");
+scegliTema(SCURO && SCURO.matches ? "scuro" : "chiaro");
+if (SCURO && SCURO.addEventListener)
+  SCURO.addEventListener("change", (e) => { if (!temaAMano) scegliTema(e.matches ? "scuro" : "chiaro"); });
 
 /* «A mano»: gli ultimi filetti che qualcuno ha mosso, in fondo al foglio. Una
    tavola che si muove da sé per tre quarti ha bisogno di dire quale quarto è
@@ -199,6 +227,60 @@ cursore("intreccio", "vIntreccio", con(suGT("tIntreccio"), (v) => numero(v / 100
 cursore("livello", "vLivello", con(suGT("tLivello"),
         (v) => dB(20 * Math.log10(clamp(v, 8, 60) / 32) - 7) + " dB"));
 cursore("tspazio",   "vTspazio",   con(suGT("tSpazio"), (v) => numero(v / 100, 2)));
+
+/* ------------------------------------------------- l'inserto delle due classi
+   Una tendina e tre manopole per parte, sotto la linea. Le manopole scrivono
+   sempre lo stesso numero — 0÷100 in `GT` — e sono l'EFFETTO a dire che cosa
+   voglia dire: la targa lo chiede a `EFFETTI` ogni volta che la deve scrivere,
+   quindi non c'è nessuna tabella di nomi da tenere in pari con l'altra.
+
+   L'etichetta invece si riscrive a mano quando la tendina cambia, e non a ogni
+   fotogramma: è la sola cosa nel foglio che il disegno non ridipinge da sé, e
+   riscriverla sessanta volte al secondo per niente farebbe lavorare il
+   browser sul testo di sei elementi.
+
+   A inserto vuoto le tre manopole si spengono davvero — `disabled` — invece di
+   restare girabili senza effetto. Un comando che si muove e non fa niente è
+   peggio di un comando che dice di no. */
+function testoInserto(classe, i) {
+  return (v) => {
+    const par = EFFETTI[EFFETTO[classe]].param[i];
+    return par ? numero(par.da(v) * par.k, par.d) + par.u : "—";
+  };
+}
+
+function inserto(classe, pre, idTendina) {
+  const M = pre.toUpperCase();
+  const manopole = [];
+  for (let i = 0; i < 3; i++) {
+    manopole.push(cursore(pre + (i + 1), "v" + M + (i + 1),
+                          con(suGT(pre + (i + 1)), testoInserto(classe, i))));
+  }
+  /* Si rifà solo la LETTURA delle tre targhe, non `allinea()`: quello rimette
+     ogni cursore dove `G` lo trova, e `G` insegue `GT` con mezzo secondo di
+     ritardo. Chiamarlo qui vorrebbe dire che cambiare effetto mentre una
+     manopola sta ancora scivolando la tira indietro di qualche punto. Per un
+     mood è la cosa giusta — un mood scrive `G` e `GT` insieme, quindi non c'è
+     ritardo da subire — qui no. */
+  const rinomina = () => {
+    const spec = EFFETTI[EFFETTO[classe]].param;
+    manopole.forEach((m, i) => {
+      const par = spec[i];
+      el("fl" + M + (i + 1)).textContent = par ? par.fl : "—";
+      m.input.disabled = !par;
+      m.input.closest(".manopola").classList.toggle("spenta", !par);
+      m.mostra();
+    });
+  };
+  tendina(idTendina, EFFETTI_NOMI, null, EFFETTO[classe], (v) => {
+    EFFETTO[classe] = v;
+    rinomina();
+  });
+  rinomina();
+}
+
+inserto("gocce",   "gE", "effGocce");
+inserto("tessuti", "tE", "effTessuti");
 
 /* -------------------------------------------------------------- 04 paesaggio
    Le due maniglie del segmento non hanno una targa loro: la coppia si legge in

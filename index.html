@@ -46,6 +46,13 @@
           <span class="lingua" aria-current="true">IT</span>
           <span class="lingua">FR</span><span class="lingua">EN</span><span class="lingua">JA</span>
         </span>
+        <span class="divisore"></span>
+        <!-- Chiaro e scuro sono lo stesso foglio girato: gli stessi due colori
+             agli estremi, scambiati, e l'ambra che non si muove. -->
+        <span class="temi" role="group" aria-label="Tema">
+          <button type="button" class="lingua tema" id="temaChiaro" aria-pressed="true">CHIARO</button>
+          <button type="button" class="lingua tema" id="temaScuro" aria-pressed="false">SCURO</button>
+        </span>
       </div>
     </header>
 
@@ -135,6 +142,38 @@
             <span class="fl">Calore</span><span class="vl" id="vCalore">0,70</span>
           </div>
         </div>
+        <!-- L'INSERTO della classe. La linea separa due livelli: sopra le due
+             manopole che stanno dentro il suono, sotto le tre che stanno dopo
+             di lui. L'effetto lo sceglie la tendina, e le tre manopole
+             cambiano nome insieme a lei. -->
+        <div class="filoH"></div>
+        <div class="inserto">
+          <span class="et">Effetto</span>
+          <label class="tendina piccola"><select id="effGocce"></select></label>
+        </div>
+        <div class="sotto-quadrante tre">
+          <div class="manopola">
+            <div class="quadro" data-manopola="gE1">
+              <input id="gE1" type="range" min="0" max="100" step="1" value="40"
+                     aria-label="Effetto dei gocce, parametro 1">
+            </div>
+            <span class="fl" id="flGE1">—</span><span class="vl" id="vGE1">—</span>
+          </div>
+          <div class="manopola">
+            <div class="quadro" data-manopola="gE2">
+              <input id="gE2" type="range" min="0" max="100" step="1" value="30"
+                     aria-label="Effetto dei gocce, parametro 2">
+            </div>
+            <span class="fl" id="flGE2">—</span><span class="vl" id="vGE2">—</span>
+          </div>
+          <div class="manopola">
+            <div class="quadro" data-manopola="gE3">
+              <input id="gE3" type="range" min="0" max="100" step="1" value="30"
+                     aria-label="Effetto dei gocce, parametro 3">
+            </div>
+            <span class="fl" id="flGE3">—</span><span class="vl" id="vGE3">—</span>
+          </div>
+        </div>
       </div>
 
       <div class="filoV"></div>
@@ -155,6 +194,38 @@
                      aria-label="Passo del movimento">
             </div>
             <span class="fl">Passo</span><span class="vl" id="vPasso">0,38</span>
+          </div>
+        </div>
+        <!-- L'INSERTO della classe. La linea separa due livelli: sopra le due
+             manopole che stanno dentro il suono, sotto le tre che stanno dopo
+             di lui. L'effetto lo sceglie la tendina, e le tre manopole
+             cambiano nome insieme a lei. -->
+        <div class="filoH"></div>
+        <div class="inserto">
+          <span class="et">Effetto</span>
+          <label class="tendina piccola"><select id="effTessuti"></select></label>
+        </div>
+        <div class="sotto-quadrante tre">
+          <div class="manopola">
+            <div class="quadro" data-manopola="tE1">
+              <input id="tE1" type="range" min="0" max="100" step="1" value="40"
+                     aria-label="Effetto dei tessuti, parametro 1">
+            </div>
+            <span class="fl" id="flTE1">—</span><span class="vl" id="vTE1">—</span>
+          </div>
+          <div class="manopola">
+            <div class="quadro" data-manopola="tE2">
+              <input id="tE2" type="range" min="0" max="100" step="1" value="30"
+                     aria-label="Effetto dei tessuti, parametro 2">
+            </div>
+            <span class="fl" id="flTE2">—</span><span class="vl" id="vTE2">—</span>
+          </div>
+          <div class="manopola">
+            <div class="quadro" data-manopola="tE3">
+              <input id="tE3" type="range" min="0" max="100" step="1" value="30"
+                     aria-label="Effetto dei tessuti, parametro 3">
+            </div>
+            <span class="fl" id="flTE3">—</span><span class="vl" id="vTE3">—</span>
           </div>
         </div>
       </div>
@@ -390,6 +461,7 @@
 <script src="js/timbri.js"></script>
 <script src="js/tessuti.js"></script>
 <script src="js/mood.js"></script>
+<script src="js/effetti.js"></script>
 <script src="js/banco.js"></script>
 <script src="js/paesaggio.js"></script>
 <script src="js/motore.js"></script>

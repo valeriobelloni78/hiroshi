@@ -506,8 +506,13 @@ function quadrante(box, voci, linee, anello, ora, centro) {
    sola. */
 const MANOPOLA_DA = 235 / 360, MANOPOLA_QUANTO = 250 / 360, MANOPOLA_TACCHE = 27;
 
-function manopola(box, u, efficace) {
+function manopola(box, u, efficace, spenta) {
   if (!box) return;
+  const base = T.globalAlpha;
+  // Una manopola che l'inserto non usa resta disegnata e si spegne: toglierla
+  // farebbe saltare l'impaginazione a ogni cambio di effetto, ed è proprio
+  // quello che le tre manopole fisse servono a evitare.
+  if (spenta) T.globalAlpha = base * 0.28;
   const R = Math.min(box.w, box.h) / 2 * 0.79;
   const cx = box.cx, cy = box.cy;
   // Le lunghezze sono FRAZIONI del raggio e non pixel: la manopola può crescere
@@ -522,6 +527,7 @@ function manopola(box, u, efficace) {
   }
   quadrettoSuGiro(cx, cy, R * 0.903, MANOPOLA_DA + clamp(u, 0, 1) * MANOPOLA_QUANTO,
                   R * 0.2, tinta("inchiostro"), 1.7);
+  T.globalAlpha = base;
 }
 
 /* ------------------------------------------------------------- i misuratori
@@ -870,7 +876,24 @@ const CORONA_TESSUTI = [
 ];
 
 
+/* Il tema, come tutto il resto che la tavola sa dei comandi: guardando, non
+   facendosi chiamare. Un confronto di stringhe per fotogramma è il prezzo di
+   non avere un `addEventListener` in tutto questo file.
+
+   Con la palette cade anche l'ONDA IN CACHE, che è disegnata coi grigi del
+   tema: senza azzerare la chiave resterebbe la scala di prima, chiara su
+   fondo scuro o viceversa, finché non si cambia materiale. */
+let temaVisto = null;
+function seCambiaTema() {
+  const t = document.documentElement.dataset.tema || "chiaro";
+  if (t === temaVisto) return;
+  temaVisto = t;
+  leggiTinte();
+  ondaChiave = "";
+}
+
 function disegna() {
+  seCambiaTema();
   const ora = ctx ? ctx.currentTime : 0;
   const orologio = performance.now() / 1000;
   const f = foglio.getBoundingClientRect();
@@ -898,6 +921,16 @@ function disegna() {
   manopola(manopolaDi("calore"),    G.calore / 100,    effG.calore / 100);
   manopola(manopolaDi("tregistro"), G.tRegistro / 100, effGT.registro / 100);
   manopola(manopolaDi("passo"),     G.tPasso / 100,    effGT.passo / 100);
+
+  // Le tre dell'inserto hanno una lettura sola e non due: fra la mano e il
+  // suono non c'è né la deriva né l'ora, quindi le graduazioni e il quadrato
+  // dicono lo stesso numero e non c'è nessuna distanza da mostrare.
+  for (const [classe, pre] of [["gocce", "gE"], ["tessuti", "tE"]]) {
+    const quanti = EFFETTI[EFFETTO[classe]].param.length;
+    for (let i = 1; i <= 3; i++) {
+      manopola(manopolaDi(pre + i), G[pre + i] / 100, undefined, i > quanti);
+    }
+  }
 
   misuratoreLR(quadro("misuratore"), orologio);
   spettro(quadro("spettro"));
