@@ -119,10 +119,24 @@ body{
     text-transform:none;line-height:1.2}
 .fl{font-family:var(--mono);font-size:7.5px;letter-spacing:.16em;color:var(--grigio);
     text-transform:uppercase;line-height:1.2}
-.vl{font-family:var(--mono);font-size:8px;color:var(--inchiostro);
+/* I VALORI SONO IN AMBRA, le etichette restano grigie e le parole inchiostro.
+   È la seconda cosa che l'accento dice, e le due non si confondono perché non
+   stanno sulla stessa superficie: sul CANVAS l'ambra è ADESSO — la goccia
+   appena scattata, la tenuta appena entrata, i fili che le legano al mirino —
+   nel TESTO è un numero che cambia. Chi guarda i cerchi legge un tempo, chi
+   guarda le colonne legge una misura; nessuno deve tenere a mente due chiavi
+   nello stesso posto.
+
+   Contro la carta l'ambra sta a 3,54 di contrasto e sul fondo scuro a 2,72:
+   sopra le etichette in grigio, che stanno a 2,61 da tutt'e due le parti. I
+   numeri sono la cosa più leggibile della colonna, che è quello che devono
+   essere. */
+.vl{font-family:var(--mono);font-size:8px;color:var(--ambra);
     font-variant-numeric:tabular-nums;line-height:1.2}
 .mn{font-family:var(--mono);font-size:8px;letter-spacing:.16em;text-transform:uppercase;
     color:var(--inchiostro);line-height:1.2}
+/* `tenue` spegne un valore che non c'è ancora — le voci — e vince sull'ambra:
+   un numero in accento che dice «0 / 7» prometterebbe qualcosa. */
 .tenue{color:var(--muto)}
 .grigio{color:var(--grigio)}
 
@@ -171,6 +185,11 @@ body{
    perché non sembrino due parole strette in mezzo a un vuoto grande. */
 .sotto{display:flex;align-items:center;justify-content:space-between;
        font-size:12px;letter-spacing:.24em;color:var(--grigio);line-height:1;margin-right:-.24em}
+/* Le due «d» di rada e studio in ambra. Sono la stessa lettera nelle stesse due
+   parole, alla stessa altezza: accese fanno una rima che tiene insieme la riga,
+   e il punto che pulsa nel mezzo diventa il terzo di tre segni invece di essere
+   l'unico. */
+.sotto b{font-weight:inherit;color:var(--ambra)}
 @keyframes pulsa{0%,100%{opacity:1}50%{opacity:.34}}
 .punto{width:7px;height:7px;border-radius:50%;flex:none;background:var(--ambra);
        animation:pulsa 2.6s ease-in-out infinite}
@@ -208,9 +227,17 @@ body{
 .banda.classi{border-top:0;margin-top:0;padding-top:14px}
 .capo{display:flex;align-items:baseline;justify-content:space-between;gap:20px}
 .capo .titolo{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
-.capo .num{font-family:var(--mono);font-size:13px;font-weight:200;color:var(--muto)}
+/* I NUMERI DI SEZIONE sono numeri, quindi vanno in ambra come tutti gli
+   altri. Erano il grado più tenue della palette — un'insegna da leggere una
+   volta e poi dimenticare — e in accento diventano invece la mappa: cinque
+   punti fermi che si trovano scorrendo il foglio senza leggere una parola. */
+.capo .num{font-family:var(--mono);font-size:13px;font-weight:200;color:var(--ambra)}
 .capo .voce{font-size:11px;font-weight:400;letter-spacing:.30em;text-transform:uppercase}
 .capo .dida{font-family:var(--mono);font-size:8px;letter-spacing:.10em;color:var(--grigio)}
+/* Anche i numeri dentro una didascalia: i quattro periodi di una classe sono
+   valori, e stanno in un `b` proprio per poterli distinguere dalla prosa che
+   li circonda. */
+.dida b{font-weight:inherit;color:var(--ambra)}
 .letture{display:flex;align-items:baseline;gap:22px}
 .lettura{display:flex;align-items:baseline;gap:8px}
 .lettura .vl{font-size:8.5px}
@@ -227,7 +254,7 @@ body{
 .colonna.destra .intesta{justify-content:flex-end;text-align:right}
 .colonna.destra .intesta{flex-direction:row-reverse;justify-content:flex-end;text-align:right}
 .intesta .num{font-family:var(--mono);font-size:28px;font-weight:200;letter-spacing:-.02em;
-              color:var(--muto);line-height:.85}
+              color:var(--ambra);line-height:.85}
 .intesta .voce{font-size:12px;font-weight:400;letter-spacing:.30em;text-transform:uppercase;
                line-height:1.15;display:block}
 .intesta .dida{font-family:var(--mono);font-size:8px;letter-spacing:.10em;color:var(--grigio);
@@ -333,7 +360,7 @@ input[type=range]:focus-visible{outline:1px solid var(--ambra);outline-offset:3p
 .linea{display:grid;grid-template-columns:9px minmax(0,1fr) 34px auto auto;
        align-items:center;gap:8px}
 .linea .n{font-family:var(--mono);font-size:7.5px;color:var(--muto);text-align:center}
-.linea .vl{font-size:7.5px;text-align:right;color:var(--grigio)}
+.linea .vl{font-size:7.5px;text-align:right}
 .tasto{font-family:var(--mono);font-size:7px;letter-spacing:.12em;text-transform:uppercase;
        color:var(--grigio);background:transparent;border:1px solid var(--filo);border-radius:0;
        padding:2px 5px;cursor:pointer;line-height:1}
@@ -345,7 +372,7 @@ input[type=range]:focus-visible{outline:1px solid var(--ambra);outline-offset:3p
 .banco{display:grid;grid-template-columns:205px minmax(0,1fr) 205px;gap:0 27px;padding-top:8px}
 .registrazione{display:flex;flex-direction:column;gap:9px}
 .cronometro{font-family:var(--mono);font-size:21px;font-weight:200;letter-spacing:.03em;
-            font-variant-numeric:tabular-nums;line-height:1}
+            font-variant-numeric:tabular-nums;line-height:1;color:var(--ambra)}
 .misuratore{width:100%;height:16px;position:relative}
 .riga-comando{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:baseline;
               background:none;border:0;padding:0;width:100%;text-align:left;cursor:pointer;

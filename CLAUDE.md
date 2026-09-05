@@ -266,14 +266,36 @@ ridisegnato con le variabili — ma dice al browser di che colore fare quello ch
 disegna lui: il menù che si apre da una tendina, la barra di scorrimento. Senza,
 in tema scuro si aprirebbe un menù bianco in mezzo a una tavola nera.
 
-**LA LUNGHEZZA CODIFICA, L'AMBRA NO.** C'è un accento solo su tutta la tavola —
-`--ambra`, il rosso di Rada Deriva — e non dice *che cosa*: dice *adesso*. La
-goccia scattata nell'ultimo mezzo secondo, la tenuta entrata per ultima, il
-punto di fase, il filo che la lega al mirino. Quello che le cose SONO lo dice
-la geometria, una grandezza per classe: sulle gocce la lunghezza RADIALE della
+**LA LUNGHEZZA CODIFICA, L'AMBRA NO.** C'è un accento solo — `--ambra`, il rosso
+di Rada Deriva — e non dice mai *che cosa*. Quello che le cose SONO lo dice la
+geometria, una grandezza per classe: sulle gocce la lunghezza RADIALE della
 tacca è il registro, sui tessuti la lunghezza dell'ARCO è la durata. Tutto il
 resto è inchiostro — acceso, spento, muto, dove sta la mano, dove sta la testa
 di lettura.
+
+**L'AMBRA È DOVE GUARDARE.** Su un foglio che per il resto è tutto inchiostro su
+carta, l'accento non dice una grandezza: dice *qui*. Sono quattro famiglie e
+non una in più:
+
+- ADESSO, e sta sul canvas: la goccia scattata nell'ultimo mezzo secondo, la
+  tenuta entrata per ultima, il punto di fase, i fili che le legano al mirino, il
+  legame fra due gocce cadute insieme;
+- IL VALORE: ogni `.vl`, il cronometro, i periodi dentro una didascalia — e la
+  curva dell'equalizzatore, che è i numeri delle otto aste disegnati invece che
+  scritti, quindi va con loro e non con l'inchiostro;
+- DOVE QUALCOSA GIRA: la punta del baricentro, cioè l'istante in cui ha smesso
+  di salire o di scendere. Il corpo della colonna resta inchiostro — sono quindici
+  minuti di passato, e se fossero tutti in accento non ci sarebbe più una punta;
+- DOVE QUALCOSA COMINCIA: i cinque numeri di sezione, e le due «d» di rada e
+  studio sotto il marchio.
+
+Le etichette restano grigie e le parole inchiostro. È la proporzione a farlo
+funzionare, non la regola: l'accento indica finché resta una minoranza, e il
+giorno che una quinta famiglia lo porta sopra il resto smette di indicare
+qualunque cosa. Chi ne aggiunge una tolga qualcosa. Misurato: 3,54 di contrasto
+sulla carta chiara e 2,72 sul fondo scuro, contro il 2,61 delle etichette in
+tutt'e due — un valore in accento è la cosa più leggibile della colonna, che è
+quello che deve essere.
 
 Prima il colore era l'altezza, su una rampa a cinque fermate ancorata a 100 e
 1500 Hz, e la rampa è stata tolta insieme ai due quadranti di Rada Deriva. Due
@@ -318,10 +340,27 @@ I numerali sono romani e non arabi perché sulla tavola le cifre arabe dicono gi
 quantità dappertutto — secondi, decibel, hertz — e un «3» accanto a un anello si
 leggerebbe come una misura invece che come un nome.
 
-Il filo che lega la tenuta appena entrata al mirino dura **un secondo** e non
-mezzo come il lampo, e i due tempi non vanno pareggiati: un lampo segna un
-istante e basta che si veda, un filo è un percorso che l'occhio deve seguire dal
-bordo al centro per capire QUALE dei quattro anelli ha parlato.
+**TRE TEMPI E NON UNO, e ognuno dice una cosa diversa.** Il lampo dura mezzo
+secondo — `LAMPO`, 0,45 — e segna l'ISTANTE: la tacca si ingrossa, il punto del
+mirino si accende, e basta che si veda. Il filo che lega una GOCCIA al mirino
+dura 0,7, quello di una TENUTA un secondo: non sono lampi ma percorsi, che
+l'occhio deve seguire dal bordo al centro per capire QUALE dei quattro anelli ha
+parlato, e mezzo secondo non basta a farlo. Fra le due classi la differenza è la
+differenza fra i due suoni: una tenuta entra e resta, una goccia è già finita
+mentre la si guarda, e un filo che le sopravvivesse racconterebbe un suono che
+non c'è più. Chi pareggia questi tre numeri toglie tre letture e ne lascia una.
+
+**IL LEGAME: quando due gocce di LINEE DIVERSE cadono a meno di 0,18 s l'una
+dall'altra, un filo le unisce** e sfuma con loro — è il segno che viene da Rada.
+Di linee diverse e non della stessa: due gocce della stessa frase sono la frase
+che scorre, non un incontro. Non a distanza zero: quattro periodi coprimi non
+cadono mai sullo stesso istante esatto, e un accordo lo si sente accordo anche a
+un sesto di secondo. La coppia sfuma con lo SCARTO oltre che col tempo, così un
+incontro stretto si vede pieno e uno lasco appena. Le gocce calde si raccolgono
+in una scorta di lunghezza fissa mentre si disegnano gli anelli e si consumano
+subito dopo, prima del mirino: a sessanta fotogrammi al secondo, allocare un
+array per buttarlo via è l'unica cosa che il disegno può fare per disturbare
+l'audio.
 
 **Il baricentro è un ISTOGRAMMA A PUNTI, non una curva**, ed è il mockup a
 dirlo. Una linea continua su una fascia alta quaranta pixel diventa un filo che
@@ -786,7 +825,9 @@ testata e un piede:
 - **01 · 02**, le due classi in cinque colonne — comandi, quadrante, filo,
   quadrante, comandi. Ogni quadrante è un cerchio di Rada Deriva: quattro anelli,
   uno per linea, con la crociera e il mirino al centro e il numerale romano fuori
-  dall'anello. Una goccia è una tacca radiale lunga quanto è alta la sua nota;
+  dall'anello. Una goccia è una tacca radiale lunga quanto è alta la sua nota, e
+  quando suona un filo la lega al mirino — se ne cadono due insieme, su linee
+  diverse, un secondo filo unisce anche loro;
   una tenuta è un arco lungo quanto sta in aria, tenue finché è passata, a
   inchiostro pieno mentre suona, in ambra solo l'ultima entrata. Attorno, la corona: tre tracce di
   graduazioni aperte in basso, che mostrano l'efficace mentre i filetti in

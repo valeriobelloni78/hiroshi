@@ -110,15 +110,22 @@ foglio girato: carta e inchiostro si scambiano, gli stessi due colori, e i sei
 toni in mezzo tengono il rapporto di contrasto che avevano. All'apertura si
 chiede al sistema; non si scrive niente da nessuna parte.
 
-C'è un accento solo, il rosso di Rada Deriva, e non cambia col tema — dice
-**adesso**. Quello che le cose sono lo dice la lunghezza — il registro di una
+C'è un accento solo, il rosso di Rada Deriva, e non cambia col tema. Non dice una
+grandezza: dice **dove guardare**. Sui cerchi è *adesso* — la goccia appena
+scattata, la tenuta appena entrata, i fili che le legano al centro; nelle colonne
+è *il valore*, ogni numero e la curva dell'equalizzatore; sulla corsia del
+baricentro è il punto in cui la deriva ha girato; e in testa a una sezione è il
+suo numero. Tutto il resto è inchiostro, ed è la proporzione a far funzionare la
+cosa: l'accento indica finché resta una minoranza. Quello che le cose sono lo dice la lunghezza — il registro di una
 goccia, la durata di una tenuta. Tutto il resto è inchiostro.
 
 Cinque sezioni numerate. Le **due classi** stanno su due quadranti gemelli
 presi da Rada Deriva, un anello per linea, numerati in cifre romane, con le
 diagonali della crociera e il mirino nel mezzo che si accende quando una linea
 parla. La fase corre come un punto; una goccia è una tacca radiale lunga quanto
-è alta la sua nota; una tenuta è un arco lungo quanto sta in aria, tenue
+è alta la sua nota, e mentre suona un filo la lega al centro — se due gocce di
+linee diverse cadono insieme, un altro filo unisce anche loro, che è il modo di
+vedere quattro cicli irrazionali trovarsi d'accordo per un attimo; una tenuta è un arco lungo quanto sta in aria, tenue
 quando è passata, a inchiostro pieno mentre suona, in ambra solo l'ultima
 entrata. Attorno corre la corona, tre tracce graduate
 che mostrano quello che sta suonando mentre i filetti in colonna mostrano dove

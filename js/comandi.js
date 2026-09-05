@@ -766,7 +766,7 @@ function battito() {
 
   el("piedeMano").textContent = MANI.length
     ? "a mano: " + MANI.join(", ")
-    : "la lunghezza è il registro, l'arco la durata, l'ambra è adesso";
+    : "la lunghezza è il registro, l'arco la durata; in ambra i numeri e quello che suona adesso";
 
   el("piedeStato").textContent =
     (running ? "in ascolto" : "fermo") +

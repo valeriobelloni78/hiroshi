@@ -254,6 +254,25 @@ const R_MIRINO = 0.045;
    capire QUALE dei quattro anelli ha appena parlato. Mezzo secondo non basta a
    farlo, e i due segni non sono la stessa cosa detta in due posti. */
 const FILO_TENUTA = 1;
+/* Quanto resta il filo che lega una goccia al mirino: MENO di quello di una
+   tenuta, e la differenza è la differenza fra le due classi. Una tenuta entra e
+   resta, e il suo filo deve durare abbastanza da farsi seguire fino all'anello
+   che ha parlato; una goccia è già finita mentre la si guarda, e un filo che le
+   sopravvivesse racconterebbe un suono che non c'è più. */
+const FILO_GOCCIA = 0.7;
+/* Due gocce sono «insieme» se non distano più di questo. Non è zero: due linee
+   con periodi coprimi non cadono mai sullo stesso istante esatto, e un accordo
+   lo si sente accordo anche a un sesto di secondo di distanza. Ma è poco: oltre,
+   il foglio si riempirebbe di fili fra cose che non hanno niente da spartire. */
+const FINESTRA_LEGAME = 0.18;
+
+/* LE GOCCE CALDE DEL FOTOGRAMMA, raccolte mentre si disegnano gli anelli e
+   consumate subito dopo, prima del mirino. È una scorta fissa e non un array
+   nuovo per fotogramma: a sessanta fotogrammi al secondo, allocare per buttare
+   via è l'unica cosa che il disegno può fare per disturbare l'audio.
+   Il modello non le sa: sono posizioni sullo schermo, e vivono un fotogramma. */
+const CALDE = Array.from({ length: 48 }, () => ({ x: 0, y: 0, t: 0, linea: 0 }));
+let quanteCalde = 0;
 
 /* Il numerale della linea, FUORI dal proprio anello e dal lato della sua
    colonna di comandi — le gocce a ovest, i tessuti a est. È il legame visivo
@@ -326,6 +345,26 @@ function anelloFrase(cx, cy, R, r, L, ora, attiva) {
     T.stroke();
   }
   T.lineCap = "butt";
+
+  /* Il filo di ogni goccia recente, dal mirino alla sua tacca, e la tacca nella
+     scorta perché i legami la trovino. Si scorre il piano una seconda volta, e
+     non insieme alle campiture: là si accumulava UN tracciato per tutte le
+     tacche accese, qui ogni filo ha la sua opacità e quindi il suo tracciato —
+     mescolarli vorrebbe dire dare a tutti l'opacità dell'ultimo. */
+  if (attiva && !L.muted) {
+    for (const p of L.plan) {
+      const dt = ora - p.ev.flash;
+      if (dt < 0 || dt >= FILO_GOCCIA) continue;
+      const a = ang(p.ph);
+      const ux = Math.cos(a), uy = Math.sin(a);
+      const x = cx + ux * r, y = cy + uy * r;
+      filoAlMirino(cx, cy, R, x, y, dt / FILO_GOCCIA);
+      if (quanteCalde < CALDE.length) {
+        const o = CALDE[quanteCalde++];
+        o.x = x; o.y = y; o.t = p.ev.flash; o.linea = L.i;
+      }
+    }
+  }
 
   if (running && attiva && !L.muted) puntoDiFase(cx, cy, r, R, L, ora);
   etichettaAnello(NUMERI_ANELLO[L.i], cx, cy, r, R, -1);
@@ -441,37 +480,74 @@ function tenutaPiuRecente(ora) {
 }
 
 /* Vero nei LAMPO secondi che seguono una goccia qualunque: lo legge il punto
-   del mirino. */
+   del mirino. Non riscorre il modello — la scorta delle gocce calde l'ha già
+   attraversato in questo stesso fotogramma — e filtra su LAMPO invece che su
+   FILO_GOCCIA perché il punto al centro è il segno dell'ISTANTE, mentre i fili
+   sono il percorso che l'occhio ci mette a seguire. */
 function gocciaAppena(ora) {
-  if (!frasiOn) return false;
-  for (const L of frasi) {
-    if (L.muted) continue;
-    for (const p of L.plan) {
-      const dt = ora - p.ev.flash;
-      if (dt >= 0 && dt < LAMPO) return true;
-    }
-  }
+  for (let i = 0; i < quanteCalde; i++)
+    if (ora - CALDE[i].t < LAMPO) return true;
   return false;
 }
 
-/* Il filo che lega la tenuta appena entrata al mirino. Non è un accento in più:
-   è LO STESSO della tenuta ambra, prolungato fino al centro — e la tenuta ambra
-   in tutta la tavola è una sola. Svanisce col quadrato del tempo e non
-   linearmente: un filo che attraversa mezzo quadrante resta visibile a lungo
-   anche molto tenue, e con la dissolvenza lineare l'ultimo terzo di secondo si
-   trascinerebbe. */
-function filoAlMirino(cx, cy, R, q, ora) {
-  if (!q.ev || ora - q.ev.flash >= FILO_TENUTA) return;
-  const t = (ora - q.ev.flash) / FILO_TENUTA;
-  const co = Math.cos(q.angolo), si = Math.sin(q.angolo);
+/* IL FILO AL MIRINO: dal bordo del mirino fino al punto che ha appena suonato.
+   Non è un accento in più — è LO STESSO segno, prolungato fino al centro — e
+   serve a dire QUALE dei quattro anelli ha parlato, che un lampo sull'anello
+   da solo non dice.
+
+   `t` va da zero a uno lungo la vita del filo, e la dissolvenza è quadratica e
+   non lineare: un filo che attraversa mezzo quadrante resta visibile a lungo
+   anche molto tenue, e con la dissolvenza lineare l'ultimo terzo si
+   trascinerebbe.
+
+   Un solo disegno per le due classi. Le vite sono diverse — FILO_TENUTA e
+   FILO_GOCCIA — ma il segno è lo stesso, e due copie divergerebbero al primo
+   ritocco. */
+function filoAlMirino(cx, cy, R, x, y, t) {
+  if (t < 0 || t >= 1) return;
+  const dx = x - cx, dy = y - cy;
+  const d = Math.hypot(dx, dy);
+  if (d < 1e-6) return;
   const base = T.globalAlpha;
   T.globalAlpha = base * (1 - t) * (1 - t);
   T.strokeStyle = tinta("ambra");
   T.lineWidth = 1;
   T.beginPath();
-  T.moveTo(cx + co * R_MIRINO * R, cy + si * R_MIRINO * R);
-  T.lineTo(cx + co * q.raggio * R, cy + si * q.raggio * R);
+  T.moveTo(cx + (dx / d) * R_MIRINO * R, cy + (dy / d) * R_MIRINO * R);
+  T.lineTo(x, y);
   T.stroke();
+  T.globalAlpha = base;
+}
+
+/* I LEGAMI: quando due gocce di LINEE DIVERSE cadono quasi insieme, un filo le
+   unisce e sfuma con loro. È il collage colto sul fatto — quattro cicli
+   irrazionali che per un attimo si sono trovati d'accordo — e senza un segno
+   quel momento passerebbe senza che nessuno lo veda.
+
+   Di linee diverse e non della stessa: due gocce della stessa frase sono la
+   frase che scorre, non un incontro. La coppia sfuma con lo SCARTO oltre che
+   col tempo, così un accordo stretto si vede pieno e uno lasco appena. */
+function legami(ora) {
+  if (quanteCalde < 2) return;
+  const base = T.globalAlpha;
+  T.strokeStyle = tinta("ambra");
+  T.lineWidth = 1;
+  for (let i = 0; i < quanteCalde; i++) {
+    for (let j = i + 1; j < quanteCalde; j++) {
+      const a = CALDE[i], b = CALDE[j];
+      if (a.linea === b.linea) continue;
+      const scarto = Math.abs(a.t - b.t);
+      if (scarto > FINESTRA_LEGAME) continue;
+      const eta = ora - Math.max(a.t, b.t);
+      const forza = clamp(1 - eta / FILO_GOCCIA, 0, 1) * clamp(1 - scarto / FINESTRA_LEGAME, 0, 1);
+      if (forza <= 0) continue;
+      T.globalAlpha = base * forza * 0.5;
+      T.beginPath();
+      T.moveTo(a.x, a.y);
+      T.lineTo(b.x, b.y);
+      T.stroke();
+    }
+  }
   T.globalAlpha = base;
 }
 
@@ -595,7 +671,11 @@ function spettro(box) {
     const passi = Math.max(1, Math.round(Math.abs(h) / 3));
     for (let k = 0; k <= passi; k++) {
       const y = mezzo - (h * k) / passi;
-      T.fillStyle = tinta("inchiostro-2", 0.55);
+      // I puntini della curva sono AMBRA: la curva dell'equalizzatore è la sola
+      // cosa disegnata che sia un VALORE e non un evento — è dove stanno le otto
+      // aste, tradotto in decibel — e i valori su questa tavola sono in accento
+      // ovunque, nel testo come qui.
+      T.fillStyle = tinta("ambra", 0.7);
       T.fillRect(Math.round(x), Math.round(y), 1.4, 1.4);
     }
   }
@@ -847,7 +927,11 @@ function fasciaBaricentro(box, ora) {
     const a = Math.abs(v[i]);
     const punta = a >= Math.abs(v[i - 1] === undefined ? -1 : v[i - 1]) &&
                   a >  Math.abs(v[i + 1] === undefined ? -1 : v[i + 1]);
-    T.fillStyle = punta ? tinta("inchiostro") : tinta("inchiostro-2", 0.7);
+    // La punta in AMBRA: è il momento in cui il baricentro ha smesso di salire
+    // o di scendere, cioè l'unico istante che questa corsia indica invece di
+    // misurare. Il corpo della colonna resta inchiostro — sono quindici minuti
+    // di passato, e se fossero tutti in accento non ci sarebbe più una punta.
+    T.fillStyle = punta ? tinta("ambra") : tinta("inchiostro-2", 0.7);
     for (let k = 1; k <= quanti; k++) {
       T.beginPath();
       T.arc(x, box.cy - Math.sign(v[i]) * k * alt, 1.3, 0, RADIANTI);
@@ -904,16 +988,25 @@ function disegna() {
   T.clearRect(0, 0, LARGO, ALTO);
   T.lineCap = "butt";
 
-  const goccia = gocciaAppena(ora);
+  // La scorta si azzera PRIMA del quadrante e si legge DOPO: vive un
+  // fotogramma, come tutto quello che il disegno sa.
+  quanteCalde = 0;
   quadrante(quadro("gocce"), CORONA_GOCCE, frasi,
             (cx, cy, R, r, L, t) => anelloFrase(cx, cy, R, r, L, t, frasiOn), ora,
-            (cx, cy, R) => mirino(cx, cy, R, goccia ? "punto" : ""));
+            (cx, cy, R) => {
+              legami(ora);
+              mirino(cx, cy, R, gocciaAppena(ora) ? "punto" : "");
+            });
 
   const recente = tenutaPiuRecente(ora);
   quadrante(quadro("tessuti"), CORONA_TESSUTI, tessuti,
             (cx, cy, R, r, L, t) => anelloTenuta(cx, cy, R, r, L, t, tessutiOn, recente.ev), ora,
             (cx, cy, R) => {
-              filoAlMirino(cx, cy, R, recente, ora);
+              if (recente.ev) {
+                const x = cx + Math.cos(recente.angolo) * recente.raggio * R;
+                const y = cy + Math.sin(recente.angolo) * recente.raggio * R;
+                filoAlMirino(cx, cy, R, x, y, (ora - recente.ev.flash) / FILO_TENUTA);
+              }
               mirino(cx, cy, R, recente.appena ? "anello" : "");
             });
 
