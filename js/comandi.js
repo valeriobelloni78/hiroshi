@@ -22,53 +22,57 @@
    legge da qui — è l'unica cosa che le serve dai comandi.
 ============================================================================= */
 
-const NOMI_TIMBRI = {
-  vetro: "Vetro", legno: "Legno", onda: "Onda", soffio: "Soffio",
-  corda: "Corda", metallo: "Metallo", canna: "Canna", sabbia: "Sabbia",
-};
-const NOMI_TESSUTI = {
-  bordone: "Bordone", marea: "Marea", attrito: "Attrito", frangia: "Frangia",
-  corrente: "Corrente", cavo: "Cavo", brina: "Brina", soglia: "Soglia",
-};
-const NOMI_MOOD = {
-  sereno: "Sereno", pioggia: "Pioggia", vespro: "Vespro", carillon: "Carillon",
-  arcipelago: "Arcipelago", collina: "Collina", finestra: "Finestra", nuvola: "Nuvola",
-  velo: "Velo", fondale: "Fondale", lino: "Lino", respiro: "Respiro",
-  bruma: "Bruma", tenda: "Tenda", seta: "Seta", vela: "Vela",
-};
-const NOMI_NOTE = ["do", "do♯", "re", "mi♭", "mi", "fa", "fa♯", "sol", "la♭", "la", "si♭", "si"];
+/* I NOMI NON STANNO PIÙ QUI: stanno in `i18n.js`, che è più in alto di tutto e
+   non dipende da niente. Prima erano quattro dizionari in questo file e la
+   tavola veniva a prenderseli — era l'unica cosa che le serviva dai comandi, e
+   adesso non le serve più nemmeno quella. */
 /* Il circolo delle quinte com'è scritto sulla fascia: DO SOL RE… Ogni passo
    cambia una nota sola della pentatonica, ed è per questo che non ha un bordo
    che si senta. */
 const CIRCOLO = [0, 7, 2, 9, 4, 11, 6, 1, 8, 3, 10, 5];
 
 const el = (id) => document.getElementById(id);
-const numero = (v, d = 0) => v.toFixed(d).replace(".", ",");
 const dB = (v) => (v > 0 ? "+" : "") + numero(v, 1);
 const mmss = (s) => Math.floor(s / 60) + ":" + String(Math.floor(s % 60)).padStart(2, "0");
 const minsec = (s) => Math.floor(s / 60) + "′ " + String(Math.floor(s % 60)).padStart(2, "0") + "″";
 
-/* --------------------------------------------------------------- le tendine */
-function tendina(id, chiavi, nomi, corrente, scegli) {
+/* --------------------------------------------------------------- le tendine
+   `traduci` è una FUNZIONE e non un dizionario, ed è tutta la differenza: un
+   dizionario si legge una volta, al momento di costruire le voci, e resterebbe
+   nella lingua di allora. Una funzione la si richiama, ed è quello che fa
+   `ridisegnaTendine()` quando qualcuno tocca il selettore in alto.
+
+   Ogni tendina si iscrive a un elenco: il valore scelto è nel `value`, che non
+   cambia mai — sono le PAROLE a cambiare, e il modello non se ne accorge. */
+const TENDINE = [];
+
+function tendina(id, chiavi, traduci, corrente, scegli) {
   const sel = el(id);
   for (const k of chiavi) {
     const o = document.createElement("option");
-    o.value = k; o.textContent = nomi ? nomi[k] : k;
+    o.value = k;
     if (k === corrente) o.selected = true;
     sel.appendChild(o);
   }
   sel.addEventListener("change", () => scegli(sel.value));
+  const scrivi = () => {
+    for (const o of sel.options) o.textContent = traduci ? traduci(o.value) : o.value;
+  };
+  TENDINE.push(scrivi);
+  scrivi();
   return sel;
 }
 
-const selTimbro  = tendina("timbro",  TIMBRI,  NOMI_TIMBRI,  timbroFrasi,   (v) => { timbroFrasi = v; });
+function ridisegnaTendine() { for (const s of TENDINE) s(); }
+
+const selTimbro  = tendina("timbro",  TIMBRI,  nomeTimbro,  timbroFrasi,   (v) => { timbroFrasi = v; });
 /* Il tessuto scelto vale per le TENUTE CHE NASCONO DA ORA: quelle già aperte
    arrivano in fondo con la loro voce. Cambiare timbro a un suono che dura
    quaranta secondi vorrebbe dire sentirlo mutare a metà, che è un taglio. */
-const selTessuto = tendina("tessuto", TESSUTI, NOMI_TESSUTI, timbroTessuti, (v) => { timbroTessuti = v; });
+const selTessuto = tendina("tessuto", TESSUTI, nomeTenuto, timbroTessuti, (v) => { timbroTessuti = v; });
 
-tendina("modoGocce",   ["deriva", "ancora"], null, MODI.gocce,   (v) => { MODI.gocce = v; });
-tendina("modoTessuti", ["deriva", "ancora"], null, MODI.tessuti, (v) => { MODI.tessuti = v; });
+tendina("modoGocce",   ["deriva", "ancora"], nomeModo, MODI.gocce,   (v) => { MODI.gocce = v; });
+tendina("modoTessuti", ["deriva", "ancora"], nomeModo, MODI.tessuti, (v) => { MODI.tessuti = v; });
 
 /* ------------------------------------------------------------------ i cursori
    Un cursore scrive sul BERSAGLIO `GT`, non su `G`: `G` ci arriva lisciato in
@@ -111,6 +115,39 @@ function cursore(id, targaId, def) {
   return voce;
 }
 
+/* ------------------------------------------------------------- le lingue
+   Tutto quello che sta scritto nell'HTML lo rifà `applicaTesti()` da sé, e non
+   serve dirglielo. Qui si rifà SOLO quello che l'HTML non contiene: le voci
+   delle sei tendine, le parole delle otto righe delle linee, le cinque
+   etichette del mixer, i nomi dei profili, le sei manopole degli inserti, e
+   ogni targa — che è un numero, e i numeri cambiano separatore decimale
+   insieme alla lingua.
+
+   `alCambioDiLingua` non è registrata da nessuna parte: `i18n.js` la cerca per
+   nome quando serve. È lo stesso patto della tavola col modello — chi sta più
+   in basso guarda in su, non viceversa — e la ragione per cui `i18n.js` può
+   stare in cima senza conoscere nessuno. */
+function alCambioDiLingua() {
+  ridisegnaTendine();
+  for (const r of RINOMINA_INSERTI) r();
+  for (const c of CANALI_MIXER) c.rinomina();
+  for (const L of frasi.concat(tessuti)) if (L._rinomina) L._rinomina();
+  elencaProfili();
+  aggiornaMaterie();
+  didascaliaDeriva();
+  allinea();
+  aggiornaRiallineo();
+  // Le letture che cambiano da sé — la riga di stato, il baricentro, i picchi —
+  // le riscrive `battito()` fra trentatré millesimi, e non c'è niente da fare.
+}
+
+/* La didascalia della deriva porta dentro un tempo, e il tempo lo sa `deriva.js`
+   — scritto a mano nell'HTML sarebbe una cifra da tenere in pari con una
+   costante che sta in un altro file. */
+function didascaliaDeriva() {
+  el("didaDeriva").textContent = dice("dida.deriva", { t: minsec(PASSO_QUINTA) });
+}
+
 /* --------------------------------------------------------- chiaro e scuro
    Il tema sta in un attributo sull'elemento radice, e basta quello: il CSS ci
    appende la palette scura, e la tavola se ne accorge da sé confrontandolo con
@@ -132,6 +169,10 @@ function scegliTema(quale) {
   for (const k in TEMI) TEMI[k].setAttribute("aria-pressed", String(k === quale));
 }
 for (const k in TEMI) TEMI[k].addEventListener("click", () => { temaAMano = true; scegliTema(k); });
+
+costruisciSelettoreLingua(el("lingue"));
+applicaTesti();
+didascaliaDeriva();
 
 const SCURO = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)");
 scegliTema(SCURO && SCURO.matches ? "scuro" : "chiaro");
@@ -188,10 +229,10 @@ const secondi = (v) => numero(v, 1) + " s";
 /* Il registro non è un numero senza unità: è quanto è larga la forbice con cui
    il campo viene guardato. Sedici gradi di pentatonica a cursore pieno fanno
    poco più di tre ottave, e dirlo in ottave è dire una cosa che si sente. */
-const ottave = (v) => numero(v * 0.032, 1) + " ott";
+const ottave = (v) => dice("unita.ott", { n: numero(v * 0.032, 1) });
 
 /* ------------------------------------------------------------------ 01 gocce */
-cursore("fAttacco", "vfAttacco", con(suOggetto(FORMA, "attacco", 1000), (v) => Math.round(v * 1000) + " ms"));
+cursore("fAttacco", "vfAttacco", con(suOggetto(FORMA, "attacco", 1000), (v) => numero(v * 1000) + " ms"));
 cursore("fCoda",    "vfCoda",    con(suOggetto(FORMA, "coda", 10), secondi));
 cursore("fInarm",   "vfInarm",   con(suOggetto(FORMA, "inarm", 100), frazioneDi));
 cursore("fBrill",   "vfBrill",   con(suOggetto(FORMA, "brill", 100), frazioneDi));
@@ -200,7 +241,7 @@ cursore("fCorpo",   "vfCorpo",   con(suOggetto(FORMA, "corpo", 100), frazioneDi)
 cursore("registro",     "vRegistro",     con(suGT("registro"), ottave));
 cursore("calore",       "vCalore",       con(suGT("calore"), (v) => numero(v / 100, 2)));
 cursore("addensamento", "vAddensamento", con(suGT("addensamento"), (v) => numero(v / 100, 2)));
-cursore("densita",      "vDensita",      con(suGT("densita"), (v) => Math.round(v) + " / giro"));
+cursore("densita",      "vDensita",      con(suGT("densita"), (v) => dice("unita.giro", { n: numero(v) })));
 cursore("spazio",       "vSpazio",       con(suGT("spazio"), (v) => numero(v / 100, 2)));
 
 /* ---------------------------------------------------------------- 02 tessuti
@@ -245,9 +286,15 @@ cursore("tspazio",   "vTspazio",   con(suGT("tSpazio"), (v) => numero(v / 100, 2
 function testoInserto(classe, i) {
   return (v) => {
     const par = EFFETTI[EFFETTO[classe]].param[i];
-    return par ? numero(par.da(v) * par.k, par.d) + par.u : "—";
+    if (!par) return "—";
+    // L'unità «ott» è l'unica parola fra quelle degli effetti, e sta nel
+    // dizionario: `u` porta i segni, non le parole.
+    const x = numero(par.da(v) * par.k, par.d);
+    return par.u === "ott" ? dice("unita.ott", { n: x }) : x + par.u;
   };
 }
+
+const RINOMINA_INSERTI = [];
 
 function inserto(classe, pre, idTendina) {
   const M = pre.toUpperCase();
@@ -266,17 +313,20 @@ function inserto(classe, pre, idTendina) {
     const spec = EFFETTI[EFFETTO[classe]].param;
     manopole.forEach((m, i) => {
       const par = spec[i];
-      el("fl" + M + (i + 1)).textContent = par ? par.fl : "—";
+      el("fl" + M + (i + 1)).textContent = par ? nomeParam(par.fl) : "—";
       m.input.disabled = !par;
       m.input.closest(".manopola").classList.toggle("spenta", !par);
+      m.input.setAttribute("aria-label",
+        dice("a11y.effetto", { classe: dice("sez." + classe), n: i + 1 }));
       m.mostra();
     });
   };
-  tendina(idTendina, EFFETTI_NOMI, null, EFFETTO[classe], (v) => {
+  tendina(idTendina, EFFETTI_NOMI, nomeEffetto, EFFETTO[classe], (v) => {
     EFFETTO[classe] = v;
     rinomina();
   });
   rinomina();
+  RINOMINA_INSERTI.push(rinomina);
 }
 
 inserto("gocce",   "gE", "effGocce");
@@ -287,14 +337,14 @@ inserto("tessuti", "tE", "effTessuti");
    cifre nel capo della sezione, «3″ → 1′ 15″», perché un inizio senza la sua
    fine non dice niente e due targhe separate costringerebbero a fare la
    sottrazione a mente. */
-cursore("pRallenta",   "vRallenta",    con(suGT("pRallenta"), (v) => Math.round(v) + "×"));
-cursore("pVelo",       "vVelo",        con(suGT("pVelo"), (v) => Math.round(v) + " ms"));
+cursore("pRallenta",   "vRallenta",    con(suGT("pRallenta"), (v) => numero(v) + "×"));
+cursore("pVelo",       "vVelo",        con(suGT("pVelo"), (v) => numero(v) + " ms"));
 cursore("pSparpaglio", "vPsparpaglio", con(suGT("pSparpaglio"), (v) => numero(v / 100, 2)));
 /* L'accordatura dosa fra il paesaggio crudo e quello intonato; il fuoco è
    quanto sono stretti i risonatori. Sono due domande diverse — quanto, e che
    cosa — e per questo sono due cursori. */
 cursore("pAccordatura","vAccordatura", con(suGT("pAccordatura"), (v) => numero(v / 100, 2)));
-cursore("pFuoco",      "vFuoco",       con(suGT("pFuoco"), (v) => String(Math.round(v))));
+cursore("pFuoco",      "vFuoco",       con(suGT("pFuoco"), (v) => numero(v)));
 cursore("pCoda",       "vCoda",        con(suGT("pCoda"), (v) => numero(v, 1) + " s"));
 cursore("pTono",       "vTono",        con(suGT("pTono"), (v) => numero(v / 1000, 1) + " kHz"));
 cursore("pRiverbero",  "vRiverbero",   con(suGT("pRiverbero"), (v) => numero(v / 100, 2)));
@@ -327,12 +377,12 @@ maniglia("pFine");
    nuovo carattere per due o tre secondi, cioè un fondo che si dissolve — il
    contrario di un cambio di scena. Dopo, i cursori e le targhe vanno rimessi in
    pari, o l'interfaccia racconta lo stato di prima. */
-tendina("moodGocce", Object.keys(MOOD_GOCCE), NOMI_MOOD, null, (v) => {
+tendina("moodGocce", Object.keys(MOOD_GOCCE), nomeMood, null, (v) => {
   applicaMoodGocce(v);
   selTimbro.value = timbroFrasi;
   allinea(); aggiornaLinee();
 });
-tendina("moodTessuti", Object.keys(MOOD_TESSUTI), NOMI_MOOD, null, (v) => {
+tendina("moodTessuti", Object.keys(MOOD_TESSUTI), nomeMood, null, (v) => {
   applicaMoodTessuti(v);
   selTessuto.value = timbroTessuti;
   allinea(); aggiornaLinee();
@@ -345,7 +395,7 @@ btnAscolto.addEventListener("click", async () => {
   acceso = !acceso;
   await accendi(acceso);
   btnAscolto.setAttribute("aria-pressed", String(acceso));
-  el("etichettaAscolto").textContent = acceso ? "Pausa" : "Ascolta";
+  el("etichettaAscolto").textContent = dice(acceso ? "governo.pausa" : "governo.ascolta");
 });
 document.addEventListener("keydown", (e) => {
   if (e.code === "Space" && e.target === document.body) { e.preventDefault(); btnAscolto.click(); }
@@ -379,7 +429,7 @@ function costruisciLinee(contenitore, lista, min, max, rigenerala) {
     const dur = document.createElement("input");
     dur.type = "range"; dur.min = min; dur.max = max; dur.step = 0.5;
     dur.value = L.target;
-    dur.setAttribute("aria-label", "Durata del giro, linea " + (i + 1));
+    dur.setAttribute("aria-label", dice("a11y.durataGiro", { n: i + 1 }));
 
     const val = document.createElement("span");
     val.className = "vl"; val.textContent = numero(L.target, 1) + "″";
@@ -397,9 +447,9 @@ function costruisciLinee(contenitore, lista, min, max, rigenerala) {
 
     const muto = document.createElement("button");
     muto.className = "tasto";
-    muto.textContent = "muta";
+    muto.textContent = dice("linea.muta");
     muto.setAttribute("aria-pressed", "false");
-    muto.setAttribute("aria-label", "Silenzia la linea " + (i + 1));
+    muto.setAttribute("aria-label", dice("a11y.silenzia", { n: i + 1 }));
     muto.addEventListener("click", () => {
       L.muted = !L.muted;
       muto.setAttribute("aria-pressed", String(L.muted));
@@ -408,7 +458,7 @@ function costruisciLinee(contenitore, lista, min, max, rigenerala) {
     const nuova = document.createElement("button");
     nuova.className = "tasto";
     nuova.textContent = "↻";
-    nuova.setAttribute("aria-label", "Nuova idea, linea " + (i + 1));
+    nuova.setAttribute("aria-label", dice("a11y.nuovaIdea", { n: i + 1 }));
     nuova.addEventListener("click", () => {
       rigenerala(L);
       if (ctx) riposizionaIdx(L, orizzonteSicuro(ctx.currentTime));
@@ -419,6 +469,16 @@ function costruisciLinee(contenitore, lista, min, max, rigenerala) {
     L._cursoreDurata = dur;
     L._aggiornaDurata = aggiorna;
     L._pulsanteMuto = muto;
+    /* Le parole di questa riga si rifanno al cambio di lingua. Il numero della
+       linea NON è una parola: «1» resta «1» in tutte e quattro, come i numerali
+       romani sugli anelli. */
+    L._rinomina = () => {
+      muto.textContent = dice("linea.muta");
+      dur.setAttribute("aria-label", dice("a11y.durataGiro", { n: i + 1 }));
+      muto.setAttribute("aria-label", dice(L.muted ? "a11y.riattiva" : "a11y.silenzia", { n: i + 1 }));
+      nuova.setAttribute("aria-label", dice("a11y.nuovaIdea", { n: i + 1 }));
+      aggiorna();
+    };
     aggiorna();
   });
 }
@@ -449,10 +509,14 @@ function aggiornaPeriodi() {
 function aggiornaRiallineo() {
   const s = riallineamento(frasi.concat(tessuti));
   const ore = s / 3600, giorni = ore / 24;
+  /* Le tre scale del riallineamento: ore, giorni, anni. Le frasi stanno intere
+     nel dizionario perché in giapponese il numero e l'unità non si staccano —
+     «60,2年» e non «60,2 年» — e una concatenazione con lo spazio dentro non
+     saprebbe toglierlo. */
   el("riallineo").textContent =
-    giorni >= 400 ? numero(giorni / 365, 1) + " anni"
-    : ore >= 48   ? Math.round(giorni) + " giorni"
-    : Math.floor(ore) + " h " + Math.round((s % 3600) / 60) + "′";
+    giorni >= 400 ? dice("unita.anni",   { n: numero(giorni / 365, 1) })
+    : ore >= 48   ? dice("unita.giorni", { n: numero(giorni) })
+    : dice("unita.ore", { n: numero(ore, 1) });
 }
 
 /* ------------------------------------------------------------ 03 banco · eq
@@ -471,7 +535,7 @@ BANDE.forEach((b, i) => {
   const a = document.createElement("input");
   a.type = "range"; a.className = "verticale";
   a.min = -EQ_CORSA; a.max = EQ_CORSA; a.step = 0.5; a.value = EQ_DB[i];
-  a.setAttribute("aria-label", "Banda " + NOMI_BANDE[i] + " hertz");
+  a.setAttribute("aria-label", dice("a11y.banda", { hz: NOMI_BANDE[i] }));
   a.addEventListener("input", () => {
     EQ_DB[i] = Number(a.value);
     if (banco) banco.banda(i, EQ_DB[i]);
@@ -484,13 +548,18 @@ BANDE.forEach((b, i) => {
 /* I profili: otto numeri con un nome, in memoria e solo per questa seduta.
    Scriverli sul disco di chi ascolta è la prima cosa in tutto il progetto che
    lo farebbe, ed è una decisione che non è stata presa. */
-const PROFILI = [{ nome: "piatto", v: [0, 0, 0, 0, 0, 0, 0, 0] }];
+/* Il profilo d'esordio porta una CHIAVE e non una parola: la lista si ridisegna
+   a ogni cambio di lingua, e «piatto» scritto qui resterebbe italiano. Quelli
+   che si salvano dopo, invece, sono numerati — «profilo 2» — e il numero non ha
+   bisogno di traduzione. */
+const PROFILI = [{ nome: "banco.piatto", v: [0, 0, 0, 0, 0, 0, 0, 0] }];
 const selProfilo = el("profilo");
 function elencaProfili() {
   selProfilo.innerHTML = "";
   PROFILI.forEach((p, i) => {
     const o = document.createElement("option");
-    o.value = String(i); o.textContent = p.nome;
+    o.value = String(i);
+    o.textContent = p.nome ? dice(p.nome) : dice("banco.profiloN", { n: numero(p.n) });
     selProfilo.appendChild(o);
   });
 }
@@ -504,7 +573,7 @@ selProfilo.addEventListener("change", () => {
   });
 });
 el("salvaProfilo").addEventListener("click", () => {
-  PROFILI.push({ nome: "profilo " + PROFILI.length, v: EQ_DB.slice() });
+  PROFILI.push({ n: PROFILI.length, v: EQ_DB.slice() });
   elencaProfili();
   selProfilo.value = String(PROFILI.length - 1);
 });
@@ -516,13 +585,13 @@ elencaProfili();
    carattere della classe e sta nella sua colonna. L'asta è il missaggio, il
    filetto è la musica — un mood scrive il secondo e non tocca il primo. */
 const CANALI_MIXER = [
-  { et: "Frasi",   dai: () => LIVELLI.frasi,  metti: (v) => { LIVELLI.frasi = v; if (banco) banco.livello("frasi", v); }, min: -24, max: 6 },
-  { et: "Tessuti", dai: () => LIVELLI.tessuti,
+  { et: "mix.frasi",   dai: () => LIVELLI.frasi,  metti: (v) => { LIVELLI.frasi = v; if (banco) banco.livello("frasi", v); }, min: -24, max: 6 },
+  { et: "mix.tessuti", dai: () => LIVELLI.tessuti,
     metti: (v) => { LIVELLI.tessuti = v; if (banco) rileggiTarature(); }, min: -24, max: 6 },
-  { et: "Voci",    dai: () => LIVELLI.voci, metti: () => {}, min: -24, max: 6, spento: true },
-  { et: "Paesaggio", dai: () => LIVELLI.paesaggio,
+  { et: "mix.voci",    dai: () => LIVELLI.voci, metti: () => {}, min: -24, max: 6, spento: true },
+  { et: "mix.paesaggio", dai: () => LIVELLI.paesaggio,
     metti: (v) => { LIVELLI.paesaggio = v; if (banco) banco.livello("paesaggio", v); }, min: -24, max: 6 },
-  { et: "Uscita",  dai: () => LIVELLI.uscita, metti: (v) => { LIVELLI.uscita = v;
+  { et: "mix.uscita",  dai: () => LIVELLI.uscita, metti: (v) => { LIVELLI.uscita = v;
       if (banco && running) banco.uscita.gain.setTargetAtTime(Math.pow(10, v / 20), ctx.currentTime, 0.1); },
     min: -24, max: 0 },
 ];
@@ -534,9 +603,13 @@ CANALI_MIXER.forEach((c) => {
   a.type = "range"; a.className = "verticale";
   a.min = c.min; a.max = c.max; a.step = 0.5; a.value = c.dai();
   a.disabled = !!c.spento;
-  a.setAttribute("aria-label", "Livello " + c.et);
   const et = document.createElement("span");
-  et.className = "fl" + (c.spento ? " tenue" : ""); et.textContent = c.et;
+  et.className = "fl" + (c.spento ? " tenue" : "");
+  c.rinomina = () => {
+    et.textContent = dice(c.et);
+    a.setAttribute("aria-label", dice("a11y.livello", { canale: dice(c.et) }));
+  };
+  c.rinomina();
   const val = document.createElement("span");
   val.className = "vl" + (c.spento ? " tenue" : "");
   const mostra = () => { val.textContent = dB(c.dai()); };
@@ -561,7 +634,7 @@ btnPresa.addEventListener("click", async () => {
     const buf = fermaPresa();
     clearInterval(orologioPresa);
     btnPresa.setAttribute("aria-pressed", "false");
-    el("etichettaPresa").textContent = "Registra";
+    el("etichettaPresa").textContent = dice("banco.registra");
     el("formato").textContent = salvaComeWav(buf)
       ? numero(buf.duration, 1) + " s salvati"
       : "non è arrivato niente";
@@ -570,27 +643,27 @@ btnPresa.addEventListener("click", async () => {
   try {
     await avviaPresa();
     btnPresa.setAttribute("aria-pressed", "true");
-    el("etichettaPresa").textContent = "Ferma e salva";
-    el("formato").textContent = "48 kHz · 24 bit";
+    el("etichettaPresa").textContent = dice("banco.fermaSalva");
+    el("formato").textContent = dice("banco.formato");
     orologioPresa = setInterval(() => {
       const s = secondiRegistrati();
       el("cronometro").textContent = mmss(s);
       if (s >= SESSIONE_MAX - 0.5) btnPresa.click();     // il tetto si ferma da sé
     }, 200);
   } catch (e) {
-    el("formato").textContent = "non riesco ad aprire la presa";
+    el("formato").textContent = dice("banco.presaNegata");
   }
 });
 
 cursore("durata", "vDurata", {
   valore: (x) => x, scrivi: () => {}, crudo: () => Number(el("durata").value),
-  testo: (v) => v + "′",
+  testo: (v) => numero(v) + "′",
 });
 
 btnEsporta.addEventListener("click", async () => {
   const sec = Number(el("durata").value) * 60;
   btnEsporta.disabled = true;
-  el("esito").textContent = "rendo…";
+  el("esito").textContent = dice("banco.rendo");
   // Un giro di eventi prima di partire, o l'etichetta non fa in tempo a
   // comparire: il rendering tiene occupato il thread principale.
   await new Promise((r) => setTimeout(r, 30));
@@ -598,10 +671,10 @@ btnEsporta.addEventListener("click", async () => {
     const t0 = performance.now();
     const buf = await esporta(sec);
     salvaComeWav(buf);
-    el("esito").textContent = numero((performance.now() - t0) / 1000, 1) + " s per " +
-                              Math.round(sec / 60) + "′";
+    el("esito").textContent = numero((performance.now() - t0) / 1000, 1) + " s → " +
+                              numero(sec / 60) + "′";
   } catch (e) {
-    el("esito").textContent = "non ce l'ho fatta";
+    el("esito").textContent = dice("banco.nonFatta");
   }
   btnEsporta.disabled = false;
 });
@@ -611,7 +684,7 @@ btnEsporta.addEventListener("click", async () => {
 el("esportaPng").addEventListener("click", () => {
   const tela = el("tavola");
   tela.toBlob((b) => {
-    if (!b) { el("misuraPng").textContent = "non ce l'ho fatta"; return; }
+    if (!b) { el("misuraPng").textContent = dice("banco.nonFatta"); return; }
     const a = document.createElement("a");
     a.href = URL.createObjectURL(b);
     a.download = "hiroshi-" + new Date().toISOString().slice(0, 16).replace(/[:T]/g, "") + ".png";
@@ -630,7 +703,7 @@ function aggiornaMaterie() {
   selMateria.innerHTML = "";
   if (!materiali.length) {
     const o = document.createElement("option");
-    o.value = "-1"; o.textContent = "niente ancora";
+    o.value = "-1"; o.textContent = dice("pae.nienteAncora");
     selMateria.appendChild(o);
     return;
   }
@@ -652,13 +725,13 @@ function assicuraContesto() { costruisciMotore(); return ctx; }
 el("file").addEventListener("change", async (e) => {
   const f = e.target.files && e.target.files[0];
   if (!f) return;
-  el("cattura").textContent = "leggo…";
+  el("cattura").textContent = dice("pae.leggo");
   try {
     await caricaFile(assicuraContesto(), f);
     aggiornaMaterie();
     el("cattura").textContent = "";
   } catch (err) {
-    el("cattura").textContent = "non riesco a leggerlo";
+    el("cattura").textContent = dice("pae.nonLeggo");
   }
   e.target.value = "";
 });
@@ -672,13 +745,13 @@ btnReg.addEventListener("click", async () => {
     clearInterval(orologioMic);
     if (flusso) { flusso.getTracks().forEach((t) => t.stop()); flusso = null; }
     btnReg.setAttribute("aria-pressed", "false");
-    el("etichettaRegistra").textContent = "Microfono";
+    el("etichettaRegistra").textContent = dice("pae.microfono");
     if (buf && buf.length) {
       aggiungiMateria("microfono " + (materiali.filter((m) => /^microfono/.test(m.nome)).length + 1), buf);
       aggiornaMaterie();
       el("cattura").textContent = "";
     } else {
-      el("cattura").textContent = "non è arrivato niente";
+      el("cattura").textContent = dice("pae.nienteArrivato");
     }
     return;
   }
@@ -688,12 +761,12 @@ btnReg.addEventListener("click", async () => {
     flusso = await apriMicrofono();
     presa = await apriCattura(c, c.createMediaStreamSource(flusso));
     btnReg.setAttribute("aria-pressed", "true");
-    el("etichettaRegistra").textContent = "Ferma";
+    el("etichettaRegistra").textContent = dice("pae.ferma");
     orologioMic = setInterval(() => {
       if (presa) el("cattura").textContent = numero(presa.secondi, 1) + " s";
     }, 200);
   } catch (err) {
-    el("cattura").textContent = "microfono negato";
+    el("cattura").textContent = dice("pae.negato");
     presa = null; flusso = null;
   }
 });
@@ -747,7 +820,7 @@ function battito() {
   el("sessione").textContent = mmss(running ? t - (avvioSessione || 0) : 0);
   el("quinteFatte").textContent = String(passiQuinta);
   el("prossima").textContent = minsec(Math.max(0, prossimaQuinta - t));
-  el("tonalita").textContent = NOMI_NOTE[tonalita()];
+  el("tonalita").textContent = nomeNota(tonalita());
 
   const mat = materiaCorrente();
   if (mat) {
@@ -765,16 +838,18 @@ function battito() {
     numero(deriva.centro * AMPIEZZA_CENTRO, 1);
 
   el("piedeMano").textContent = MANI.length
-    ? "a mano: " + MANI.join(", ")
-    : "la lunghezza è il registro, l'arco la durata; in ambra i numeri e quello che suona adesso";
+    ? dice("piede.aMano", { elenco: MANI.join(", ") })
+    : dice("piede.legenda");
 
   el("piedeStato").textContent =
-    (running ? "in ascolto" : "fermo") +
-    " · tonalità " + NOMI_NOTE[tonalita()] +
-    " · gocce " + NOMI_TIMBRI[timbroFrasi] +
-    " · tessuti " + NOMI_TESSUTI[timbroTessuti] +
-    " · " + tavolozzaOraria(oraCorrente()).nome +
-    " · " + tavolozzaStagionale(meseCorrente()).nome;
+    dice("piede.stato", {
+      stato:    dice(running ? "piede.inAscolto" : "piede.fermo"),
+      nota:     nomeNota(tonalita()),
+      timbro:   nomeTimbro(timbroFrasi),
+      tenuto:   nomeTenuto(timbroTessuti),
+      ora:      nomeOra(tavolozzaOraria(oraCorrente()).nome),
+      stagione: nomeStagione(tavolozzaStagionale(meseCorrente()).nome),
+    });
 
   setTimeout(battito, 33);
 }

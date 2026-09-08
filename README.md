@@ -105,7 +105,8 @@ da girare è un cursore trasparente disteso sopra il disegno dell'arco — il
 canvas la disegna, il browser la comanda — così tutto resta raggiungibile col
 dito, col tasto Tab e con un lettore di schermo.
 
-In alto a destra si sceglie fra **chiaro e scuro**, e il tema scuro è lo stesso
+In alto a destra si sceglie la **lingua** — italiano, francese, inglese,
+giapponese, come nelle altre app della famiglia — e fra **chiaro e scuro**, e il tema scuro è lo stesso
 foglio girato: carta e inchiostro si scambiano, gli stessi due colori, e i sei
 toni in mezzo tengono il rapporto di contrasto che avevano. All'apertura si
 chiede al sistema; non si scrive niente da nessuna parte.
@@ -155,7 +156,8 @@ Nessuna dipendenza da installare, nessun passaggio di compilazione: si apre
 ```
 index.html        lo strumento
 css/style.css     palette, tipografia, impaginazione
-js/deriva.js      il tempo lungo: sei canali e il campo armonico. Non dipende da nulla
+js/i18n.js        le quattro lingue: italiano, francese, inglese, giapponese
+js/deriva.js      il tempo lungo: sei canali e il campo armonico
 js/cattura.js     prendere il suono dal grafo, e scriverlo in un wav a 24 bit
 js/linee.js       lo stato: linee, idee, piani, ricambio
 js/timbri.js      gli otto suoni delle gocce

@@ -209,18 +209,17 @@ body{
 .chip:has(input:disabled){color:var(--muto);cursor:default}
 .chip input:focus-visible{outline:1px solid var(--ambra);outline-offset:2px}
 .chip.pieno input{width:7px;height:7px}
+/* LE LINGUE E IL TEMA SONO LA STESSA COSA: due gruppi di pulsanti veri, che si
+   prendono col tasto Tab e che un lettore di schermo annuncia come premuti. La
+   parola è l'opzione, non lo stato di adesso — quello lo dice quale delle due è
+   a inchiostro pieno. Un solo blocco di regole per tutti e sei, o il giorno che
+   se ne tocca uno l'altro resta indietro. */
 .lingue{display:flex;gap:19px}
-.lingua{font-family:var(--mono);font-size:8px;letter-spacing:.18em;color:var(--muto);
-        background:none;border:0;padding:0;cursor:default}
-.lingua[aria-current=true]{color:var(--inchiostro)}
-
-/* Il selettore del tema: due parole, come le lingue, ma sono due PULSANTI veri
-   — si prendono col tasto Tab e un lettore di schermo dice quale è premuto.
-   La parola è l'opzione, non lo stato di adesso: qui l'etichetta è l'azione. */
 .temi{display:flex;gap:14px}
-.tema{cursor:pointer}
-.tema[aria-pressed=true]{color:var(--inchiostro)}
-.tema:focus-visible{outline:1px solid var(--ambra);outline-offset:3px}
+.lingua{font-family:var(--mono);font-size:8px;letter-spacing:.18em;color:var(--muto);
+        background:none;border:0;padding:0;cursor:pointer}
+.lingua[aria-pressed=true]{color:var(--inchiostro)}
+.lingua:focus-visible{outline:1px solid var(--ambra);outline-offset:3px}
 
 /* -------------------------------------------------------------------- le bande */
 .banda{border-top:1px solid var(--filo);margin-top:16px;padding-top:12px}

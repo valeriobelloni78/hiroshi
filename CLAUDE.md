@@ -388,9 +388,58 @@ l'audio.** Il colore di un evento da `altezza()`, la lunghezza di una tenuta da
 `formaGocce()`. Una tavola che ridisegnasse a modo suo comincerebbe a mentire
 al primo ritocco, e mentirebbe piano.
 
+**QUATTRO LINGUE, E L'ITALIANO È LA PRINCIPALE.** Italiano, francese, inglese,
+giapponese — le stesse quattro di Rada, Rada Deriva e Nuvole, con lo stesso
+meccanismo e lo stesso vocabolario dove le parole si ripetono: «frasi» sono
+*phrases* e フレーズ in tutte e tre le app, «sereno» è *Serein* e 凪. Chi
+traduce una parola nuova guardi prima se esiste già di là.
+
+L'italiano è la principale perché è la lingua in cui i nomi sono stati
+inventati: «Frangia», «Soglia», «Bordone» dicono una cosa precisa a chi li ha
+scelti, e le altre tre sono traduzioni di quelli. Dove una traduzione deve
+scegliere, sta vicino a QUELLO CHE IL SUONO FA e non alla parola italiana:
+«Cavo» è un tenuto che pronuncia una vocale lentissima, quindi in inglese è
+*Hollow* e non *Cable*.
+
+**Le frasi stanno intere nel dizionario.** La riga di stato — «in ascolto ·
+tonalità do · gocce Vetro» — in giapponese cambia l'ordine e attacca il
+genitivo al nome: nessuna concatenazione può prevederlo, e infatti
+`piede.stato` è una frase sola con dentro i buchi. Lo stesso vale per le unità:
+`unita.ott` è «{n} ott» e «{n}オクターブ», perché fra la cifra e l'unità il
+giapponese non mette spazio e una concatenazione con lo spazio dentro non
+saprebbe toglierlo.
+
+**I numeri passano da `Intl`, e i formattatori si costruiscono una volta per
+lingua.** Prima `numero()` scriveva la virgola a mano — `toFixed().replace(".",
+",")` — che in inglese e in giapponese è un errore di ortografia. Costruirne uno
+dentro il ciclo del disegno costerebbe più del disegno.
+
+**La notazione non si traduce.** `dB`, `Hz`, `ms`, `×`, `°`, `′`, `″`, i
+numerali romani degli anelli, le otto frequenze dell'equalizzatore e le cifre
+delle linee restano uguali in tutte e quattro: sono segni, non parole. Un
+giapponese che legge una tavola tecnica si aspetta `dB`, non «デシベル».
+
+**La lingua si scrive sul disco di chi ascolta, il tema no**, e la differenza
+non è una svista: aprire lo strumento nella lingua sbagliata lo rende
+inutilizzabile finché non si ritrova il selettore, trovarlo chiaro invece che
+scuro è un fastidio di un secondo. Il peso della cosa dimenticata non è lo
+stesso, quindi non è la stessa decisione. La scelta è a tre gradini: `?lang=`,
+poi quello che si era scelto l'altra volta, poi quello che dice il browser, poi
+l'inglese.
+
+**Chi aggiunge un comando aggiunge una chiave, e chi aggiunge una chiave la
+mette in tutte e quattro.** `dice()` ripiega sull'inglese e poi sulla chiave
+nuda: un buco si vede — «fl.qualcosa» a schermo — ed è così che si ripara. Le
+parole che stanno nell'HTML portano `data-i18n` e le rifà `applicaTesti()` da
+sé; quelle che il JavaScript costruisce — le voci delle tendine, le righe delle
+linee, il mixer, gli inserti — le rifà `alCambioDiLingua()` in `comandi.js`, che
+nessuno registra da nessuna parte: `i18n.js` la cerca per nome quando serve, ed
+è lo stesso patto della tavola col modello.
+
 **Le dipendenze scorrono in una direzione sola:**
-`deriva ← cattura ← linee ← timbri ← tessuti ← mood ← effetti ← banco ←
-paesaggio ← motore ← registratore ← comandi ← tavola`. Gli effetti vengono PRIMA
+`i18n ← deriva ← cattura ← linee ← timbri ← tessuti ← mood ← effetti ← banco ←
+paesaggio ← motore ← registratore ← comandi ← tavola`. `i18n.js` sta in cima e
+non dipende da niente: contiene solo parole. Gli effetti vengono PRIMA
 del banco perché è il banco a montarli sui canali, e loro non sanno niente di
 lui: un effetto riceve due nodi e ci costruisce in mezzo. Il paesaggio viene
 DOPO il banco, e
@@ -402,8 +451,9 @@ conosce il disegno.
 visibile.** `comandi.js` tocca il modello e non disegna un pixel; `tavola.js`
 legge il modello e non registra un ascoltatore. Non c'è un `addEventListener`
 in tutta la tavola e non deve arrivarcene uno: un cursore disegnato sarebbe un
-cursore che nessuno può usare senza vederlo. La tavola prende dai comandi una
-cosa sola — i dizionari dei nomi — e per quello l'arrow punta in quel verso.
+cursore che nessuno può usare senza vederlo. La tavola prendeva dai comandi una
+cosa sola — i dizionari dei nomi — e adesso non prende più nemmeno quella: le
+parole stanno in `i18n.js`, che è più in alto di tutti e due.
 
 **La tavola si accorge da sé che una mano ha mosso qualcosa**, confrontando
 `GT` con la propria copia a ogni fotogramma. È il modo di reagire senza
@@ -844,7 +894,7 @@ il canvas in `tavola.js`. Un foglio che scorre, cinque sezioni numerate fra una
 testata e un piede:
 
 - la **testata**: le quattro sorgenti e il cielo come spunte quadrate, la
-  pausa, le lingue (una sola, per ora, e le altre lo dicono);
+  pausa, le **quattro lingue** e il selettore chiaro/scuro;
 - **01 · 02**, le due classi in cinque colonne — comandi, quadrante, filo,
   quadrante, comandi. Ogni quadrante è un cerchio di Rada Deriva: quattro anelli,
   uno per linea, con la crociera e il mirino al centro e il numerale romano fuori

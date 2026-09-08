@@ -801,7 +801,7 @@ function fasciaPaesaggio(box, ora) {
 
   if (!m) {
     riga(box.x, box.cy, box.x + box.w, box.cy, 1, tinta("filo-2"), [2, 5]);
-    scritta("nessuna materia: carica un suono, o apri il microfono",
+    scritta(dice("pae.nessunaMateria"),
       box.cx, box.cy - 8, { dim: 9, sp: .4, all: "center", base: "middle" });
     return;
   }
@@ -851,7 +851,7 @@ function fasciaQuinte(box) {
     const x = box.x + (k + 0.5) * passo;
     const suona = k === qui, dopo = k === poi;
     riga(x, y, x, y + (suona ? 7 : 4), 1, tinta(suona ? "inchiostro" : "filo"));
-    scritta(NOMI_NOTE[CIRCOLO[k]], x, y - 7, {
+    scritta(nomeNota(CIRCOLO[k]), x, y - 7, {
       dim: suona ? 11 : 9, sans: true, sp: 0.2, all: "center",
       col: suona ? "inchiostro" : dopo ? "grigio" : "muto",
     });

@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Hiroshi</title>
+<meta name="description" content="A studio for making ambient music in the browser.">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -32,28 +33,27 @@
            cicli e ricambio avanzano comunque, e riaccendendola non si ritrova
            quello che si era lasciato ma quello che sarebbe successo. -->
       <div class="sorgenti">
-        <label class="chip"><input type="checkbox" id="gocceOn" checked> Frasi</label>
-        <label class="chip"><input type="checkbox" id="tessutiOn" checked> Tessuti</label>
-        <label class="chip"><input type="checkbox" id="vociOn" disabled> Voci</label>
-        <label class="chip"><input type="checkbox" id="paesaggioOn" checked> Paesaggio</label>
-        <label class="chip"><input type="checkbox" id="cieloOn" disabled> Cielo</label>
+        <label class="chip"><input type="checkbox" id="gocceOn" checked> <span data-i18n="sorgente.frasi">Frasi</span></label>
+        <label class="chip"><input type="checkbox" id="tessutiOn" checked> <span data-i18n="sorgente.tessuti">Tessuti</span></label>
+        <label class="chip"><input type="checkbox" id="vociOn" disabled> <span data-i18n="sorgente.voci">Voci</span></label>
+        <label class="chip"><input type="checkbox" id="paesaggioOn" checked> <span data-i18n="sorgente.paesaggio">Paesaggio</span></label>
+        <label class="chip"><input type="checkbox" id="cieloOn" disabled> <span data-i18n="sorgente.cielo">Cielo</span></label>
       </div>
 
       <div class="governo">
         <button class="chip" id="ascolto" aria-pressed="false">
-          <span class="spia"></span><span id="etichettaAscolto">Ascolta</span>
+          <span class="spia"></span><span id="etichettaAscolto" data-i18n="governo.ascolta">Ascolta</span>
         </button>
         <span class="divisore"></span>
-        <span class="lingue">
-          <span class="lingua" aria-current="true">IT</span>
-          <span class="lingua">FR</span><span class="lingua">EN</span><span class="lingua">JA</span>
-        </span>
+        <!-- Le quattro lingue le costruisce `i18n.js`: sigle e comportamento
+             devono essere una cosa sola, e qui basta il posto dove metterle. -->
+        <span class="lingue" id="lingue" role="group"></span>
         <span class="divisore"></span>
         <!-- Chiaro e scuro sono lo stesso foglio girato: gli stessi due colori
              agli estremi, scambiati, e l'ambra che non si muove. -->
-        <span class="temi" role="group" aria-label="Tema">
-          <button type="button" class="lingua tema" id="temaChiaro" aria-pressed="true">CHIARO</button>
-          <button type="button" class="lingua tema" id="temaScuro" aria-pressed="false">SCURO</button>
+        <span class="temi" id="temi" role="group" data-i18n-aria="testata.tema">
+          <button type="button" class="lingua tema" id="temaChiaro" aria-pressed="true" data-i18n="tema.chiaro">CHIARO</button>
+          <button type="button" class="lingua tema" id="temaScuro" aria-pressed="false" data-i18n="tema.scuro">SCURO</button>
         </span>
       </div>
     </header>
@@ -65,32 +65,32 @@
         <div class="intesta">
           <span class="num">01</span>
           <span>
-            <span class="voce">Gocce</span>
-            <span class="dida">quattro frasi · <b id="periodiGocce">7 11 13 17</b></span>
+            <span class="voce" data-i18n="sez.gocce">Gocce</span>
+            <span class="dida"><span data-i18n="dida.frasi">quattro frasi</span> · <b id="periodiGocce">7 11 13 17</b></span>
           </span>
         </div>
 
         <label class="gruppo tendina piccola">
-          <span class="et">MOOD</span>
+          <span class="et" data-i18n="et.mood">MOOD</span>
           <select id="moodGocce"></select>
         </label>
 
         <label class="gruppo tendina">
-          <span class="et">TIMBRO</span>
+          <span class="et" data-i18n="et.timbro">TIMBRO</span>
           <select id="timbro"></select>
         </label>
 
         <div class="gruppo">
-          <span class="et">Forma del suono</span>
-          <label class="filetto"><span class="fl">Attacco</span><span class="vl" id="vfAttacco">4 ms</span>
+          <span class="et" data-i18n="et.forma">Forma del suono</span>
+          <label class="filetto"><span class="fl" data-i18n="fl.attacco">Attacco</span><span class="vl" id="vfAttacco">4 ms</span>
             <input id="fAttacco" type="range" min="1" max="60" step="1" value="4"></label>
-          <label class="filetto"><span class="fl">Coda</span><span class="vl" id="vfCoda">1,8 s</span>
+          <label class="filetto"><span class="fl" data-i18n="fl.coda">Coda</span><span class="vl" id="vfCoda">1,8 s</span>
             <input id="fCoda" type="range" min="2" max="60" step="1" value="18"></label>
-          <label class="filetto"><span class="fl">Inarmonicità</span><span class="vl" id="vfInarm">0,22</span>
+          <label class="filetto"><span class="fl" data-i18n="fl.inarmonicita">Inarmonicità</span><span class="vl" id="vfInarm">0,22</span>
             <input id="fInarm" type="range" min="0" max="100" step="1" value="22"></label>
-          <label class="filetto"><span class="fl">Brillantezza</span><span class="vl" id="vfBrill">0,58</span>
+          <label class="filetto"><span class="fl" data-i18n="fl.brillantezza">Brillantezza</span><span class="vl" id="vfBrill">0,58</span>
             <input id="fBrill" type="range" min="0" max="100" step="1" value="58"></label>
-          <label class="filetto"><span class="fl">Corpo</span><span class="vl" id="vfCorpo">0,41</span>
+          <label class="filetto"><span class="fl" data-i18n="fl.corpo">Corpo</span><span class="vl" id="vfCorpo">0,41</span>
             <input id="fCorpo" type="range" min="0" max="100" step="1" value="41"></label>
         </div>
 
@@ -98,23 +98,23 @@
              Il filetto dice dove sta la mano, la corona dice che cosa sta
              suonando: fra i due c'è la deriva, l'ora e la stagione. -->
         <div class="gruppo">
-          <span class="et">Insieme</span>
-          <label class="filetto"><span class="fl">Addensamento</span>
+          <span class="et" data-i18n="et.insieme">Insieme</span>
+          <label class="filetto"><span class="fl" data-i18n="fl.addensamento">Addensamento</span>
             <span class="vl" id="vAddensamento">0,30</span>
             <input id="addensamento" type="range" min="5" max="100" step="1" value="30"></label>
-          <label class="filetto"><span class="fl">Densità</span>
+          <label class="filetto"><span class="fl" data-i18n="fl.densita">Densità</span>
             <span class="vl" id="vDensita">5 / giro</span>
             <input id="densita" type="range" min="1" max="20" step="1" value="5"></label>
-          <label class="filetto"><span class="fl">Spazio</span>
+          <label class="filetto"><span class="fl" data-i18n="fl.spazio">Spazio</span>
             <span class="vl" id="vSpazio">0,72</span>
             <input id="spazio" type="range" min="0" max="100" step="1" value="72"></label>
         </div>
 
         <div class="gruppo">
-          <span class="et">Le quattro frasi</span>
+          <span class="et" data-i18n="card.frasi">Le quattro frasi</span>
           <div class="linee" id="lineeGocce"></div>
           <label class="gruppo tendina piccola">
-            <span class="et">MATERIALE</span>
+            <span class="et" data-i18n="et.materiale">MATERIALE</span>
             <select id="modoGocce"></select>
           </label>
         </div>
@@ -132,16 +132,16 @@
           <div class="manopola">
             <div class="quadro" data-manopola="registro">
               <input id="registro" type="range" min="0" max="100" step="1" value="45"
-                     aria-label="Registro delle gocce">
+                     data-i18n-aria="a11y.registro">
             </div>
-            <span class="fl">Registro</span><span class="vl" id="vRegistro">1,4 ott</span>
+            <span class="fl" data-i18n="fl.registro">Registro</span><span class="vl" id="vRegistro">1,4 ott</span>
           </div>
           <div class="manopola">
             <div class="quadro" data-manopola="calore">
               <input id="calore" type="range" min="0" max="100" step="1" value="70"
-                     aria-label="Calore del timbro">
+                     data-i18n-aria="a11y.calore">
             </div>
-            <span class="fl">Calore</span><span class="vl" id="vCalore">0,70</span>
+            <span class="fl" data-i18n="fl.calore">Calore</span><span class="vl" id="vCalore">0,70</span>
           </div>
         </div>
         <!-- L'INSERTO della classe. La linea separa due livelli: sopra le due
@@ -150,28 +150,25 @@
              cambiano nome insieme a lei. -->
         <div class="filoH"></div>
         <div class="inserto">
-          <span class="et">Effetto</span>
+          <span class="et" data-i18n="et.effetto">Effetto</span>
           <label class="tendina piccola"><select id="effGocce"></select></label>
         </div>
         <div class="sotto-quadrante tre">
           <div class="manopola">
             <div class="quadro" data-manopola="gE1">
-              <input id="gE1" type="range" min="0" max="100" step="1" value="40"
-                     aria-label="Effetto dei gocce, parametro 1">
+              <input id="gE1" type="range" min="0" max="100" step="1" value="40">
             </div>
             <span class="fl" id="flGE1">—</span><span class="vl" id="vGE1">—</span>
           </div>
           <div class="manopola">
             <div class="quadro" data-manopola="gE2">
-              <input id="gE2" type="range" min="0" max="100" step="1" value="30"
-                     aria-label="Effetto dei gocce, parametro 2">
+              <input id="gE2" type="range" min="0" max="100" step="1" value="30">
             </div>
             <span class="fl" id="flGE2">—</span><span class="vl" id="vGE2">—</span>
           </div>
           <div class="manopola">
             <div class="quadro" data-manopola="gE3">
-              <input id="gE3" type="range" min="0" max="100" step="1" value="30"
-                     aria-label="Effetto dei gocce, parametro 3">
+              <input id="gE3" type="range" min="0" max="100" step="1" value="30">
             </div>
             <span class="fl" id="flGE3">—</span><span class="vl" id="vGE3">—</span>
           </div>
@@ -186,16 +183,16 @@
           <div class="manopola">
             <div class="quadro" data-manopola="tregistro">
               <input id="tregistro" type="range" min="0" max="100" step="1" value="55"
-                     aria-label="Registro dei tessuti">
+                     data-i18n-aria="a11y.tregistro">
             </div>
-            <span class="fl">Registro</span><span class="vl" id="vTregistro">1,8 ott</span>
+            <span class="fl" data-i18n="fl.registro">Registro</span><span class="vl" id="vTregistro">1,8 ott</span>
           </div>
           <div class="manopola">
             <div class="quadro" data-manopola="passo">
               <input id="passo" type="range" min="0" max="100" step="1" value="38"
-                     aria-label="Passo del movimento">
+                     data-i18n-aria="a11y.passo">
             </div>
-            <span class="fl">Passo</span><span class="vl" id="vPasso">0,38</span>
+            <span class="fl" data-i18n="fl.passo">Passo</span><span class="vl" id="vPasso">0,38</span>
           </div>
         </div>
         <!-- L'INSERTO della classe. La linea separa due livelli: sopra le due
@@ -204,28 +201,25 @@
              cambiano nome insieme a lei. -->
         <div class="filoH"></div>
         <div class="inserto">
-          <span class="et">Effetto</span>
+          <span class="et" data-i18n="et.effetto">Effetto</span>
           <label class="tendina piccola"><select id="effTessuti"></select></label>
         </div>
         <div class="sotto-quadrante tre">
           <div class="manopola">
             <div class="quadro" data-manopola="tE1">
-              <input id="tE1" type="range" min="0" max="100" step="1" value="40"
-                     aria-label="Effetto dei tessuti, parametro 1">
+              <input id="tE1" type="range" min="0" max="100" step="1" value="40">
             </div>
             <span class="fl" id="flTE1">—</span><span class="vl" id="vTE1">—</span>
           </div>
           <div class="manopola">
             <div class="quadro" data-manopola="tE2">
-              <input id="tE2" type="range" min="0" max="100" step="1" value="30"
-                     aria-label="Effetto dei tessuti, parametro 2">
+              <input id="tE2" type="range" min="0" max="100" step="1" value="30">
             </div>
             <span class="fl" id="flTE2">—</span><span class="vl" id="vTE2">—</span>
           </div>
           <div class="manopola">
             <div class="quadro" data-manopola="tE3">
-              <input id="tE3" type="range" min="0" max="100" step="1" value="30"
-                     aria-label="Effetto dei tessuti, parametro 3">
+              <input id="tE3" type="range" min="0" max="100" step="1" value="30">
             </div>
             <span class="fl" id="flTE3">—</span><span class="vl" id="vTE3">—</span>
           </div>
@@ -236,53 +230,53 @@
         <div class="intesta">
           <span class="num">02</span>
           <span>
-            <span class="voce">Tessuti</span>
-            <span class="dida">quattro tenute · <b id="periodiTessuti">9 16 25 31</b></span>
+            <span class="voce" data-i18n="sez.tessuti">Tessuti</span>
+            <span class="dida"><span data-i18n="dida.tenute">quattro tenute</span> · <b id="periodiTessuti">9 16 25 31</b></span>
           </span>
         </div>
 
         <label class="gruppo tendina piccola">
-          <span class="et">MOOD</span>
+          <span class="et" data-i18n="et.mood">MOOD</span>
           <select id="moodTessuti"></select>
         </label>
 
         <label class="gruppo tendina">
-          <span class="et">TIMBRO</span>
+          <span class="et" data-i18n="et.timbro">TIMBRO</span>
           <select id="tessuto"></select>
         </label>
 
         <div class="gruppo">
-          <span class="et">Forma del suono</span>
-          <label class="filetto"><span class="fl">Apertura</span><span class="vl" id="vApertura">3,0 s</span>
+          <span class="et" data-i18n="et.forma">Forma del suono</span>
+          <label class="filetto"><span class="fl" data-i18n="fl.apertura">Apertura</span><span class="vl" id="vApertura">3,0 s</span>
             <input id="apertura" type="range" min="3" max="120" step="1" value="30"></label>
-          <label class="filetto"><span class="fl">Chiusura</span><span class="vl" id="vChiusura">4,3 s</span>
+          <label class="filetto"><span class="fl" data-i18n="fl.chiusura">Chiusura</span><span class="vl" id="vChiusura">4,3 s</span>
             <input id="chiusura" type="range" min="3" max="150" step="1" value="43"></label>
-          <label class="filetto"><span class="fl">Movimento</span><span class="vl" id="vfMovimento">0,55</span>
+          <label class="filetto"><span class="fl" data-i18n="fl.movimento">Movimento</span><span class="vl" id="vfMovimento">0,55</span>
             <input id="fMovimento" type="range" min="0" max="100" step="1" value="55"></label>
-          <label class="filetto"><span class="fl">Brillantezza</span><span class="vl" id="vfTbrill">0,50</span>
+          <label class="filetto"><span class="fl" data-i18n="fl.brillantezza">Brillantezza</span><span class="vl" id="vfTbrill">0,50</span>
             <input id="fTbrill" type="range" min="0" max="100" step="1" value="50"></label>
-          <label class="filetto"><span class="fl">Corpo</span><span class="vl" id="vfTcorpo">0,50</span>
+          <label class="filetto"><span class="fl" data-i18n="fl.corpo">Corpo</span><span class="vl" id="vfTcorpo">0,50</span>
             <input id="fTcorpo" type="range" min="0" max="100" step="1" value="50"></label>
         </div>
 
         <div class="gruppo">
-          <span class="et">Insieme</span>
-          <label class="filetto"><span class="fl">Intreccio</span>
+          <span class="et" data-i18n="et.insieme">Insieme</span>
+          <label class="filetto"><span class="fl" data-i18n="fl.intreccio">Intreccio</span>
             <span class="vl" id="vIntreccio">0,45</span>
             <input id="intreccio" type="range" min="0" max="100" step="1" value="45"></label>
-          <label class="filetto"><span class="fl">Livello</span>
+          <label class="filetto"><span class="fl" data-i18n="fl.livello">Livello</span>
             <span class="vl" id="vLivello">−7,0 dB</span>
             <input id="livello" type="range" min="8" max="60" step="1" value="32"></label>
-          <label class="filetto"><span class="fl">Spazio</span>
+          <label class="filetto"><span class="fl" data-i18n="fl.spazio">Spazio</span>
             <span class="vl" id="vTspazio">0,55</span>
             <input id="tspazio" type="range" min="0" max="100" step="1" value="55"></label>
         </div>
 
         <div class="gruppo">
-          <span class="et">Le quattro tenute</span>
+          <span class="et" data-i18n="card.tenute">Le quattro tenute</span>
           <div class="linee" id="lineeTessuti"></div>
           <label class="gruppo tendina piccola">
-            <span class="et">MATERIALE</span>
+            <span class="et" data-i18n="et.materiale">MATERIALE</span>
             <select id="modoTessuti"></select>
           </label>
         </div>
@@ -294,48 +288,48 @@
       <div class="capo">
         <span class="titolo">
           <span class="num">03</span>
-          <span class="voce">Banco</span>
-          <span class="dida">l'uscita dello studio · registrazione, equalizzatore, mixer</span>
+          <span class="voce" data-i18n="sez.banco">Banco</span>
+          <span class="dida" data-i18n="dida.banco">l'uscita dello studio · registrazione, equalizzatore, mixer</span>
           <span class="divisore"></span>
-          <span class="et">PROFILO</span>
+          <span class="et" data-i18n="et.profilo">PROFILO</span>
           <label class="tendina piccola" style="width:96px">
             <select id="profilo"></select>
           </label>
           <button class="tasto" id="salvaProfilo" title="Salva le otto bande come profilo">+</button>
         </span>
         <span class="letture">
-          <span class="lettura"><span class="fl">Picco</span><span class="vl" id="picco">—</span></span>
-          <span class="lettura"><span class="fl">Limitatore</span><span class="vl" id="riduzione">—</span></span>
+          <span class="lettura"><span class="fl" data-i18n="fl.picco">Picco</span><span class="vl" id="picco">—</span></span>
+          <span class="lettura"><span class="fl" data-i18n="fl.limitatore">Limitatore</span><span class="vl" id="riduzione">—</span></span>
         </span>
       </div>
 
       <div class="banco">
         <div class="registrazione">
-          <span class="et">REGISTRAZIONE</span>
+          <span class="et" data-i18n="et.registrazione">REGISTRAZIONE</span>
           <button class="chip" id="presa" aria-pressed="false">
-            <span class="spia"></span><span id="etichettaPresa">Registra</span>
-            <span class="misura" id="formato">48 kHz · 24 bit</span>
+            <span class="spia"></span><span id="etichettaPresa" data-i18n="banco.registra">Registra</span>
+            <span class="misura" id="formato" data-i18n="banco.formato">48 kHz · 24 bit</span>
           </button>
           <div class="cronometro" id="cronometro">00:00</div>
           <div class="misuratore" data-quadro="misuratore"></div>
           <div class="taglio"></div>
 
-          <span class="et">ESPORTA</span>
+          <span class="et" data-i18n="et.esporta">ESPORTA</span>
           <button class="riga-comando" id="esporta">
-            <span class="mn">Traccia wav</span>
-            <span class="misura" id="esito">5 minuti</span>
+            <span class="mn" data-i18n="banco.tracciaWav">Traccia wav</span>
+            <span class="misura" id="esito"></span>
           </button>
           <label class="filetto">
-            <span class="fl">Durata del reso</span><span class="vl" id="vDurata">5′</span>
+            <span class="fl" data-i18n="banco.durataReso">Durata del reso</span><span class="vl" id="vDurata">5′</span>
             <input id="durata" type="range" min="1" max="20" step="1" value="5">
           </label>
           <button class="riga-comando" id="esportaPng">
-            <span class="mn">Tavola png</span>
+            <span class="mn" data-i18n="banco.tavolaPng">Tavola png</span>
             <span class="misura" id="misuraPng">—</span>
           </button>
           <button class="riga-comando" id="esportaScena" disabled>
-            <span class="mn">Scena</span>
-            <span class="misura">serve un seme</span>
+            <span class="mn" data-i18n="banco.scena">Scena</span>
+            <span class="misura" data-i18n="banco.serveSeme">serve un seme</span>
           </button>
         </div>
 
@@ -346,7 +340,7 @@
         </div>
 
         <div class="mixer">
-          <span class="et">MIXER</span>
+          <span class="et" data-i18n="et.mixer">MIXER</span>
           <div class="faders" id="faders"></div>
         </div>
       </div>
@@ -357,22 +351,22 @@
       <div class="capo">
         <span class="titolo">
           <span class="num">04</span>
-          <span class="voce">Paesaggio</span>
-          <span class="dida">una registrazione tenuta ferma sotto una lente</span>
+          <span class="voce" data-i18n="sez.paesaggio">Paesaggio</span>
+          <span class="dida" data-i18n="dida.paesaggio">una registrazione tenuta ferma sotto una lente</span>
           <span class="divisore"></span>
-          <span class="fl">Segmento</span>
+          <span class="fl" data-i18n="fl.segmento">Segmento</span>
           <span class="vl" id="vSegmento">—</span>
         </span>
         <span class="letture">
-          <span class="et">SORGENTE</span>
+          <span class="et" data-i18n="et.sorgente">SORGENTE</span>
           <label class="tendina piccola" style="width:190px">
             <select id="materia"><option value="-1">niente ancora</option></select>
           </label>
           <span class="divisore"></span>
-          <label class="chip" for="file" id="etichettaFile">Carica un suono</label>
+          <label class="chip" for="file" id="etichettaFile" data-i18n="pae.carica">Carica un suono</label>
           <input id="file" type="file" accept="audio/*" hidden>
           <button class="chip" id="registra" aria-pressed="false">
-            <span class="spia"></span><span id="etichettaRegistra">Microfono</span>
+            <span class="spia"></span><span id="etichettaRegistra" data-i18n="pae.microfono">Microfono</span>
           </button>
           <span class="vl" id="cattura"></span>
         </span>
@@ -384,27 +378,27 @@
            compare il filo di messa a fuoco. -->
       <div class="fascia-paesaggio" data-quadro="paesaggio">
         <input id="pInizio" class="maniglia alto" type="range" min="0" max="100" step="0.1"
-               value="0" aria-label="Inizio del segmento, in centesimi del materiale">
+               value="0" data-i18n-aria="a11y.inizio">
         <input id="pFine" class="maniglia basso" type="range" min="0" max="100" step="0.1"
-               value="100" aria-label="Fine del segmento, in centesimi del materiale">
+               value="100" data-i18n-aria="a11y.fine">
       </div>
 
       <div class="comandi-paesaggio">
-        <label class="filetto"><span class="fl">Rallentamento</span><span class="vl" id="vRallenta">8×</span>
+        <label class="filetto"><span class="fl" data-i18n="fl.rallentamento">Rallentamento</span><span class="vl" id="vRallenta">8×</span>
           <input id="pRallenta" type="range" min="1" max="64" step="1" value="8"></label>
-        <label class="filetto"><span class="fl">Velo</span><span class="vl" id="vVelo">700 ms</span>
+        <label class="filetto"><span class="fl" data-i18n="fl.velo">Velo</span><span class="vl" id="vVelo">700 ms</span>
           <input id="pVelo" type="range" min="80" max="2000" step="10" value="700"></label>
-        <label class="filetto"><span class="fl">Sparpaglio</span><span class="vl" id="vPsparpaglio">0,35</span>
+        <label class="filetto"><span class="fl" data-i18n="fl.sparpaglio">Sparpaglio</span><span class="vl" id="vPsparpaglio">0,35</span>
           <input id="pSparpaglio" type="range" min="0" max="100" step="1" value="35"></label>
-        <label class="filetto"><span class="fl">Accordatura</span><span class="vl" id="vAccordatura">0,55</span>
+        <label class="filetto"><span class="fl" data-i18n="fl.accordatura">Accordatura</span><span class="vl" id="vAccordatura">0,55</span>
           <input id="pAccordatura" type="range" min="0" max="100" step="1" value="55"></label>
-        <label class="filetto"><span class="fl">Fuoco</span><span class="vl" id="vFuoco">18</span>
+        <label class="filetto"><span class="fl" data-i18n="fl.fuoco">Fuoco</span><span class="vl" id="vFuoco">18</span>
           <input id="pFuoco" type="range" min="8" max="80" step="1" value="18"></label>
-        <label class="filetto"><span class="fl">Coda</span><span class="vl" id="vCoda">12,0 s</span>
+        <label class="filetto"><span class="fl" data-i18n="fl.coda">Coda</span><span class="vl" id="vCoda">12,0 s</span>
           <input id="pCoda" type="range" min="1" max="40" step="1" value="12"></label>
-        <label class="filetto"><span class="fl">Tono</span><span class="vl" id="vTono">2,0 kHz</span>
+        <label class="filetto"><span class="fl" data-i18n="fl.tono">Tono</span><span class="vl" id="vTono">2,0 kHz</span>
           <input id="pTono" type="range" min="300" max="12000" step="100" value="2000"></label>
-        <label class="filetto"><span class="fl">Riverbero</span><span class="vl" id="vRiverbero">0,70</span>
+        <label class="filetto"><span class="fl" data-i18n="fl.riverbero">Riverbero</span><span class="vl" id="vRiverbero">0,70</span>
           <input id="pRiverbero" type="range" min="0" max="100" step="1" value="70"></label>
       </div>
     </section>
@@ -414,49 +408,50 @@
       <div class="capo">
         <span class="titolo">
           <span class="num">05</span>
-          <span class="voce">Deriva</span>
-          <span class="dida">il tempo lungo · una quinta ogni 2′ 30″</span>
+          <span class="voce" data-i18n="sez.deriva">Deriva</span>
+          <span class="dida" id="didaDeriva">il tempo lungo · una quinta ogni 2′ 30″</span>
         </span>
         <span class="letture">
-          <span class="lettura"><span class="fl">Sessione</span><span class="vl" id="sessione">00:00</span></span>
-          <span class="lettura"><span class="fl">Quinte</span><span class="vl" id="quinteFatte">0</span></span>
-          <span class="lettura"><span class="fl">Prossima</span><span class="vl" id="prossima">2′ 30″</span></span>
-          <span class="lettura"><span class="fl">Riallinea</span><span class="vl" id="riallineo">—</span></span>
+          <span class="lettura"><span class="fl" data-i18n="fl.sessione">Sessione</span><span class="vl" id="sessione">00:00</span></span>
+          <span class="lettura"><span class="fl" data-i18n="fl.quinte">Quinte</span><span class="vl" id="quinteFatte">0</span></span>
+          <span class="lettura"><span class="fl" data-i18n="fl.prossima">Prossima</span><span class="vl" id="prossima">2′ 30″</span></span>
+          <span class="lettura"><span class="fl" data-i18n="fl.riallinea">Riallinea</span><span class="vl" id="riallineo">—</span></span>
         </span>
       </div>
 
       <div class="deriva">
         <div class="cella">
-          <span class="et">TONALITÀ</span>
+          <span class="et" data-i18n="et.tonalita">TONALITÀ</span>
           <span class="tonalita" id="tonalita">do</span>
         </div>
         <div class="filoV"></div>
         <div class="cella">
-          <span class="et">CIRCOLO DELLE QUINTE</span>
+          <span class="et" data-i18n="et.circolo">CIRCOLO DELLE QUINTE</span>
           <div class="tela-quinte" data-quadro="quinte"></div>
         </div>
         <div class="filoV"></div>
         <div class="cella">
-          <span class="et">BARICENTRO · 15 MIN <span class="vl" id="vBaricentro">+0,0</span></span>
+          <span class="et"><span data-i18n="et.baricentro">BARICENTRO · 15 MIN</span> <span class="vl" id="vBaricentro">+0,0</span></span>
           <div class="tela-baricentro" data-quadro="baricentro"></div>
         </div>
         <div class="filoV"></div>
         <div class="cella">
-          <span class="et">VOCI <span class="vl tenue" id="vociQuante">0 / 7</span></span>
+          <span class="et"><span data-i18n="et.voci">VOCI</span> <span class="vl tenue" id="vociQuante">0 / 7</span></span>
           <div class="voci-spie" id="vociSpie"></div>
-          <span class="fl">cielo — non ancora</span>
+          <span class="fl" data-i18n="deriva.cielo">cielo — non ancora</span>
         </div>
       </div>
     </section>
 
     <footer class="piede">
-      <span id="piedeStato">fermo</span>
-      <span id="piedeMano">la lunghezza è il registro, l'arco la durata; in ambra i numeri e quello che suona adesso</span>
+      <span id="piedeStato" data-i18n="piede.fermo">fermo</span>
+      <span id="piedeMano" data-i18n="piede.legenda">la lunghezza è il registro, l'arco la durata; in ambra i numeri e quello che suona adesso</span>
     </footer>
 
   </div>
 </div>
 
+<script src="js/i18n.js"></script>
 <script src="js/deriva.js"></script>
 <script src="js/cattura.js"></script>
 <script src="js/linee.js"></script>

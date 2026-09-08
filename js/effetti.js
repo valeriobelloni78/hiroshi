@@ -44,7 +44,13 @@ const EFFETTI_NOMI = ["niente", "eco", "tremolo", "coro", "filtro"];
    nell'unità dell'effetto, `k`, `d` e `u` dicono come si scrive sulla targa
    (`numero(x * k, d) + u`, e la formattazione la fa chi disegna). Le corse
    esponenziali dove l'orecchio è esponenziale — tempi e frequenze — lineari
-   dove è lineare. */
+   dove è lineare.
+
+   `fl` è una CHIAVE del dizionario e non un'etichetta: qui non si scrivono
+   parole, perché un file che descrive dei nodi audio non è il posto dove tenere
+   quattro lingue. Le parole stanno in `i18n.js`, sotto `par`. Le unità invece
+   sono qui e non si traducono — `ms`, `Hz`, `°` sono segni; l'unica parola è
+   l'ottava del filtro, e quella la mette la targa. */
 const EFFETTI = {
 
   niente: {
@@ -70,9 +76,9 @@ const EFFETTI = {
      I ritorni non passano 0,8: sopra, il giro cresce invece di scendere. */
   eco: {
     param: [
-      { fl: "Tempo",    da: (v) => 0.06 * Math.pow(20, v / 100), k: 1000, d: 0, u: " ms" },
-      { fl: "Ritorni",  da: (v) => (v / 100) * 0.8,              k: 1,    d: 2, u: "" },
-      { fl: "Quantità", da: (v) => v / 100,                      k: 1,    d: 2, u: "" },
+      { fl: "tempo",    da: (v) => 0.06 * Math.pow(20, v / 100), k: 1000, d: 0, u: " ms" },
+      { fl: "ritorni",  da: (v) => (v / 100) * 0.8,              k: 1,    d: 2, u: "" },
+      { fl: "quantita", da: (v) => v / 100,                      k: 1,    d: 2, u: "" },
     ],
     costruisci(ctx, ingresso, uscita) {
       const secco = ctx.createGain(), bagnato = ctx.createGain();
@@ -107,9 +113,9 @@ const EFFETTI = {
      comando dà la stessa cosa e non ha un istante da indovinare. */
   tremolo: {
     param: [
-      { fl: "Velocità",   da: (v) => 0.1 * Math.pow(60, v / 100), k: 1, d: 1, u: " Hz" },
-      { fl: "Profondità", da: (v) => v / 100,                     k: 1, d: 2, u: "" },
-      { fl: "Sghembo",    da: (v) => (v / 100) * 180,             k: 1, d: 0, u: "°" },
+      { fl: "velocita",   da: (v) => 0.1 * Math.pow(60, v / 100), k: 1, d: 1, u: " Hz" },
+      { fl: "profondita", da: (v) => v / 100,                     k: 1, d: 2, u: "" },
+      { fl: "sghembo",    da: (v) => (v / 100) * 180,             k: 1, d: 0, u: "°" },
     ],
     costruisci(ctx, ingresso, uscita) {
       const divide = ctx.createChannelSplitter(2), unisce = ctx.createChannelMerger(2);
@@ -153,9 +159,9 @@ const EFFETTI = {
      due lati, non dal ritardo. */
   coro: {
     param: [
-      { fl: "Velocità",   da: (v) => 0.05 * Math.pow(40, v / 100),  k: 1,    d: 2, u: " Hz" },
-      { fl: "Profondità", da: (v) => 0.0004 + (v / 100) * 0.0055,   k: 1000, d: 1, u: " ms" },
-      { fl: "Quantità",   da: (v) => v / 100,                       k: 1,    d: 2, u: "" },
+      { fl: "velocita",   da: (v) => 0.05 * Math.pow(40, v / 100),  k: 1,    d: 2, u: " Hz" },
+      { fl: "profondita", da: (v) => 0.0004 + (v / 100) * 0.0055,   k: 1000, d: 1, u: " ms" },
+      { fl: "quantita",   da: (v) => v / 100,                       k: 1,    d: 2, u: "" },
     ],
     costruisci(ctx, ingresso, uscita) {
       const secco = ctx.createGain(), bagnato = ctx.createGain();
@@ -197,9 +203,9 @@ const EFFETTI = {
      volta che uno dei due si muove. */
   filtro: {
     param: [
-      { fl: "Taglio",     da: (v) => 200 * Math.pow(60, v / 100), k: 1, d: 0, u: " Hz" },
-      { fl: "Risonanza",  da: (v) => 0.7 + (v / 100) * 11,        k: 1, d: 1, u: "" },
-      { fl: "Movimento",  da: (v) => (v / 100) * 2,               k: 1, d: 2, u: " ott" },
+      { fl: "taglio",     da: (v) => 200 * Math.pow(60, v / 100), k: 1, d: 0, u: " Hz" },
+      { fl: "risonanza",  da: (v) => 0.7 + (v / 100) * 11,        k: 1, d: 1, u: "" },
+      { fl: "movimento",  da: (v) => (v / 100) * 2,               k: 1, d: 2, u: "ott" },
     ],
     costruisci(ctx, ingresso, uscita) {
       const f = ctx.createBiquadFilter();
