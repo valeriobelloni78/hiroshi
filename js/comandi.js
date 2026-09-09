@@ -148,36 +148,12 @@ function didascaliaDeriva() {
   el("didaDeriva").textContent = dice("dida.deriva", { t: minsec(PASSO_QUINTA) });
 }
 
-/* --------------------------------------------------------- chiaro e scuro
-   Il tema sta in un attributo sull'elemento radice, e basta quello: il CSS ci
-   appende la palette scura, e la tavola se ne accorge da sé confrontandolo con
-   la propria copia a ogni fotogramma — lo stesso modo in cui si accorge che
-   una mano ha mosso un cursore. Nessun ascoltatore nel disegno, nessuna
-   chiamata dai comandi al disegno.
-
-   All'apertura si CHIEDE AL SISTEMA con `prefers-color-scheme`. È l'unico modo
-   di ritrovare il proprio tema senza scrivere niente da nessuna parte, e in un
-   progetto che non ha ancora deciso se toccare il disco di chi ascolta non lo
-   si decide per un colore. Il seguito lo si ascolta: se il sistema cambia idea
-   a metà seduta — perché è calato il sole — la tavola lo segue, ma solo finché
-   nessuno ha scelto a mano, perché dopo la scelta è di chi l'ha fatta. */
-const TEMI = { chiaro: el("temaChiaro"), scuro: el("temaScuro") };
-let temaAMano = false;
-
-function scegliTema(quale) {
-  document.documentElement.dataset.tema = quale;
-  for (const k in TEMI) TEMI[k].setAttribute("aria-pressed", String(k === quale));
-}
-for (const k in TEMI) TEMI[k].addEventListener("click", () => { temaAMano = true; scegliTema(k); });
-
+/* Il tema e il selettore delle lingue: il primo sta in `tema.js` e il secondo
+   in `i18n.js`, perché li usa anche la guida. Qui si accendono e basta. */
 costruisciSelettoreLingua(el("lingue"));
 applicaTesti();
 didascaliaDeriva();
-
-const SCURO = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)");
-scegliTema(SCURO && SCURO.matches ? "scuro" : "chiaro");
-if (SCURO && SCURO.addEventListener)
-  SCURO.addEventListener("change", (e) => { if (!temaAMano) scegliTema(e.matches ? "scuro" : "chiaro"); });
+avviaTema("temaChiaro", "temaScuro");
 
 /* «A mano»: gli ultimi filetti che qualcuno ha mosso, in fondo al foglio. Una
    tavola che si muove da sé per tre quarti ha bisogno di dire quale quarto è

@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hiroshi · Guida</title>
+<meta name="description" content="Operating manual for Hiroshi.">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- LA GUIDA È UN DOCUMENTO, non uno strumento: nessun canvas, nessun contesto
+     audio, nessun ciclo. Solo testo e tabelle, con lo stesso foglio di stile e
+     lo stesso selettore di lingua e di tema della pagina che descrive.
+
+     Le CORSE nelle tabelle sono scritte a mano e non lette dai cursori: la
+     guida si apre anche da sola, senza il motore caricato, e un manuale che
+     mostrasse celle vuote quando l'app non gira non servirebbe a niente. Chi
+     cambia una corsa in `index.html` la cambia anche qui — sono le uniche cifre
+     di questo file. -->
+<div class="foglio guida">
+  <div class="sopra">
+
+    <header class="testata">
+      <div class="logo">
+        <div class="nome">Hiroshi</div>
+        <div class="filo"></div>
+        <div class="sotto"><span>ra<b>d</b>a</span><span class="punto"></span><span>stu<b>d</b>io</span></div>
+      </div>
+
+      <div class="governo">
+        <a class="chip" href="index.html" data-i18n="g.torna">Torna allo strumento</a>
+        <span class="divisore"></span>
+        <span class="lingue" id="lingue" role="group"></span>
+        <span class="divisore"></span>
+        <span class="temi" id="temi" role="group" data-i18n-aria="testata.tema">
+          <button type="button" class="lingua tema" id="temaChiaro" aria-pressed="true" data-i18n="tema.chiaro">CHIARO</button>
+          <button type="button" class="lingua tema" id="temaScuro" aria-pressed="false" data-i18n="tema.scuro">SCURO</button>
+        </span>
+      </div>
+    </header>
+
+    <section class="banda doc">
+      <div class="capo"><span class="et" data-i18n="g.occhiello">Manuale d'uso</span></div>
+      <p class="apertura" data-i18n="g.intro"></p>
+    </section>
+
+    <!-- ================================================= la catena del segnale -->
+    <section class="banda doc">
+      <div class="capo"><span class="titolo"><span class="num">—</span>
+        <span class="voce" data-i18n="g.pan.t">Catena del segnale</span></span></div>
+      <p data-i18n="g.pan.1"></p>
+      <!-- Lo schema è una riga sola e non un disegno a rami: in giapponese i
+           caratteri sono a doppia larghezza e un'arte ASCII allineata a mano
+           andrebbe a pezzi. Due righe di frecce dicono la stessa cosa e si
+           traducono. -->
+      <pre class="catena" data-i18n="g.pan.catena"></pre>
+      <p data-i18n="g.pan.2"></p>
+      <p data-i18n="g.pan.3"></p>
+    </section>
+
+    <!-- ==================================================== struttura temporale -->
+    <section class="banda doc">
+      <div class="capo"><span class="titolo"><span class="num">—</span>
+        <span class="voce" data-i18n="g.tempo.t">Struttura temporale</span></span></div>
+      <p data-i18n="g.tempo.1"></p>
+      <p data-i18n="g.tempo.2"></p>
+      <p data-i18n="g.tempo.3"></p>
+    </section>
+
+    <!-- ================================================================= gocce -->
+    <section class="banda doc">
+      <div class="capo"><span class="titolo"><span class="num">01</span>
+        <span class="voce" data-i18n="g.gocce.t">Gocce</span></span></div>
+      <p data-i18n="g.gocce.1"></p>
+
+      <span class="et" data-i18n="g.gocce.forma">Forma del suono</span>
+      <table class="par">
+        <thead><tr><th data-i18n="g.col.par">Parametro</th><th data-i18n="g.col.corsa">Corsa</th><th data-i18n="g.col.fun">Funzione</th></tr></thead>
+        <tbody>
+          <tr><td data-i18n="fl.attacco"></td>      <td>1 – 60 ms</td>      <td data-i18n="g.p.attacco"></td></tr>
+          <tr><td data-i18n="fl.coda"></td>         <td>0,2 – 6,0 s</td>    <td data-i18n="g.p.coda"></td></tr>
+          <tr><td data-i18n="fl.inarmonicita"></td> <td>0 – 1</td>          <td data-i18n="g.p.inarm"></td></tr>
+          <tr><td data-i18n="fl.brillantezza"></td> <td>0 – 1</td>          <td data-i18n="g.p.brill"></td></tr>
+          <tr><td data-i18n="fl.corpo"></td>        <td>0 – 1</td>          <td data-i18n="g.p.corpo"></td></tr>
+        </tbody>
+      </table>
+
+      <span class="et" data-i18n="g.gocce.insieme">Insieme</span>
+      <table class="par">
+        <tbody>
+          <tr><td data-i18n="fl.addensamento"></td> <td>0,05 – 1</td>       <td data-i18n="g.p.addens"></td></tr>
+          <tr><td data-i18n="fl.densita"></td>      <td>1 – 20</td>         <td data-i18n="g.p.densita"></td></tr>
+          <tr><td data-i18n="fl.spazio"></td>       <td>0 – 1</td>          <td data-i18n="g.p.spazio"></td></tr>
+        </tbody>
+      </table>
+
+      <span class="et" data-i18n="g.gocce.man">Manopole</span>
+      <table class="par">
+        <tbody>
+          <tr><td data-i18n="fl.registro"></td>     <td data-i18n="g.corsa.ott"></td>    <td data-i18n="g.p.registro"></td></tr>
+          <tr><td data-i18n="fl.calore"></td>       <td>0 – 1</td>          <td data-i18n="g.p.calore"></td></tr>
+        </tbody>
+      </table>
+
+      <span class="et" data-i18n="g.gocce.timbri">Gli otto timbri</span>
+      <table class="par nomi">
+        <thead><tr><th data-i18n="g.col.nome">Nome</th><th data-i18n="g.col.desc">Sintesi</th></tr></thead>
+        <tbody>
+          <tr><td data-i18n="timbri.vetro"></td>   <td data-i18n="g.tim.vetro"></td></tr>
+          <tr><td data-i18n="timbri.legno"></td>   <td data-i18n="g.tim.legno"></td></tr>
+          <tr><td data-i18n="timbri.onda"></td>    <td data-i18n="g.tim.onda"></td></tr>
+          <tr><td data-i18n="timbri.soffio"></td>  <td data-i18n="g.tim.soffio"></td></tr>
+          <tr><td data-i18n="timbri.corda"></td>   <td data-i18n="g.tim.corda"></td></tr>
+          <tr><td data-i18n="timbri.metallo"></td> <td data-i18n="g.tim.metallo"></td></tr>
+          <tr><td data-i18n="timbri.canna"></td>   <td data-i18n="g.tim.canna"></td></tr>
+          <tr><td data-i18n="timbri.sabbia"></td>  <td data-i18n="g.tim.sabbia"></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- =============================================================== tessuti -->
+    <section class="banda doc">
+      <div class="capo"><span class="titolo"><span class="num">02</span>
+        <span class="voce" data-i18n="g.tess.t">Tessuti</span></span></div>
+      <p data-i18n="g.tess.1"></p>
+      <p data-i18n="g.tess.2"></p>
+
+      <span class="et" data-i18n="g.gocce.forma">Forma del suono</span>
+      <table class="par">
+        <thead><tr><th data-i18n="g.col.par">Parametro</th><th data-i18n="g.col.corsa">Corsa</th><th data-i18n="g.col.fun">Funzione</th></tr></thead>
+        <tbody>
+          <tr><td data-i18n="fl.apertura"></td>     <td>0,3 – 12,0 s</td>   <td data-i18n="g.p.apertura"></td></tr>
+          <tr><td data-i18n="fl.chiusura"></td>     <td>0,3 – 15,0 s</td>   <td data-i18n="g.p.chiusura"></td></tr>
+          <tr><td data-i18n="fl.movimento"></td>    <td>0 – 1</td>          <td data-i18n="g.p.movimento"></td></tr>
+          <tr><td data-i18n="fl.brillantezza"></td> <td>0 – 1</td>          <td data-i18n="g.p.tbrill"></td></tr>
+          <tr><td data-i18n="fl.corpo"></td>        <td>0 – 1</td>          <td data-i18n="g.p.tcorpo"></td></tr>
+        </tbody>
+      </table>
+
+      <span class="et" data-i18n="g.gocce.insieme">Insieme</span>
+      <table class="par">
+        <tbody>
+          <tr><td data-i18n="fl.intreccio"></td>    <td>0 – 1</td>              <td data-i18n="g.p.intreccio"></td></tr>
+          <tr><td data-i18n="fl.livello"></td>      <td>−19,0 – −1,5 dB</td>    <td data-i18n="g.p.livello"></td></tr>
+          <tr><td data-i18n="fl.spazio"></td>       <td>0 – 1</td>              <td data-i18n="g.p.tspazio"></td></tr>
+        </tbody>
+      </table>
+
+      <span class="et" data-i18n="g.gocce.man">Manopole</span>
+      <table class="par">
+        <tbody>
+          <tr><td data-i18n="fl.registro"></td>     <td data-i18n="g.corsa.ott"></td>    <td data-i18n="g.p.tregistro"></td></tr>
+          <tr><td data-i18n="fl.passo"></td>        <td>0 – 1</td>          <td data-i18n="g.p.passo"></td></tr>
+        </tbody>
+      </table>
+
+      <span class="et" data-i18n="g.tess.timbri">Gli otto tenuti</span>
+      <table class="par nomi">
+        <thead><tr><th data-i18n="g.col.nome">Nome</th><th data-i18n="g.col.desc">Sintesi</th></tr></thead>
+        <tbody>
+          <tr><td data-i18n="tenuti.bordone"></td>  <td data-i18n="g.ten.bordone"></td></tr>
+          <tr><td data-i18n="tenuti.marea"></td>    <td data-i18n="g.ten.marea"></td></tr>
+          <tr><td data-i18n="tenuti.attrito"></td>  <td data-i18n="g.ten.attrito"></td></tr>
+          <tr><td data-i18n="tenuti.frangia"></td>  <td data-i18n="g.ten.frangia"></td></tr>
+          <tr><td data-i18n="tenuti.corrente"></td> <td data-i18n="g.ten.corrente"></td></tr>
+          <tr><td data-i18n="tenuti.cavo"></td>     <td data-i18n="g.ten.cavo"></td></tr>
+          <tr><td data-i18n="tenuti.brina"></td>    <td data-i18n="g.ten.brina"></td></tr>
+          <tr><td data-i18n="tenuti.soglia"></td>   <td data-i18n="g.ten.soglia"></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- =============================================================== inserti -->
+    <section class="banda doc">
+      <div class="capo"><span class="titolo"><span class="num">—</span>
+        <span class="voce" data-i18n="g.ins.t">Inserti</span></span></div>
+      <p data-i18n="g.ins.1"></p>
+      <p data-i18n="g.ins.2"></p>
+      <p data-i18n="g.ins.3"></p>
+
+      <table class="par nomi">
+        <thead><tr><th data-i18n="g.col.nome">Nome</th><th data-i18n="g.col.desc">Sintesi</th></tr></thead>
+        <tbody>
+          <tr><td data-i18n="effetto.niente"></td>  <td data-i18n="g.eff.niente"></td></tr>
+          <tr><td data-i18n="effetto.eco"></td>     <td data-i18n="g.eff.eco"></td></tr>
+          <tr><td data-i18n="effetto.tremolo"></td> <td data-i18n="g.eff.tremolo"></td></tr>
+          <tr><td data-i18n="effetto.coro"></td>    <td data-i18n="g.eff.coro"></td></tr>
+          <tr><td data-i18n="effetto.filtro"></td>  <td data-i18n="g.eff.filtro"></td></tr>
+        </tbody>
+      </table>
+
+      <span class="et"><span data-i18n="effetto.eco"></span></span>
+      <table class="par">
+        <tbody>
+          <tr><td data-i18n="par.tempo"></td>    <td>60 – 1200 ms</td>  <td data-i18n="g.pe.tempo"></td></tr>
+          <tr><td data-i18n="par.ritorni"></td>  <td>0 – 0,80</td>      <td data-i18n="g.pe.ritorni"></td></tr>
+          <tr><td data-i18n="par.quantita"></td> <td>0 – 1</td>         <td data-i18n="g.pe.quantita"></td></tr>
+        </tbody>
+      </table>
+
+      <span class="et"><span data-i18n="effetto.tremolo"></span></span>
+      <table class="par">
+        <tbody>
+          <tr><td data-i18n="par.velocita"></td>   <td>0,1 – 6,0 Hz</td> <td data-i18n="g.pe.velocita"></td></tr>
+          <tr><td data-i18n="par.profondita"></td> <td>0 – 1</td>        <td data-i18n="g.pe.profondita"></td></tr>
+          <tr><td data-i18n="par.larghezza"></td>  <td>0 – 180°</td>     <td data-i18n="g.pe.larghezza"></td></tr>
+        </tbody>
+      </table>
+
+      <span class="et"><span data-i18n="effetto.coro"></span></span>
+      <table class="par">
+        <tbody>
+          <tr><td data-i18n="par.velocita"></td>   <td>0,05 – 2,00 Hz</td> <td data-i18n="g.pe.velocita"></td></tr>
+          <tr><td data-i18n="par.profondita"></td> <td>0,4 – 5,9 ms</td>   <td data-i18n="g.pe.profondita"></td></tr>
+          <tr><td data-i18n="par.quantita"></td>   <td>0 – 1</td>          <td data-i18n="g.pe.quantita"></td></tr>
+        </tbody>
+      </table>
+
+      <span class="et"><span data-i18n="effetto.filtro"></span></span>
+      <table class="par">
+        <tbody>
+          <tr><td data-i18n="par.taglio"></td>    <td>200 – 12000 Hz</td> <td data-i18n="g.pe.taglio"></td></tr>
+          <tr><td data-i18n="par.risonanza"></td> <td>0,7 – 11,7</td>     <td data-i18n="g.pe.risonanza"></td></tr>
+          <tr><td data-i18n="par.movimento"></td> <td data-i18n="g.corsa.ottmov"></td>      <td data-i18n="g.pe.movimento"></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ================================================================= banco -->
+    <section class="banda doc">
+      <div class="capo"><span class="titolo"><span class="num">03</span>
+        <span class="voce" data-i18n="g.banco.t">Banco</span></span></div>
+      <p data-i18n="g.banco.1"></p>
+      <p data-i18n="g.banco.2"></p>
+      <p data-i18n="g.banco.3"></p>
+
+      <table class="par">
+        <thead><tr><th data-i18n="g.col.par">Parametro</th><th data-i18n="g.col.corsa">Corsa</th><th data-i18n="g.col.fun">Funzione</th></tr></thead>
+        <tbody>
+          <tr><td data-i18n="et.mixer"></td>       <td>−24 – +6 dB</td> <td data-i18n="g.p.mixer"></td></tr>
+          <tr><td data-i18n="et.profilo"></td>     <td>±8 dB</td>       <td data-i18n="g.p.eq"></td></tr>
+          <tr><td data-i18n="fl.limitatore"></td>  <td>dB</td>          <td data-i18n="g.p.limitatore"></td></tr>
+          <tr><td data-i18n="fl.picco"></td>       <td>dB</td>          <td data-i18n="g.p.picco"></td></tr>
+          <tr><td data-i18n="banco.registra"></td> <td>—</td>           <td data-i18n="g.p.registra"></td></tr>
+          <tr><td data-i18n="banco.tracciaWav"></td> <td data-i18n="g.corsa.min"></td><td data-i18n="g.p.esporta"></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ============================================================= paesaggio -->
+    <section class="banda doc">
+      <div class="capo"><span class="titolo"><span class="num">04</span>
+        <span class="voce" data-i18n="g.pae.t">Paesaggio</span></span></div>
+      <p data-i18n="g.pae.1"></p>
+      <p data-i18n="g.pae.2"></p>
+      <p data-i18n="g.pae.3"></p>
+      <p data-i18n="g.pae.4"></p>
+
+      <table class="par">
+        <thead><tr><th data-i18n="g.col.par">Parametro</th><th data-i18n="g.col.corsa">Corsa</th><th data-i18n="g.col.fun">Funzione</th></tr></thead>
+        <tbody>
+          <tr><td data-i18n="fl.segmento"></td>      <td>0 – 100 %</td>     <td data-i18n="g.p.segmento"></td></tr>
+          <tr><td data-i18n="fl.rallentamento"></td> <td>1 – 64 ×</td>      <td data-i18n="g.p.rallenta"></td></tr>
+          <tr><td data-i18n="fl.velo"></td>          <td>80 – 2000 ms</td>  <td data-i18n="g.p.velo"></td></tr>
+          <tr><td data-i18n="fl.sparpaglio"></td>    <td>0 – 1</td>         <td data-i18n="g.p.sparpaglio"></td></tr>
+          <tr><td data-i18n="fl.accordatura"></td>   <td>0 – 1</td>         <td data-i18n="g.p.accordatura"></td></tr>
+          <tr><td data-i18n="fl.fuoco"></td>         <td>8 – 80</td>        <td data-i18n="g.p.fuoco"></td></tr>
+          <tr><td data-i18n="fl.coda"></td>          <td>1 – 40 s</td>      <td data-i18n="g.p.pcoda"></td></tr>
+          <tr><td data-i18n="fl.tono"></td>          <td>300 – 12000 Hz</td><td data-i18n="g.p.ptono"></td></tr>
+          <tr><td data-i18n="fl.riverbero"></td>     <td>0 – 1</td>         <td data-i18n="g.p.priverbero"></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ================================================================ deriva -->
+    <section class="banda doc">
+      <div class="capo"><span class="titolo"><span class="num">05</span>
+        <span class="voce" data-i18n="g.der.t">Deriva</span></span></div>
+      <p data-i18n="g.der.1"></p>
+      <p data-i18n="g.der.2"></p>
+      <p data-i18n="g.der.3"></p>
+      <p data-i18n="g.der.4"></p>
+
+      <table class="par nomi">
+        <thead><tr><th data-i18n="et.materiale">MATERIALE</th><th data-i18n="g.col.fun">Funzione</th></tr></thead>
+        <tbody>
+          <tr><td data-i18n="modo.ancora"></td> <td data-i18n="g.p.ancora"></td></tr>
+          <tr><td data-i18n="modo.deriva"></td> <td data-i18n="g.p.deriva"></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ================================================================== mood -->
+    <section class="banda doc">
+      <div class="capo"><span class="titolo"><span class="num">—</span>
+        <span class="voce" data-i18n="g.mood.t">Mood</span></span></div>
+      <p data-i18n="g.mood.1"></p>
+      <p data-i18n="g.mood.2"></p>
+
+      <table class="par mood">
+        <thead><tr><th data-i18n="sez.gocce"></th><th data-i18n="et.timbro"></th><th data-i18n="g.col.periodi"></th></tr></thead>
+        <tbody>
+          <tr><td data-i18n="mood.sereno"></td>     <td data-i18n="timbri.vetro"></td>   <td>7 · 11 · 13 · 17</td></tr>
+          <tr><td data-i18n="mood.pioggia"></td>    <td data-i18n="timbri.sabbia"></td>  <td>5 · 7 · 9 · 11</td></tr>
+          <tr><td data-i18n="mood.vespro"></td>     <td data-i18n="timbri.onda"></td>    <td>17 · 19 · 23 · 29</td></tr>
+          <tr><td data-i18n="mood.carillon"></td>   <td data-i18n="timbri.metallo"></td> <td>4 · 9 · 17 · 25</td></tr>
+          <tr><td data-i18n="mood.arcipelago"></td> <td data-i18n="timbri.corda"></td>   <td>13 · 16 · 21 · 25</td></tr>
+          <tr><td data-i18n="mood.collina"></td>    <td data-i18n="timbri.legno"></td>   <td>8 · 13 · 19 · 27</td></tr>
+          <tr><td data-i18n="mood.finestra"></td>   <td data-i18n="timbri.soffio"></td>  <td>9 · 14 · 23 · 25</td></tr>
+          <tr><td data-i18n="mood.nuvola"></td>     <td data-i18n="timbri.canna"></td>   <td>6 · 11 · 19 · 25</td></tr>
+        </tbody>
+      </table>
+
+      <table class="par mood">
+        <thead><tr><th data-i18n="sez.tessuti"></th><th data-i18n="et.timbro"></th><th data-i18n="g.col.periodi"></th></tr></thead>
+        <tbody>
+          <tr><td data-i18n="mood.velo"></td>    <td data-i18n="tenuti.corrente"></td> <td>9 · 16 · 25 · 31</td></tr>
+          <tr><td data-i18n="mood.fondale"></td> <td data-i18n="tenuti.bordone"></td>  <td>31 · 37 · 41 · 43</td></tr>
+          <tr><td data-i18n="mood.lino"></td>    <td data-i18n="tenuti.attrito"></td>  <td>8 · 15 · 19 · 23</td></tr>
+          <tr><td data-i18n="mood.respiro"></td> <td data-i18n="tenuti.frangia"></td>  <td>23 · 29 · 41 · 43</td></tr>
+          <tr><td data-i18n="mood.bruma"></td>   <td data-i18n="tenuti.soglia"></td>   <td>31 · 37 · 43 · 47</td></tr>
+          <tr><td data-i18n="mood.tenda"></td>   <td data-i18n="tenuti.cavo"></td>     <td>19 · 29 · 37 · 47</td></tr>
+          <tr><td data-i18n="mood.seta"></td>    <td data-i18n="tenuti.brina"></td>    <td>8 · 9 · 25 · 29</td></tr>
+          <tr><td data-i18n="mood.vela"></td>    <td data-i18n="tenuti.marea"></td>    <td>31 · 41 · 47 · 53</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ============================================================ influenze -->
+    <section class="banda doc">
+      <div class="capo"><span class="titolo"><span class="num">—</span>
+        <span class="voce" data-i18n="g.infl.t">Influenze esterne</span></span></div>
+      <p data-i18n="g.infl.1"></p>
+    </section>
+
+    <!-- =============================================================== tavola -->
+    <section class="banda doc">
+      <div class="capo"><span class="titolo"><span class="num">—</span>
+        <span class="voce" data-i18n="g.tav.t">Lettura della tavola</span></span></div>
+      <p data-i18n="g.tav.1"></p>
+      <p data-i18n="g.tav.2"></p>
+      <p data-i18n="g.tav.3"></p>
+      <p data-i18n="g.tav.4"></p>
+    </section>
+
+    <!-- =========================================================== specifiche -->
+    <section class="banda doc">
+      <div class="capo"><span class="titolo"><span class="num">—</span>
+        <span class="voce" data-i18n="g.spec.t">Specifiche</span></span></div>
+      <p data-i18n="g.spec.1"></p>
+
+      <table class="par nomi">
+        <thead><tr><th data-i18n="g.col.par">Parametro</th><th data-i18n="g.col.valore">Valore</th></tr></thead>
+        <tbody>
+          <tr><td>Web Audio</td>            <td data-i18n="g.spec.motore"></td></tr>
+          <tr><td>wav</td>                  <td data-i18n="g.spec.uscita"></td></tr>
+          <tr><td>buffer</td>               <td data-i18n="g.spec.buffer"></td></tr>
+          <tr><td data-i18n="g.spec.krete"></td>  <td data-i18n="g.spec.rete"></td></tr>
+          <tr><td data-i18n="g.spec.kmem"></td>   <td data-i18n="g.spec.memoria"></td></tr>
+          <tr><td data-i18n="testata.lingua"></td> <td data-i18n="g.spec.lingua"></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <footer class="piede">
+      <span><a href="index.html" data-i18n="g.torna">Torna allo strumento</a></span>
+      <span data-i18n="g.titolo">Hiroshi · Guida</span>
+    </footer>
+
+  </div>
+</div>
+
+<script src="js/i18n.js"></script>
+<script src="js/tema.js"></script>
+<script src="js/guida-i18n.js"></script>
+</body>
+</html>

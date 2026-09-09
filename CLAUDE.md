@@ -245,6 +245,11 @@ il suo contrasto scende da 3,54 a 2,72, ma è l'unica cosa colorata di tutta la
 tavola e su una pagina di soli grigi un arancio non ha bisogno di luminanza per
 farsi vedere.
 
+**Il tema sta in `tema.js`, che è un file suo perché lo usano DUE PAGINE**: lo
+strumento e la guida. È lo stesso mestiere — scrivere un attributo sulla radice
+e marcare due pulsanti — e due copie divergerebbero al primo ritocco, come
+sarebbe successo a `cattura.js` fra il microfono e il registratore.
+
 **Il tema sta in un attributo sulla radice, e la tavola se ne accorge da sé.**
 `data-tema="scuro"` sull'elemento radice, scritto dai comandi; il CSS ci appende
 la palette e `tavola.js` confronta l'attributo con la propria copia a ogni
@@ -771,6 +776,29 @@ e `npx playwright install chromium`, una volta sola. La prova non ha percorsi
 scritti a mano: il browser è quello che playwright ha installato e la pagina si
 ricava da dove sta `prova.mjs`, aperta con `file://` perché è il doppio clic la
 promessa da verificare. `HIROSHI_CHROMIUM` resta per chi ha un Chromium suo.
+
+**LA GUIDA È UN DOCUMENTO A SÉ**, `guida.html`, e non una sezione dello
+strumento: non ha canvas, non apre un contesto audio, non ha un ciclo. Carica
+`i18n.js`, `tema.js` e `guida-i18n.js` — quaranta kilobyte di prosa non devono
+stare sulla pagina che deve far partire il suono in meno di un secondo — e usa
+lo stesso `dice()`, lo stesso `applicaTesti()` e gli stessi due selettori.
+
+**IL TONO DELLA GUIDA È QUELLO DI UN MANUALE**, e non è una preferenza di
+stile: è la funzione del documento. Non si racconta che cosa si prova ad
+ascoltare — quello lo fa lo strumento — si dice che cosa fa un comando, in che
+corsa si muove, in quale unità, e che cosa cambia nel segnale. Una frase
+evocativa dentro una tabella di parametri è una riga che chi cerca un numero
+deve saltare.
+
+**I nomi dei comandi non si riscrivono nella guida**: le tabelle li prendono da
+`i18n.js` con la stessa chiave che usano i cursori — `fl.attacco`,
+`par.ritorni`, `timbri.vetro` — perché un manuale che chiama un comando con un
+nome che sul pannello non c'è è peggio di nessun manuale. Per questo `dice()`
+legge una chiave col punto anche come PERCORSO dentro le mappe raggruppate.
+Le CORSE invece sono scritte a mano in `guida.html`: la guida si apre anche da
+sola, senza il motore caricato, e celle vuote non servirebbero a nessuno. Sono
+le uniche cifre di quel file, e chi cambia una corsa in `index.html` la cambia
+anche lì.
 
 **IL CANVAS DI DESIGN SI RIFÀ CON `node tavolo.mjs`, e non si ridisegna.**
 Apre `index.html`, la lascia suonare finché i quadranti hanno qualcosa dentro, e

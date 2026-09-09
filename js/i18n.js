@@ -57,6 +57,7 @@ const TESTI = {
     "sorgente.paesaggio": "Paesaggio",
     "sorgente.cielo":    "Cielo",
     "governo.ascolta":   "Ascolta",
+    "g.guida":           "Guida",
     "governo.pausa":     "Pausa",
 
     "sez.gocce":      "Gocce",
@@ -208,6 +209,7 @@ const TESTI = {
     "sorgente.paesaggio": "Paysage",
     "sorgente.cielo":    "Ciel",
     "governo.ascolta":   "Écouter",
+    "g.guida":           "Guide",
     "governo.pausa":     "Pause",
 
     "sez.gocce":      "Gouttes",
@@ -359,6 +361,7 @@ const TESTI = {
     "sorgente.paesaggio": "Landscape",
     "sorgente.cielo":    "Sky",
     "governo.ascolta":   "Listen",
+    "g.guida":           "Guide",
     "governo.pausa":     "Pause",
 
     "sez.gocce":      "Drops",
@@ -510,6 +513,7 @@ const TESTI = {
     "sorgente.paesaggio": "風景",
     "sorgente.cielo":    "空",
     "governo.ascolta":   "再生",
+    "g.guida":           "手引き",
     "governo.pausa":     "一時停止",
 
     "sez.gocce":      "しずく",
@@ -707,10 +711,29 @@ function numero(v, d = 0) {
 /* ----------------------------------------------------------- la lettura
    Se una chiave manca nella lingua scelta si ripiega sull'inglese, e se manca
    anche lì si mostra la chiave: un buco si vede, e un buco che si vede si
-   ripara. */
+   ripara.
+
+   UNA CHIAVE COL PUNTO PUÒ ESSERE ANCHE UN PERCORSO. Le chiavi piatte —
+   `fl.attacco` — si cercano per prime; se non ci sono, il punto si legge come
+   una discesa dentro le mappe raggruppate, e `timbri.vetro` trova «Vetro»
+   dentro `timbri`. Serve alla guida, che nelle sue tabelle nomina i timbri, i
+   mood e i parametri degli effetti con le STESSE parole che stanno sui
+   comandi: senza questo avrebbe dovuto tenerne una seconda copia, e due copie
+   divergono. */
+function percorso(dizionario, chiave) {
+  let v = dizionario;
+  for (const passo of chiave.split(".")) {
+    if (v === null || typeof v !== "object") return undefined;
+    v = v[passo];
+  }
+  return typeof v === "string" ? v : undefined;
+}
+
 function dice(chiave, valori) {
   let s = TESTI[lingua][chiave];
+  if (s === undefined) s = percorso(TESTI[lingua], chiave);
   if (s === undefined) s = TESTI.en[chiave];
+  if (s === undefined) s = percorso(TESTI.en, chiave);
   if (s === undefined) return chiave;
   if (valori) for (const k in valori) s = s.split("{" + k + "}").join(valori[k]);
   return s;

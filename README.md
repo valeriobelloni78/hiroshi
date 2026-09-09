@@ -159,6 +159,9 @@ Nessuna dipendenza da installare, nessun passaggio di compilazione: si apre
 index.html        lo strumento
 css/style.css     palette, tipografia, impaginazione
 js/i18n.js        le quattro lingue: italiano, francese, inglese, giapponese
+js/tema.js        chiaro e scuro, condiviso fra lo strumento e la guida
+js/guida-i18n.js  i testi del manuale, nelle quattro lingue
+guida.html        il manuale: corse, unità, effetto sul segnale
 js/deriva.js      il tempo lungo: sei canali e il campo armonico
 js/cattura.js     prendere il suono dal grafo, e scriverlo in un wav a 24 bit
 js/linee.js       lo stato: linee, idee, piani, ricambio
