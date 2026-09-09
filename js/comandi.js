@@ -588,7 +588,6 @@ const CANALI_MIXER = [
   { et: "mix.frasi",   dai: () => LIVELLI.frasi,  metti: (v) => { LIVELLI.frasi = v; if (banco) banco.livello("frasi", v); }, min: -24, max: 6 },
   { et: "mix.tessuti", dai: () => LIVELLI.tessuti,
     metti: (v) => { LIVELLI.tessuti = v; if (banco) rileggiTarature(); }, min: -24, max: 6 },
-  { et: "mix.voci",    dai: () => LIVELLI.voci, metti: () => {}, min: -24, max: 6, spento: true },
   { et: "mix.paesaggio", dai: () => LIVELLI.paesaggio,
     metti: (v) => { LIVELLI.paesaggio = v; if (banco) banco.livello("paesaggio", v); }, min: -24, max: 6 },
   { et: "mix.uscita",  dai: () => LIVELLI.uscita, metti: (v) => { LIVELLI.uscita = v;
@@ -602,16 +601,15 @@ CANALI_MIXER.forEach((c) => {
   const a = document.createElement("input");
   a.type = "range"; a.className = "verticale";
   a.min = c.min; a.max = c.max; a.step = 0.5; a.value = c.dai();
-  a.disabled = !!c.spento;
   const et = document.createElement("span");
-  et.className = "fl" + (c.spento ? " tenue" : "");
+  et.className = "fl";
   c.rinomina = () => {
     et.textContent = dice(c.et);
     a.setAttribute("aria-label", dice("a11y.livello", { canale: dice(c.et) }));
   };
   c.rinomina();
   const val = document.createElement("span");
-  val.className = "vl" + (c.spento ? " tenue" : "");
+  val.className = "vl";
   const mostra = () => { val.textContent = dB(c.dai()); };
   a.addEventListener("input", () => { c.metti(Number(a.value)); mostra(); });
   cella.append(a, et, val);
@@ -770,13 +768,6 @@ btnReg.addEventListener("click", async () => {
     presa = null; flusso = null;
   }
 });
-
-/* ----------------------------------------------------------- le sette voci
-   Non ci sono ancora, e le spie lo dicono: sette caselle vuote. Aspettano una
-   decisione musicale — l'archivio delle 53 frasi attraversa tutti e dodici i
-   gradi, mentre gocce e tessuti stanno su una pentatonica dove nulla può
-   stonare — e non una riga di codice. */
-for (let k = 0; k < 7; k++) el("vociSpie").appendChild(document.createElement("span"));
 
 /* ------------------------------------------------------------- il ciclo lento
    Non è il ciclo del disegno: è quello che liscia i parametri e aggiorna le

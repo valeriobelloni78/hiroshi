@@ -2,8 +2,9 @@
    HIROSHI · banco.js — l'uscita dello studio
 
    In Rada il grafo finiva dritto in `destination`: una sola classe di suoni,
-   un solo riverbero, un solo volume. Hiroshi ha quattro sorgenti che devono
-   convivere, un equalizzatore a otto bande, un limitatore e un registratore.
+   un solo riverbero, un solo volume. Hiroshi ha tre sorgenti che devono
+   convivere — gocce, tessuti, paesaggio — un equalizzatore a otto bande, un
+   limitatore e un registratore.
    Tutto questo sta qui, e sta SOTTO alle sorgenti: il banco non sa che cosa
    suona, sa solo che gli arrivano dei canali.
 

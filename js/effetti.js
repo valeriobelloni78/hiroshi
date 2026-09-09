@@ -107,6 +107,13 @@ const EFFETTI = {
      all'altro, e in mezzo gira. Su un fondo lungo la seconda è quasi sempre la
      cosa giusta, e con un comando solo non si potrebbe scegliere.
 
+     La terza manopola si chiama LARGHEZZA e non «sfasamento», che è il
+     meccanismo, né «sghembo», che non è una parola che si legge volentieri: il
+     nome dice quello che si SENTE girandola — il suono che da un pulsare al
+     centro si apre fino a passare da un lato all'altro. L'unità resta in gradi
+     perché quella è la misura vera, ed è giusto che l'etichetta dica l'effetto
+     e la cifra dica la causa.
+
      Lo sfasamento è un RITARDO sull'oscillatore, non un secondo oscillatore
      fatto partire più tardi: due oscillatori si possono far partire solo nel
      futuro, e la fase che serve qui sta nel passato. Un ritardo sul segnale di
@@ -115,7 +122,7 @@ const EFFETTI = {
     param: [
       { fl: "velocita",   da: (v) => 0.1 * Math.pow(60, v / 100), k: 1, d: 1, u: " Hz" },
       { fl: "profondita", da: (v) => v / 100,                     k: 1, d: 2, u: "" },
-      { fl: "sghembo",    da: (v) => (v / 100) * 180,             k: 1, d: 0, u: "°" },
+      { fl: "larghezza",  da: (v) => (v / 100) * 180,             k: 1, d: 0, u: "°" },
     ],
     costruisci(ctx, ingresso, uscita) {
       const divide = ctx.createChannelSplitter(2), unisce = ctx.createChannelMerger(2);
@@ -123,7 +130,7 @@ const EFFETTI = {
       const osc = ctx.createOscillator(); osc.type = "sine"; osc.frequency.value = 3;
       const profL = ctx.createGain(), profR = ctx.createGain();
       // Dieci secondi di corsa: a un decimo di hertz mezzo giro sono cinque
-      // secondi, e un massimo più corto tarperebbe lo sghembo proprio alle
+      // secondi, e un massimo più corto tarperebbe la larghezza proprio alle
       // velocità lente, che sono quelle per cui esiste.
       const sfasa = ctx.createDelay(10);
       gL.gain.value = 1; gR.gain.value = 1;

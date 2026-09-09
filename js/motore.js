@@ -345,7 +345,7 @@ function costruisciMotore() {
   } catch (e) {
     ctx = new (window.AudioContext || window.webkitAudioContext)();
   }
-  banco = costruisciBanco(ctx, ["frasi", "tessuti", "voci", "paesaggio"]);
+  banco = costruisciBanco(ctx, ["frasi", "tessuti", "paesaggio"]);
   tara();
 
   avvia(ctx.currentTime);
@@ -434,7 +434,7 @@ function avvia(now) {
    respira. Sono due cose che si moltiplicano sullo stesso bus e vanno tenute
    separate lo stesso, perché un mood deve poter scrivere il carattere senza
    spostare il missaggio, e viceversa. */
-const LIVELLI = { frasi: -4, tessuti: 0, voci: -12, paesaggio: -6, uscita: -0.9 };
+const LIVELLI = { frasi: -4, tessuti: 0, paesaggio: -6, uscita: -0.9 };
 const EQ_DB = [0, 0, 0, 0, 0, 0, 0, 0];
 
 /* La taratura d'esordio dei canali. Sta in una funzione sola perché il motore
@@ -443,7 +443,6 @@ const EQ_DB = [0, 0, 0, 0, 0, 0, 0, 0];
    come quello che si è ascoltato. */
 function tara() {
   banco.livello("frasi", LIVELLI.frasi);
-  banco.livello("voci", LIVELLI.voci);
   banco.livello("paesaggio", LIVELLI.paesaggio);
   EQ_DB.forEach((dB, i) => banco.banda(i, dB));
   ultimo.spazio = ultimo.colore = ultimo.livello = ultimo.tSpazio = -1;
@@ -558,7 +557,7 @@ async function rendiOffline(secondi, sampleRate = 48000) {
   const modello = istantaneaModello();
 
   ctx = new OfflineAudioContext(2, Math.ceil(secondi * sampleRate), sampleRate);
-  banco = costruisciBanco(ctx, ["frasi", "tessuti", "voci", "paesaggio"]);
+  banco = costruisciBanco(ctx, ["frasi", "tessuti", "paesaggio"]);
   tara();
   banco.uscita.gain.value = Math.pow(10, LIVELLI.uscita / 20);
 

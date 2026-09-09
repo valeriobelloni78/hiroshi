@@ -1,9 +1,8 @@
 # Hiroshi — contesto di progetto
 
-Uno studio per fare musica d'ambiente nel browser. Riunisce ed estende Rada,
-Rada Deriva e Nuvole: otto linee sfasate, un campo continuo che chiama le
-voci, il paesaggio tirato da registrazioni proprie, e un banco d'uscita che registra
-ed esporta.
+Uno studio per fare musica d'ambiente nel browser. Riunisce ed estende Rada e
+Rada Deriva: otto linee sfasate, un campo continuo che deriva, il paesaggio
+tirato da registrazioni proprie, e un banco d'uscita che registra ed esporta.
 
 **Rispondi sempre in italiano.** Commenti nel codice, messaggi di commit e
 testi dell'interfaccia sono in italiano.
@@ -863,7 +862,7 @@ clic.
 ## Stato e prossimi passi
 
 **Hiroshi è al pari di Rada Deriva, e in due punti oltre.** Fatto: il **banco
-d'uscita** (mixer a quattro canali con mandata al riverbero, normalizzazione
+d'uscita** (mixer a tre canali con mandata al riverbero, normalizzazione
 per canale, colore d'insieme, equalizzatore a otto bande, limitatore doppio,
 misuratori), la **deriva** trapiantata intatta, il **modello delle linee** con
 piani, trame e ricambio, gli **otto timbri** delle gocce, gli **otto tenuti**
@@ -893,8 +892,8 @@ l'impalcatura, e l'ha sostituita separandosi da lei: i comandi in `comandi.js`,
 il canvas in `tavola.js`. Un foglio che scorre, cinque sezioni numerate fra una
 testata e un piede:
 
-- la **testata**: le quattro sorgenti e il cielo come spunte quadrate, la
-  pausa, le **quattro lingue** e il selettore chiaro/scuro;
+- la **testata**: le tre sorgenti e il cielo come spunte quadrate, la pausa, le
+  **quattro lingue** e il selettore chiaro/scuro;
 - **01 · 02**, le due classi in cinque colonne — comandi, quadrante, filo,
   quadrante, comandi. Ogni quadrante è un cerchio di Rada Deriva: quattro anelli,
   uno per linea, con la crociera e il mirino al centro e il numerale romano fuori
@@ -910,7 +909,7 @@ testata e un piede:
 - **03 · banco**: registrazione con cronometro e misuratori a tessere,
   esportazione (wav, la tavola in png, la scena che aspetta un seme),
   equalizzatore a otto aste con la curva vera sopra — chiesta ai filtri con
-  `getFrequencyResponse` — e il mixer a cinque aste;
+  `getFrequencyResponse` — e il mixer a quattro aste;
 - **04 · paesaggio**: LA MATERIA INTERA distesa per il lungo, come istogramma
   di quadratini in scala di grigi che PARTONO DALLA RIGA DI MEZZO — il primo ci
   sta sopra, non accanto, o resterebbe una riga vuota in mezzo alla fascia che
@@ -921,8 +920,7 @@ testata e un piede:
   carta si posa sopra; dentro, la finestra che si sta leggendo è una banda
   chiara che cammina. Sotto, i sei filetti;
 - **05 · deriva**: la tonalità, il circolo delle quinte con dove siamo e dove
-  andremo, il baricentro su quindici minuti di passato e le sette voci che non
-  ci sono ancora;
+  andremo, e il baricentro su quindici minuti di passato;
   In alto a destra, dopo le lingue, il selettore **chiaro/scuro**: due pulsanti
   veri, non due parole, perché si prendono col tasto Tab;
 - il **piede**: lo stato, le due influenze esterne, e «a mano», cioè gli ultimi
@@ -943,15 +941,22 @@ Da fare, in ordine:
    Restano fuori dal mockup, e sono aggiunte consapevoli: le due tendine dei
    **mood**, le quattro righe dei **comandi per linea** e il **microfono**, che
    il disegno non prevedeva e senza i quali mancherebbe metà dello strumento.
-2. Le **voci** e il **cielo**: il motore alla *In C* di Nuvole con l'archivio
-   delle 53 frasi, e il campo `fBm` che le sveglia. **Rimandati per scelta**:
-   l'archivio attraversa tutti e dodici i gradi mentre gocce e tessuti stanno
-   su una pentatonica anemitonica, e far entrare le voci vuol dire decidere
-   che cosa succede a quella garanzia. È una decisione musicale, non tecnica,
-   e non è ancora presa. La tavola le aspetta già in tre punti: la spunta
-   «voci» nella testata, l'asta del mixer, e le sette spie in fondo alla
-   deriva. Sono spente e lo dicono; il giorno che si accendono non c'è
-   impaginazione da rifare.
+2. LE **VOCI** SONO STATE TOLTE, e non è un rinvio: è un taglio. C'erano tre
+   segnaposti — la spunta nella testata, l'asta del mixer, le sette spie in
+   fondo alla deriva — messi lì perché il giorno che le voci arrivassero non ci
+   fosse impaginazione da rifare. Ma un posto che aspetta è una promessa, e
+   questa promessa nessuno l'ha presa: la decisione musicale che le regge —
+   l'archivio delle 53 frasi alla *In C* attraversa tutti e dodici i gradi,
+   mentre gocce e tessuti stanno su una pentatonica anemitonica dove nulla può
+   stonare — non è ancora stata presa, e finché non lo è tre caselle spente
+   dicono soltanto che manca qualcosa.
+
+   Se un giorno si fa, si rifà anche l'impaginazione: il canale del banco, la
+   spunta e la cella della deriva sono un'ora di lavoro, e valeva la pena
+   pagarla dopo invece di tenere in piedi tre bugie per anni. Il **cielo** —
+   il campo `fBm` che le sveglierebbe — è rimasto come spunta nella testata
+   perché è una sorgente a sé, spenta e dichiarata; il giorno che se ne decide
+   la sorte, quella se ne va con la stessa mano.
 
 Aperti: `rendiOffline` percorre lo stesso modello che sta suonando, quindi
 esportare mentre si ascolta oggi disturberebbe la sessione in corso — va dato

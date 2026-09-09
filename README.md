@@ -144,9 +144,11 @@ in cui la curva ha girato scritte a inchiostro pieno. Non tiene memoria di
 niente: la deriva è una funzione del tempo, quindi la corsia si ricostruisce a
 ogni fotogramma e una sessione ripresa dopo una pausa non ha buchi.
 
-Le voci alla *In C* di Nuvole aspettano una decisione musicale: il loro
-archivio attraversa tutti e dodici i gradi, mentre gocce e tessuti stanno su
-una pentatonica dove nulla può stonare.
+Le voci alla *In C* di Nuvole non ci sono, e non ci sono nemmeno più i posti
+che le aspettavano: il loro archivio attraversa tutti e dodici i gradi mentre
+gocce e tessuti stanno su una pentatonica dove nulla può stonare, e finché
+quella decisione musicale non è presa, tre caselle spente dicevano soltanto che
+mancava qualcosa.
 
 ## Come funziona
 

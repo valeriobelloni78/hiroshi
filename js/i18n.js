@@ -54,7 +54,6 @@ const TESTI = {
     "tema.scuro":        "SCURO",
     "sorgente.frasi":    "Frasi",
     "sorgente.tessuti":  "Tessuti",
-    "sorgente.voci":     "Voci",
     "sorgente.paesaggio": "Paesaggio",
     "sorgente.cielo":    "Cielo",
     "governo.ascolta":   "Ascolta",
@@ -85,7 +84,6 @@ const TESTI = {
     "et.tonalita":      "TONALITÀ",
     "et.circolo":       "CIRCOLO DELLE QUINTE",
     "et.baricentro":    "BARICENTRO · 15 MIN",
-    "et.voci":          "VOCI",
 
     "fl.attacco":       "Attacco",
     "fl.coda":          "Coda",
@@ -139,7 +137,6 @@ const TESTI = {
 
     "mix.frasi":     "Frasi",
     "mix.tessuti":   "Tessuti",
-    "mix.voci":      "Voci",
     "mix.paesaggio": "Paesaggio",
     "mix.uscita":    "Uscita",
 
@@ -152,8 +149,6 @@ const TESTI = {
     "pae.nienteArrivato": "non è arrivato niente",
     "pae.negato":         "microfono negato",
     "pae.nessunaMateria": "nessuna materia: carica un suono, o apri il microfono",
-
-    "deriva.cielo": "cielo — non ancora",
 
     "piede.inAscolto": "in ascolto",
     "piede.fermo":     "fermo",
@@ -196,7 +191,7 @@ const TESTI = {
     stagione: { primavera: "primavera", estate: "estate", autunno: "autunno", inverno: "inverno" },
     effetto: { niente: "niente", eco: "eco", tremolo: "tremolo", coro: "coro", filtro: "filtro" },
     par:     { tempo: "Tempo", ritorni: "Ritorni", quantita: "Quantità",
-               velocita: "Velocità", profondita: "Profondità", sghembo: "Sghembo",
+               velocita: "Velocità", profondita: "Profondità", larghezza: "Larghezza",
                taglio: "Taglio", risonanza: "Risonanza", movimento: "Movimento" },
   },
 
@@ -210,7 +205,6 @@ const TESTI = {
     "tema.scuro":        "SOMBRE",
     "sorgente.frasi":    "Phrases",
     "sorgente.tessuti":  "Tissus",
-    "sorgente.voci":     "Voix",
     "sorgente.paesaggio": "Paysage",
     "sorgente.cielo":    "Ciel",
     "governo.ascolta":   "Écouter",
@@ -241,7 +235,6 @@ const TESTI = {
     "et.tonalita":      "TONALITÉ",
     "et.circolo":       "CYCLE DES QUINTES",
     "et.baricentro":    "BARYCENTRE · 15 MIN",
-    "et.voci":          "VOIX",
 
     "fl.attacco":       "Attaque",
     "fl.coda":          "Traîne",
@@ -295,7 +288,6 @@ const TESTI = {
 
     "mix.frasi":     "Phrases",
     "mix.tessuti":   "Tissus",
-    "mix.voci":      "Voix",
     "mix.paesaggio": "Paysage",
     "mix.uscita":    "Sortie",
 
@@ -308,8 +300,6 @@ const TESTI = {
     "pae.nienteArrivato": "rien n'est arrivé",
     "pae.negato":         "microphone refusé",
     "pae.nessunaMateria": "aucune matière : chargez un son, ou ouvrez le microphone",
-
-    "deriva.cielo": "ciel — pas encore",
 
     "piede.inAscolto": `à l'écoute`,
     "piede.fermo":     `à l'arrêt`,
@@ -352,7 +342,7 @@ const TESTI = {
     stagione: { primavera: "printemps", estate: "été", autunno: "automne", inverno: "hiver" },
     effetto: { niente: "aucun", eco: "écho", tremolo: "trémolo", coro: "chœur", filtro: "filtre" },
     par:     { tempo: "Temps", ritorni: "Retours", quantita: "Quantité",
-               velocita: "Vitesse", profondita: "Profondeur", sghembo: "Décalage",
+               velocita: "Vitesse", profondita: "Profondeur", larghezza: "Largeur",
                taglio: "Coupure", risonanza: "Résonance", movimento: "Mouvement" },
   },
 
@@ -366,7 +356,6 @@ const TESTI = {
     "tema.scuro":        "DARK",
     "sorgente.frasi":    "Phrases",
     "sorgente.tessuti":  "Weaves",
-    "sorgente.voci":     "Voices",
     "sorgente.paesaggio": "Landscape",
     "sorgente.cielo":    "Sky",
     "governo.ascolta":   "Listen",
@@ -397,7 +386,6 @@ const TESTI = {
     "et.tonalita":      "KEY",
     "et.circolo":       "CIRCLE OF FIFTHS",
     "et.baricentro":    "CENTROID · 15 MIN",
-    "et.voci":          "VOICES",
 
     "fl.attacco":       "Attack",
     "fl.coda":          "Decay",
@@ -451,7 +439,6 @@ const TESTI = {
 
     "mix.frasi":     "Phrases",
     "mix.tessuti":   "Weaves",
-    "mix.voci":      "Voices",
     "mix.paesaggio": "Landscape",
     "mix.uscita":    "Output",
 
@@ -464,8 +451,6 @@ const TESTI = {
     "pae.nienteArrivato": "nothing came in",
     "pae.negato":         "microphone refused",
     "pae.nessunaMateria": "no material: load a sound, or open the microphone",
-
-    "deriva.cielo": "sky — not yet",
 
     "piede.inAscolto": "playing",
     "piede.fermo":     "stopped",
@@ -508,7 +493,7 @@ const TESTI = {
     stagione: { primavera: "spring", estate: "summer", autunno: "autumn", inverno: "winter" },
     effetto: { niente: "none", eco: "echo", tremolo: "tremolo", coro: "chorus", filtro: "filter" },
     par:     { tempo: "Time", ritorni: "Feedback", quantita: "Amount",
-               velocita: "Speed", profondita: "Depth", sghembo: "Skew",
+               velocita: "Speed", profondita: "Depth", larghezza: "Width",
                taglio: "Cutoff", risonanza: "Resonance", movimento: "Motion" },
   },
 
@@ -522,7 +507,6 @@ const TESTI = {
     "tema.scuro":        "暗",
     "sorgente.frasi":    "フレーズ",
     "sorgente.tessuti":  "織り",
-    "sorgente.voci":     "声",
     "sorgente.paesaggio": "風景",
     "sorgente.cielo":    "空",
     "governo.ascolta":   "再生",
@@ -553,7 +537,6 @@ const TESTI = {
     "et.tonalita":      "調",
     "et.circolo":       "五度圏",
     "et.baricentro":    "重心 · 15分",
-    "et.voci":          "声",
 
     "fl.attacco":       "立ち上がり",
     "fl.coda":          "余韻",
@@ -607,7 +590,6 @@ const TESTI = {
 
     "mix.frasi":     "フレーズ",
     "mix.tessuti":   "織り",
-    "mix.voci":      "声",
     "mix.paesaggio": "風景",
     "mix.uscita":    "出力",
 
@@ -620,8 +602,6 @@ const TESTI = {
     "pae.nienteArrivato": "何も入りませんでした",
     "pae.negato":         "マイクが拒まれました",
     "pae.nessunaMateria": "素材がありません。音を読み込むか、マイクを開いてください",
-
-    "deriva.cielo": "空 — まだです",
 
     "piede.inAscolto": "再生中",
     "piede.fermo":     "停止中",
@@ -664,7 +644,7 @@ const TESTI = {
     stagione: { primavera: "春", estate: "夏", autunno: "秋", inverno: "冬" },
     effetto: { niente: "なし", eco: "反響", tremolo: "トレモロ", coro: "コーラス", filtro: "濾波" },
     par:     { tempo: "時間", ritorni: "返り", quantita: "量",
-               velocita: "速さ", profondita: "深さ", sghembo: "ずれ",
+               velocita: "速さ", profondita: "深さ", larghezza: "広がり",
                taglio: "遮断", risonanza: "共振", movimento: "動き" },
   },
 };
