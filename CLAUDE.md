@@ -313,9 +313,12 @@ problemi.
 design fra gli artifact di Claude — «Hiroshi · interfaccia», un'artboard 1440 ×
 1176 — e da lì vengono le misure, la scala tipografica e la geometria delle
 sezioni. Chi cambia l'impaginazione lo guardi prima: le colonne da 205, la luce
-di 1360, i quadranti da 420 e la corona a 178·189·200 con la sua bocca di
-sessanta gradi in basso non sono numeri scelti qui. Fanno eccezione gli anelli,
-che il mockup metteva a 82·108·134·160 e che oggi seguono Rada Deriva.
+di 1360, i quadranti da 420 e la corona a 178·189·200 non sono numeri scelti
+qui. Fanno eccezione gli anelli, che il mockup metteva a 82·108·134·160 e che
+oggi seguono Rada Deriva, e la BOCCA della corona — sessanta gradi in basso nel
+disegno — che è caduta il giorno che le tre tracce hanno cominciato a crescere
+dalle diagonali: al suo posto c'è la fenditura di quattro gradi fra i due archi
+bassi.
 
 Dove il mockup e il motore non coincidono, **vince il motore**: il disegno è
 stato fatto prima che i parametri fossero fermi, e mostra dei tessuti con
@@ -627,6 +630,57 @@ ripetizione: fra i due c'è la deriva, l'ora e la stagione, e vederli separati �
 l'unico modo di sapere chi sta muovendo un parametro. Chi togliesse una delle
 due lascerebbe la tavola senza il suo argomento principale.
 
+**LE TRE TRACCE DELLA CORONA SONO ARCHI DI MISURA DI RADA 2, presi di peso.**
+Un filo sottile per tutta la corsa possibile — la parte non raggiunta, che resta
+visibile perché una traccia a zero deve leggersi «a zero» e non «non c'è» — e
+sopra una barra spessa fino all'efficace, `max(2, R·0,016)`, che è il numero di
+Rada 2.
+
+**LA TRACCIA PIÙ INTERNA È GRADUATA, le altre due sono piene**, e la differenza
+non è decorativa: è la traccia appoggiata agli anelli — addensamento sulle
+gocce, intreccio sui tessuti — e una fila di barrette radiali è lo stesso segno
+delle tacche delle gocce, quindi appartiene al disegno che ha sotto invece di
+galleggiarci sopra. Le due esterne dicono QUANTO, e una barra piena è il modo di
+dirlo da lontano. Le barrette ci sono tutte sempre e si accendono dal centro
+verso i due capi come farebbe la barra: quelle spente sono la guida, e sono
+dispari perché una deve stare esattamente sulla diagonale — a valore zero resta
+accesa solo quella, che è come si dice «a zero» invece di sparire.
+
+**OGNI ARCO CRESCE SIMMETRICO ATTORNO A UNA DIAGONALE**, nei due versi insieme:
+si apre come una forbice invece di scorrere da un capo, e a metà corsa sta a
+metà del suo quadrante invece che a un quarto. È quello che permette di leggere
+tre valori insieme senza contarli — un arco corto è corto da qualunque parte lo
+si guardi, mentre tre archi che partissero tutti dallo stesso punto si
+confronterebbero solo guardando dove finiscono.
+
+**UN QUADRANTE PER ARCO, E IL QUARTO RESTA VUOTO.** Gli assi sono, dall'arco più
+interno al più esterno: NORD-EST, SUD-EST, SUD-OVEST sulle gocce, e le stesse
+tre ribaltate sulla verticale — `1 − giro`, e nient'altro — sui tessuti, perché
+i due cerchi si guardano. È la stessa ragione per cui i numerali delle gocce
+stanno a ovest e quelli dei tessuti a est. Il quadrante libero è quello ALTO
+ESTERNO: a nord-ovest sulle gocce, a nord-est sui tessuti.
+
+A fondo scala un arco copre esattamente il proprio quadrante MENO DUE GRADI PER
+ESTREMO. Quel piede è di Rada 2 e fa due cose: tiene i tre archi staccati fra
+loro, e lascia in fondo — dove le due manopole stanno sotto al cerchio — una
+fenditura di quattro gradi, tutto quello che resta della bocca di sessanta.
+La bocca serviva a dire dove cominciava e dove finiva UNA corsa sola: con tre
+corse che crescono dal centro non ha più niente da dire. Prima erano ottantacinque tacche per traccia, e la testa
+della graduazione era così tenue da aver bisogno di un quadratino che la
+indicasse: UNA BARRA HA UNA FINE, e quel quadratino era un secondo segno per un
+numero solo — se n'è andato con le tacche. Resta una figura sola per un valore
+solo, che è la stessa regola per cui una targa legge il cursore e non `G`.
+
+La barra è più spessa della zona attiva e della tenuta che suona, che stanno a
+`SPESSORE_ARCO`, e non è una svista: gli eventi sono istanti e si vedono perché
+si MUOVONO, i parametri stanno fermi per minuti interi e devono leggersi da
+lontano senza lampeggiare. Ma quello è il tetto: sul bordo convivono tre archi
+e chi li ingrossasse ancora si prenderebbe la corona come prima cosa che si
+vede sul quadrante, cioè metterebbe lo sfondo davanti al primo piano. E LE SEI
+BARRE SONO TUTTE DELLO STESSO INCHIOSTRO TENUE: a distinguere le due classi è
+il lato del foglio, non la tinta, e l'ambra qui non entra — un parametro che
+sta fermo un quarto d'ora non è mai «adesso».
+
 Sulle MANOPOLE le due letture stanno sulla stessa figura, perché il comando è
 l'arco: le graduazioni si riempiono fino all'EFFICACE, il quadrato sta dove sta
 la MANO. Il quadrato deve seguire il dito — è un comando — e le tacche devono
@@ -694,9 +748,9 @@ suono — e tre sotto «Insieme», che sulla tavola sono le tre tracce della cor
 addensamento · densità · spazio per le gocce, intreccio · livello · spazio per i
 tessuti. SOTTO IL QUADRANTE, le due manopole: registro e calore per le gocce, registro e passo per i tessuti.
 Stanno lì e non in colonna perché sono la stessa figura del quadrante — un arco
-graduato con un quadrato che ci corre sopra — e la bocca della corona si apre in
-basso proprio verso di loro: si leggono come due satelliti del cerchio invece
-che come due comandi qualunque in fondo a una lista. SOTTO LA LINEA, la tendina
+graduato con un quadrato che ci corre sopra — e la corona si chiude in basso su
+una fenditura che sta proprio sopra di loro: si leggono come due satelliti del
+cerchio invece che come due comandi qualunque in fondo a una lista. SOTTO LA LINEA, la tendina
 dell'effetto e le sue tre manopole: la linea separa quello che sta DENTRO il
 suono da quello che gli viene DOPO, e senza di lei sarebbero cinque manopole in
 fila senza una ragione per cui tre cambiano nome quando si tocca una tendina.
@@ -929,8 +983,10 @@ testata e un piede:
   quando suona un filo la lega al mirino — se ne cadono due insieme, su linee
   diverse, un secondo filo unisce anche loro;
   una tenuta è un arco lungo quanto sta in aria, tenue finché è passata, a
-  inchiostro pieno mentre suona, in ambra solo l'ultima entrata. Attorno, la corona: tre tracce di
-  graduazioni aperte in basso, che mostrano l'efficace mentre i filetti in
+  inchiostro pieno mentre suona, in ambra solo l'ultima entrata. Attorno, la corona: tre archi di
+  misura che crescono simmetrici dalla propria diagonale — nord-est, sud-est,
+  sud-ovest, specchiati sui tessuti — graduato a barrette il più interno, pieni
+  gli altri due sopra la loro guida, e mostrano l'efficace mentre i filetti in
   colonna mostrano la mano. Sotto il cerchio due manopole — registro e calore,
   registro e passo — poi una linea, poi la tendina dell'**effetto** con le sue
   tre manopole;

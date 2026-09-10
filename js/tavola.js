@@ -176,34 +176,86 @@ function scritta(s, x, y, opz) {
 }
 
 /* ---------------------------------------------------------------- la corona
-   Tre tracce concentriche di graduazioni, aperte in basso di sessanta gradi:
-   il quadrante si legge come si legge uno strumento, e la bocca in basso dice
-   dove comincia e dove finisce la corsa.
+   Tre archi di misura attorno al quadrante, ed è il segno di RADA 2 preso di
+   peso: sotto, un filo sottile per tutta la corsa possibile — la parte non
+   raggiunta, che resta visibile perché una traccia a zero deve leggersi «a
+   zero» e non «non c'è»; sopra, una barra spessa fino all'efficace.
+
+   OGNI ARCO CRESCE SIMMETRICO ATTORNO A UNA DIAGONALE, e cresce nei due versi
+   insieme: si apre come una forbice invece di scorrere da un capo, e a metà
+   corsa sta a metà del suo quadrante invece che a un quarto. È la ragione per
+   cui tre valori si leggono insieme senza contarli — un arco corto è un arco
+   corto da qualunque parte lo si guardi, mentre tre archi che partissero tutti
+   dallo stesso punto si leggerebbero solo confrontando dove finiscono.
+
+   UN QUADRANTE PER ARCO, e il quarto resta vuoto. A fondo scala l'arco copre
+   esattamente il proprio quadrante meno due gradi per estremo: quel piede
+   tiene i tre archi staccati fra loro e lascia in fondo, dove le due manopole
+   stanno sotto al cerchio, una fenditura di quattro gradi — quello che resta
+   della bocca di prima, che con la crescita simmetrica non aveva più niente da
+   dire. Il quadrante libero è quello ALTO ESTERNO: a nord-ovest sulle gocce, a
+   nord-est sui tessuti.
+
+   LE DUE CLASSI SONO SPECCHIATE, non copiate: la stessa traccia sta sull'asse
+   ribaltato rispetto alla verticale — `1 − giro` e nient'altro, perché i due
+   cerchi si guardano. È lo stesso motivo per cui i numerali delle gocce stanno
+   a ovest e quelli dei tessuti a est.
+
+   LO SPESSORE È QUELLO DI RADA 2 — sedici millesimi del raggio, mai sotto due
+   pixel — e la barra è più grassa della zona attiva e della tenuta che suona,
+   che stanno a `SPESSORE_ARCO`. Non è una svista: gli eventi sono istanti e si
+   vedono perché si MUOVONO, i parametri stanno fermi per minuti interi e
+   devono leggersi da lontano senza lampeggiare. Ma quello è il tetto.
 
    La traccia mostra L'EFFICACE, cioè quello che sta suonando; il filetto in
    colonna mostra dove sta la mano. Fra i due c'è la deriva, l'ora e la
-   stagione — che è tutto il punto — e vederli separati è l'unico modo di sapere
-   chi sta muovendo un parametro. */
-const CORONA_DA = 210 / 360, CORONA_QUANTO = 300 / 360, CORONA_TACCHE = 85;
+   stagione — che è tutto il punto — e vederli separati è l'unico modo di
+   sapere chi sta muovendo un parametro. */
 const CORONA_DENTRO = 0.89;
+// Le tre diagonali delle gocce, dall'arco più interno al più esterno: nord-est,
+// sud-est, sud-ovest. I tessuti le prendono ribaltate.
+const CORONA_ASSI = [45 / 360, 135 / 360, 225 / 360];
+const CORONA_PIEDE = 2 / 360;                     // lo stacco a ciascun estremo
+const CORONA_MEZZA = 45 / 360 - CORONA_PIEDE;     // semi-apertura a fondo scala
+/* LA TRACCIA PIÙ INTERNA È GRADUATA, le altre due sono piene, e la differenza
+   non è decorativa: è la traccia che sta appoggiata agli anelli, e una fila di
+   barrette radiali è lo stesso segno delle tacche delle gocce — appartiene al
+   disegno che ha sotto invece di galleggiarci sopra. Le due esterne misurano
+   quanto, e una barra piena è il modo di dirlo da lontano.
 
-function corona(cx, cy, R, voci) {
+   Le barrette CI SONO TUTTE, sempre: si accendono dal centro verso i due capi
+   come farebbe la barra, e quelle spente sono la guida. Sono dispari perché una
+   deve stare esattamente sulla diagonale — a valore zero resta accesa solo
+   quella, che è il modo di dire «a zero» invece di sparire. Il passo è quello
+   di prima, un grado e mezzo scarso fra una barretta e l'altra: una fila più
+   rada diventerebbe una scala da leggere a una a una. */
+const CORONA_GRADUATA = 0;
+const CORONA_TACCHE = 25;
+
+function corona(cx, cy, R, voci, specchio) {
   // Le tracce si spartiscono la fascia esterna, quante che siano — oggi tre per
   // classe, e la più esterna è lo spazio da tutt'e due le parti: lo stesso
-  // parametro allo stesso raggio sui due quadranti.
+  // parametro allo stesso raggio sui due quadranti, sull'asse specchiato.
   const passoR = voci.length > 1 ? (1 - CORONA_DENTRO) / (voci.length - 1) : 0;
+  const spessore = Math.max(2, R * 0.016);
   voci.forEach((v, i) => {
     const r = R * (CORONA_DENTRO + i * passoR);
+    const asse = specchio ? 1 - CORONA_ASSI[i] : CORONA_ASSI[i];
     const u = clamp((v.eff() - v.min) / (v.max - v.min), 0, 1);
-    const fino = Math.round(u * (CORONA_TACCHE - 1));
-    for (let k = 0; k < CORONA_TACCHE; k++) {
-      const g = CORONA_DA + (k / (CORONA_TACCHE - 1)) * CORONA_QUANTO;
-      const dentro = k <= fino;
-      tacca(cx, cy, g, r - (dentro ? R * 0.028 : R * 0.015), r,
-            1, tinta(dentro ? "inchiostro-2" : "spento"));
+    const mezza = CORONA_MEZZA * u;
+    if (i === CORONA_GRADUATA) {
+      for (let k = 0; k < CORONA_TACCHE; k++) {
+        const scarto = (k / (CORONA_TACCHE - 1) - 0.5) * CORONA_MEZZA * 2;
+        const dentro = Math.abs(scarto) <= mezza + 1e-9;
+        tacca(cx, cy, asse + scarto, r - (dentro ? R * 0.028 : R * 0.015), r,
+              1, tinta(dentro ? "inchiostro-2" : "spento"));
+      }
+      return;
     }
-    quadrettoSuGiro(cx, cy, r - R * 0.014, CORONA_DA + u * CORONA_QUANTO,
-                    R * 0.036, tinta("inchiostro"), 1.6);
+    arco(cx, cy, r, asse - CORONA_MEZZA, CORONA_MEZZA * 2, 1, tinta("spento"));
+    // Sotto il mezzo per cento la barra sarebbe un punto e non una lunghezza:
+    // resta la guida, che è la lettura giusta di un parametro al minimo.
+    if (u > 0.005) arco(cx, cy, r, asse - mezza, mezza * 2, spessore, tinta("inchiostro-2"));
   });
 }
 
@@ -559,11 +611,11 @@ function legami(ora) {
    La classe spenta non spegne il quadrante intero: si spengono gli anelli, a
    tre decimi, e la corona resta accesa. I parametri continuano a valere anche
    quando la classe tace, e mostrarli spenti direbbe che non valgono più. */
-function quadrante(box, voci, linee, anello, ora, centro) {
+function quadrante(box, voci, linee, anello, ora, centro, specchio) {
   if (!box) return;
   const R = Math.min(box.w, box.h) / 2 - 2;
   crociera(box.cx, box.cy, R);
-  corona(box.cx, box.cy, R, voci);
+  corona(box.cx, box.cy, R, voci, specchio);
   linee.forEach((L, i) => anello(box.cx, box.cy, R, R * RAGGI_ANELLI[i], L, ora));
   centro(box.cx, box.cy, R);
 }
@@ -1008,7 +1060,9 @@ function disegna() {
                 filoAlMirino(cx, cy, R, x, y, (ora - recente.ev.flash) / FILO_TENUTA);
               }
               mirino(cx, cy, R, recente.appena ? "anello" : "");
-            });
+            },
+            // specchiato: i tre assi delle gocce ribaltati sulla verticale.
+            true);
 
   manopola(manopolaDi("registro"),  G.registro / 100,  effG.registro / 100);
   manopola(manopolaDi("calore"),    G.calore / 100,    effG.calore / 100);
