@@ -1252,6 +1252,9 @@ function disegna() {
   manopola(manopolaDi("calore"),    G.calore / 100,    effG.calore / 100);
   manopola(manopolaDi("tregistro"), G.tRegistro / 100, effGT.registro / 100);
   manopola(manopolaDi("passo"),     G.tPasso / 100,    effGT.passo / 100);
+  // La quantità del paesaggio non ha un efficace: fra la mano e il velo non c'è
+  // nessuna deriva, quindi graduazioni e quadrato dicono lo stesso numero.
+  manopola(manopolaDi("pQuantita"), G.pQuantita / 100);
 
   // Le tre dell'inserto hanno una lettura sola e non due: fra la mano e il
   // suono non c'è né la deriva né l'ora, quindi le graduazioni e il quadrato

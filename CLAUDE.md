@@ -768,6 +768,23 @@ sposta; le cifre sono `--su-ambra`, cioè `#e7e7e4` in tutti e due i temi — ca
 nel chiaro, inchiostro nello scuro — perché l'ambra non cambia col tema e quello
 che ci sta sopra nemmeno. Una targhetta vuota non si disegna.
 
+**LA TENDINA CHIUSA È UNA TARGA SMUSSATA, QUELLA APERTA UN PIANO DI VETRO.**
+Vengono dalle proposte «Hiroshi · tendine», ibridate: chiusa è la targa, aperta
+è il menù disegnato. Chiusa, è un piccolo piano con due angoli tagliati come i
+pannelli e le scelte — sulla carta è vetro, su un piano è carta, ed è `--sotto` a
+scambiarli — e presa col tasto Tab o aperta si riempie d'inchiostro, come una
+scelta. La lista aperta ha il fondo e lo smusso della sua targa e la voce scelta
+a inchiostro.
+
+RESTA UN `select` NATIVO: la lista la disegna il browser con `appearance:
+base-select`, quindi tastiera, lettore di schermo e voci restano quelle vere, e
+nessuna lista finta è scritta a mano. Dove il browser non lo sa fare — oggi fuori
+da Chromium — resta il menù di sistema, e la targa chiusa non cambia. E SOLO CON
+UN PUNTATORE FINE: su un telefono il menù di sistema è la ruota, che è meglio di
+qualunque lista disegnata. Il triangolo sta nel contenitore e non nel `select`, e
+la sua altezza è misurata sulla targa: chi cambia il padding cambia anche
+`bottom`.
+
 **I comandi sono elementi HTML nativi** e funzionano identici col puntatore,
 col dito, col tasto Tab e con un lettore di schermo. Il disegno è puro
 display: non ascolta nulla, e il canvas porta `aria-hidden` perché quello che
@@ -1190,7 +1207,9 @@ vetro per classe, il banco e la deriva su uno ciascuno, il resto sulla carta:
   quello di sotto, uno per lato perché due cursori distesi sullo stesso
   rettangolo se li prenderebbe sempre quello davanti. Fuori dal segmento la
   carta si posa sopra; dentro, la finestra che si sta leggendo è una banda
-  chiara che cammina. Sotto, i sei filetti;
+  chiara che cammina. A sinistra, sotto la colonna delle gocce, le
+  quattro letture — avanti, indietro, pendolo, fermo — e a destra, sotto quella
+  dei tessuti, la manopola della quantità; sotto, i filetti;
 - **05 · deriva**: un pannello a sinistra, largo quanto la colonna delle gocce
   e il suo quadrante 
   Dentro, il circolo delle quinte in cerchio con la tonalità al centro, l'arco
@@ -1237,6 +1256,18 @@ Da fare, in ordine:
    il campo `fBm` che le sveglierebbe — è rimasto come spunta nella testata
    perché è una sorgente a sé, spenta e dichiarata; il giorno che se ne decide
    la sorte, quella se ne va con la stessa mano.
+
+3. **LE QUATTRO LETTURE DEL PAESAGGIO E LA QUANTITÀ HANNO L'INTERFACCIA E NON IL
+   MOTORE.** A sinistra dell'onda quattro pulsanti — avanti, indietro, pendolo,
+   fermo, nomi presi da come questo file descrive la testa: «si ferma, torna,
+   cammina» — e a destra una manopola «quantità». Scrivono nel modello,
+   `G.pLettura` e `GT.pQuantita`, e il velo non li legge ancora. È un'ECCEZIONE
+   DICHIARATA alla regola per cui un comando che si muove e non fa niente è peggio
+   di uno spento: l'interfaccia è stata chiesta prima delle funzioni, e questa riga
+   è la promessa scritta. Quando le funzioni si decidono, si leggono in
+   `paesaggio.js`; se una lettura non ha bisogno della quantità, la manopola si
+   spegne come quelle di un inserto vuoto. I nomi sono provvisori quanto le
+   funzioni.
 
 Aperti: `rendiOffline` percorre lo stesso modello che sta suonando, quindi
 esportare mentre si ascolta oggi disturberebbe la sessione in corso — va dato

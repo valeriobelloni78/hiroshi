@@ -380,15 +380,40 @@
         </span>
       </div>
 
-      <!-- Le due maniglie del segmento sono due cursori nativi trasparenti stesi
-           sopra il disegno dell'onda: quella in alto è l'inizio, quella in basso
-           la fine. Il canvas le disegna, il browser le comanda — e col tasto Tab
-           compare il filo di messa a fuoco. -->
-      <div class="fascia-paesaggio" data-quadro="paesaggio">
-        <input id="pInizio" class="maniglia alto" type="range" min="0" max="100" step="0.1"
-               value="0" data-i18n-aria="a11y.inizio">
-        <input id="pFine" class="maniglia basso" type="range" min="0" max="100" step="0.1"
-               value="100" data-i18n-aria="a11y.fine">
+      <!-- LA RIGA DEL PAESAGGIO sta sulla griglia delle classi: a sinistra, sotto la
+           colonna delle gocce, le quattro letture; al centro la materia; a destra,
+           sotto la colonna dei tessuti, la manopola. Le letture e la quantità hanno
+           l'interfaccia e non ancora il motore: scrivono nel modello, e il velo non
+           le legge ancora — vedi «Da fare» in CLAUDE.md. -->
+      <div class="riga-paesaggio">
+        <div class="modi-lettura" role="group" data-i18n-aria="a11y.lettura">
+          <span class="et" data-i18n="et.lettura">LETTURA</span>
+          <button type="button" class="modo" data-lettura="0" aria-pressed="true"><i aria-hidden="true">→</i><span data-i18n="lettura.avanti">Avanti</span></button>
+          <button type="button" class="modo" data-lettura="1" aria-pressed="false"><i aria-hidden="true">←</i><span data-i18n="lettura.indietro">Indietro</span></button>
+          <button type="button" class="modo" data-lettura="2" aria-pressed="false"><i aria-hidden="true">⇄</i><span data-i18n="lettura.pendolo">Pendolo</span></button>
+          <button type="button" class="modo" data-lettura="3" aria-pressed="false"><i aria-hidden="true">‖</i><span data-i18n="lettura.fermo">Fermo</span></button>
+        </div>
+
+        <!-- Le due maniglie del segmento sono due cursori nativi trasparenti stesi
+             sopra il disegno dell'onda: quella in alto è l'inizio, quella in basso
+             la fine. Il canvas le disegna, il browser le comanda — e col tasto Tab
+             compare il filo di messa a fuoco. -->
+        <div class="fascia-paesaggio" data-quadro="paesaggio">
+          <input id="pInizio" class="maniglia alto" type="range" min="0" max="100" step="0.1"
+                 value="0" data-i18n-aria="a11y.inizio">
+          <input id="pFine" class="maniglia basso" type="range" min="0" max="100" step="0.1"
+                 value="100" data-i18n-aria="a11y.fine">
+        </div>
+
+        <div class="lato-paesaggio">
+          <div class="manopola">
+            <div class="quadro" data-manopola="pQuantita">
+              <input id="pQuantita" type="range" min="0" max="100" step="1" value="50"
+                     data-i18n-aria="a11y.quantita">
+            </div>
+            <span class="fl" data-i18n="par.quantita">Quantità</span><span class="vl" id="vPquantita">0,50</span>
+          </div>
+        </div>
       </div>
 
       <div class="comandi-paesaggio">

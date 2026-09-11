@@ -325,6 +325,24 @@ cursore("pCoda",       "vCoda",        con(suGT("pCoda"), (v) => numero(v, 1) + 
 cursore("pTono",       "vTono",        con(suGT("pTono"), (v) => numero(v / 1000, 1) + " kHz"));
 cursore("pRiverbero",  "vRiverbero",   con(suGT("pRiverbero"), (v) => numero(v / 100, 2)));
 
+/* LE QUATTRO LETTURE E LA QUANTITÀ hanno l'interfaccia e non ancora il motore:
+   scrivono nel modello — `G.pLettura`, `GT.pQuantita` — e il velo non le legge.
+   La lettura si scrive su `G` E su `GT` insieme, come un mood: è uno scatto fra
+   quattro posizioni, e lisciarla vorrebbe dire passare per le letture di mezzo. */
+cursore("pQuantita",   "vPquantita",   con(suGT("pQuantita"), (v) => numero(v / 100, 2)));
+const MODI_LETTURA = [...document.querySelectorAll(".modo[data-lettura]")];
+function segnaLettura() {
+  for (const b of MODI_LETTURA)
+    b.setAttribute("aria-pressed", String(Number(b.dataset.lettura) === G.pLettura));
+}
+for (const b of MODI_LETTURA) {
+  b.addEventListener("click", () => {
+    G.pLettura = GT.pLettura = Number(b.dataset.lettura);
+    segnaLettura();
+  });
+}
+segnaLettura();
+
 /* Il segmento scrive DIRETTO su `G` oltre che su `GT`, ed è l'unica eccezione
    fuori dai mood. Una maniglia lisciata da `battito()` si trascinerebbe dietro
    il disegno con un decimo di secondo di ritardo — e trascinare un bordo che

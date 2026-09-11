@@ -395,19 +395,57 @@ input[type=range]::-moz-range-thumb{width:6px;height:7px;background:var(--inchio
 input[type=range]:focus-visible{outline:1px solid var(--ambra);outline-offset:3px}
 
 /* ------------------------------------------------------------------- le tendine
-   Restano `select` nativi: il menù che si apre è quello del sistema, e su un
-   telefono è la ruota, che è meglio di qualunque lista disegnata. */
-.tendina{position:relative;display:block}
+   LA TENDINA CHIUSA È UNA TARGA SMUSSATA, e quella aperta è un piano di vetro:
+   tutte e due vengono dalle proposte «Hiroshi · tendine». Chiusa, è un piccolo
+   piano con due angoli tagliati, come i pannelli e le scelte — sulla carta è
+   vetro, su un piano è carta, ed è `--sotto` a scambiarli. Presa col tasto Tab o
+   aperta si riempie d'inchiostro, come una scelta.
+
+   RESTA UN `select` NATIVO, e la lista aperta la disegna il browser stesso con
+   `appearance: base-select`: stessa tastiera, stesso lettore di schermo, nessuna
+   lista finta scritta a mano. Dove il browser non lo sa fare — oggi fuori da
+   Chromium — resta il menù di sistema, e la targa chiusa non cambia. E SOLO CON
+   UN PUNTATORE FINE: su un telefono il menù di sistema è la ruota, che è meglio
+   di qualunque lista disegnata, e quella non si tocca.
+
+   Il triangolo sta nel contenitore e non nel `select`, perché un `select` non ha
+   pseudo-elementi che valgano in ogni browser: la sua altezza è misurata sulla
+   targa, quindi chi cambia il padding cambia anche `bottom`. */
+.tendina{position:relative;display:block;--sotto:var(--vetro)}
+[data-piano] .tendina{--sotto:var(--carta)}
 .tendina select{font-family:var(--sans);font-size:15px;font-weight:300;letter-spacing:.04em;
-                color:var(--inchiostro);background:transparent;border:0;
-                border-bottom:1px solid var(--inchiostro);border-radius:0;
-                padding:4px 18px 5px 0;appearance:none;width:100%;cursor:pointer}
-.tendina::after{content:"";position:absolute;right:2px;bottom:10px;width:8px;height:5px;
+                color:var(--inchiostro);background:var(--sotto);border:0;border-radius:0;
+                padding:6px 26px 7px 10px;appearance:none;width:100%;cursor:pointer;
+                clip-path:polygon(5px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 5px)}
+.tendina::after{content:"";position:absolute;right:11px;bottom:14px;width:6px;height:4px;
                 pointer-events:none;background:var(--inchiostro);
                 clip-path:polygon(0 0,100% 0,50% 100%)}
 .tendina.piccola select{font-size:9.5px;letter-spacing:.10em;font-family:var(--mono);
-                        border-bottom-color:var(--filo);padding:2px 14px 3px 0}
-.tendina.piccola::after{bottom:6px;width:7px;height:4px}
+                        padding:4px 22px 5px 8px}
+.tendina.piccola::after{right:9px;bottom:10.5px;width:5px;height:3px}
+/* Il contorno del fuoco lo taglierebbe lo smusso: la targa presa si riempie
+   d'inchiostro invece di disegnarsi un bordo. */
+.tendina select:focus-visible{outline:none;background:var(--inchiostro);color:var(--carta)}
+.tendina:has(select:focus-visible)::after{background:var(--carta)}
+
+@supports (appearance: base-select) {
+  @media (hover:hover) and (pointer:fine) {
+    .tendina select,.tendina select::picker(select){appearance:base-select}
+    .tendina select::picker-icon{display:none}
+    .tendina select:open{background:var(--inchiostro);color:var(--carta)}
+    .tendina:has(select:open)::after{background:var(--carta)}
+    /* La lista ha il fondo della sua targa — vetro sulla carta, carta sul vetro —
+       e lo stesso smusso, un poco più largo perché il piano è più grande. */
+    .tendina select::picker(select){background:var(--sotto);color:var(--inchiostro);border:0;
+      padding:6px 0;margin-block:3px;
+      clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px)}
+    .tendina option{font-family:var(--mono);font-size:10px;font-weight:300;letter-spacing:.10em;
+                    padding:5px 14px;color:var(--inchiostro);background:transparent}
+    .tendina option:hover,.tendina option:focus-visible{background:var(--filo-2);outline:none}
+    .tendina option:checked{background:var(--inchiostro);color:var(--carta)}
+    .tendina option::checkmark{display:none}
+  }
+}
 
 /* --------------------------------------------------------------- i quadranti
    Il canvas disegna dentro questi riquadri: il JavaScript ne legge la
@@ -540,7 +578,32 @@ input[type=range].verticale::-moz-range-thumb{width:9px;height:7px}
    sul bordo di sopra, la fine su quello di sotto. Stanno uno per lato e non
    sovrapposti perché due cursori distesi sullo stesso rettangolo se li
    prenderebbe sempre quello davanti. */
-.fascia-paesaggio{width:100%;height:82px;position:relative;margin-top:10px}
+/* LA RIGA DEL PAESAGGIO sta sulla griglia delle classi — 205, la materia, 205 —
+   così le letture cadono sotto la colonna delle gocce e la manopola sotto quella
+   dei tessuti. La riga è alta quanto la manopola e l'onda ci sta in mezzo: sopra e
+   sotto resta lo spazio delle due maniglie, che il canvas disegna fuori dalla
+   fascia. */
+.riga-paesaggio{display:grid;grid-template-columns:205px minmax(0,1fr) 205px;gap:0 27px;
+                align-items:center;margin-top:10px}
+.fascia-paesaggio{width:100%;height:82px;position:relative}
+/* LE QUATTRO LETTURE sono una scelta sola fra quattro, quindi pulsanti veri con
+   `aria-pressed`, come le lingue e il tema: la lettura scelta si riempie
+   d'inchiostro. Le frecce sono notazione e non si traducono. Presa col tasto Tab,
+   la scelta tiene il suo filo di fuoco DENTRO lo smusso, o lo smusso lo taglierebbe. */
+.modi-lettura{display:flex;flex-direction:column;gap:5px}
+.modi-lettura .et{margin-bottom:3px}
+.modo{display:flex;align-items:center;gap:10px;width:100%;margin:0;padding:3px 8px;
+      appearance:none;background:transparent;border:1px solid var(--filo);border-radius:0;
+      font-family:var(--mono);font-size:8px;letter-spacing:.16em;text-transform:uppercase;
+      color:var(--grigio);line-height:1.2;text-align:left;cursor:pointer}
+.modo i{font-style:normal;width:10px;flex:none;text-align:center;letter-spacing:0;color:var(--inchiostro-2)}
+.modo:hover{color:var(--inchiostro);border-color:var(--inchiostro)}
+.modo[aria-pressed="true"]{background:var(--inchiostro);border-color:var(--inchiostro);color:var(--carta);
+  clip-path:polygon(4px 0,100% 0,100% calc(100% - 4px),calc(100% - 4px) 100%,0 100%,0 4px)}
+.modo[aria-pressed="true"] i{color:var(--carta)}
+.modo:focus-visible{outline:1px solid var(--ambra);outline-offset:2px}
+.modo[aria-pressed="true"]:focus-visible{outline:1px solid var(--carta);outline-offset:-3px}
+.lato-paesaggio{display:flex;justify-content:center}
 .fascia-paesaggio .maniglia{position:absolute;left:0;width:100%;height:18px;
                             appearance:none;background:transparent;opacity:0;cursor:ew-resize}
 .fascia-paesaggio .maniglia.alto{top:-5px}
@@ -635,6 +698,7 @@ input[type=range].verticale::-moz-range-thumb{width:9px;height:7px}
   .banco .mixer{grid-column:1/-1}
   .faders{max-width:420px}
   .comandi-paesaggio{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 26px}
+  .riga-paesaggio{grid-template-columns:160px minmax(0,1fr) 120px;gap:0 20px}
   .deriva-banda{grid-template-columns:205px minmax(0,1fr);gap:30px 24px}
   .pannello-deriva,.pannello-influenze{grid-column:1/-1}
 }
@@ -645,6 +709,9 @@ input[type=range].verticale::-moz-range-thumb{width:9px;height:7px}
   .classi .colonna.destra .intesta .voce,.classi .colonna.destra .intesta .dida{margin-right:0}
   .banco{grid-template-columns:minmax(0,1fr)}
   .comandi-paesaggio{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .riga-paesaggio{grid-template-columns:minmax(0,1fr);gap:18px}
+  .modi-lettura{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .modi-lettura .et{grid-column:1/-1}
   .deriva-banda{grid-template-columns:minmax(0,1fr)}
   .deriva{grid-template-columns:minmax(0,1fr)}
   .deriva .cerchio-quinte,.deriva .baricentro{grid-column:auto;grid-row:auto}

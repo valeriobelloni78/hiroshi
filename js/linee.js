@@ -47,6 +47,9 @@ const G  = {
   /* paesaggio */
   pInizio: 0, pFine: 100, pRallenta: 8, pVelo: 700, pSparpaglio: 35,
   pAccordatura: 55, pFuoco: 18, pCoda: 12, pTono: 2000, pRiverbero: 70,
+  // La lettura del paesaggio e la sua quantità: per ora solo interfaccia, il
+  // velo non le legge ancora. `pLettura` è un indice fra quattro, non una corsa.
+  pLettura: 0, pQuantita: 50,
   /* le tre manopole dell'inserto, una terna per classe. Stanno in 0÷100 e
      basta: che cosa vogliano dire lo decide l'effetto scelto, e la conversione
      nell'unità vera sta in `effetti.js`. Chi le mettesse in unità reali
