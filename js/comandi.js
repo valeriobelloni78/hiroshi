@@ -473,9 +473,62 @@ function aggiornaLinee() {
   aggiornaPeriodi();
 }
 
+/* I quattro periodi di una classe, e nient'altro: [7·11·13·17]. Le cifre sono
+   valori e vanno in ambra; le parentesi e i punti sono la punteggiatura della
+   serie e vanno in inchiostro, che col tema scuro diventa chiaro da sé. Nessuna
+   parola intorno — che siano quattro lo dice la stringa. */
+function scriviPeriodi(id, linee) {
+  const dove = el(id);
+  const segno = (s, classe) => {
+    const i = document.createElement("i");
+    if (classe) i.className = classe;
+    i.textContent = s;
+    dove.appendChild(i);
+  };
+  dove.textContent = "";
+  segno("[");
+  linee.forEach((L, k) => {
+    if (k) segno("·", "sep");
+    const b = document.createElement("b");
+    b.textContent = Math.round(L.target);
+    dove.appendChild(b);
+  });
+  segno("]");
+}
+
 function aggiornaPeriodi() {
-  el("periodiGocce").textContent = frasi.map((L) => Math.round(L.target)).join(" ");
-  el("periodiTessuti").textContent = tessuti.map((L) => Math.round(L.target)).join(" ");
+  scriviPeriodi("periodiGocce", frasi);
+  scriviPeriodi("periodiTessuti", tessuti);
+}
+
+/* 06 · INFLUENZE — di quanto ciascuna fonte sposta il proprio parametro, nell'unità
+   in cui lo dice la targa del suo cursore. Ogni parametro pende da UNA fonte sola,
+   quindi efficace meno mano È il contributo di quella fonte: qui non si rifà
+   nessun conto, e non c'è un secondo posto dove la deriva, l'ora o la stagione
+   possano raccontare un numero diverso da quello che suona.
+
+   Apertura e chiusura sono un FATTORE e non una differenza, perché la stagione le
+   moltiplica. Il colore d'insieme non ha una mano, quindi non ha uno spostamento:
+   si scrive il taglio intero, che è tutto dell'ora. */
+function segnato(v, cifre) {
+  const zero = Math.abs(v) < 0.5 * Math.pow(10, -cifre);
+  return (zero ? "" : v > 0 ? "+" : "−") + numero(Math.abs(v), cifre);
+}
+function scriviInfluenze() {
+  const ottaveDi = (d) => dice("unita.ott", { n: segnato(d * 0.032, 1) });
+  el("infCalore").textContent = segnato((effG.calore - G.calore) / 100, 2);
+  el("infSpazio").textContent = segnato((effG.spazio - G.spazio) / 100, 2);
+  el("infColore").textContent = numero(effG.colore / 1000, 1) + " kHz";
+  el("infTregistro").textContent = ottaveDi(effGT.registro - G.tRegistro);
+  el("infApertura").textContent = "×" + numero(effGT.apertura / Math.max(0.01, G.tApertura), 2);
+  el("infChiusura").textContent = "×" + numero(effGT.chiusura / Math.max(0.01, G.tChiusura), 2);
+  el("infPasso").textContent = segnato((effGT.passo - G.tPasso) / 100, 2);
+  el("infRegistro").textContent = ottaveDi(effG.registro - G.registro);
+  el("infAddensamento").textContent = segnato((effG.addensamento - G.addensamento) / 100, 2);
+  el("infDensita").textContent = dice("unita.giro", { n: segnato(effG.densita - G.densita, 1) });
+  el("infLivello").textContent = segnato(20 * Math.log10(effGT.livello / Math.max(1, G.tLivello)), 1) + " dB";
+  el("nomeOra").textContent = dice("ora." + tavolozzaOraria(oraCorrente()).nome);
+  el("nomeStagione").textContent = dice("stagione." + tavolozzaStagionale(meseCorrente()).nome);
 }
 
 /* Il riallineamento è quello di TUTTE E OTTO le linee: è il tempo prima che la
@@ -788,6 +841,10 @@ function battito() {
   el("quinteFatte").textContent = String(passiQuinta);
   el("prossima").textContent = minsec(Math.max(0, prossimaQuinta - t));
   el("tonalita").textContent = nomeNota(tonalita());
+  // Le note in uso, dalla tonica in su nell'ordine della scala: sul circolo sono
+  // un arco, qui si leggono. I nomi vengono da `nomeNota`, quindi dalla lingua.
+  el("collezione").textContent = GRADI.map((g) => nomeNota((tonalita() + g) % 12)).join(" ");
+  scriviInfluenze();
 
   const mat = materiaCorrente();
   if (mat) {

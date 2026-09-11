@@ -54,7 +54,7 @@ la sua coda e il suo tono, e la mandata alla stanza dello studio resta a zero �
 è la sola sorgente senza uno «spazio».
 
 **OGNI CLASSE HA UN INSERTO, E IL RIVERBERO NON CI STA DENTRO.** Sotto il
-quadrante, oltre la linea, ci sono una tendina e tre manopole: l'effetto scelto
+quadrante, in un piano di vetro suo, ci sono una tendina e tre manopole: l'effetto scelto
 sta sul canale della classe, fra il normalizzatore e la coppia livello/mandata
 — `ingresso → normale → presa → [effetto] → ritorno → { livello, mandata }`.
 Prima del normalizzatore l'effetto lavorerebbe su un segnale che sale e scende
@@ -233,11 +233,77 @@ regola.
 **IL TEMA SCURO È LO STESSO FOGLIO GIRATO, non una seconda palette.** Carta e
 inchiostro si SCAMBIANO — gli stessi due colori — e i sei toni in mezzo stanno
 sulla retta fra i due nuovi estremi, ciascuno nel punto in cui il suo rapporto
-di contrasto col fondo è quello che aveva sulla carta chiara: 6,01 · 2,61 ·
-1,63 · 1,45 · 1,17 · 1,24, gli stessi a due cifre. È per questo che il tema
-scuro non è più contrastato né più piatto dell'altro. Chi aggiunge una tinta
-alla palette la calcoli così e scriva il numero, o il tema scuro comincerà a
-essere un'altra tavola.
+di contrasto col fondo è quello che aveva sulla carta chiara: 6,01 · 1,45, gli stessi a due cifre — e poi `grigio`, `muto`, `filo-2`
+e `spento`, che fanno eccezione (vedi sotto). È per questo che il tema scuro non è più
+contrastato né più piatto dell'altro. Chi aggiunge una tinta alla palette la
+calcoli così e scriva il numero, o il tema scuro comincerà a essere un'altra
+tavola.
+
+**IL VETRO È IL PIANO RIALZATO, e ci appoggiano sopra gli strumenti**: due
+piani per classe — il cerchio con le sue due manopole, l'effetto — il banco, la
+deriva. Viene dal
+mockup «Hiroshi · console», da cui è stata presa la composizione cromatica e
+non l'impaginazione. `--vetro` è `#f0efe9` sulla carta chiara, 1,08 di
+contrasto, e sta OLTRE la carta, dalla parte opposta all'inchiostro.
+
+IL VETRO LO DISEGNA IL CANVAS, e non per gusto: il canvas sta SOTTO i comandi,
+quindi un fondo messo in CSS su un elemento coprirebbe il quadrante che il canvas
+gli disegna dietro. `piani()` in `tavola.js` è la prima cosa di ogni
+fotogramma, e legge i riquadri degli elementi marcati `[data-piano]`; quanto il
+piano sporge lo dicono `--piano-sopra`, `--piano-lato`, `--piano-sotto` nel CSS,
+prese dagli spazi che c'erano già — quattordici di lato dentro i ventisette fra
+le colonne, cinque sotto il filo di sopra e otto sopra quello di sotto; i due piani di una
+classe invece non sporgono né sopra né sotto, l'aria la danno da dentro i loro
+vani. Quando il vetro è arrivato nessun comando si è spostato di un pixel. Venendo dal canvas, il vetro finisce da sé
+nella tavola in png e nel canvas di design di `tavolo.mjs`.
+
+Lo STRAPPO sotto il quadrato di una manopola non cancella più se sta su un
+piano: ridipinge il vetro, a opacità piena come faceva `clearRect`, perché
+cancellare bucherebbe il piano fino alla carta. Il PAESAGGIO resta sulla carta,
+e non per dimenticanza: fuori dal segmento ci si posa sopra un velo fatto di
+carta, che sul vetro diventerebbe una toppa. Restano sulla carta anche le
+colonne dei comandi, la testata e il piede: il vetro sta sotto lo strumento, non
+sotto la lista delle sue manopole.
+
+**LA GRANA NON È NEUTRA, quindi il vetro scuro si misura sullo schermo.** Il
+rumore della carta è lo stesso nei due temi e sposta la carta verso il grigio:
+la chiara la scurisce, la scura la SCHIARISCE — misurato, `#20211c` esce a
+schermo come `#262722`. Il vetro calcolato a pari rapporto scritto era proprio
+`#262722`, cioè identico alla carta granita e invisibile, benché il pixel del
+canvas fosse giusto. Il confronto giusto è quello che arriva all'occhio: sul
+chiaro il vetro sta 3,40 L* sopra la carta a schermo, sullo scuro `#2d2e28` sta
+a 3,22, il più vicino fra i valori che ci sono.
+
+Un piano più chiaro, nel tema scuro, avvicina i toni invece di allontanarli:
+`filo-2` e `spento` scendevano a 1,01 e 1,05 e sparivano la guida della corona,
+le tacche non raggiunte delle manopole, i binari delle aste. Sono stati alzati —
+`#33332f` e `#373733` — quanto basta perché SUL VETRO si vedano come si vedevano
+sulla carta a schermo, 1,08 e 1,15, restando sotto `filo` e in ordine. Alzarli
+fino al contrasto che hanno sul vetro chiaro avrebbe messo `filo-2` sopra
+`filo`, cioè rovesciato la scala. Sono gli unici due toni scuri che non rifanno
+il rapporto scritto della carta chiara. Chi aggiunge una tinta la misuri sullo
+schermo, grana compresa, sul fondo su cui verrà disegnata.
+
+**NEL TEMA SCURO LE ETICHETTE SONO INCHIOSTRO TENUE, non grigio.** `--grigio`
+scuro è `var(--inchiostro-2)`: una tinta della palette, non una nuova. Al
+rapporto scritto della carta chiara — 2,61, cioè 2,42 sulla carta granita e 2,21
+sul vetro — le etichette dei filetti, le didascalie e le sigle a sette pixel e
+mezzo nel tema scuro non si leggevano, mentre sulla carta chiara lo stesso
+rapporto si legge. Cambiare il TOKEN e non le regole vuol dire che si alzano
+tutte insieme: le scritte del CSS, quelle che il canvas disegna in grigio, quelle
+della guida. La conseguenza va detta: nel tema scuro un valore in ambra (3,70) ha
+MENO contrasto della sua etichetta (6,03), e si fa trovare con la tinta invece
+che con la luminanza. Le parole restano un gradino sopra, in inchiostro pieno.
+
+**E IL MUTO SCURO STA A METÀ STRADA.** Allo stesso modo il `muto` — le lingue e
+il tema non scelti, i numeri delle linee, le note fuori dalla collezione sul
+circolo, i comandi spenti — nel tema scuro a `#434340` non si vedeva quasi. Non
+poteva diventare `inchiostro-2` come il grigio: sul circolo le note in uso e
+quelle fuori si scriverebbero uguali, e una manopola spenta avrebbe l'etichetta di
+una accesa. Sta a metà, in chiarezza percepita, fra il grigio di prima — che per
+un'etichetta non bastava — e l'inchiostro tenue delle etichette: `#7f7f7b`,
+3.74 sulla carta a schermo e 3.41 sul vetro. Si legge, e resta un gradino sotto:
+dice ancora «non scelto», «spento». L'ordine dei toni scuri resta quello.
 
 **L'ambra non cambia col tema**, ed è il punto: l'accento dice ADESSO, e un
 accento che cambiasse tinta smetterebbe di essere una cosa sola. Sul fondo scuro
@@ -282,24 +348,28 @@ carta, l'accento non dice una grandezza: dice *qui*. Sono quattro famiglie e
 non una in più:
 
 - ADESSO, e sta sul canvas: la goccia scattata nell'ultimo mezzo secondo, la
-  tenuta entrata per ultima, il punto di fase, i fili che le legano al mirino, il
+  tenuta entrata per ultima, il punto di fase — sugli anelli, sul circolo delle quinte, sull'ora del
+  cerchio delle influenze —, i fili che le
+  legano al mirino, il
   legame fra due gocce cadute insieme;
-- IL VALORE: ogni `.vl`, il cronometro, i periodi dentro una didascalia — e la
+- IL VALORE: ogni `.vl`, il cronometro, i periodi dentro una didascalia — e i
+  valori VIVI, quelli che cambiano da sé, in una targhetta a fondo pieno — e la
   curva dell'equalizzatore, che è i numeri delle otto aste disegnati invece che
   scritti, quindi va con loro e non con l'inchiostro;
 - DOVE QUALCOSA GIRA: la punta del baricentro, cioè l'istante in cui ha smesso
   di salire o di scendere. Il corpo della colonna resta inchiostro — sono quindici
   minuti di passato, e se fossero tutti in accento non ci sarebbe più una punta;
-- DOVE QUALCOSA COMINCIA: i cinque numeri di sezione, e le due «d» di rada e
+- DOVE QUALCOSA COMINCIA: i sei numeri di sezione, e le due «d» di rada e
   studio sotto il marchio.
 
 Le etichette restano grigie e le parole inchiostro. È la proporzione a farlo
 funzionare, non la regola: l'accento indica finché resta una minoranza, e il
 giorno che una quinta famiglia lo porta sopra il resto smette di indicare
-qualunque cosa. Chi ne aggiunge una tolga qualcosa. Misurato: 3,54 di contrasto
-sulla carta chiara e 2,72 sul fondo scuro, contro il 2,61 delle etichette in
-tutt'e due — un valore in accento è la cosa più leggibile della colonna, che è
-quello che deve essere.
+qualunque cosa. Chi ne aggiunge una tolga qualcosa. Misurato sulla carta chiara:
+3,54 di contrasto contro il 2,61 delle etichette — un valore in accento è la cosa
+più leggibile della colonna, che è quello che deve essere. Nel tema scuro le
+etichette sono salite a 6,03 e l'ambra resta a 3,70: lì l'accento indica con la
+tinta, non con la luminanza (vedi il tema scuro).
 
 Prima il colore era l'altezza, su una rampa a cinque fermate ancorata a 100 e
 1500 Hz, e la rampa è stata tolta insieme ai due quadranti di Rada Deriva. Due
@@ -379,6 +449,57 @@ momento in cui il baricentro ha smesso di salire. Dove il valore è nullo la
 colonna non sparisce: resta un puntino più piccolo e più chiaro sulla linea
 dello zero, perché una colonna vuota si leggerebbe come un buco nei dati. Non
 serve nessuna memoria: `misto()` risponde per qualunque istante passato.
+
+**IL CIRCOLO DELLE QUINTE È UN CERCHIO, E LE NOTE IN USO SONO UN ARCO.** Viene dal
+mockup «Hiroshi · console». Sulla striscia di prima il fa e il do stavano ai due
+capi e sembravano lontanissimi, mentre sono a un passo. E la collezione ha una
+forma vera: una pentatonica anemitonica è cinque quinte di fila — tonica + 0, 2,
+4, 7, 9 cade sul circolo a 0, +2, +4, +1, +3 — quindi le note in uso sono cinque
+posizioni contigue, e si disegnano con la barra della corona invece che con
+cinque segni. Un passo di quinta sposta l'arco di una posizione: da un capo esce
+una nota, dall'altro ne entra una, ed è il tratteggio in fondo all'arco. Il verso
+lo sa `tonalitaFra(1)`, che legge la stessa parola sturmiana dello scatto vero:
+se si sale entra la nota dopo l'ultima, se si scende quella prima della tonica.
+
+Il PUNTO IN AMBRA cammina dalla tonica verso la meta nei centocinquanta secondi
+del passo, contati sullo stesso `ctx.currentTime` della lettura «prossima»: è un
+punto di fase come quelli degli anelli, quindi ADESSO, e non una famiglia nuova
+dell'ambra. Tonica e meta restano inchiostro — sono dove si è e dove si va, non un
+istante — e le note in uso scritte accanto sono parole, quindi inchiostro anche
+loro. La TONALITÀ AL CENTRO è testo vero steso sopra il disegno, come i cursori
+sopra le manopole: si traduce e un lettore di schermo la trova.
+
+**LA DERIVA A SINISTRA, LE INFLUENZE A DESTRA, a specchio.** I due pannelli in
+fondo occupano le stesse colonne delle due classi — la deriva sotto le gocce, le
+influenze sotto i tessuti — con la figura nella colonna da 205 dalla parte
+esterna e le letture sotto il quadrante; l'intestazione delle influenze è
+giustificata a destra come quella dei tessuti. Fra i due vetri resta lo stesso
+vuoto che c'è fra i due quadranti. Le righe interne non hanno la stessa altezza
+nei due pannelli, quindi si allineano sul FONDO e non a metà: il gruppo della
+deriva nelle influenze chiude sulla riga del cerchio, come il baricentro a fianco.
+
+**06 · INFLUENZE DICE CHI STA MUOVENDO UN PARAMETRO OLTRE ALLA MANO.** Fra la
+corona e il filetto c'è la deriva, l'ora e la stagione, e finora quella distanza
+si vedeva solo cursore per cursore. Il pannello la raccoglie per fonte: ORA →
+gocce (calore, spazio, colore d'insieme), STAGIONE → tessuti (registro, apertura,
+chiusura, passo), DERIVA → gocce e tessuti (registro, densità, addensamento,
+livello). NON RIFÀ NESSUN CONTO: ogni parametro pende da una fonte sola, quindi
+efficace meno mano È il contributo di quella fonte, letto da `effG`, `effGT` e
+`G`. Gli spostamenti sono nell'unità della targa del cursore — ottave, «/ giro»,
+decimali, dB — e stanno in targhette, perché cambiano da sé. Apertura e chiusura
+sono un FATTORE, ×1,15, perché la stagione le moltiplica. Il colore d'insieme
+non ha una mano e quindi non ha uno spostamento: si scrive il taglio intero, in
+kHz, che è tutto dell'ora — e così il pannello non ricopia le costanti della
+formula del motore.
+
+Il CERCHIO ha fuori le ventiquattro ore e dentro i dodici mesi, mezzanotte e
+inverno in alto: il buio e il freddo dalla stessa parte. Fasce e stagioni non
+sono scritte nel disegno, si leggono chiedendo a `tavolozzaOraria()` e
+`tavolozzaStagionale()` ora per ora e mese per mese: dove il nome cambia c'è un
+confine. La fascia e la stagione di adesso sono la barra della corona, il mese
+un quadratino d'inchiostro. IL PUNTO IN AMBRA STA AL CENTRO DELL'ORA e non sul
+minuto: il motore legge l'ora intera, e un punto che scivolasse coi minuti
+racconterebbe una precisione che il suono non ha.
 
 **L'onda del materiale si disegna una volta sola, su una tela sua.** Un file di
 novanta secondi sono quattro milioni di campioni e duecentocinquanta colonne di
@@ -496,8 +617,8 @@ delle due si sovrappone alla deriva: ogni parametro pende da una cosa sola,
 altrimenti non si sa più chi lo sta muovendo. Oggi la deriva muove registro,
 densità e addensamento delle gocce e il livello dei tessuti; l'ora muove
 calore, spazio e il colore d'insieme; la stagione muove registro, apertura,
-chiusura e passo dei tessuti. Chi aggiunge un'influenza dica da quale casella
-la prende.
+chiusura e passo dei tessuti. Chi aggiunge un'influenza dica da quale casella la prende, e la metta nel
+pannello 06.
 
 **Il motore non sa da dove viene il tempo.** `passo(now)` è una funzione del
 tempo che le viene passato. Dal vivo la chiama un `setInterval`; per scrivere
@@ -618,6 +739,34 @@ muta all'apertura: è già successo, dividendo il file in moduli.
 
 **Le etichette dei comandi descrivono l'azione, non lo stato** («Pausa», non
 «In ascolto»). Lo stato lo racconta la riga in alto e il punto che pulsa.
+
+**LA SCELTA SI RIEMPIE D'INCHIOSTRO, e la parola diventa carta**: la lingua e
+il tema scelti, i pulsanti premuti — Ascolta, Registra, Microfono — e i tasti
+delle linee. Viene dal mockup «Hiroshi · console». Il riempimento è uno
+pseudo-elemento che SPORGE dal pulsante invece di un padding, così il pulsante
+resta grande quanto la sua parola e niente intorno si sposta; gli angoli sono
+smussati come i piani. L'ambra non entra: nel mockup il pieno in ambra stava
+sui VALORI — il nome del mood, il tempo di registrazione — e qui i valori sono
+già in ambra; farne anche il segno di una scelta sarebbe una quinta famiglia.
+
+**IL VALORE VIVO STA IN UNA TARGHETTA D'AMBRA A FONDO PIENO**, con le cifre chiare:
+anche questo viene dal mockup «Hiroshi · console». Vivo vuol dire che cambia DA
+SÉ: il picco e il limitatore del banco, la cattura del microfono, la sessione,
+le quinte, la prossima, il riallineamento e il baricentro della deriva, gli spostamenti
+delle influenze — le letture marcate `.vl.vivo`. LA MANO SCRIVE IN RIGA, LO STRUMENTO IN TARGHETTA: le
+cifre dei filetti, delle manopole, del mixer e dei periodi le decide una mano e
+restano ambra su carta. È la separazione fra efficace e mano detta con una
+forma, e tiene l'ambra una minoranza — riempire anche le targhe dei cursori
+vorrebbe dire una quarantina di blocchi arancioni, e l'accento smetterebbe di
+indicare. Il cronometro e la tonalità restano come sono: sono già figure grandi,
+non righe di testo.
+
+La parola va tenuta distinta: la TARGA è la cifra accanto a un cursore, e legge
+il cursore; la TARGHETTA è una lettura dello strumento. Il fondo è uno
+pseudo-elemento che sporge, come il riempimento di una scelta, quindi niente si
+sposta; le cifre sono `--su-ambra`, cioè `#e7e7e4` in tutti e due i temi — carta
+nel chiaro, inchiostro nello scuro — perché l'ambra non cambia col tema e quello
+che ci sta sopra nemmeno. Una targhetta vuota non si disegna.
 
 **I comandi sono elementi HTML nativi** e funzionano identici col puntatore,
 col dito, col tasto Tab e con un lettore di schermo. Il disegno è puro
@@ -746,14 +895,15 @@ toglierebbe ai tessuti l'unico comando che li distingue davvero.
 sono.** Nella colonna: cinque filetti sotto «Forma del suono» — che cosa è il
 suono — e tre sotto «Insieme», che sulla tavola sono le tre tracce della corona:
 addensamento · densità · spazio per le gocce, intreccio · livello · spazio per i
-tessuti. SOTTO IL QUADRANTE, le due manopole: registro e calore per le gocce, registro e passo per i tessuti.
+tessuti. SOTTO IL QUADRANTE, sullo stesso piano di vetro del cerchio, le due manopole: registro e calore per le gocce, registro e passo per i tessuti.
 Stanno lì e non in colonna perché sono la stessa figura del quadrante — un arco
 graduato con un quadrato che ci corre sopra — e la corona si chiude in basso su
 una fenditura che sta proprio sopra di loro: si leggono come due satelliti del
-cerchio invece che come due comandi qualunque in fondo a una lista. SOTTO LA LINEA, la tendina
-dell'effetto e le sue tre manopole: la linea separa quello che sta DENTRO il
-suono da quello che gli viene DOPO, e senza di lei sarebbero cinque manopole in
-fila senza una ragione per cui tre cambiano nome quando si tocca una tendina.
+cerchio invece che come due comandi qualunque in fondo a una lista. IN UN TERZO PIANO, la
+tendina dell'effetto e le sue tre manopole: il vuoto fra i due piani separa
+quello che sta DENTRO il suono da quello che gli viene DOPO — prima lo faceva una
+linea — e senza quella separazione sarebbero cinque manopole in fila senza una
+ragione per cui tre cambiano nome quando si tocca una tendina.
 
 **LE DUE CLASSI SONO SIMMETRICHE, comando per comando**, e la simmetria è una
 cosa da difendere: cinque filetti, tre tracce di corona, due manopole, la
@@ -763,6 +913,43 @@ SPAZIO da tutt'e due le parti — lo stesso parametro allo stesso raggio sui due
 quadranti. Chi aggiunge un comando a una classe si chieda che cosa gli
 corrisponde nell'altra: se non c'è risposta, forse il comando è nel posto
 sbagliato.
+
+**L'INTESTAZIONE DEI TESSUTI È LO SPECCHIO DI QUELLA DELLE GOCCE**: il numero sul
+filo destro della colonna, il titolo e i periodi giustificati contro di lui. In
+una riga rovesciata l'inizio è a destra, quindi `justify-content:flex-start` —
+con `flex-end`, com'era, il blocco finiva spinto a sinistra e «02» non toccava
+il bordo. Titolo e periodi hanno il margine destro negativo quanto la loro
+spaziatura, per la stessa ragione del marchio: senza, l'ultima lettera starebbe
+un pelo più in qua del bordo che dice di toccare.
+
+**DUE PIANI PER CLASSE, E FRA L'UNO E L'ALTRO DICIOTTO PIXEL**: il cerchio con le
+sue due manopole, e l'effetto. Diciotto è il vuoto fra due gruppi nella colonna
+dei comandi, così le tre colonne respirano allo stesso passo. I vani sono larghi
+quanto il cerchio e non oltre, quindi i bordi dei piani cadono sulla stessa
+verticale a qualunque larghezza. Le due manopole hanno avuto per un giorno un
+piano loro e sono tornate su quello del cerchio — sono la stessa figura, un arco
+graduato con un quadrato — SENZA SPOSTARSI: stanno trentaquattro pixel sotto il
+cerchio, la somma dell'aria e del vuoto che c'era fra i due piani. Dentro,
+L'ARIA SI MISURA SULL'INCHIOSTRO E NON SUI RIQUADRI: sopra l'arco di una manopola
+il riquadro ha già dieci pixel vuoti e sotto le etichette nessuno, quindi il
+piano chiude diciassette pixel sotto le etichette e l'aria che si vede è pari.
+
+**LE MANOPOLE STANNO SU UNA GRIGLIA A SESTI.** Le due di sopra hanno il centro a un
+terzo e a due terzi, le tre dell'effetto a un sesto, a metà e a cinque sesti:
+ognuna delle due cade esattamente fra due delle tre. In fila, ciascuna riga col
+suo `gap` centrato, i centri capitavano dove capitavano e le due righe non
+avevano niente in comune. Le colonne sono frazioni, quindi regge a qualunque
+larghezza. L'ETICHETTA SALE NELLA BOCCA DELL'ARCO: il punto più basso della corsa
+sta a tre quarti del riquadro, e il quarto sotto staccava il nome dalla sua
+manopola.
+
+**LE RIGHE DELLE LINEE CHIUDONO LA COLONNA ALLA STESSA ALTEZZA DEL PIANO
+DELL'EFFETTO**, con `margin-top:auto`. Il quadrante è più alto della colonna, e il
+vuoto che avanza va tutto sopra le righe: fra i comandi del suono e i comandi per
+linea, che sono due cose diverse. Così ogni blocco alto ha un compagno — i gruppi
+del suono accanto al cerchio, le righe delle linee accanto all'effetto — invece
+di tre colonne che finiscono a tre altezze. Sotto i 720 px la colonna sta da sola
+nella sua riga e la regola non fa niente, com'è giusto.
 
 **I numeri che cambiano** usano cifre a larghezza fissa, altrimenti tremolano
 a ogni aggiornamento.
@@ -971,8 +1158,9 @@ COMPLETO.**
 
 **C'È ANCHE LA TAVOLA, ed è quella del mockup.** Il disegno ha sostituito
 l'impalcatura, e l'ha sostituita separandosi da lei: i comandi in `comandi.js`,
-il canvas in `tavola.js`. Un foglio che scorre, cinque sezioni numerate fra una
-testata e un piede:
+il canvas in `tavola.js`. Un foglio che scorre, sei sezioni numerate fra una
+testata e un piede — i quadranti su due piani di
+vetro per classe, il banco e la deriva su uno ciascuno, il resto sulla carta:
 
 - la **testata**: le tre sorgenti e il cielo come spunte quadrate, la pausa, le
   **quattro lingue** e il selettore chiaro/scuro;
@@ -987,9 +1175,9 @@ testata e un piede:
   misura che crescono simmetrici dalla propria diagonale — nord-est, sud-est,
   sud-ovest, specchiati sui tessuti — graduato a barrette il più interno, pieni
   gli altri due sopra la loro guida, e mostrano l'efficace mentre i filetti in
-  colonna mostrano la mano. Sotto il cerchio due manopole — registro e calore,
-  registro e passo — poi una linea, poi la tendina dell'**effetto** con le sue
-  tre manopole;
+  colonna mostrano la mano. Sotto il cerchio, sullo stesso piano,
+  le due manopole — registro e calore, registro e passo — e in un piano suo la
+  tendina dell'**effetto** con le sue tre manopole;
 - **03 · banco**: registrazione con cronometro e misuratori a tessere,
   esportazione (wav, la tavola in png, la scena che aspetta un seme),
   equalizzatore a otto aste con la curva vera sopra — chiesta ai filtri con
@@ -1003,8 +1191,16 @@ testata e un piede:
   rettangolo se li prenderebbe sempre quello davanti. Fuori dal segmento la
   carta si posa sopra; dentro, la finestra che si sta leggendo è una banda
   chiara che cammina. Sotto, i sei filetti;
-- **05 · deriva**: la tonalità, il circolo delle quinte con dove siamo e dove
-  andremo, e il baricentro su quindici minuti di passato;
+- **05 · deriva**: un pannello a sinistra, largo quanto la colonna delle gocce
+  e il suo quadrante 
+  Dentro, il circolo delle quinte in cerchio con la tonalità al centro, l'arco
+  delle note in uso e il punto di fase verso la prossima quinta; accanto le note
+  scritte e le letture del tempo lungo; sotto, il baricentro su quindici minuti
+  di passato;
+- **06 · influenze**: a specchio della deriva, sotto i tessuti. Un cerchio con
+  le ventiquattro ore fuori e i dodici mesi dentro, e per ciascuna fonte — ora,
+  stagione, deriva — di quanto sposta i suoi parametri oltre alla mano, in
+  targhette;
   In alto a destra, dopo le lingue, il selettore **chiaro/scuro**: due pulsanti
   veri, non due parole, perché si prendono col tasto Tab;
 - il **piede**: lo stato, le due influenze esterne, e «a mano», cioè gli ultimi

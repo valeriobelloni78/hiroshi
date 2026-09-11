@@ -67,7 +67,7 @@
           <span class="num">01</span>
           <span>
             <span class="voce" data-i18n="sez.gocce">Gocce</span>
-            <span class="dida"><span data-i18n="dida.frasi">quattro frasi</span> · <b id="periodiGocce">7 11 13 17</b></span>
+            <span class="dida periodi" id="periodiGocce"><i>[</i><b>7</b><i class="sep">·</i><b>11</b><i class="sep">·</i><b>13</b><i class="sep">·</i><b>17</b><i>]</i></span>
           </span>
         </div>
 
@@ -122,56 +122,57 @@
       </div>
 
       <div class="quadrante gocce">
-        <div class="tela-quadrante" data-quadro="gocce"></div>
-        <!-- Le due manopole stanno SOTTO il quadrante, dove il cerchio le
-             lascia stare: sono la stessa figura — un arco graduato con un
-             quadrato che ci corre sopra — e messe qui si leggono come due
-             satelliti del quadrante invece che come due comandi qualunque.
-             Il disegno lo fa il canvas; il comando è il cursore trasparente
-             steso sopra l'arco. -->
-        <div class="sotto-quadrante">
-          <div class="manopola">
-            <div class="quadro" data-manopola="registro">
-              <input id="registro" type="range" min="0" max="100" step="1" value="45"
-                     data-i18n-aria="a11y.registro">
+        <!-- Il cerchio e le sue due manopole sullo STESSO piano: sono la stessa
+             figura — un arco graduato con un quadrato che ci corre sopra — e il
+             vetro le tiene insieme. Il disegno lo fa il canvas; il comando è il
+             cursore trasparente steso sopra l'arco. -->
+        <div class="vano cerchio" data-piano>
+          <div class="tela-quadrante" data-quadro="gocce"></div>
+          <div class="sotto-quadrante">
+            <div class="manopola">
+              <div class="quadro" data-manopola="registro">
+                <input id="registro" type="range" min="0" max="100" step="1" value="45"
+                       data-i18n-aria="a11y.registro">
+              </div>
+              <span class="fl" data-i18n="fl.registro">Registro</span><span class="vl" id="vRegistro">1,4 ott</span>
             </div>
-            <span class="fl" data-i18n="fl.registro">Registro</span><span class="vl" id="vRegistro">1,4 ott</span>
-          </div>
-          <div class="manopola">
-            <div class="quadro" data-manopola="calore">
-              <input id="calore" type="range" min="0" max="100" step="1" value="70"
-                     data-i18n-aria="a11y.calore">
+            <div class="manopola">
+              <div class="quadro" data-manopola="calore">
+                <input id="calore" type="range" min="0" max="100" step="1" value="70"
+                       data-i18n-aria="a11y.calore">
+              </div>
+              <span class="fl" data-i18n="fl.calore">Calore</span><span class="vl" id="vCalore">0,70</span>
             </div>
-            <span class="fl" data-i18n="fl.calore">Calore</span><span class="vl" id="vCalore">0,70</span>
           </div>
         </div>
-        <!-- L'INSERTO della classe. La linea separa due livelli: sopra le due
-             manopole che stanno dentro il suono, sotto le tre che stanno dopo
-             di lui. L'effetto lo sceglie la tendina, e le tre manopole
-             cambiano nome insieme a lei. -->
-        <div class="filoH"></div>
-        <div class="inserto">
-          <span class="et" data-i18n="et.effetto">Effetto</span>
-          <label class="tendina piccola"><select id="effGocce"></select></label>
-        </div>
-        <div class="sotto-quadrante tre">
-          <div class="manopola">
-            <div class="quadro" data-manopola="gE1">
-              <input id="gE1" type="range" min="0" max="100" step="1" value="40">
-            </div>
-            <span class="fl" id="flGE1">—</span><span class="vl" id="vGE1">—</span>
+        <!-- L'INSERTO della classe, in un piano suo. Le due manopole di sopra
+             stanno DENTRO il suono, le tre di qui gli vengono DOPO: prima lo
+             diceva una linea, adesso il vuoto fra due piani. L'effetto lo sceglie
+             la tendina, e le tre manopole cambiano nome insieme a lei. -->
+        <div class="vano effetti" data-piano>
+          <div class="inserto">
+            <span class="et" data-i18n="et.effetto">Effetto</span>
+            <label class="tendina piccola"><select id="effGocce"></select></label>
           </div>
-          <div class="manopola">
-            <div class="quadro" data-manopola="gE2">
-              <input id="gE2" type="range" min="0" max="100" step="1" value="30">
+          <div class="sotto-quadrante tre">
+            <div class="manopola">
+              <div class="quadro" data-manopola="gE1">
+                <input id="gE1" type="range" min="0" max="100" step="1" value="40">
+              </div>
+              <span class="fl" id="flGE1">—</span><span class="vl" id="vGE1">—</span>
             </div>
-            <span class="fl" id="flGE2">—</span><span class="vl" id="vGE2">—</span>
-          </div>
-          <div class="manopola">
-            <div class="quadro" data-manopola="gE3">
-              <input id="gE3" type="range" min="0" max="100" step="1" value="30">
+            <div class="manopola">
+              <div class="quadro" data-manopola="gE2">
+                <input id="gE2" type="range" min="0" max="100" step="1" value="30">
+              </div>
+              <span class="fl" id="flGE2">—</span><span class="vl" id="vGE2">—</span>
             </div>
-            <span class="fl" id="flGE3">—</span><span class="vl" id="vGE3">—</span>
+            <div class="manopola">
+              <div class="quadro" data-manopola="gE3">
+                <input id="gE3" type="range" min="0" max="100" step="1" value="30">
+              </div>
+              <span class="fl" id="flGE3">—</span><span class="vl" id="vGE3">—</span>
+            </div>
           </div>
         </div>
       </div>
@@ -179,50 +180,57 @@
       <div class="filoV"></div>
 
       <div class="quadrante tessuti">
-        <div class="tela-quadrante" data-quadro="tessuti"></div>
-        <div class="sotto-quadrante">
-          <div class="manopola">
-            <div class="quadro" data-manopola="tregistro">
-              <input id="tregistro" type="range" min="0" max="100" step="1" value="55"
-                     data-i18n-aria="a11y.tregistro">
+        <!-- Il cerchio e le sue due manopole sullo STESSO piano: sono la stessa
+             figura — un arco graduato con un quadrato che ci corre sopra — e il
+             vetro le tiene insieme. Il disegno lo fa il canvas; il comando è il
+             cursore trasparente steso sopra l'arco. -->
+        <div class="vano cerchio" data-piano>
+          <div class="tela-quadrante" data-quadro="tessuti"></div>
+          <div class="sotto-quadrante">
+            <div class="manopola">
+              <div class="quadro" data-manopola="tregistro">
+                <input id="tregistro" type="range" min="0" max="100" step="1" value="55"
+                       data-i18n-aria="a11y.tregistro">
+              </div>
+              <span class="fl" data-i18n="fl.registro">Registro</span><span class="vl" id="vTregistro">1,8 ott</span>
             </div>
-            <span class="fl" data-i18n="fl.registro">Registro</span><span class="vl" id="vTregistro">1,8 ott</span>
-          </div>
-          <div class="manopola">
-            <div class="quadro" data-manopola="passo">
-              <input id="passo" type="range" min="0" max="100" step="1" value="38"
-                     data-i18n-aria="a11y.passo">
+            <div class="manopola">
+              <div class="quadro" data-manopola="passo">
+                <input id="passo" type="range" min="0" max="100" step="1" value="38"
+                       data-i18n-aria="a11y.passo">
+              </div>
+              <span class="fl" data-i18n="fl.passo">Passo</span><span class="vl" id="vPasso">0,38</span>
             </div>
-            <span class="fl" data-i18n="fl.passo">Passo</span><span class="vl" id="vPasso">0,38</span>
           </div>
         </div>
-        <!-- L'INSERTO della classe. La linea separa due livelli: sopra le due
-             manopole che stanno dentro il suono, sotto le tre che stanno dopo
-             di lui. L'effetto lo sceglie la tendina, e le tre manopole
-             cambiano nome insieme a lei. -->
-        <div class="filoH"></div>
-        <div class="inserto">
-          <span class="et" data-i18n="et.effetto">Effetto</span>
-          <label class="tendina piccola"><select id="effTessuti"></select></label>
-        </div>
-        <div class="sotto-quadrante tre">
-          <div class="manopola">
-            <div class="quadro" data-manopola="tE1">
-              <input id="tE1" type="range" min="0" max="100" step="1" value="40">
-            </div>
-            <span class="fl" id="flTE1">—</span><span class="vl" id="vTE1">—</span>
+        <!-- L'INSERTO della classe, in un piano suo. Le due manopole di sopra
+             stanno DENTRO il suono, le tre di qui gli vengono DOPO: prima lo
+             diceva una linea, adesso il vuoto fra due piani. L'effetto lo sceglie
+             la tendina, e le tre manopole cambiano nome insieme a lei. -->
+        <div class="vano effetti" data-piano>
+          <div class="inserto">
+            <span class="et" data-i18n="et.effetto">Effetto</span>
+            <label class="tendina piccola"><select id="effTessuti"></select></label>
           </div>
-          <div class="manopola">
-            <div class="quadro" data-manopola="tE2">
-              <input id="tE2" type="range" min="0" max="100" step="1" value="30">
+          <div class="sotto-quadrante tre">
+            <div class="manopola">
+              <div class="quadro" data-manopola="tE1">
+                <input id="tE1" type="range" min="0" max="100" step="1" value="40">
+              </div>
+              <span class="fl" id="flTE1">—</span><span class="vl" id="vTE1">—</span>
             </div>
-            <span class="fl" id="flTE2">—</span><span class="vl" id="vTE2">—</span>
-          </div>
-          <div class="manopola">
-            <div class="quadro" data-manopola="tE3">
-              <input id="tE3" type="range" min="0" max="100" step="1" value="30">
+            <div class="manopola">
+              <div class="quadro" data-manopola="tE2">
+                <input id="tE2" type="range" min="0" max="100" step="1" value="30">
+              </div>
+              <span class="fl" id="flTE2">—</span><span class="vl" id="vTE2">—</span>
             </div>
-            <span class="fl" id="flTE3">—</span><span class="vl" id="vTE3">—</span>
+            <div class="manopola">
+              <div class="quadro" data-manopola="tE3">
+                <input id="tE3" type="range" min="0" max="100" step="1" value="30">
+              </div>
+              <span class="fl" id="flTE3">—</span><span class="vl" id="vTE3">—</span>
+            </div>
           </div>
         </div>
       </div>
@@ -232,7 +240,7 @@
           <span class="num">02</span>
           <span>
             <span class="voce" data-i18n="sez.tessuti">Tessuti</span>
-            <span class="dida"><span data-i18n="dida.tenute">quattro tenute</span> · <b id="periodiTessuti">9 16 25 31</b></span>
+            <span class="dida periodi" id="periodiTessuti"><i>[</i><b>9</b><i class="sep">·</i><b>16</b><i class="sep">·</i><b>25</b><i class="sep">·</i><b>31</b><i>]</i></span>
           </span>
         </div>
 
@@ -285,12 +293,12 @@
     </section>
 
     <!-- =========================================================== 03 banco -->
-    <section class="banda">
+    <section class="banda" data-piano>
       <div class="capo">
         <span class="titolo">
           <span class="num">03</span>
           <span class="voce" data-i18n="sez.banco">Banco</span>
-          <span class="dida" data-i18n="dida.banco">l'uscita dello studio · registrazione, equalizzatore, mixer</span>
+          <span class="dida" data-i18n="dida.banco">registrazione, equalizzatore, mixer</span>
           <span class="divisore"></span>
           <span class="et" data-i18n="et.profilo">PROFILO</span>
           <label class="tendina piccola" style="width:96px">
@@ -299,8 +307,8 @@
           <button class="tasto" id="salvaProfilo" title="Salva le otto bande come profilo">+</button>
         </span>
         <span class="letture">
-          <span class="lettura"><span class="fl" data-i18n="fl.picco">Picco</span><span class="vl" id="picco">—</span></span>
-          <span class="lettura"><span class="fl" data-i18n="fl.limitatore">Limitatore</span><span class="vl" id="riduzione">—</span></span>
+          <span class="lettura"><span class="fl" data-i18n="fl.picco">Picco</span><span class="vl vivo" id="picco">—</span></span>
+          <span class="lettura"><span class="fl" data-i18n="fl.limitatore">Limitatore</span><span class="vl vivo" id="riduzione">—</span></span>
         </span>
       </div>
 
@@ -353,7 +361,6 @@
         <span class="titolo">
           <span class="num">04</span>
           <span class="voce" data-i18n="sez.paesaggio">Paesaggio</span>
-          <span class="dida" data-i18n="dida.paesaggio">una registrazione tenuta ferma sotto una lente</span>
           <span class="divisore"></span>
           <span class="fl" data-i18n="fl.segmento">Segmento</span>
           <span class="vl" id="vSegmento">—</span>
@@ -369,7 +376,7 @@
           <button class="chip" id="registra" aria-pressed="false">
             <span class="spia"></span><span id="etichettaRegistra" data-i18n="pae.microfono">Microfono</span>
           </button>
-          <span class="vl" id="cattura"></span>
+          <span class="vl vivo" id="cattura"></span>
         </span>
       </div>
 
@@ -405,35 +412,94 @@
     </section>
 
     <!-- ========================================================== 05 deriva -->
-    <section class="banda">
-      <div class="capo">
-        <span class="titolo">
-          <span class="num">05</span>
-          <span class="voce" data-i18n="sez.deriva">Deriva</span>
-          <span class="dida" id="didaDeriva">il tempo lungo · una quinta ogni 2′ 30″</span>
-        </span>
-        <span class="letture">
-          <span class="lettura"><span class="fl" data-i18n="fl.sessione">Sessione</span><span class="vl" id="sessione">00:00</span></span>
-          <span class="lettura"><span class="fl" data-i18n="fl.quinte">Quinte</span><span class="vl" id="quinteFatte">0</span></span>
-          <span class="lettura"><span class="fl" data-i18n="fl.prossima">Prossima</span><span class="vl" id="prossima">2′ 30″</span></span>
-          <span class="lettura"><span class="fl" data-i18n="fl.riallinea">Riallinea</span><span class="vl" id="riallineo">—</span></span>
-        </span>
-      </div>
+    <!-- La deriva sta in un pannello a sinistra, largo quanto la colonna delle
+         gocce più il suo quadrante: i bordi del vetro cadono sulle stesse
+         verticali dei piani di sopra. A destra, a specchio, le influenze. -->
+    <section class="banda deriva-banda">
+      <div class="pannello-deriva" data-piano>
+        <div class="capo">
+          <span class="titolo">
+            <span class="num">05</span>
+            <span class="voce" data-i18n="sez.deriva">Deriva</span>
+            <span class="dida" id="didaDeriva">il tempo lungo · una quinta ogni 2′ 30″</span>
+          </span>
+        </div>
 
-      <div class="deriva">
-        <div class="cella">
-          <span class="et" data-i18n="et.tonalita">TONALITÀ</span>
-          <span class="tonalita" id="tonalita">do</span>
+        <div class="deriva">
+          <!-- Il circolo lo disegna il canvas; la tonalità al centro è testo
+               vero, steso sopra il disegno come i cursori sopra le manopole. -->
+          <div class="cella cerchio-quinte">
+            <span class="et" data-i18n="et.circolo">CIRCOLO DELLE QUINTE</span>
+            <div class="tela-quinte" data-quadro="quinte">
+              <span class="centro-quinte">
+                <span class="et" data-i18n="et.tonalita">TONALITÀ</span>
+                <span class="tonalita" id="tonalita">do</span>
+              </span>
+            </div>
+          </div>
+          <div class="cella">
+            <span class="et" data-i18n="et.collezione">COLLEZIONE</span>
+            <span class="collezione" id="collezione">do re mi sol la</span>
+          </div>
+          <div class="cella letture-deriva">
+            <span class="lettura"><span class="fl" data-i18n="fl.sessione">Sessione</span><span class="vl vivo" id="sessione">00:00</span></span>
+            <span class="lettura"><span class="fl" data-i18n="fl.quinte">Quinte</span><span class="vl vivo" id="quinteFatte">0</span></span>
+            <span class="lettura"><span class="fl" data-i18n="fl.prossima">Prossima</span><span class="vl vivo" id="prossima">2′ 30″</span></span>
+            <span class="lettura"><span class="fl" data-i18n="fl.riallinea">Riallinea</span><span class="vl vivo" id="riallineo">—</span></span>
+          </div>
+          <div class="cella baricentro">
+            <span class="et"><span data-i18n="et.baricentro">BARICENTRO · 15 MIN</span> <span class="vl vivo" id="vBaricentro">+0,0</span></span>
+            <div class="tela-baricentro" data-quadro="baricentro"></div>
+          </div>
         </div>
-        <div class="filoV"></div>
-        <div class="cella">
-          <span class="et" data-i18n="et.circolo">CIRCOLO DELLE QUINTE</span>
-          <div class="tela-quinte" data-quadro="quinte"></div>
+      </div>
+      <!-- 06 · INFLUENZE, a specchio della deriva: le letture sotto il quadrante
+           dei tessuti, il cerchio nella colonna da 205 accanto a loro. Dice di
+           quanto la deriva, l'ora e la stagione spostano ciascun parametro oltre
+           a quello che ha deciso la mano. -->
+      <div class="pannello-influenze" data-piano>
+        <div class="capo">
+          <span class="titolo">
+            <span class="num">06</span>
+            <span class="voce" data-i18n="sez.influenze">Influenze</span>
+            <span class="dida" data-i18n="dida.influenze">chi muove i parametri oltre alla mano</span>
+          </span>
         </div>
-        <div class="filoV"></div>
-        <div class="cella">
-          <span class="et"><span data-i18n="et.baricentro">BARICENTRO · 15 MIN</span> <span class="vl" id="vBaricentro">+0,0</span></span>
-          <div class="tela-baricentro" data-quadro="baricentro"></div>
+
+        <div class="influenze">
+          <div class="cella fonte">
+            <span class="et" data-i18n="et.inf.ora">ORA → GOCCE</span>
+            <span class="lettura"><span class="fl" data-i18n="fl.calore">Calore</span><span class="vl vivo" id="infCalore">0,00</span></span>
+            <span class="lettura"><span class="fl" data-i18n="fl.spazio">Spazio</span><span class="vl vivo" id="infSpazio">0,00</span></span>
+            <span class="lettura"><span class="fl" data-i18n="fl.colore">Colore d'insieme</span><span class="vl vivo" id="infColore">—</span></span>
+          </div>
+          <div class="cella fonte">
+            <span class="et" data-i18n="et.inf.stagione">STAGIONE → TESSUTI</span>
+            <span class="lettura"><span class="fl" data-i18n="fl.registro">Registro</span><span class="vl vivo" id="infTregistro">0,0 ott</span></span>
+            <span class="lettura"><span class="fl" data-i18n="fl.apertura">Apertura</span><span class="vl vivo" id="infApertura">×1,00</span></span>
+            <span class="lettura"><span class="fl" data-i18n="fl.chiusura">Chiusura</span><span class="vl vivo" id="infChiusura">×1,00</span></span>
+            <span class="lettura"><span class="fl" data-i18n="fl.passo">Passo</span><span class="vl vivo" id="infPasso">0,00</span></span>
+          </div>
+          <div class="cella fonte deriva-fonte">
+            <span class="et" data-i18n="et.inf.deriva">DERIVA → GOCCE · TESSUTI</span>
+            <div class="due">
+              <span class="lettura"><span class="fl" data-i18n="fl.registro">Registro</span><span class="vl vivo" id="infRegistro">0,0 ott</span></span>
+              <span class="lettura"><span class="fl" data-i18n="fl.addensamento">Addensamento</span><span class="vl vivo" id="infAddensamento">0,00</span></span>
+              <span class="lettura"><span class="fl" data-i18n="fl.densita">Densità</span><span class="vl vivo" id="infDensita">0 / giro</span></span>
+              <span class="lettura"><span class="fl" data-i18n="fl.livello">Livello</span><span class="vl vivo" id="infLivello">0,0 dB</span></span>
+            </div>
+          </div>
+          <!-- Il cerchio lo disegna il canvas; i nomi della fascia e della stagione
+               al centro sono testo vero, come la tonalità nella deriva. -->
+          <div class="cella cerchio-influenze">
+            <span class="et" data-i18n="et.orastagione">ORA E STAGIONE</span>
+            <div class="tela-influenze" data-quadro="influenze">
+              <span class="centro-influenze">
+                <span class="nome-tempo" id="nomeOra">mattino</span>
+                <span class="nome-tempo" id="nomeStagione">autunno</span>
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </section>

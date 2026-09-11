@@ -32,6 +32,11 @@
   --muto:#b8b7aa;     /* il grado più tenue: sigle, lingue non scelte, spento */
   --filo:#c3c2b4;     /* linee di struttura */
   --filo-2:#d8d7cc;   /* il filo più tenue */
+  /* IL VETRO è il piano rialzato su cui appoggiano gli strumenti: due piani
+     per classe — il cerchio con le sue manopole, l'effetto — il banco, la deriva. Non sta sulla retta fra carta e inchiostro
+     ma oltre la carta, dalla parte opposta all'inchiostro: 1,08 di contrasto,
+     quanto basta a staccare un piano senza disegnargli un bordo. */
+  --vetro:#f0efe9;
   --spento:#d2d1c5;   /* graduazione non raggiunta */
 
   /* UN ACCENTO SOLO, ed è quello di Rada Deriva: tutto il resto è inchiostro
@@ -40,6 +45,9 @@
      inchiostro erano cinque cose che chiedevano attenzione insieme.
      Nell'ambra si dice una cosa sola: ADESSO. */
   --ambra:#c25a2b;
+  /* Le cifre sopra l'ambra: l'estremo chiaro del foglio, carta nel tema chiaro e
+     inchiostro nello scuro — lo stesso #e7e7e4 da tutt'e due le parti. */
+  --su-ambra:var(--carta);
 
   --sans:"Helvetica Neue",-apple-system,system-ui,"Segoe UI",Roboto,Arial,sans-serif;
   --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
@@ -57,8 +65,9 @@
    l'inchiostro diventa la carta, gli stessi due colori di prima. I sei toni in
    mezzo non sono scelti a occhio — stanno sulla retta fra i due nuovi estremi,
    ciascuno nel punto in cui il suo RAPPORTO DI CONTRASTO con il fondo è quello
-   che aveva sulla carta chiara. Misurati: 6,01 · 2,61 · 1,63 · 1,45 · 1,17 ·
-   1,24, gli stessi a due cifre. È per questo che il tema scuro non è più
+   che aveva sulla carta chiara. Misurati: 6,01 · 1,45, gli stessi a due cifre;
+   `grigio`, `muto`, `filo-2` e `spento` fanno eccezione, e il perché sta qui sotto
+   accanto ai loro valori. È per questo che il tema scuro non è più
    contrastato né più piatto dell'altro: è lo stesso foglio girato.
 
    L'AMBRA NON SI TOCCA, ed è il punto di tutto: l'accento dice ADESSO, e se
@@ -76,12 +85,43 @@
   color-scheme:dark;
   --carta:#20211c;
   --inchiostro:#e7e7e4;
+  --su-ambra:var(--inchiostro);
   --inchiostro-2:#9e9e9b;
-  --grigio:#61615f;
-  --muto:#434340;
+  /* LE ETICHETTE SCURE SONO INCHIOSTRO TENUE. Il grigio calcolato — #61615f, 2,61
+     sulla carta come il grigio chiaro — a schermo scendeva a 2,42 sulla carta
+     granita e a 2,21 sul vetro, e le etichette a sette pixel e mezzo non si
+     leggevano. Qui il grigio è la tinta subito sopra della palette, non una
+     nuova: stessa tinta, un nome in più. Le parole restano un gradino sopra. */
+  --grigio:var(--inchiostro-2);
+  /* IL MUTO SCURO STA A METÀ STRADA, in chiarezza percepita, fra il grigio di
+     prima — che per un'etichetta non bastava — e l'inchiostro tenue delle
+     etichette: 3.74 sulla carta a schermo, 3.41 sul vetro. Si legge, e resta un
+     gradino sotto. Non può essere inchiostro-2 come il grigio: sul circolo le
+     note fuori collezione si scriverebbero come quelle in uso, e una manopola
+     spenta avrebbe l'etichetta di una accesa. */
+  --muto:#7f7f7b;
   --filo:#3b3b38;
-  --filo-2:#2c2d29;
-  --spento:#30312e;
+  --filo-2:#33332f;
+  /* IL VETRO E I DUE TONI PIÙ TENUI SONO MISURATI SULLO SCHERMO, non scritti.
+
+     Il vetro è l'unica tinta che col tema non si ribalta: rialzato vuol dire più
+     chiaro in tutti e due, o sul fondo scuro il piano si leggerebbe come una
+     buca. Ma a pari rapporto scritto — 1,08 — era invisibile, e non per un
+     errore di conto: la GRANA NON È NEUTRA. Sulla carta chiara la scurisce, su
+     quella scura la schiarisce, e misurato #20211c esce a schermo come #262722,
+     cioè proprio il vetro calcolato. Il vetro lo disegna il canvas sopra la
+     grana, quindi la grana non ce l'ha. Si confronta allora quello che arriva
+     all'occhio: sulla carta chiara il vetro sta 3,40 L* sopra la carta granita,
+     qui 3,22 — il più vicino fra i valori che ci sono.
+
+     Sopra un piano più chiaro `filo-2` e `spento` sparivano, a 1,01 e 1,05: la
+     guida della corona, le tacche non raggiunte delle manopole, i binari delle
+     aste. Sono alzati quanto basta perché sul vetro si vedano come si vedevano
+     sulla carta a schermo — 1,08 e 1,15 — restando sotto `filo` e in ordine. Sono
+     gli unici due toni scuri che non rifanno il rapporto scritto della carta
+     chiara, e la ragione è questa. */
+  --vetro:#2d2e28;
+  --spento:#373733;
   --retino:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='7'%3E%3Ccircle cx='3.5' cy='3.5' r='1.05' fill='%23393936'/%3E%3C/svg%3E");
 }
 
@@ -112,6 +152,30 @@ body{
 #tavola{position:absolute;left:0;top:0;width:100%;pointer-events:none;z-index:0}
 .sopra{position:relative;z-index:1}
 
+/* -------------------------------------------------------------------- i piani
+   IL VETRO LO DISEGNA IL CANVAS, non il foglio di stile, e non è una scelta di
+   gusto: il canvas sta SOTTO i comandi, quindi un fondo messo qui su un
+   elemento coprirebbe il quadrante che il canvas gli disegna dietro. Qui stanno
+   solo le misure — quanto il piano sporge dal riquadro dell'elemento marcato
+   `[data-piano]` — perché l'impaginazione resta tutta in questo file.
+
+   Le sporgenze sono prese dagli spazi che ci sono già e non ne chiedono uno in
+   più: nessun comando si sposta di un pixel. Di lato quattordici, dentro i
+   ventisette fra una colonna e l'altra; sopra e sotto il piano si ferma a
+   cinque pixel dal filo che gli sta sopra e a otto da quello che gli sta sotto.
+   Una banda parte con il filo in testa, quindi lì il piano rientra. */
+:root{--piano-smusso:9px}
+[data-piano]{--piano-sopra:0px;--piano-lato:14px;--piano-sotto:8px}
+/* I due piani di una classe non sporgono né sopra né sotto: l'aria la danno i
+   vani da dentro, e fra due piani c'è il `gap` del quadrante. Solo il cerchio
+   sale fino a cinque pixel dal filo della testata. */
+.vano[data-piano]{--piano-sotto:0px}
+.vano.cerchio[data-piano]{--piano-sopra:9px}
+.banda[data-piano]{--piano-sopra:-6px}
+/* Il pannello della deriva comincia dentro la sua banda, dopo il filo e il suo
+   padding: sette in su lo fermano a cinque pixel dal filo, come gli altri. */
+.pannello-deriva[data-piano],.pannello-influenze[data-piano]{--piano-sopra:7px}
+
 /* ------------------------------------------------------------------- caratteri
    Un ruolo, una classe. Le dimensioni sono quelle del disegno e non si
    arrotondano: 7,5 px con una spaziatura larga è una cosa diversa da 8. */
@@ -127,12 +191,32 @@ body{
    guarda le colonne legge una misura; nessuno deve tenere a mente due chiavi
    nello stesso posto.
 
-   Contro la carta l'ambra sta a 3,54 di contrasto e sul fondo scuro a 2,72:
-   sopra le etichette in grigio, che stanno a 2,61 da tutt'e due le parti. I
-   numeri sono la cosa più leggibile della colonna, che è quello che devono
-   essere. */
+   Sulla carta chiara l'ambra sta a 3,54 di contrasto, sopra le etichette in grigio
+   a 2,61: i numeri sono la cosa più leggibile della colonna. Nel tema scuro no:
+   le etichette sono salite all'inchiostro tenue, 6,03, perché a 2,6 sulla carta
+   granita non si leggevano, e l'ambra — 3,70 — resta sotto di loro. Là un valore
+   si fa trovare con la tinta e non con la luminanza, che è quello che un arancio
+   fa comunque su una pagina di soli grigi. */
 .vl{font-family:var(--mono);font-size:8px;color:var(--ambra);
     font-variant-numeric:tabular-nums;line-height:1.2}
+/* IL VALORE VIVO STA IN UNA TARGHETTA, e viene dal mockup «Hiroshi · console»:
+   ambra a fondo pieno, cifre chiare. Vivo vuol dire che cambia DA SÉ — il tempo
+   della seduta, il picco, il limitatore, la deriva — e non perché una mano ha
+   mosso un cursore. LA MANO SCRIVE IN RIGA, LO STRUMENTO IN TARGHETTA: le targhe
+   dei filetti, delle manopole e del mixer restano cifre in ambra sulla carta, e
+   la distanza fra le due cose si vede da lontano. È la stessa separazione che
+   c'è fra la corona e il filetto, fra l'efficace e la mano.
+
+   Il fondo è uno pseudo-elemento che sporge dalla cifra, come il riempimento di
+   una scelta: il valore resta grande quanto il suo testo e niente si sposta. Le
+   cifre sono chiare nei due temi perché l'ambra non cambia col tema e quello che
+   ci sta sopra nemmeno. Una targhetta vuota non si disegna: sarebbe una macchia
+   d'ambra che non dice niente. */
+.vl.vivo{position:relative;z-index:0;color:var(--su-ambra);font-weight:500}
+.vl.vivo::before{content:"";position:absolute;z-index:-1;inset:-3px -5px;
+  background:var(--ambra);
+  clip-path:polygon(4px 0,100% 0,100% calc(100% - 4px),calc(100% - 4px) 100%,0 100%,0 4px)}
+.vl.vivo:empty::before{display:none}
 .mn{font-family:var(--mono);font-size:8px;letter-spacing:.16em;text-transform:uppercase;
     color:var(--inchiostro);line-height:1.2}
 .grigio{color:var(--grigio)}
@@ -215,7 +299,16 @@ body{
 .temi{display:flex;gap:14px}
 .lingua{font-family:var(--mono);font-size:8px;letter-spacing:.18em;color:var(--muto);
         background:none;border:0;padding:0;cursor:pointer}
-.lingua[aria-pressed=true]{color:var(--inchiostro)}
+/* LA SCELTA SI RIEMPIE D'INCHIOSTRO, e la parola diventa carta. Il riempimento
+   è uno pseudo-elemento che sporge dal pulsante invece di un padding: il
+   pulsante resta grande quanto la sua parola e niente intorno si sposta. A
+   destra sporge un po' meno, perché la spaziatura mette già un vuoto dopo
+   l'ultima lettera. Gli angoli sono smussati come i piani, e l'ambra qui non
+   entra: dice un valore, non una scelta. */
+.lingua[aria-pressed=true]{color:var(--carta);position:relative;z-index:0}
+.lingua[aria-pressed=true]::before{content:"";position:absolute;z-index:-1;
+  inset:-4px calc(.18em - 6px) -4px -6px;background:var(--inchiostro);
+  clip-path:polygon(4px 0,100% 0,100% calc(100% - 4px),calc(100% - 4px) 100%,0 100%,0 4px)}
 .lingua:focus-visible{outline:1px solid var(--ambra);outline-offset:3px}
 
 /* -------------------------------------------------------------------- le bande */
@@ -231,9 +324,13 @@ body{
 .capo .voce{font-size:11px;font-weight:400;letter-spacing:.30em;text-transform:uppercase}
 .capo .dida{font-family:var(--mono);font-size:8px;letter-spacing:.10em;color:var(--grigio)}
 /* Anche i numeri dentro una didascalia: i quattro periodi di una classe sono
-   valori, e stanno in un `b` proprio per poterli distinguere dalla prosa che
-   li circonda. */
+   valori, e stanno in un `b` proprio per poterli distinguere da quello che li
+   circonda. Sotto «gocce» e «tessuti» intorno non c'è più prosa ma soltanto la
+   punteggiatura della serie — [7·11·13·17] — e quella è INCHIOSTRO: nera sulla
+   carta, chiara sul fondo scuro, senza una riga in più per il tema. */
 .dida b{font-weight:inherit;color:var(--ambra)}
+.dida.periodi i{font-style:normal;color:var(--inchiostro)}
+.dida.periodi .sep{margin:0 .3em}
 .letture{display:flex;align-items:baseline;gap:22px}
 .lettura{display:flex;align-items:baseline;gap:8px}
 .lettura .vl{font-size:8.5px}
@@ -246,9 +343,21 @@ body{
         gap:0 27px;padding-top:0}
 .filoV{background:var(--filo);width:1px;justify-self:center}
 .colonna{display:flex;flex-direction:column;gap:18px}
+/* Le righe delle linee chiudono la colonna alla stessa altezza in cui l'ultimo
+   piano chiude il quadrante: il vuoto che avanza va tutto sopra di loro, fra i
+   comandi del suono e i comandi per linea, che sono due cose diverse. */
+.colonna>.gruppo:last-child{margin-top:auto}
 .intesta{display:flex;align-items:flex-start;gap:14px}
-.colonna.destra .intesta{justify-content:flex-end;text-align:right}
-.colonna.destra .intesta{flex-direction:row-reverse;justify-content:flex-end;text-align:right}
+/* L'intestazione dei tessuti è lo SPECCHIO di quella delle gocce: il numero sul
+   filo destro della colonna, il titolo e i periodi giustificati contro di lui.
+   In una riga rovesciata l'inizio è a destra, quindi `flex-start`: con
+   `flex-end` il blocco finiva spinto a sinistra. La spaziatura mette un vuoto
+   anche dopo l'ultima lettera, e il margine negativo lo toglie — la stessa
+   ragione del marchio — o «TESSUTI» e la parentesi chiusa starebbero un pelo più
+   in qua del bordo che dicono di toccare. */
+.colonna.destra .intesta{flex-direction:row-reverse;justify-content:flex-start;text-align:right}
+.colonna.destra .intesta .voce{margin-right:-.30em}
+.colonna.destra .intesta .dida{margin-right:-.10em}
 .intesta .num{font-family:var(--mono);font-size:28px;font-weight:200;letter-spacing:-.02em;
               color:var(--ambra);line-height:.85}
 .intesta .voce{font-size:12px;font-weight:400;letter-spacing:.30em;text-transform:uppercase;
@@ -308,27 +417,44 @@ input[type=range]:focus-visible{outline:1px solid var(--ambra);outline-offset:3p
    Sopra il quadrante stanno tre comandi trasparenti, uno per corona. Non si
    vedono perché il loro disegno è la corona stessa: si prendono col dito, col
    puntatore e col tasto Tab, e allora compare il filo di messa a fuoco. */
-.quadrante{position:relative;display:flex;flex-direction:column}
+/* DUE PIANI PER CLASSE, uno sotto l'altro: il cerchio con le sue due manopole,
+   e l'effetto. Fra i due lo stesso vuoto che separa due gruppi nella colonna dei
+   comandi, diciotto pixel. I vani sono larghi quanto il cerchio e non oltre, così
+   i bordi dei piani cadono sulla stessa verticale a qualunque larghezza; l'aria
+   dentro il piano è il loro padding, non una sporgenza. */
+.quadrante{position:relative;display:flex;flex-direction:column;gap:18px}
+.vano{width:100%;max-width:460px;margin:0 auto}
+/* Il padding non è simmetrico perché l'inchiostro non lo è. Le due manopole
+   restano dov'erano quando avevano un piano loro, trentaquattro pixel sotto il
+   cerchio, e sotto le loro etichette il piano chiude a diciassette: la stessa
+   aria di prima. Nel piano dell'effetto la tendina sta quattro pixel più in giù
+   del suo vano, quindi sopra dieci e sotto quattordici. Misurato
+   sull'inchiostro, non sui riquadri. */
+.vano.cerchio{padding-bottom:17px}
+.vano.cerchio .sotto-quadrante{margin-top:34px}
+.vano.effetti{display:flex;flex-direction:column;gap:8px;padding:10px 0 14px}
 /* Il quadrante non cresce oltre una certa misura: su uno schermo largo
    diventerebbe un cerchio da mezzo metro con quattro anelli lontanissimi, e la
    fase di una linea si leggerebbe peggio, non meglio. */
 .tela-quadrante{position:relative;width:100%;max-width:460px;margin:0 auto;padding-bottom:min(100%,460px)}
-/* Sotto il quadrante, le due manopole della classe: due satelliti del cerchio,
-   non due comandi qualunque messi in fondo alla colonna. La bocca della corona
-   si apre in basso proprio verso di loro. */
-.sotto-quadrante{display:flex;justify-content:center;gap:56px;margin-top:2px}
-/* Le tre dell'inserto stanno più strette: tre manopole da cento pixel con lo
-   stesso respiro delle due di sopra uscirebbero dal quadrante, che non cresce
-   oltre 460. */
-.sotto-quadrante.tre{gap:18px}
+/* LE MANOPOLE STANNO SU UNA GRIGLIA A SESTI. Le due di sopra hanno il centro a un
+   terzo e a due terzi, le tre dell'effetto a un sesto, a metà e a cinque sesti:
+   ognuna delle due cade esattamente fra due delle tre. Messe in fila ciascuna
+   col suo `gap` centrato, le due righe non avevano niente in comune e i centri
+   capitavano dove capitavano. Le colonne sono frazioni, quindi la regola regge
+   a qualunque larghezza. */
+.sotto-quadrante{display:grid;grid-template-columns:1fr 2fr 2fr 1fr;justify-items:center}
+.sotto-quadrante>.manopola:first-child{grid-column:2}
+.sotto-quadrante.tre{grid-template-columns:repeat(3,minmax(0,1fr))}
+.sotto-quadrante.tre>.manopola:first-child{grid-column:auto}
 
 /* ------------------------------------------------------------------ l'inserto
-   La linea che separa i due livelli sotto il quadrante: sopra le manopole che
-   stanno DENTRO il suono — registro, calore, passo — sotto quelle che stanno
-   DOPO di lui. Senza la linea sarebbero cinque comandi in fila e non si
-   capirebbe perché tre cambiano nome quando si tocca una tendina. */
-.filoH{height:1px;background:var(--filo);margin:16px auto 12px;max-width:420px;width:100%}
-.inserto{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:2px}
+   La tendina dell'effetto apre il suo piano, e sotto ci sono le tre manopole che
+   cambiano nome con lei. Il piano sta sotto quello delle due manopole e non
+   insieme: quelle stanno DENTRO il suono — registro, calore, passo — queste gli
+   vengono DOPO. Prima lo diceva una linea; adesso lo dice il vuoto fra due
+   piani, che è la stessa cosa senza un segno in più. */
+.inserto{display:flex;align-items:center;justify-content:center;gap:12px}
 .inserto .et{margin:0}
 .inserto .tendina{width:150px}
 
@@ -341,7 +467,10 @@ input[type=range]:focus-visible{outline:1px solid var(--ambra);outline-offset:3p
 .manopola .quadro input{position:absolute;left:0;top:50%;width:100%;height:30px;
                         transform:translateY(-50%);opacity:0;cursor:ew-resize}
 .manopola .quadro input:focus-visible{opacity:1}
-.manopola .fl{text-align:center}
+/* L'etichetta sale DENTRO la bocca dell'arco, dove il disegno non arriva: il
+   punto più basso della corsa sta a tre quarti del riquadro, e sotto restava un
+   quarto vuoto che staccava il nome dalla manopola a cui appartiene. */
+.manopola .fl{text-align:center;margin-top:-16px}
 /* Una manopola che l'effetto scelto non usa: il disegno la spegne da sé, qui si
    spengono le due scritte e il cursore smette di prendere il fuoco. */
 .manopola.spenta .fl,.manopola.spenta .vl{color:var(--muto)}
@@ -362,7 +491,8 @@ input[type=range]:focus-visible{outline:1px solid var(--ambra);outline-offset:3p
        padding:2px 5px;cursor:pointer;line-height:1}
 .tasto:hover{color:var(--inchiostro);border-color:var(--inchiostro)}
 .tasto[aria-pressed=true]{background:var(--inchiostro);border-color:var(--inchiostro);
-                          color:var(--carta)}
+                          color:var(--carta);
+                          clip-path:polygon(3px 0,100% 0,100% calc(100% - 3px),calc(100% - 3px) 100%,0 100%,0 3px)}
 
 /* ------------------------------------------------------------------- il banco */
 .banco{display:grid;grid-template-columns:205px minmax(0,1fr) 205px;gap:0 27px;padding-top:8px}
@@ -419,18 +549,69 @@ input[type=range].verticale::-moz-range-thumb{width:9px;height:7px}
 .comandi-paesaggio{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));
                    gap:0 26px;padding-top:26px}
 
-/* ------------------------------------------------------------------- la deriva */
-/* Tre celle e due fili: tonalità, circolo delle quinte, baricentro. Erano
-   quattro — la quarta teneva le sette spie delle voci, che non ci sono e per
-   adesso non ci saranno: una casella che aspetta è una promessa, e una promessa
-   che nessuno ha preso è meglio non farla. */
-.deriva{display:grid;grid-template-columns:92px 1px minmax(0,1fr) 1px 250px;
-        gap:0 22px;padding-top:12px;align-items:stretch}
-.deriva .cella{display:flex;flex-direction:column;gap:8px;justify-content:flex-start}
-.deriva .et{display:flex;justify-content:space-between;gap:10px}
+/* ------------------------------------------------------------------- la deriva
+   Un pannello a sinistra, sulle prime due colonne della griglia delle classi:
+   largo quanto la colonna delle gocce più il suo quadrante, così i bordi del
+   vetro cadono sulle verticali dei piani di sopra. Nelle due colonne di destra,
+   a specchio, le influenze.
+
+   Dentro, la stessa griglia in piccolo: il circolo nella colonna da 205, le note
+   in uso, le letture e il baricentro nello spazio del quadrante. Il baricentro
+   si allunga fino al fondo del circolo, così il pannello chiude su una riga. */
+.deriva-banda{display:grid;grid-template-columns:205px minmax(0,1fr) 1px minmax(0,1fr) 205px;gap:0 27px}
+.pannello-deriva{grid-column:1/3;display:flex;flex-direction:column;gap:12px}
+.deriva{display:grid;grid-template-columns:205px minmax(0,1fr) minmax(0,1fr);
+        grid-template-rows:auto 1fr;gap:18px 27px}
+.deriva .cella{display:flex;flex-direction:column;gap:8px}
+.deriva .cerchio-quinte{grid-column:1;grid-row:1/3}
+.deriva .baricentro{grid-column:2/4;grid-row:2}
+.deriva .baricentro .et{display:flex;justify-content:space-between;gap:10px}
+/* Il baricentro sta dentro la sua etichetta, e da lì ereditava la spaziatura larga
+   e il corpo delle sigle: in una targhetta si vedeva — «+ 0 , 2», più piccolo delle
+   altre e con un vuoto a destra. Qui torna come le altre letture. */
+.deriva .baricentro .et .vl{font-size:8.5px;letter-spacing:0}
+.letture-deriva{gap:9px}
+.letture-deriva .lettura{justify-content:space-between}
+.tela-quinte{position:relative;width:100%;height:190px}
+/* La tonalità al centro del circolo è testo e non disegno: si legge, si
+   traduce, e un lettore di schermo la trova. */
+.centro-quinte{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+               display:flex;flex-direction:column;align-items:center;gap:5px;
+               pointer-events:none}
 .tonalita{font-size:26px;font-weight:200;letter-spacing:.02em;line-height:1}
-.tela-quinte{width:100%;height:44px}
-.tela-baricentro{width:100%;height:44px}
+/* Le note in uso sono parole, quindi inchiostro: l'ambra è dei valori. */
+.collezione{font-family:var(--mono);font-size:11px;letter-spacing:.12em;
+            color:var(--inchiostro);line-height:1.4}
+.tela-baricentro{width:100%;flex:1;min-height:44px}
+/* ---------------------------------------------------------------- le influenze
+   Lo specchio della deriva: il pannello sulle due colonne di destra, le letture
+   sotto il quadrante dei tessuti e il cerchio nella colonna da 205 dalla parte
+   esterna. L'intestazione è giustificata a destra come quella dei tessuti, e la
+   voce ha il margine negativo quanto la sua spaziatura per la stessa ragione.
+
+   Le due righe di sopra non hanno la stessa altezza di quelle della deriva — la
+   stagione ha un'etichetta e quattro letture, la deriva quattro letture sole —
+   quindi le due non si allineano sulla riga del baricentro ma sul FONDO: il
+   gruppo della deriva chiude sulla riga del cerchio, come il baricentro a fianco. */
+.pannello-influenze{grid-column:4/6;display:flex;flex-direction:column;gap:12px}
+.pannello-influenze .capo{justify-content:flex-end}
+.pannello-influenze .capo .titolo{flex-direction:row-reverse}
+.pannello-influenze .capo .voce{margin-right:-.30em}
+.influenze{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 205px;
+           grid-template-rows:auto 1fr;gap:18px 27px}
+.influenze .cella{display:flex;flex-direction:column;gap:9px}
+.influenze .lettura{justify-content:space-between}
+.influenze .cerchio-influenze{grid-column:3;grid-row:1/3;gap:8px}
+.influenze .cerchio-influenze .et{text-align:right}
+.influenze .deriva-fonte{grid-column:1/3;grid-row:2;align-self:end}
+.influenze .due{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:9px 27px}
+.tela-influenze{position:relative;width:100%;height:190px}
+.centro-influenze{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+                  display:flex;flex-direction:column;align-items:center;gap:4px;
+                  pointer-events:none}
+/* Due parole e non una sola grande come la tonalità: dentro l'anello dei mesi
+   «pomeriggio» a ventisei pixel non ci starebbe. */
+.nome-tempo{font-size:15px;font-weight:300;letter-spacing:.02em;line-height:1}
 
 /* --------------------------------------------------------------------- il piede */
 .piede{display:flex;align-items:baseline;justify-content:space-between;gap:20px;
@@ -454,17 +635,26 @@ input[type=range].verticale::-moz-range-thumb{width:9px;height:7px}
   .banco .mixer{grid-column:1/-1}
   .faders{max-width:420px}
   .comandi-paesaggio{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px 26px}
-  .deriva{grid-template-columns:92px 1px minmax(0,1fr);gap:16px 22px}
-  .deriva .filoV:nth-of-type(2){display:none}
+  .deriva-banda{grid-template-columns:205px minmax(0,1fr);gap:30px 24px}
+  .pannello-deriva,.pannello-influenze{grid-column:1/-1}
 }
 @media (max-width:720px){
   .foglio{padding:24px 20px 22px}
   .classi{grid-template-columns:minmax(0,1fr)}
   .classi .colonna.destra .intesta{flex-direction:row;justify-content:flex-start;text-align:left}
+  .classi .colonna.destra .intesta .voce,.classi .colonna.destra .intesta .dida{margin-right:0}
   .banco{grid-template-columns:minmax(0,1fr)}
   .comandi-paesaggio{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .deriva-banda{grid-template-columns:minmax(0,1fr)}
   .deriva{grid-template-columns:minmax(0,1fr)}
-  .deriva .filoV{display:none}
+  .deriva .cerchio-quinte,.deriva .baricentro{grid-column:auto;grid-row:auto}
+  .influenze,.influenze .due{grid-template-columns:minmax(0,1fr)}
+  .influenze .cerchio-influenze,.influenze .deriva-fonte{grid-column:auto;grid-row:auto}
+  .influenze .cerchio-influenze{order:-1}
+  .pannello-influenze .capo{justify-content:flex-start}
+  .pannello-influenze .capo .titolo{flex-direction:row}
+  .pannello-influenze .capo .voce{margin-right:0}
+  .influenze .cerchio-influenze .et{text-align:left}
   .testata{gap:14px;padding-bottom:12px}
   .piede{flex-direction:column;gap:6px}
 }
@@ -473,7 +663,13 @@ input[type=range].verticale::-moz-range-thumb{width:9px;height:7px}
    Sta dentro un `button` e non è una spunta, perché quello che si preme è
    un'azione — «Ascolta», «Ferma» — e non una casella da barrare. */
 .spia{width:9px;height:9px;flex:none;border:1px solid var(--inchiostro);background:transparent}
-.chip[aria-pressed=true] .spia{background:var(--inchiostro)}
+/* Premuto, un pulsante d'azione fa quello che fa una lingua scelta: si riempie
+   d'inchiostro e la spia si rovescia in carta. */
+.chip[aria-pressed=true]{color:var(--carta);position:relative;z-index:0}
+.chip[aria-pressed=true]::before{content:"";position:absolute;z-index:-1;
+  inset:-5px calc(.16em - 7px) -5px -7px;background:var(--inchiostro);
+  clip-path:polygon(4px 0,100% 0,100% calc(100% - 4px),calc(100% - 4px) 100%,0 100%,0 4px)}
+.chip[aria-pressed=true] .spia{background:var(--carta);border-color:var(--carta)}
 .chip .misura{font-family:var(--mono);font-size:7.5px;letter-spacing:.06em;color:var(--grigio);
               text-transform:none;margin-left:8px}
 .chip:hover{color:var(--ambra)}

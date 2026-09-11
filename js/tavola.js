@@ -31,7 +31,7 @@
 
 /* ------------------------------------------------------------------ la palette */
 const TINTE = {};
-const NOMI_TINTE = ["carta", "inchiostro", "inchiostro-2", "grigio", "muto",
+const NOMI_TINTE = ["carta", "vetro", "inchiostro", "inchiostro-2", "grigio", "muto",
                     "filo", "filo-2", "spento", "ambra"];
 let CARATTERE_MONO = "monospace";
 let CARATTERE_SANS = "sans-serif";
@@ -89,6 +89,7 @@ function ridimensiona() {
   tela.width = Math.round(LARGO * DPR);
   tela.height = Math.round(ALTO * DPR);
   tela.style.height = ALTO + "px";
+  leggiPiani();
 }
 
 /* Il riquadro di un elemento, in coordinate del foglio. È l'unico ponte fra
@@ -103,6 +104,68 @@ function riquadro(e) {
 }
 const quadro = (nome) => riquadro(document.querySelector('[data-quadro="' + nome + '"]'));
 const manopolaDi = (nome) => riquadro(document.querySelector('[data-manopola="' + nome + '"]'));
+
+/* ------------------------------------------------------------------- i piani
+   IL VETRO È IL PIANO RIALZATO SU CUI APPOGGIANO GLI STRUMENTI: due
+   piani per classe — il cerchio con le sue due manopole, l'effetto — il banco, la deriva. Lo disegna il canvas e
+   non il foglio di stile perché il canvas sta SOTTO i comandi: un fondo messo
+   su un elemento coprirebbe il quadrante che il canvas gli disegna dietro. Si
+   disegna per primo, prima di ogni altra cosa del fotogramma.
+
+   Le misure non sono qui. Quanto il piano sporge dal riquadro dell'elemento
+   marcato `[data-piano]` lo dice il CSS, e si rilegge solo quando
+   l'impaginazione cambia, cioè in `ridimensiona()`: un `getComputedStyle` per
+   fotogramma costerebbe più del piano.
+
+   IL PAESAGGIO RESTA SULLA CARTA, e non per dimenticanza: fuori dal segmento
+   ci si posa sopra un velo che è fatto di carta, e sul vetro quel velo
+   diventerebbe una toppa. Restano sulla carta anche le colonne dei comandi,
+   la testata e il piede: il vetro sta sotto lo strumento, non sotto la lista
+   delle sue manopole. */
+const PIANI = [];
+let SMUSSO_PIANO = 0;
+
+function leggiPiani() {
+  PIANI.length = 0;
+  const px = (s, k) => parseFloat(s.getPropertyValue(k)) || 0;
+  for (const e of document.querySelectorAll("[data-piano]")) {
+    const s = getComputedStyle(e);
+    PIANI.push({ e, sopra: px(s, "--piano-sopra"), lato: px(s, "--piano-lato"),
+                 sotto: px(s, "--piano-sotto"), x: 0, y: 0, w: 0, h: 0 });
+  }
+  SMUSSO_PIANO = px(getComputedStyle(document.documentElement), "--piano-smusso");
+}
+
+/* Gli smussi sono due, in alto a sinistra e in basso a destra: gli stessi del
+   mockup, e gli stessi dei pulsanti scelti. */
+function piani() {
+  T.fillStyle = tinta("vetro");
+  for (const p of PIANI) {
+    const r = p.e.getBoundingClientRect();
+    p.x = Math.round(r.left - originaFoglio.left - p.lato);
+    p.y = Math.round(r.top - originaFoglio.top - p.sopra);
+    p.w = Math.round(r.width + p.lato * 2);
+    p.h = Math.round(r.height + p.sopra + p.sotto);
+    const s = Math.min(SMUSSO_PIANO, p.w / 2, p.h / 2);
+    T.beginPath();
+    T.moveTo(p.x + s, p.y);
+    T.lineTo(p.x + p.w, p.y);
+    T.lineTo(p.x + p.w, p.y + p.h - s);
+    T.lineTo(p.x + p.w - s, p.y + p.h);
+    T.lineTo(p.x, p.y + p.h);
+    T.lineTo(p.x, p.y + s);
+    T.closePath();
+    T.fill();
+  }
+}
+
+// Gli angoli smussati non contano: nessuno strappo cade in un angolo di un piano.
+function pianoSotto(x, y) {
+  for (const p of PIANI) {
+    if (x >= p.x && x <= p.x + p.w && y >= p.y && y <= p.y + p.h) return true;
+  }
+  return false;
+}
 
 /* ------------------------------------------------------------- le primitive
    Gli angoli si contano in GIRI e partono dalle dodici, in senso orario: è così
@@ -150,10 +213,25 @@ function riga(x0, y0, x1, y1, spessore, colore, tratteggio) {
 /* Il quadratino d'inchiostro col suo strappo: sotto ci sta un quadrato di
    carta che cancella il filo dov'è appoggiato. È la convenzione del disegno
    tecnico, e qui costa niente — il canvas è trasparente, quindi cancellare
-   rimette la carta con la sua grana e non una toppa di colore. */
+   rimette la carta con la sua grana e non una toppa di colore.
+
+   SUL VETRO LO STRAPPO SI RIEMPIE DI VETRO. Il piano sta sullo stesso canvas,
+   quindi cancellare lo bucherebbe fino alla carta: si ridipinge invece il
+   piano, a opacità piena come faceva `clearRect` — che l'opacità la ignora —
+   anche dentro una manopola spenta, e poi l'opacità torna dov'era. */
 function quadretto(x, y, lato, colore, strappo) {
-  if (strappo) T.clearRect(x - lato / 2 - strappo, y - lato / 2 - strappo,
-                           lato + strappo * 2, lato + strappo * 2);
+  if (strappo) {
+    const x0 = x - lato / 2 - strappo, y0 = y - lato / 2 - strappo, l = lato + strappo * 2;
+    if (pianoSotto(x, y)) {
+      const a = T.globalAlpha;
+      T.globalAlpha = 1;
+      T.fillStyle = tinta("vetro");
+      T.fillRect(x0, y0, l, l);
+      T.globalAlpha = a;
+    } else {
+      T.clearRect(x0, y0, l, l);
+    }
+  }
   T.fillStyle = colore;
   T.fillRect(Math.round(x - lato / 2), Math.round(y - lato / 2), lato, lato);
 }
@@ -888,28 +966,133 @@ function fasciaPaesaggio(box, ora) {
 }
 
 /* ------------------------------------------------------ il circolo delle quinte
-   Dodici tacche nell'ordine del circolo, non in quello della scala: fra una
-   pentatonica e la sua quinta cambia UNA nota su cinque, ed è il passo più
-   piccolo che ci sia fra due collezioni consonanti. Il cammino è deterministico
-   nei due versi, quindi accanto a dove siamo si può scrivere dove si andrà. */
-function fasciaQuinte(box) {
+   Dodici note nell'ordine del circolo, non in quello della scala, e in cerchio
+   perché il circolo È un cerchio: sulla striscia di prima il fa e il do stavano
+   ai due capi e sembravano lontanissimi, mentre sono a un passo.
+
+   LE NOTE IN USO SONO UN ARCO. Una pentatonica anemitonica è cinque quinte di
+   fila — tonica + 0, 2, 4, 7, 9 cade sul circolo a 0, +2, +4, +1, +3 — quindi la
+   collezione è letteralmente cinque posizioni contigue, e si disegna con la barra
+   della corona invece che con cinque segni. Un passo di quinta la sposta di una
+   posizione: da un capo esce una nota, dall'altro ne entra una. Quella che
+   entrerà è il tratteggio in fondo all'arco, dalla parte dove si andrà.
+
+   Il verso non è sempre lo stesso — lo decide la parola sturmiana in
+   `deriva.js` — e `tonalitaFra(1)` lo sa già: se si sale entra la nota dopo
+   l'ultima, se si scende quella prima della tonica.
+
+   IL PUNTO IN AMBRA È UN PUNTO DI FASE: cammina dalla tonica verso quella di
+   dopo nei centocinquanta secondi del passo, come il punto che percorre un
+   anello. È ADESSO, la prima delle quattro famiglie dell'ambra, e non una
+   famiglia nuova. La tonica e la meta restano inchiostro, come sulla striscia:
+   sono dove si è e dove si va, non un istante. */
+function circoloQuinte(box, ora) {
   if (!box) return;
-  const y = box.y + box.h - 14;
-  riga(box.x, y, box.x + box.w, y, 1, tinta("filo"));
-  const passo = box.w / 12;
+  const cx = box.cx, cy = box.cy;
+  const R = Math.min(box.w, box.h) / 2 - 17;          // fuori, lo spazio dei nomi
   const qui = CIRCOLO.indexOf(tonalita());
   const poi = CIRCOLO.indexOf(tonalitaFra(1));
+  const verso = ((poi - qui + 12) % 12) === 1 ? 1 : -1;
+  const entra = ((verso > 0 ? qui + 5 : qui - 1) + 12) % 12;
+  const giro = (k) => k / 12;
+
+  cerchio(cx, cy, R, 1, tinta("filo"));
+
+  // Le cinque in uso: la barra della corona, da poco prima della prima tacca a
+  // poco dopo l'ultima, così si legge «queste cinque» e non «da qui a qui».
+  const spessore = Math.max(2.5, R * 0.035);
+  arco(cx, cy, R, giro(qui - 0.4), giro(4.8), spessore, tinta("inchiostro-2"));
+
+  // Quella che entrerà al prossimo passo: la stessa barra, tratteggiata e muta.
+  T.save();
+  T.setLineDash([2, 2.5]);
+  arco(cx, cy, R, giro(entra - 0.4), giro(0.8), spessore * 0.6, tinta("muto"));
+  T.restore();
+
   for (let k = 0; k < 12; k++) {
-    const x = box.x + (k + 0.5) * passo;
-    const suona = k === qui, dopo = k === poi;
-    riga(x, y, x, y + (suona ? 7 : 4), 1, tinta(suona ? "inchiostro" : "filo"));
-    scritta(nomeNota(CIRCOLO[k]), x, y - 7, {
-      dim: suona ? 11 : 9, sans: true, sp: 0.2, all: "center",
-      col: suona ? "inchiostro" : dopo ? "grigio" : "muto",
+    const inUso = ((k - qui + 12) % 12) <= 4;
+    const tonica = k === qui, meta = k === poi;
+    const a = ang(giro(k));
+    tacca(cx, cy, giro(k), R - (tonica ? 9 : 4), R, 1, tinta(tonica ? "inchiostro" : "filo"));
+    scritta(nomeNota(CIRCOLO[k]), cx + Math.cos(a) * (R + 11), cy + Math.sin(a) * (R + 11), {
+      dim: tonica ? 10 : 8.5, sans: true, sp: 0.2, all: "center", base: "middle",
+      col: tonica ? "inchiostro" : meta ? "inchiostro-2" : inUso ? "grigio" : "muto",
     });
-    if (suona) quadretto(x, y - 22, 6, tinta("inchiostro"), 0);
-    if (dopo) quadretto(x, y - 22, 4, tinta("muto"), 0);
   }
+  quadrettoSuGiro(cx, cy, R - 14, giro(poi), 4, tinta("muto"), 0);
+
+  // Il punto di fase, dalla tonica verso la meta al passo del passo di quinta.
+  const fatto = clamp(1 - (prossimaQuinta - ora) / PASSO_QUINTA, 0, 1);
+  const p = ang(giro(qui + verso * fatto));
+  T.fillStyle = tinta("ambra");
+  T.beginPath();
+  T.arc(cx + Math.cos(p) * R, cy + Math.sin(p) * R, Math.max(2, R * 0.03), 0, RADIANTI);
+  T.fill();
+}
+/* ------------------------------------------------------------ ora e stagione
+   Il cerchio del tempo che non è musica: fuori le ventiquattro ore, dentro i
+   dodici mesi. Mezzanotte e inverno in alto, mezzogiorno ed estate in basso,
+   così il buio e il freddo stanno dalla stessa parte.
+
+   Le fasce e le stagioni NON SONO SCRITTE QUI: si leggono chiedendo a
+   `tavolozzaOraria()` e `tavolozzaStagionale()` ora per ora e mese per mese,
+   le stesse funzioni che spostano i parametri. Dove il nome cambia c'è un
+   confine; la fascia e la stagione di adesso sono la barra della corona.
+
+   IL PUNTO IN AMBRA STA AL CENTRO DELL'ORA, non sul minuto: il motore legge
+   l'ora intera, e un punto che scivolasse coi minuti racconterebbe una
+   precisione che il suono non ha. */
+function cerchioInfluenze(box) {
+  if (!box) return;
+  const cx = box.cx, cy = box.cy;
+  const R = Math.min(box.w, box.h) / 2 - 15;          // fuori, lo spazio delle ore
+  const r = R * 0.72;
+  const h = oraCorrente(), m = meseCorrente();
+  const spessore = Math.max(2.5, R * 0.035);
+
+  cerchio(cx, cy, R, 1, tinta("filo"));
+  cerchio(cx, cy, r, 1, tinta("filo"));
+
+  // Quanto dura quello che c'è adesso, contando all'indietro e in avanti finché
+  // il nome non cambia. Il giro di mezzanotte non è un caso a parte: si conta
+  // in modulo.
+  const durata = (n, quanti, nome) => {
+    let prima = 0, dopo = 0;
+    while (prima < quanti && nome((n - prima - 1 + quanti * 2) % quanti) === nome(n)) prima++;
+    while (dopo < quanti && nome((n + dopo + 1) % quanti) === nome(n)) dopo++;
+    return { da: n - prima, lungo: prima + dopo + 1 };
+  };
+  const fascia = durata(h, 24, (k) => tavolozzaOraria(k).nome);
+  const stagione = durata(m, 12, (k) => tavolozzaStagionale(k).nome);
+  arco(cx, cy, R, (fascia.da + 0.1) / 24, (fascia.lungo - 0.2) / 24, spessore, tinta("inchiostro-2"));
+  arco(cx, cy, r, (stagione.da + 0.05) / 12, (stagione.lungo - 0.1) / 12, spessore, tinta("inchiostro-2"));
+
+  for (let k = 0; k < 24; k++) {
+    const confine = tavolozzaOraria(k).nome !== tavolozzaOraria((k + 23) % 24).nome;
+    tacca(cx, cy, k / 24, R - (confine ? 7 : 3), R, 1, tinta(confine ? "inchiostro-2" : "filo"));
+  }
+  for (let k = 0; k < 12; k++) {
+    const confine = tavolozzaStagionale(k).nome !== tavolozzaStagionale((k + 11) % 12).nome;
+    tacca(cx, cy, k / 12, r - (confine ? 6 : 3), r, 1, tinta(confine ? "inchiostro-2" : "filo"));
+  }
+  // Le ore scritte sono quattro, ed è notazione: non si traducono.
+  for (const k of [0, 6, 12, 18]) {
+    const a = ang(k / 24);
+    scritta(String(k), cx + Math.cos(a) * (R + 9), cy + Math.sin(a) * (R + 9),
+            { dim: 7.5, sp: 0.4, all: "center", base: "middle", col: "grigio" });
+  }
+
+  // Il mese di adesso: un quadratino d'inchiostro FRA i due anelli. Dentro l'anello
+  // dei mesi andava addosso ai nomi della fascia e della stagione, che stanno al
+  // centro; qui ha il posto libero fra la barra della stagione e le tacche delle ore.
+  quadrettoSuGiro(cx, cy, r + 9, (m + 0.5) / 12, 4, tinta("inchiostro"), 0);
+
+  // L'ora di adesso, al centro della sua casella.
+  const p = ang((h + 0.5) / 24);
+  T.fillStyle = tinta("ambra");
+  T.beginPath();
+  T.arc(cx + Math.cos(p) * R, cy + Math.sin(p) * R, Math.max(2, R * 0.03), 0, RADIANTI);
+  T.fill();
 }
 
 /* ------------------------------------------------------------- il baricentro
@@ -1039,6 +1222,7 @@ function disegna() {
   T.setTransform(DPR, 0, 0, DPR, 0, 0);
   T.clearRect(0, 0, LARGO, ALTO);
   T.lineCap = "butt";
+  piani();
 
   // La scorta si azzera PRIMA del quadrante e si legge DOPO: vive un
   // fotogramma, come tutto quello che il disegno sa.
@@ -1083,7 +1267,8 @@ function disegna() {
   spettro(quadro("spettro"));
   zeroAste(quadro("aste"));
   fasciaPaesaggio(quadro("paesaggio"), ora);
-  fasciaQuinte(quadro("quinte"));
+  circoloQuinte(quadro("quinte"), ora);
+  cerchioInfluenze(quadro("influenze"));
   fasciaBaricentro(quadro("baricentro"), ora);
 }
 
