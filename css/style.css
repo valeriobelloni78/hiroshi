@@ -783,6 +783,30 @@ input[type=range].verticale::-moz-range-thumb{width:9px;height:7px}
        color:var(--grigio);line-height:1.6}
 .piede b{font-weight:400;color:var(--inchiostro)}
 
+/* --------------------------------------------------------------------- la firma
+   LA STESSA DEGLI ALTRI PROGETTI — Rada, Rada 2, Nuvole — con le stesse parole e
+   la stessa forma: un filo, e sotto la frase e i recapiti, centrati. Il filo
+   separa senza chiudere: un riquadro qui non conterrebbe nulla. I colori sono
+   quelli di questa tavola — grigio le parole, filo la linea, ambra il fuoco — e
+   il divisore è quello della testata. Il nome del sito e l'indirizzo non si
+   traducono: sono identificatori, non parole. */
+.firma{margin-top:26px;padding-top:16px;border-top:1px solid var(--filo);text-align:center}
+.firma p{margin:0;font-family:var(--sans);font-weight:400;font-size:10px;letter-spacing:.1em;
+         color:var(--grigio)}
+.firma .recapiti{display:flex;align-items:center;justify-content:center;gap:14px;
+                 flex-wrap:wrap;margin-top:9px}
+.firma a,.firma .posta{font-family:var(--sans);font-weight:400;font-size:10px;letter-spacing:.1em;
+                       color:var(--grigio);text-decoration:none;padding-bottom:2px;
+                       border-bottom:1px solid transparent}
+.firma a{transition:color .2s,border-color .2s}
+.firma a:hover{color:var(--inchiostro);border-bottom-color:var(--filo)}
+.firma a:focus-visible{outline:1px solid var(--ambra);outline-offset:3px}
+.firma .divisore{height:10px}
+@media (max-width:479px){
+  .firma .divisore{display:none}
+  .firma .recapiti{gap:8px;flex-direction:column}
+}
+
 /* ------------------------------------------------------------- schermi stretti
    Le cinque colonne diventano due e poi una. I quadranti non rimpiccioliscono
    sotto una certa misura: quattro anelli in centoventi pixel non si leggono, e
@@ -860,6 +884,9 @@ input[type=range].verticale::-moz-range-thumb{width:9px;height:7px}
 .guida p{max-width:62ch;margin:0 0 11px;font-size:12.5px;line-height:1.62;
          color:var(--inchiostro-2)}
 .guida p.apertura{max-width:76ch;font-size:14px;color:var(--inchiostro);margin-top:10px}
+/* La firma non è un paragrafo del manuale: senza questa riga prenderebbe la misura
+   di lettura, il corpo e il colore del testo corrente, e starebbe a sinistra. */
+.guida .firma p{max-width:none;margin:0;font-size:10px;line-height:normal;color:var(--grigio)}
 .guida .banda.doc > .et{display:block;margin:22px 0 7px}
 
 /* Lo schema del segnale è in mono e a larghezza fissa: è un disegno fatto di

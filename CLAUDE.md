@@ -867,6 +867,17 @@ Spegnere non è una pausa e non è un muto: cicli e ricambio avanzano comunque, 
 riaccendendo si ritrova quello che sarebbe successo. L'uscita non ha il suo ON,
 perché spegnerla sarebbe la pausa, che sta già nella testata.
 
+**LA FIRMA È QUELLA DEGLI ALTRI PROGETTI**, e non si riscrive: stessa frase —
+«questo è un progetto open source ideato da Valerio Belloni», con le traduzioni
+di Rada, Rada 2 e Nuvole in `foot.credits` — stesso sito, stesso indirizzo, stessa
+forma: un filo e sotto, centrati, la frase e i recapiti. Cambiano solo i colori,
+che sono quelli di questa tavola. L'INDIRIZZO NON È UN COLLEGAMENTO: un `mailto:`
+con dentro «[at]» aprirebbe una bozza verso un destinatario inesistente, e scritto
+così va ricomposto a mano, che è il prezzo di non darlo ai raccoglitori di
+indirizzi. Il sito si apre in un'ALTRA SCHEDA, qui e non negli altri progetti,
+perché lasciare questa pagina vorrebbe dire fermare il suono e perdere il
+paesaggio registrato.
+
 **LA SCELTA SI RIEMPIE D'INCHIOSTRO, e la parola diventa carta**: la lingua
 scelta, i pulsanti premuti — Ascolta, Registra, Microfono — i tasti delle linee,
 e dentro una tendina aperta la voce scelta. Viene dal mockup «Hiroshi · console». Il riempimento è uno
@@ -1354,7 +1365,9 @@ vetro per classe, il banco e la deriva su uno ciascuno, il resto sulla carta:
   targhette;
 - il **piede**: lo stato, le due influenze esterne, e «a mano», cioè gli ultimi
   tre filetti che qualcuno ha mosso. Una tavola che si muove da sé per tre
-  quarti ha bisogno di dire quale quarto è stato deciso.
+  quarti ha bisogno di dire quale quarto è stato deciso;
+- la **firma**, sotto il piede, nello strumento e nella guida: la frase dei
+  crediti, `valeriobelloni.art` e l'indirizzo di posta.
 
 Sotto i 1180 px le cinque colonne diventano due e i quadranti si impilano; sotto
 i 720 una sola. I quadranti non crescono oltre 460 px: un cerchio da mezzo metro

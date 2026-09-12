@@ -163,6 +163,7 @@ const TESTI = {
     "piede.stato":     "{stato} · tonalità {nota} · gocce {timbro} · tessuti {tenuto} · {ora} · {stagione}",
     "piede.aMano":     "a mano: {elenco}",
     "piede.legenda":   "la lunghezza è il registro, l'arco la durata; in ambra i numeri e quello che suona adesso",
+    "foot.credits":    "questo è un progetto open source ideato da Valerio Belloni",
 
     "a11y.durataGiro":  "Durata del giro, linea {n}",
     "a11y.silenzia":    "Silenzia la linea {n}",
@@ -325,6 +326,7 @@ const TESTI = {
     "piede.stato":     "{stato} · tonalité {nota} · gouttes {timbro} · tissus {tenuto} · {ora} · {stagione}",
     "piede.aMano":     `à la main${NNBSP}: {elenco}`,
     "piede.legenda":   `la longueur est le registre, l'arc la durée${NNBSP}; en ambre les nombres et ce qui sonne maintenant`,
+    "foot.credits":    "ce projet libre est une idée de Valerio Belloni",
 
     "a11y.durataGiro":  "Durée du tour, ligne {n}",
     "a11y.silenzia":    "Mettre en silence la ligne {n}",
@@ -487,6 +489,7 @@ const TESTI = {
     "piede.stato":     "{stato} · key {nota} · drops {timbro} · weaves {tenuto} · {ora} · {stagione}",
     "piede.aMano":     "by hand: {elenco}",
     "piede.legenda":   "length is the register, the arc is the duration; in amber the numbers and what is sounding now",
+    "foot.credits":    "this is an open source project by Valerio Belloni",
 
     "a11y.durataGiro":  "Cycle length, line {n}",
     "a11y.silenzia":    "Mute line {n}",
@@ -649,6 +652,7 @@ const TESTI = {
     "piede.stato":     "{stato} · {nota}調 · しずく{timbro} · 織り{tenuto} · {ora} · {stagione}",
     "piede.aMano":     "手で動かした：{elenco}",
     "piede.legenda":   "長さは音域、弧は持続。琥珀色は数値と、いま鳴っているもの",
+    "foot.credits":    "Valerio Belloniによる、オープンソースの企画です。",
 
     "a11y.durataGiro":  "線{n}の一周の長さ",
     "a11y.silenzia":    "線{n}を消音する",
