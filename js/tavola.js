@@ -121,7 +121,11 @@ const manopolaDi = (nome) => riquadro(document.querySelector('[data-manopola="' 
    ci si posa sopra un velo che è fatto di carta, e sul vetro quel velo
    diventerebbe una toppa. Restano sulla carta anche le colonne dei comandi,
    la testata e il piede: il vetro sta sotto lo strumento, non sotto la lista
-   delle sue manopole. */
+   delle sue manopole.
+
+   IN MERIGGIO OGNI PIANO HA IL COLORE DELLA SUA SEZIONE, e il disegno non lo
+   sa: legge `--piano-tinta` dall'elemento marcato, che negli altri due temi vale
+   vetro. Si rilegge a ogni cambio di tema, insieme alle tinte. */
 const PIANI = [];
 let SMUSSO_PIANO = 0;
 
@@ -131,7 +135,9 @@ function leggiPiani() {
   for (const e of document.querySelectorAll("[data-piano]")) {
     const s = getComputedStyle(e);
     PIANI.push({ e, sopra: px(s, "--piano-sopra"), lato: px(s, "--piano-lato"),
-                 sotto: px(s, "--piano-sotto"), x: 0, y: 0, w: 0, h: 0 });
+                 sotto: px(s, "--piano-sotto"),
+                 tinta: s.getPropertyValue("--piano-tinta").trim() || null,
+                 x: 0, y: 0, w: 0, h: 0 });
   }
   SMUSSO_PIANO = px(getComputedStyle(document.documentElement), "--piano-smusso");
 }
@@ -139,8 +145,8 @@ function leggiPiani() {
 /* Gli smussi sono due, in alto a sinistra e in basso a destra: gli stessi del
    mockup, e gli stessi dei pulsanti scelti. */
 function piani() {
-  T.fillStyle = tinta("vetro");
   for (const p of PIANI) {
+    T.fillStyle = p.tinta || tinta("vetro");
     const r = p.e.getBoundingClientRect();
     p.x = Math.round(r.left - originaFoglio.left - p.lato);
     p.y = Math.round(r.top - originaFoglio.top - p.sopra);
@@ -159,12 +165,13 @@ function piani() {
   }
 }
 
-// Gli angoli smussati non contano: nessuno strappo cade in un angolo di un piano.
+// Il piano che sta sotto un punto, o nessuno. Gli angoli smussati non contano:
+// nessuno strappo cade in un angolo di un piano.
 function pianoSotto(x, y) {
   for (const p of PIANI) {
-    if (x >= p.x && x <= p.x + p.w && y >= p.y && y <= p.y + p.h) return true;
+    if (x >= p.x && x <= p.x + p.w && y >= p.y && y <= p.y + p.h) return p;
   }
-  return false;
+  return null;
 }
 
 /* ------------------------------------------------------------- le primitive
@@ -215,17 +222,18 @@ function riga(x0, y0, x1, y1, spessore, colore, tratteggio) {
    tecnico, e qui costa niente — il canvas è trasparente, quindi cancellare
    rimette la carta con la sua grana e non una toppa di colore.
 
-   SUL VETRO LO STRAPPO SI RIEMPIE DI VETRO. Il piano sta sullo stesso canvas,
+   SU UN PIANO LO STRAPPO SI RIEMPIE DEL COLORE DEL PIANO. Il piano sta sullo stesso canvas,
    quindi cancellare lo bucherebbe fino alla carta: si ridipinge invece il
    piano, a opacità piena come faceva `clearRect` — che l'opacità la ignora —
    anche dentro una manopola spenta, e poi l'opacità torna dov'era. */
 function quadretto(x, y, lato, colore, strappo) {
   if (strappo) {
     const x0 = x - lato / 2 - strappo, y0 = y - lato / 2 - strappo, l = lato + strappo * 2;
-    if (pianoSotto(x, y)) {
+    const piano = pianoSotto(x, y);
+    if (piano) {
       const a = T.globalAlpha;
       T.globalAlpha = 1;
-      T.fillStyle = tinta("vetro");
+      T.fillStyle = piano.tinta || tinta("vetro");
       T.fillRect(x0, y0, l, l);
       T.globalAlpha = a;
     } else {
@@ -1208,6 +1216,7 @@ function seCambiaTema() {
   if (t === temaVisto) return;
   temaVisto = t;
   leggiTinte();
+  leggiPiani();
   ondaChiave = "";
 }
 

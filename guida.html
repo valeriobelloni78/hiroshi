@@ -33,10 +33,14 @@
         <span class="divisore"></span>
         <span class="lingue" id="lingue" role="group"></span>
         <span class="divisore"></span>
-        <span class="temi" id="temi" role="group" data-i18n-aria="testata.tema">
-          <button type="button" class="lingua tema" id="temaChiaro" aria-pressed="true" data-i18n="tema.chiaro">CHIARO</button>
-          <button type="button" class="lingua tema" id="temaScuro" aria-pressed="false" data-i18n="tema.scuro">SCURO</button>
-        </span>
+        <label class="tendina piccola temi">
+          <select id="tema" data-i18n-aria="testata.tema">
+            <option value="chiaro" data-i18n="tema.chiaro">CHIARO</option>
+            <option value="scuro" data-i18n="tema.scuro">SCURO</option>
+            <option value="meriggio" data-i18n="tema.meriggio">MERIGGIO</option>
+            <option value="crepuscolo" data-i18n="tema.crepuscolo">CREPUSCOLO</option>
+          </select>
+        </label>
       </div>
     </header>
 

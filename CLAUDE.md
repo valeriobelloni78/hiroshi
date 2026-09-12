@@ -305,6 +305,76 @@ un'etichetta non bastava — e l'inchiostro tenue delle etichette: `#7f7f7b`,
 3.74 sulla carta a schermo e 3.41 sul vetro. Si legge, e resta un gradino sotto:
 dice ancora «non scelto», «spento». L'ordine dei toni scuri resta quello.
 
+**CREPUSCOLO COLORA I PIANI per funzione.** Si è chiamato meriggio finché quel
+nome non è passato al tema chiaro a colori, qui sotto. Viene dalle
+proposte «Hiroshi · meriggio», dai pannelli di un Mother-32: sul sintetizzatore il
+colore di un modulo dice che cosa fa, e Hiroshi è costruito sulla stessa idea — i
+piani sono le sezioni, i segni sono inchiostro. La cassa nera è la carta
+(`#1c1b19`), la serigrafia crema è l'inchiostro (`#f0e9d6`), e ogni piano prende
+il colore della sua funzione: GOCCE il blu dell'oscillatore `#394b59`, TESSUTI il
+vinaccia del filtro `#732f27`, EFFETTI il salvia del VCA `#3b4e3b`, BANCO il
+petrolio del sequencer `#2c3c40`, DERIVA E INFLUENZE il noce dei fianchi della
+cassa `#53311b`. I segni restano di un colore solo e l'accento resta uno: il
+colore torna sui piani e dice una funzione, mai un valore, quindi «la lunghezza
+codifica, l'ambra no» è intatta.
+
+I colori della foto sono stati SCURITI IN LUCE LINEARE fino a L* 24–31, tenendo
+ciascuno la sua tinta: il canvas disegna i segni con un inchiostro solo, e alla
+luminosità della foto i fili tenui e l'ambra scendevano a 1,2 sui piani chiari. I
+TONI SONO TARATI CONTRO I PIANI e non contro la carta: sui piani la serigrafia sta
+fra 7,4 e 9,5, le etichette fra 4,4 e 5,6, `filo-2` fra 1,95 e 2,51 — e sulla
+cassa i fili stanno a 4,9, come la serigrafia di un pannello, non a 1,4 come nel
+tema scuro.
+
+L'AMBRA NON CAMBIA NEMMENO QUI, ed è stata una scelta: una variante col giallo del
+DFAM si leggeva meglio sui piani e avrebbe rotto la regola. Sui piani l'ambra sta
+a 2,0–2,6, e sul vinaccia è quasi la stessa tinta: si trova, con meno distanza che
+altrove. Per Deriva e Influenze sono state provate cinque tinte; il noce è la più
+contrastata — ambra a 2,63, serigrafia a 9,5 — ma calda come l'ambra, ΔE 45: lì
+l'accento si stacca per luminosità, non per tinta.
+
+I COLORI DEI PIANI SONO CINQUE TOKEN — `--piano-gocce`, `--piano-tessuti`,
+`--piano-effetti`, `--piano-banco`, `--piano-deriva` — che in chiaro e scuro
+valgono `var(--vetro)`. Ogni `[data-piano]` ne legge uno in `--piano-tinta`,
+`tavola.js` lo prende da lì e lo rilegge a ogni cambio di tema, e lo strappo
+sotto il quadrato di una manopola si riempie del colore del suo piano. MERIGGIO E
+CREPUSCOLO SI SCELGONO SOLO A MANO: `prefers-color-scheme` sa dire chiaro o scuro,
+e `tema.js` continua a chiedere solo quello.
+
+**MERIGGIO È IL ROVESCIO DEL CREPUSCOLO: un tema CHIARO che colora i piani.**
+Viene da una palette a cinque fasce — petrolio, bruno, ruggine, senape, crema — e
+ne prende anche le proporzioni: la fascia più larga è la crema, e la crema è la
+CARTA (`#efe9c8`). Il BRUNO è l'inchiostro, scurito a L* 16 tenendo la tinta
+(`#31261c`): al valore della palette la serigrafia sui piani scendeva a 6, e il
+bruno vero (`#4b3c2f`) resta come inchiostro tenue. LA RUGGINE È GIÀ L'AMBRA —
+ΔE 3,7 — quindi l'accento non cambia, e stavolta la regola non ha dovuto
+scegliere niente.
+
+I piani sono le tinte della palette portate IN LCh a L* 78–82, TENENDO LA TINTA,
+e non mescolate alla crema in luce lineare: mescolato, il petrolio diventava un
+grigio verde con croma 12 e non si riconosceva più. TESSUTI senape `#e9c791`,
+EFFETTI salvia `#b8d0b7`, BANCO un petrolio spento `#afc5c8`, DERIVA E INFLUENZE il
+bruno `#d3bdab`: le stesse funzioni del crepuscolo, col bruno sotto il tempo lungo.
+
+LE GOCCE SONO UN ROSA TENUE, `#e2c1ca` — L* 81, croma 13, tinta 0° — ed è l'unica
+tinta che nella palette non c'è. All'inizio erano il petrolio chiaro `#9dcccf`,
+che non convinceva. Il rosa è stato scelto fra sette varianti: tiene l'ambra a
+2,65 e l'inchiostro a 8,9, sopra il piano più scuro, quindi la taratura dei toni
+non si muove. Fra le varianti rosa è la più lontana dal bruno della deriva che gli
+sta sotto, ΔE 15, e sta a 61 dall'ambra. Con le gocce rosa il salvia degli effetti
+non sta più a metà fra i colori delle due classi: resta per quello che dice, il
+piano che viene DOPO il suono.
+
+PIÙ SCURI NON SI PUÒ: l'ambra sui piani sta a 2,4–2,7, come nel crepuscolo, e ogni
+L* tolto ai piani lo toglie a lei.
+
+I TONI SONO TARATI CONTRO IL PIANO PIÙ SCURO, sulla retta fra inchiostro e carta:
+serigrafia 8,2–9,2, etichette 4,2–4,7, muto 2,7–3,0, filo 2,1–2,35, spento
+1,65–1,86, filo-2 1,42–1,59. Sulla crema vengono più forti che nel chiaro — i fili a
+3,1 invece di 1,45 — ed è il carattere del tema: una stampa, non un foglio velato.
+Il vetro sta oltre la carta a 1,08 (`#f6f1da`), ed è il fondo delle tendine che
+stanno sulla carta.
+
 **L'ambra non cambia col tema**, ed è il punto: l'accento dice ADESSO, e un
 accento che cambiasse tinta smetterebbe di essere una cosa sola. Sul fondo scuro
 il suo contrasto scende da 3,54 a 2,72, ma è l'unica cosa colorata di tutta la
@@ -313,8 +383,16 @@ farsi vedere.
 
 **Il tema sta in `tema.js`, che è un file suo perché lo usano DUE PAGINE**: lo
 strumento e la guida. È lo stesso mestiere — scrivere un attributo sulla radice
-e marcare due pulsanti — e due copie divergerebbero al primo ritocco, come
-sarebbe successo a `cattura.js` fra il microfono e il registratore.
+e tenere in pari la tendina che lo sceglie — e due copie divergerebbero al primo
+ritocco, come sarebbe successo a `cattura.js` fra il microfono e il registratore.
+
+**I TEMI SONO QUATTRO E LI SCEGLIE UNA TENDINA**, `#tema`, dello stesso disegno
+di tutte le altre. Due pulsanti stavano in una riga; quattro parole in fila
+accanto alle quattro lingue erano otto pulsanti dello stesso peso, e una scelta
+fra più di due voci su questa tavola è sempre stata una tendina. La tendina è
+LARGA QUANTO LA SUA VOCE PIÙ LUNGA in tutte e quattro le lingue — 104 px, per
+«CREPUSCOLO» e «MÉRIDIENNE» — così cambiare tema non sposta la testata. Chi
+aggiunge un tema o ne traduce uno misuri la voce nuova.
 
 **Il tema sta in un attributo sulla radice, e la tavola se ne accorge da sé.**
 `data-tema="scuro"` sull'elemento radice, scritto dai comandi; il CSS ci appende
@@ -740,9 +818,9 @@ muta all'apertura: è già successo, dividendo il file in moduli.
 **Le etichette dei comandi descrivono l'azione, non lo stato** («Pausa», non
 «In ascolto»). Lo stato lo racconta la riga in alto e il punto che pulsa.
 
-**LA SCELTA SI RIEMPIE D'INCHIOSTRO, e la parola diventa carta**: la lingua e
-il tema scelti, i pulsanti premuti — Ascolta, Registra, Microfono — e i tasti
-delle linee. Viene dal mockup «Hiroshi · console». Il riempimento è uno
+**LA SCELTA SI RIEMPIE D'INCHIOSTRO, e la parola diventa carta**: la lingua
+scelta, i pulsanti premuti — Ascolta, Registra, Microfono — i tasti delle linee,
+e dentro una tendina aperta la voce scelta. Viene dal mockup «Hiroshi · console». Il riempimento è uno
 pseudo-elemento che SPORGE dal pulsante invece di un padding, così il pulsante
 resta grande quanto la sua parola e niente intorno si sposta; gli angoli sono
 smussati come i piani. L'ambra non entra: nel mockup il pieno in ambra stava
@@ -1180,7 +1258,8 @@ testata e un piede — i quadranti su due piani di
 vetro per classe, il banco e la deriva su uno ciascuno, il resto sulla carta:
 
 - la **testata**: le tre sorgenti e il cielo come spunte quadrate, la pausa, le
-  **quattro lingue** e il selettore chiaro/scuro;
+  **quattro lingue** e la tendina dei **quattro temi** — chiaro, scuro, meriggio,
+  crepuscolo;
 - **01 · 02**, le due classi in cinque colonne — comandi, quadrante, filo,
   quadrante, comandi. Ogni quadrante è un cerchio di Rada Deriva: quattro anelli,
   uno per linea, con la crociera e il mirino al centro e il numerale romano fuori
@@ -1220,8 +1299,6 @@ vetro per classe, il banco e la deriva su uno ciascuno, il resto sulla carta:
   le ventiquattro ore fuori e i dodici mesi dentro, e per ciascuna fonte — ora,
   stagione, deriva — di quanto sposta i suoi parametri oltre alla mano, in
   targhette;
-  In alto a destra, dopo le lingue, il selettore **chiaro/scuro**: due pulsanti
-  veri, non due parole, perché si prendono col tasto Tab;
 - il **piede**: lo stato, le due influenze esterne, e «a mano», cioè gli ultimi
   tre filetti che qualcuno ha mosso. Una tavola che si muove da sé per tre
   quarti ha bisogno di dire quale quarto è stato deciso.

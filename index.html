@@ -50,12 +50,18 @@
              devono essere una cosa sola, e qui basta il posto dove metterle. -->
         <span class="lingue" id="lingue" role="group"></span>
         <span class="divisore"></span>
-        <!-- Chiaro e scuro sono lo stesso foglio girato: gli stessi due colori
-             agli estremi, scambiati, e l'ambra che non si muove. -->
-        <span class="temi" id="temi" role="group" data-i18n-aria="testata.tema">
-          <button type="button" class="lingua tema" id="temaChiaro" aria-pressed="true" data-i18n="tema.chiaro">CHIARO</button>
-          <button type="button" class="lingua tema" id="temaScuro" aria-pressed="false" data-i18n="tema.scuro">SCURO</button>
-        </span>
+        <!-- I quattro temi in una tendina, come ogni altra scelta fra più di due
+             voci. Chiaro e scuro sono lo stesso foglio girato; meriggio e
+             crepuscolo colorano i piani per funzione. L'ambra non si muove in
+             nessuno dei quattro. -->
+        <label class="tendina piccola temi">
+          <select id="tema" data-i18n-aria="testata.tema">
+            <option value="chiaro" data-i18n="tema.chiaro">CHIARO</option>
+            <option value="scuro" data-i18n="tema.scuro">SCURO</option>
+            <option value="meriggio" data-i18n="tema.meriggio">MERIGGIO</option>
+            <option value="crepuscolo" data-i18n="tema.crepuscolo">CREPUSCOLO</option>
+          </select>
+        </label>
       </div>
     </header>
 

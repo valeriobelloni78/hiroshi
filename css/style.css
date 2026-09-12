@@ -48,6 +48,10 @@
   /* Le cifre sopra l'ambra: l'estremo chiaro del foglio, carta nel tema chiaro e
      inchiostro nello scuro — lo stesso #e7e7e4 da tutt'e due le parti. */
   --su-ambra:var(--carta);
+  /* I PIANI PER SEZIONE. In chiaro e scuro valgono tutti vetro; in meriggio e
+     crepuscolo prendono il colore della loro funzione (vedi i loro blocchi). */
+  --piano-gocce:var(--vetro); --piano-tessuti:var(--vetro); --piano-effetti:var(--vetro);
+  --piano-banco:var(--vetro); --piano-deriva:var(--vetro);
 
   --sans:"Helvetica Neue",-apple-system,system-ui,"Segoe UI",Roboto,Arial,sans-serif;
   --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
@@ -125,6 +129,85 @@
   --retino:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='7'%3E%3Ccircle cx='3.5' cy='3.5' r='1.05' fill='%23393936'/%3E%3C/svg%3E");
 }
 
+/* ---------------------------------------------------------------- crepuscolo
+   CREPUSCOLO COLORA I PIANI PER FUNZIONE, come i pannelli di un Mother-32:
+   sul sintetizzatore il colore di un modulo dice che cosa fa, e Hiroshi è fatto
+   allo stesso modo — i piani sono le sezioni, i segni sono inchiostro. La cassa
+   nera è la carta, la serigrafia crema è l'inchiostro, e ogni piano prende la sua
+   funzione: le gocce il blu dell'oscillatore, i tessuti il vinaccia del filtro,
+   gli effetti il salvia del VCA, il banco il petrolio del sequencer, deriva e
+   influenze il noce dei fianchi della cassa. I segni restano di un colore solo e
+   l'ambra resta una: il colore dice una funzione, mai un valore.
+
+   I COLORI DELLA FOTO SONO SCURITI IN LUCE LINEARE fino a L* 24–31, tenendo la
+   loro tinta: il canvas disegna i segni con un inchiostro solo, e alla luminosità
+   della foto fili tenui e ambra scendevano a 1,2. I TONI SONO TARATI CONTRO I
+   PIANI, non contro la carta — serigrafia 7,4–9,5, etichette 4,4–5,6, filo-2
+   1,95–2,51 — e sulla cassa i fili stanno a 4,9, come una serigrafia.
+
+   L'AMBRA NON CAMBIA NEMMENO QUI: sui piani sta a 2,0–2,6, sul noce a 2,63. */
+:root[data-tema="crepuscolo"]{
+  color-scheme:dark;
+  --carta:#1c1b19;
+  --vetro:#2e2c28;
+  --inchiostro:#f0e9d6;
+  --inchiostro-2:#d8d0bb;
+  --grigio:#bdb5a0;
+  --muto:#a39c8b;
+  --filo:#8f897a;
+  --spento:#827c6f;
+  --filo-2:#7a7568;
+  --su-ambra:var(--inchiostro);
+  --piano-gocce:#394b59;
+  --piano-tessuti:#732f27;
+  --piano-effetti:#3b4e3b;
+  --piano-banco:#2c3c40;
+  --piano-deriva:#53311b;
+  --retino:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='7'%3E%3Ccircle cx='3.5' cy='3.5' r='1.05' fill='%233a3833'/%3E%3C/svg%3E");
+}
+
+/* ------------------------------------------------------------------ meriggio
+   MERIGGIO È LA LUCE DI MEZZOGIORNO, da una palette a cinque fasce: petrolio,
+   bruno, ruggine, senape, crema. La fascia più larga è la crema, e la crema è la
+   carta. Il bruno è l'inchiostro, scurito a L* 16 tenendo la tinta: al valore
+   della palette la serigrafia sui piani scendeva a 6, e il bruno vero resta come
+   inchiostro tenue. LA RUGGINE È GIÀ L'AMBRA — le due tinte sono quasi lo stesso
+   colore — quindi l'accento non cambia nemmeno qui, e non per regola soltanto.
+
+   I piani colorano per funzione come nel crepuscolo, con le tinte della palette
+   portate in LCh a L* 78–82, tenendone la tinta: tessuti senape, effetti salvia,
+   banco un petrolio spento, deriva e influenze il bruno. Le GOCCE sono un ROSA
+   TENUE, l'unica tinta che nella palette non c'è: il petrolio chiaro sotto il
+   quadrante non convinceva. Sta a ΔE 61 dall'ambra, che resta staccata, e a 15
+   dal bruno della deriva che gli sta sotto.
+   PIÙ SCURI NON SI PUÒ: l'ambra sui piani sta a 2,4–2,7, come nel crepuscolo, e
+   ogni L* tolto ai piani lo toglie a lei.
+
+   I TONI SONO TARATI CONTRO IL PIANO PIÙ SCURO, sulla retta fra inchiostro e
+   carta: etichette 4,2, muto 2,7, filo 2,1, spento 1,65, filo-2 1,42. Sulla
+   crema vengono più forti che nel chiaro — i fili a 3,1 — ed è il carattere del
+   tema: una stampa, non un foglio velato. Il vetro resta oltre la carta a 1,08,
+   ed è il fondo delle tendine che stanno sulla carta. */
+:root[data-tema="meriggio"]{
+  color-scheme:light;
+  --carta:#efe9c8;
+  --vetro:#f6f1da;
+  --inchiostro:#31261c;
+  --inchiostro-2:#4b3c2f;
+  --grigio:#5a5445;
+  --muto:#77715f;
+  --filo:#89836f;
+  --spento:#9b957f;
+  --filo-2:#a7a28a;
+  --su-ambra:var(--carta);
+  --piano-gocce:#e2c1ca;
+  --piano-tessuti:#e9c791;
+  --piano-effetti:#b8d0b7;
+  --piano-banco:#afc5c8;
+  --piano-deriva:#d3bdab;
+  --retino:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='7'%3E%3Ccircle cx='3.5' cy='3.5' r='1.05' fill='%23ccc7aa'/%3E%3C/svg%3E");
+}
+
 /* La grana della carta: rumore frattale generato dal browser, non un'immagine
    da scaricare. È un SVG scritto qui dentro come data URI, quindi la pagina
    continua ad aprirsi senza rete — che è una regola del progetto, non una
@@ -175,6 +258,13 @@ body{
 /* Il pannello della deriva comincia dentro la sua banda, dopo il filo e il suo
    padding: sette in su lo fermano a cinque pixel dal filo, come gli altri. */
 .pannello-deriva[data-piano],.pannello-influenze[data-piano]{--piano-sopra:7px}
+/* Il colore di ogni piano: un token per sezione, che in chiaro e scuro è vetro.
+   Il canvas lo legge da `--piano-tinta`, e lo rilegge quando il tema cambia. */
+.quadrante.gocce .vano.cerchio{--piano-tinta:var(--piano-gocce)}
+.quadrante.tessuti .vano.cerchio{--piano-tinta:var(--piano-tessuti)}
+.vano.effetti{--piano-tinta:var(--piano-effetti)}
+.banda[data-piano]{--piano-tinta:var(--piano-banco)}
+.pannello-deriva,.pannello-influenze{--piano-tinta:var(--piano-deriva)}
 
 /* ------------------------------------------------------------------- caratteri
    Un ruolo, una classe. Le dimensioni sono quelle del disegno e non si
@@ -290,13 +380,15 @@ body{
 .chip:has(input:disabled){color:var(--muto);cursor:default}
 .chip input:focus-visible{outline:1px solid var(--ambra);outline-offset:2px}
 .chip.pieno input{width:7px;height:7px}
-/* LE LINGUE E IL TEMA SONO LA STESSA COSA: due gruppi di pulsanti veri, che si
-   prendono col tasto Tab e che un lettore di schermo annuncia come premuti. La
-   parola è l'opzione, non lo stato di adesso — quello lo dice quale delle due è
-   a inchiostro pieno. Un solo blocco di regole per tutti e sei, o il giorno che
-   se ne tocca uno l'altro resta indietro. */
+/* LE LINGUE sono un gruppo di pulsanti veri, che si prendono col tasto Tab e che
+   un lettore di schermo annuncia come premuti. La parola è l'opzione, non lo
+   stato di adesso — quello lo dice quale è a inchiostro pieno. I TEMI invece sono
+   quattro, e quattro parole in fila accanto a quattro lingue erano otto
+   pulsanti dello stesso peso: stanno in una tendina come le altre. È LARGA
+   QUANTO LA SUA VOCE PIÙ LUNGA, in tutte e quattro le lingue, così cambiare tema
+   non sposta la testata. */
 .lingue{display:flex;gap:19px}
-.temi{display:flex;gap:14px}
+.tendina.temi{width:104px;flex:none}
 .lingua{font-family:var(--mono);font-size:8px;letter-spacing:.18em;color:var(--muto);
         background:none;border:0;padding:0;cursor:pointer}
 /* LA SCELTA SI RIEMPIE D'INCHIOSTRO, e la parola diventa carta. Il riempimento

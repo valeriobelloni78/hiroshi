@@ -708,5 +708,5 @@ for (const l of LINGUE) Object.assign(TESTI[l], GUIDA[l]);
 document.addEventListener("DOMContentLoaded", () => {
   costruisciSelettoreLingua(document.getElementById("lingue"));
   applicaTesti();
-  avviaTema("temaChiaro", "temaScuro");
+  avviaTema("tema");
 });

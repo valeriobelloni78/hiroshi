@@ -153,7 +153,7 @@ function didascaliaDeriva() {
 costruisciSelettoreLingua(el("lingue"));
 applicaTesti();
 didascaliaDeriva();
-avviaTema("temaChiaro", "temaScuro");
+avviaTema("tema");
 
 /* «A mano»: gli ultimi filetti che qualcuno ha mosso, in fondo al foglio. Una
    tavola che si muove da sé per tre quarti ha bisogno di dire quale quarto è

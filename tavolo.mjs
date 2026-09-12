@@ -126,7 +126,7 @@ for (const tema of ['chiaro', 'scuro']) {
   });
   await p.goto('file://' + path.join(APP, 'index.html'));
   await p.click('#ascolto');
-  if (tema === 'scuro') await p.click('#temaScuro');
+  if (tema === 'scuro') await p.selectOption('#tema', 'scuro');
 
   /* Una materia da mostrare nel paesaggio: l'app all'apertura è muta per
      costruzione, e una fascia vuota non direbbe niente di come si legge. Sono
