@@ -378,6 +378,12 @@ body{
 /* Il pannello della deriva comincia dentro la sua banda, dopo il filo e il suo
    padding: sette in su lo fermano a tredici pixel dal filo, come gli altri. */
 .pannello-deriva[data-piano],.pannello-influenze[data-piano]{--piano-sopra:7px}
+/* Sotto, i due pannelli si allungano di dieci pixel da dentro: l'inchiostro più
+   basso — le targhette dell'ultima riga delle influenze — stava a cinque dal bordo
+   e il fa♯ in fondo al circolo a dodici, contro i quattordici di lato. Ora le
+   targhette ne hanno quindici e il circolo ventidue. È un padding e non una
+   sporgenza, così il piede scende con loro e resta alla sua distanza. */
+.pannello-deriva,.pannello-influenze{padding-bottom:10px}
 /* Il colore di ogni piano: un token per sezione, che in chiaro e scuro è vetro.
    Il canvas lo legge da `--piano-tinta`, e lo rilegge quando il tema cambia. */
 .quadrante.gocce .vano.cerchio{--piano-tinta:var(--piano-gocce)}

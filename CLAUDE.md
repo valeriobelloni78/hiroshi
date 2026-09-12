@@ -296,7 +296,15 @@ dodici a venti e quello delle classi da quattordici a ventidue, così dentro i
 piani l'aria è rimasta quella misurata sull'inchiostro. Il banco, il cui piano è
 la banda stessa e comincia sul filo, rientra di quattordici invece che di sei.
 Scende anche il paesaggio, che un piano non ce l'ha, perché le intestazioni stiano
-tutte alla stessa distanza dal loro filo. Venendo dal canvas, il vetro finisce da sé
+tutte alla stessa distanza dal loro filo.
+
+**IN FONDO A DERIVA E INFLUENZE L'INCHIOSTRO STA LONTANO DAL BORDO QUANTO DI LATO.**
+Le targhette dell'ultima riga delle influenze stavano a cinque pixel dal bordo
+basso del piano e il fa♯ in fondo al circolo delle quinte a dodici, mentre di lato
+il testo sta a quattordici. I due pannelli hanno dieci pixel di `padding-bottom`:
+le targhette arrivano a quindici, il circolo a ventidue. Si misura sull'inchiostro
+più basso, targhette comprese, e non sui riquadri; ed è un padding e non una
+sporgenza del piano, così il piede scende con i pannelli e resta alla sua distanza. Venendo dal canvas, il vetro finisce da sé
 nella tavola in png e nel canvas di design di `tavolo.mjs`.
 
 Lo STRAPPO sotto il quadrato di una manopola non cancella più se sta su un
