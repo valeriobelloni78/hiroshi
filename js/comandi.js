@@ -399,10 +399,6 @@ document.addEventListener("keydown", (e) => {
   if (e.code === "Space" && e.target === document.body) { e.preventDefault(); btnAscolto.click(); }
 });
 
-el("gocceOn").addEventListener("change", (e) => { frasiOn = e.target.checked; });
-el("tessutiOn").addEventListener("change", (e) => { tessutiOn = e.target.checked; });
-el("paesaggioOn").addEventListener("change", (e) => { paesaggioOn = e.target.checked; });
-
 /* -------------------------------------------------------- i comandi per linea
    Tre per ciascuna delle otto: quanto dura il giro, se tace, e una idea nuova.
    La tavola scrive le stesse cifre sugli anelli, così si sa quale cerchio si
@@ -631,16 +627,28 @@ el("salvaProfilo").addEventListener("click", () => {
 elencaProfili();
 
 /* --------------------------------------------------------- 03 banco · mixer
-   Cinque aste, tutte e cinque un livello del banco. Quella dei tessuti SCOSTA il
+   Quattro aste, tutte e quattro un livello del banco. Quella dei tessuti SCOSTA il
    canale: il guadagno vero è la somma fra questa e `tLivello`, che è il
    carattere della classe e sta nella sua colonna. L'asta è il missaggio, il
-   filetto è la musica — un mood scrive il secondo e non tocca il primo. */
+   filetto è la musica — un mood scrive il secondo e non tocca il primo.
+
+   SOTTO LE TRE SORGENTI C'È IL LORO ON, e sta qui e non nella testata perché
+   accendere e spegnere una sorgente è una decisione di missaggio: la si prende
+   guardando l'asta che la dosa, non in cima al foglio accanto alla lingua.
+   Premuto vuol dire acceso, come il tasto ON di un canale su un banco vero, e
+   all'apertura lo sono tutti e tre. SPEGNERE NON È UNA PAUSA E NON È UN MUTO: cicli
+   e ricambio avanzano comunque, e riaccendendo non si ritrova quello che si era
+   lasciato ma quello che sarebbe successo. L'uscita non ne ha uno: spegnerla
+   sarebbe la pausa, che sta già nella testata. */
 const CANALI_MIXER = [
-  { et: "mix.frasi",   dai: () => LIVELLI.frasi,  metti: (v) => { LIVELLI.frasi = v; if (banco) banco.livello("frasi", v); }, min: -24, max: 6 },
+  { et: "mix.frasi",   dai: () => LIVELLI.frasi,  metti: (v) => { LIVELLI.frasi = v; if (banco) banco.livello("frasi", v); }, min: -24, max: 6,
+    acceso: { dai: () => frasiOn, metti: (v) => { frasiOn = v; } } },
   { et: "mix.tessuti", dai: () => LIVELLI.tessuti,
-    metti: (v) => { LIVELLI.tessuti = v; if (banco) rileggiTarature(); }, min: -24, max: 6 },
+    metti: (v) => { LIVELLI.tessuti = v; if (banco) rileggiTarature(); }, min: -24, max: 6,
+    acceso: { dai: () => tessutiOn, metti: (v) => { tessutiOn = v; } } },
   { et: "mix.paesaggio", dai: () => LIVELLI.paesaggio,
-    metti: (v) => { LIVELLI.paesaggio = v; if (banco) banco.livello("paesaggio", v); }, min: -24, max: 6 },
+    metti: (v) => { LIVELLI.paesaggio = v; if (banco) banco.livello("paesaggio", v); }, min: -24, max: 6,
+    acceso: { dai: () => paesaggioOn, metti: (v) => { paesaggioOn = v; } } },
   { et: "mix.uscita",  dai: () => LIVELLI.uscita, metti: (v) => { LIVELLI.uscita = v;
       if (banco && running) banco.uscita.gain.setTargetAtTime(Math.pow(10, v / 20), ctx.currentTime, 0.1); },
     min: -24, max: 0 },
@@ -654,18 +662,34 @@ CANALI_MIXER.forEach((c) => {
   a.min = c.min; a.max = c.max; a.step = 0.5; a.value = c.dai();
   const et = document.createElement("span");
   et.className = "fl";
-  c.rinomina = () => {
-    et.textContent = dice(c.et);
-    a.setAttribute("aria-label", dice("a11y.livello", { canale: dice(c.et) }));
-  };
-  c.rinomina();
   const val = document.createElement("span");
   val.className = "vl";
   const mostra = () => { val.textContent = dB(c.dai()); };
   a.addEventListener("input", () => { c.metti(Number(a.value)); mostra(); });
   cella.append(a, et, val);
+
+  let on = null;
+  if (c.acceso) {
+    on = document.createElement("button");
+    on.type = "button"; on.className = "tasto";
+    on.setAttribute("aria-pressed", String(c.acceso.dai()));
+    on.addEventListener("click", () => {
+      c.acceso.metti(!c.acceso.dai());
+      on.setAttribute("aria-pressed", String(c.acceso.dai()));
+    });
+    cella.append(on);
+  }
+  c.rinomina = () => {
+    et.textContent = dice(c.et);
+    a.setAttribute("aria-label", dice("a11y.livello", { canale: dice(c.et) }));
+    if (on) {
+      on.textContent = dice("mix.on");
+      on.setAttribute("aria-label", dice("a11y.accensione", { canale: dice(c.et) }));
+    }
+  };
+  c.rinomina();
   el("faders").appendChild(cella);
-  c.input = a; c.mostra = mostra;
+  c.input = a; c.mostra = mostra; c.on = on;
   mostra();
 });
 

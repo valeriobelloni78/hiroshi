@@ -363,9 +363,10 @@ altrove. Per Deriva e Influenze sono state provate cinque tinte; il noce è la p
 contrastata — ambra a 2,63, serigrafia a 9,5 — ma calda come l'ambra, ΔE 45: lì
 l'accento si stacca per luminosità, non per tinta.
 
-I COLORI DEI PIANI SONO CINQUE TOKEN — `--piano-gocce`, `--piano-tessuti`,
-`--piano-effetti`, `--piano-banco`, `--piano-deriva` — che in chiaro e scuro
-valgono `var(--vetro)`. Ogni `[data-piano]` ne legge uno in `--piano-tinta`,
+I COLORI DEI PIANI SONO SEI TOKEN — `--piano-gocce`, `--piano-tessuti`,
+`--piano-effetti`, `--piano-banco`, `--piano-deriva`, `--piano-influenze` — che in
+chiaro e scuro valgono `var(--vetro)`; le influenze seguono la deriva dovunque un
+tema non le metta altrove. Ogni `[data-piano]` ne legge uno in `--piano-tinta`,
 `tavola.js` lo prende da lì e lo rilegge a ogni cambio di tema, e lo strappo
 sotto il quadrato di una manopola si riempie del colore del suo piano. MERIGGIO E
 CREPUSCOLO SI SCELGONO SOLO A MANO: `prefers-color-scheme` sa dire chiaro o scuro,
@@ -382,18 +383,25 @@ scegliere niente.
 
 I piani sono le tinte della palette portate IN LCh a L* 78–82, TENENDO LA TINTA,
 e non mescolate alla crema in luce lineare: mescolato, il petrolio diventava un
-grigio verde con croma 12 e non si riconosceva più. TESSUTI senape `#e9c791`,
-EFFETTI salvia `#b8d0b7`, BANCO un petrolio spento `#afc5c8`, DERIVA E INFLUENZE il
-bruno `#d3bdab`: le stesse funzioni del crepuscolo, col bruno sotto il tempo lungo.
+grigio verde con croma 12 e non si riconosceva più. GOCCE bruno `#d3bdab`, TESSUTI
+senape `#e9c791`, EFFETTI salvia `#b8d0b7`, BANCO un petrolio spento `#afc5c8`.
 
-LE GOCCE SONO UN ROSA TENUE, `#e2c1ca` — L* 81, croma 13, tinta 0° — ed è l'unica
-tinta che nella palette non c'è. All'inizio erano il petrolio chiaro `#9dcccf`,
-che non convinceva. Il rosa è stato scelto fra sette varianti: tiene l'ambra a
-2,65 e l'inchiostro a 8,9, sopra il piano più scuro, quindi la taratura dei toni
-non si muove. Fra le varianti rosa è la più lontana dal bruno della deriva che gli
-sta sotto, ΔE 15, e sta a 61 dall'ambra. Con le gocce rosa il salvia degli effetti
-non sta più a metà fra i colori delle due classi: resta per quello che dice, il
-piano che viene DOPO il suono.
+**IN MERIGGIO I QUATTRO PIANI GRANDI STANNO A CROCE.** La deriva, sotto le gocce,
+prende la senape dei tessuti; le influenze, sotto i tessuti, il bruno delle gocce.
+È una SIMMETRIA RISPETTO AL CENTRO della tavola — omotetica, con il banco e il
+paesaggio in mezzo — invece di due colonne di un colore ciascuna, e non tocca
+l'impaginazione, che resta a specchio sull'asse verticale. Per questo le influenze
+hanno un token loro, `--piano-influenze`, che negli altri tre temi vale
+`var(--piano-deriva)`; in meriggio `--piano-deriva` vale `var(--piano-tessuti)` e
+`--piano-influenze` vale `var(--piano-gocce)`. Riferimenti e non numeri copiati:
+chi ritocca un colore lo ritocca nei suoi due piani.
+
+IL BRUNO DELLE GOCCE È IL TERZO TENTATIVO — il petrolio chiaro `#9dcccf` e poi il
+rosa tenue `#e2c1ca` non convincevano. Sta a L* 78, quanto il piano più scuro,
+quindi la taratura dei toni non si muove: sul cerchio delle gocce l'inchiostro sta
+a 8,2 e l'ambra a 2,43; sulla deriva in senape l'ambra sale a 2,72. Il salvia degli effetti non
+sta più a metà fra i colori delle due classi: resta per quello che dice, il piano
+che viene DOPO il suono.
 
 PIÙ SCURI NON SI PUÒ: l'ambra sui piani sta a 2,4–2,7, come nel crepuscolo, e ogni
 L* tolto ai piani lo toglie a lei.
@@ -828,7 +836,7 @@ della corda e non il modello.
 dov'era.** Un `globalAlpha = 1` alla fine di una primitiva sembra il modo
 giusto di ripulire e invece cancella l'opacità con cui il chiamante ha
 avvolto un gruppo intero: una classe spenta tornava a disegnarsi piena, e il
-difetto si vedeva solo togliendo la spunta a una classe mentre suonava. Il
+difetto si vedeva solo spegnendo una classe mentre suonava. Il
 salvataggio vale anche per `T.save()`: dentro, `globalAlpha *=`, mai `=`.
 
 **`clearRect` non guarda l'opacità: cancella e basta.** È quello che serve per
@@ -847,6 +855,17 @@ muta all'apertura: è già successo, dividendo il file in moduli.
 
 **Le etichette dei comandi descrivono l'azione, non lo stato** («Pausa», non
 «In ascolto»). Lo stato lo racconta la riga in alto e il punto che pulsa.
+
+**L'ACCENSIONE DI UNA SORGENTE STA SOTTO IL SUO CANALE DEL MIXER**: un tasto ON
+sotto le aste di frasi, tessuti e paesaggio, e non più una spunta nella testata.
+Accendere e spegnere una sorgente è una decisione di missaggio, e la si prende
+guardando l'asta che la dosa, non in cima al foglio accanto alla lingua. ON è il
+nome del tasto sui banchi veri e non uno stato scritto: premuto vuol dire acceso,
+e all'apertura lo sono tutti e tre. Resta «ON» in tutte e quattro le lingue, come
+la notazione di un banco, e il lettore di schermo sente «Accensione di Frasi».
+Spegnere non è una pausa e non è un muto: cicli e ricambio avanzano comunque, e
+riaccendendo si ritrova quello che sarebbe successo. L'uscita non ha il suo ON,
+perché spegnerla sarebbe la pausa, che sta già nella testata.
 
 **LA SCELTA SI RIEMPIE D'INCHIOSTRO, e la parola diventa carta**: la lingua
 scelta, i pulsanti premuti — Ascolta, Registra, Microfono — i tasti delle linee,
@@ -1091,7 +1110,7 @@ uno dei due numeri tocchi anche l'altro.
 **La testata va a capo da sé**, con `flex-wrap` e un'altezza minima invece che
 fissa: la riga resta di cinquantanove pixel finché ci sta e si spezza quando non
 ci sta più. Non c'è nessuna larghezza scritta da tenere in pari col marchio o
-con quante sorgenti ci sono — e con una media query al posto suo, allargare il
+con quanti comandi ci sono — e con una media query al posto suo, allargare il
 marchio di un terzo faceva sbordare la pagina fra i 760 e i 950 px.
 
 ---
@@ -1289,7 +1308,7 @@ il canvas in `tavola.js`. Un foglio che scorre, sei sezioni numerate fra una
 testata e un piede — i quadranti su due piani di
 vetro per classe, il banco e la deriva su uno ciascuno, il resto sulla carta:
 
-- la **testata**: le tre sorgenti e il cielo come spunte quadrate, la pausa, le
+- la **testata**: la pausa, la guida, le
   **quattro lingue** e la tendina dei **quattro temi** — chiaro, scuro, meriggio,
   crepuscolo;
 - **01 · 02**, le due classi in cinque colonne — comandi, quadrante, filo,
@@ -1309,7 +1328,8 @@ vetro per classe, il banco e la deriva su uno ciascuno, il resto sulla carta:
 - **03 · banco**: registrazione con cronometro e misuratori a tessere,
   esportazione (wav, la tavola in png, la scena che aspetta un seme),
   equalizzatore a otto aste con la curva vera sopra — chiesta ai filtri con
-  `getFrequencyResponse` — e il mixer a quattro aste;
+  `getFrequencyResponse` — e il mixer a quattro aste, con sotto le tre sorgenti
+  il loro **ON**;
 - **04 · paesaggio**: LA MATERIA INTERA distesa per il lungo, come istogramma
   di quadratini in scala di grigi che PARTONO DALLA RIGA DI MEZZO — il primo ci
   sta sopra, non accanto, o resterebbe una riga vuota in mezzo alla fascia che
@@ -1363,9 +1383,10 @@ Da fare, in ordine:
    Se un giorno si fa, si rifà anche l'impaginazione: il canale del banco, la
    spunta e la cella della deriva sono un'ora di lavoro, e valeva la pena
    pagarla dopo invece di tenere in piedi tre bugie per anni. Il **cielo** —
-   il campo `fBm` che le sveglierebbe — è rimasto come spunta nella testata
-   perché è una sorgente a sé, spenta e dichiarata; il giorno che se ne decide
-   la sorte, quella se ne va con la stessa mano.
+   il campo `fBm` che le sveglierebbe — era rimasto come spunta spenta nella
+   testata, e se n'è andato con la stessa mano il giorno che le accensioni delle
+   sorgenti sono scese sotto il mixer: una casella che non si accende mai dice
+   solo che manca qualcosa.
 
 Aperti: `rendiOffline` percorre lo stesso modello che sta suonando, quindi
 esportare mentre si ascolta oggi disturberebbe la sessione in corso — va dato

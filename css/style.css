@@ -52,6 +52,8 @@
      crepuscolo prendono il colore della loro funzione (vedi i loro blocchi). */
   --piano-gocce:var(--vetro); --piano-tessuti:var(--vetro); --piano-effetti:var(--vetro);
   --piano-banco:var(--vetro); --piano-deriva:var(--vetro);
+  /* Le influenze hanno il piano della deriva, tranne dove un tema le mette a croce. */
+  --piano-influenze:var(--piano-deriva);
 
   --sans:"Helvetica Neue",-apple-system,system-ui,"Segoe UI",Roboto,Arial,sans-serif;
   --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
@@ -176,10 +178,12 @@
 
    I piani colorano per funzione come nel crepuscolo, con le tinte della palette
    portate in LCh a L* 78–82, tenendone la tinta: tessuti senape, effetti salvia,
-   banco un petrolio spento, deriva e influenze il bruno. Le GOCCE sono un ROSA
-   TENUE, l'unica tinta che nella palette non c'è: il petrolio chiaro sotto il
-   quadrante non convinceva. Sta a ΔE 61 dall'ambra, che resta staccata, e a 15
-   dal bruno della deriva che gli sta sotto.
+   banco un petrolio spento, gocce il bruno. I QUATTRO PIANI GRANDI STANNO A
+   CROCE: la deriva, sotto le gocce, prende la senape dei tessuti, e le influenze,
+   sotto i tessuti, il bruno delle gocce — una simmetria rispetto al centro della
+   tavola invece di due colonne. Per riferimento e non per copia: chi ritocca un
+   colore lo ritocca nei suoi due piani. Le gocce sono state petrolio chiaro e poi
+   rosa tenue prima del bruno, e non convincevano.
    PIÙ SCURI NON SI PUÒ: l'ambra sui piani sta a 2,4–2,7, come nel crepuscolo, e
    ogni L* tolto ai piani lo toglie a lei.
 
@@ -200,11 +204,12 @@
   --spento:#9b957f;
   --filo-2:#a7a28a;
   --su-ambra:var(--carta);
-  --piano-gocce:#e2c1ca;
+  --piano-gocce:#d3bdab;
   --piano-tessuti:#e9c791;
   --piano-effetti:#b8d0b7;
   --piano-banco:#afc5c8;
-  --piano-deriva:#d3bdab;
+  --piano-deriva:var(--piano-tessuti);
+  --piano-influenze:var(--piano-gocce);
   --retino:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='7'%3E%3Ccircle cx='3.5' cy='3.5' r='1.05' fill='%23ccc7aa'/%3E%3C/svg%3E");
 }
 
@@ -264,7 +269,8 @@ body{
 .quadrante.tessuti .vano.cerchio{--piano-tinta:var(--piano-tessuti)}
 .vano.effetti{--piano-tinta:var(--piano-effetti)}
 .banda[data-piano]{--piano-tinta:var(--piano-banco)}
-.pannello-deriva,.pannello-influenze{--piano-tinta:var(--piano-deriva)}
+.pannello-deriva{--piano-tinta:var(--piano-deriva)}
+.pannello-influenze{--piano-tinta:var(--piano-influenze)}
 
 /* ------------------------------------------------------------------- caratteri
    Un ruolo, una classe. Le dimensioni sono quelle del disegno e non si
@@ -315,8 +321,8 @@ body{
 /* LA TESTATA VA A CAPO DA SÉ e non a una larghezza decisa qui. Con
    `flex-wrap` e un'altezza MINIMA invece che fissa, la riga resta di
    cinquantanove pixel finché ci sta e si spezza quando non ci sta più: non c'è
-   nessun numero da tenere in pari con la larghezza del marchio o con quante
-   sorgenti ci sono. Il marchio allargato di un terzo l'aveva fatta sbordare
+   nessun numero da tenere in pari con la larghezza del marchio o con quanti
+   comandi ci sono. Il marchio allargato di un terzo l'aveva fatta sbordare
    fra i 760 e i 950 px — dove la riga non ci stava già prima e nessuna media
    query interveniva ancora. */
 .testata{display:flex;align-items:center;justify-content:space-between;
@@ -364,7 +370,6 @@ body{
 @keyframes pulsa{0%,100%{opacity:1}50%{opacity:.34}}
 .punto{width:7px;height:7px;border-radius:50%;flex:none;background:var(--ambra);
        animation:pulsa 2.6s ease-in-out infinite}
-.sorgenti{display:flex;align-items:center;gap:24px}
 .governo{display:flex;align-items:center;gap:20px}
 .divisore{width:1px;height:12px;background:var(--filo);flex:none}
 
@@ -664,6 +669,9 @@ input[type=range].verticale::-moz-range-thumb{width:9px;height:7px}
 .fader{display:flex;flex-direction:column;align-items:center;gap:6px}
 .fader .fl{font-size:7px;letter-spacing:.10em}
 .fader .vl{font-size:7.5px}
+/* L'ON di una sorgente sotto il suo canale: lo stesso tasto del muto di una
+   linea, premuto quando la sorgente è accesa. */
+.fader .tasto{margin-top:3px;padding:3px 7px}
 
 /* --------------------------------------------------------------- il paesaggio
    La fascia porta sopra due cursori nativi trasparenti: l'inizio del segmento

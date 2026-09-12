@@ -45,7 +45,7 @@ const GUIDA = {
     /* 0 · panoramica */
     "g.pan.t": "Catena del segnale",
     "g.pan.catena": "sorgente → normalizzatore → inserto → livello → somma → colore → equalizzatore → limitatore → uscita\nlivello → mandata → riverbero → somma",
-    "g.pan.1": "Le tre sorgenti sono indipendenti e si possono spegnere una per una dalla testata. Ogni sorgente ha un canale nel banco: normalizzatore, inserto d'effetto, cursore di livello e mandata al riverbero comune. La somma passa per un filtro di colore d'insieme, l'equalizzatore a otto bande e un limitatore a due stadi.",
+    "g.pan.1": "Le tre sorgenti sono indipendenti e si possono spegnere una per una col tasto ON sotto il loro canale del mixer. Ogni sorgente ha un canale nel banco: normalizzatore, inserto d'effetto, cursore di livello e mandata al riverbero comune. La somma passa per un filtro di colore d'insieme, l'equalizzatore a otto bande e un limitatore a due stadi.",
     "g.pan.2": "Spegnere una sorgente non mette in pausa il modello: i cicli e il ricambio delle idee proseguono, e riaccendendola si sente il punto in cui il pezzo è arrivato, non quello in cui era stato lasciato.",
     "g.pan.3": "Il riverbero della sorgente Paesaggio è interno e non usa la mandata comune: la sua coda è parte del suono, non l'ambiente in cui si trova.",
 
@@ -225,7 +225,7 @@ const GUIDA = {
 
     "g.pan.t": "Chaîne du signal",
     "g.pan.catena": "source → normalisateur → insert → niveau → somme → couleur → égaliseur → limiteur → sortie\nniveau → départ → réverbération → somme",
-    "g.pan.1": "Les trois sources sont indépendantes et se coupent une par une depuis l'en-tête. Chaque source a une voie dans la console : normalisateur, insert d'effet, curseur de niveau et départ vers la réverbération commune. La somme passe par un filtre de couleur d'ensemble, l'égaliseur à huit bandes et un limiteur à deux étages.",
+    "g.pan.1": "Les trois sources sont indépendantes et se coupent une par une avec la touche ON sous leur voie de la console. Chaque source a une voie dans la console : normalisateur, insert d'effet, curseur de niveau et départ vers la réverbération commune. La somme passe par un filtre de couleur d'ensemble, l'égaliseur à huit bandes et un limiteur à deux étages.",
     "g.pan.2": "Couper une source ne met pas le modèle en pause : les cycles et le renouvellement des idées continuent, et en la rallumant on entend où la pièce est arrivée, non où on l'avait laissée.",
     "g.pan.3": "La réverbération de la source Paysage est interne et n'utilise pas le départ commun : sa traîne fait partie du son, elle n'est pas le lieu où il se trouve.",
 
@@ -392,7 +392,7 @@ const GUIDA = {
 
     "g.pan.t": "Signal chain",
     "g.pan.catena": "source → normaliser → insert → level → sum → colour → equaliser → limiter → output\nlevel → send → reverb → sum",
-    "g.pan.1": "The three sources are independent and can be switched off one at a time from the header. Each source has a channel in the desk: normaliser, effect insert, level fader and send to the shared reverb. The sum passes through an ensemble colour filter, the eight-band equaliser and a two-stage limiter.",
+    "g.pan.1": "The three sources are independent and can be switched off one at a time with the ON button under their mixer channel. Each source has a channel in the desk: normaliser, effect insert, level fader and send to the shared reverb. The sum passes through an ensemble colour filter, the eight-band equaliser and a two-stage limiter.",
     "g.pan.2": "Switching a source off does not pause the model: cycles and idea renewal carry on, and switching it back on you hear where the piece has got to, not where you left it.",
     "g.pan.3": "The Landscape source has its own internal reverb and does not use the shared send: its tail is part of the sound, not the room the sound is in.",
 
@@ -559,7 +559,7 @@ const GUIDA = {
 
     "g.pan.t": "信号経路",
     "g.pan.catena": "音源 → 正規化器 → 挿入効果 → 音量 → 合計 → 色 → 等化器 → 制限器 → 出力\n音量 → 送り → 残響 → 合計",
-    "g.pan.1": "三つの音源は独立しており、上端で個別に切れます。各音源は卓に一系統ずつ持ち、正規化器、効果の挿入、音量、共通残響への送りの順に通ります。合計は全体の色を決める濾波器、八帯域の等化器、二段の制限器を経て出力されます。",
+    "g.pan.1": "三つの音源は独立しており、卓の各系統の下にあるONで個別に切れます。各音源は卓に一系統ずつ持ち、正規化器、効果の挿入、音量、共通残響への送りの順に通ります。合計は全体の色を決める濾波器、八帯域の等化器、二段の制限器を経て出力されます。",
     "g.pan.2": "音源を切っても模型は止まりません。周期も楽想の入れ替わりも進み続けるので、入れ直すと止めた地点ではなく、いま到達している地点が聞こえます。",
     "g.pan.3": "風景の残響は音源の内部にあり、共通の送りは使いません。その余韻は音の置かれた場所ではなく、音そのものの一部だからです。",
 
