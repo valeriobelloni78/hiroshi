@@ -325,15 +325,19 @@ cursore("pCoda",       "vCoda",        con(suGT("pCoda"), (v) => numero(v, 1) + 
 cursore("pTono",       "vTono",        con(suGT("pTono"), (v) => numero(v / 1000, 1) + " kHz"));
 cursore("pRiverbero",  "vRiverbero",   con(suGT("pRiverbero"), (v) => numero(v / 100, 2)));
 
-/* LE QUATTRO LETTURE E LA QUANTITÀ hanno l'interfaccia e non ancora il motore:
-   scrivono nel modello — `G.pLettura`, `GT.pQuantita` — e il velo non le legge.
-   La lettura si scrive su `G` E su `GT` insieme, come un mood: è uno scatto fra
-   quattro posizioni, e lisciarla vorrebbe dire passare per le letture di mezzo. */
-cursore("pQuantita",   "vPquantita",   con(suGT("pQuantita"), (v) => numero(v / 100, 2)));
+/* LE CINQUE LETTURE E LA SOSTA. La lettura si scrive su `G` E su `GT` insieme,
+   come un mood: è uno scatto fra cinque posizioni, e lisciarla vorrebbe dire
+   passare per le letture di mezzo. La sosta serve solo al random, e con le altre
+   quattro la manopola si spegne davvero — `disabled` — come quelle di un inserto
+   vuoto: un comando che si muove e non fa niente è peggio di uno che dice di no. */
+cursore("pSosta",      "vPsosta",      con(suGT("pSosta"), (v) => numero(sostaDi(v), 1) + " s"));
 const MODI_LETTURA = [...document.querySelectorAll(".modo[data-lettura]")];
 function segnaLettura() {
   for (const b of MODI_LETTURA)
     b.setAttribute("aria-pressed", String(Number(b.dataset.lettura) === G.pLettura));
+  const spenta = G.pLettura !== LETTURA.random;
+  el("pSosta").disabled = spenta;
+  el("pSosta").closest(".manopola").classList.toggle("spenta", spenta);
 }
 for (const b of MODI_LETTURA) {
   b.addEventListener("click", () => {

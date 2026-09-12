@@ -966,6 +966,13 @@ function fasciaPaesaggio(box, ora) {
   maniglia(x0, box, true);
   maniglia(x1, box, false);
   riga(tx, box.y, tx, box.y + box.h, 1, tinta("inchiostro"));
+  // Nel random, dove atterrerà il prossimo salto: tratteggiato, perché è un punto
+  // che non si sta ancora leggendo. Si vede prima di arrivarci, come la prossima
+  // quinta sul circolo.
+  if (G.pLettura === LETTURA.random) {
+    const ax = box.x + (seg.a + prossimaArea * seg.corsa) * perSec;
+    riga(ax, box.y, ax, box.y + box.h, 1, tinta("inchiostro-2"), [2, 3]);
+  }
 
   scritta("0″", box.x, box.y + box.h + 9, { dim: 7.5, sp: .6, base: "top" });
   scritta(minsec(m.durata), box.x + box.w, box.y + box.h + 9,
@@ -1261,9 +1268,10 @@ function disegna() {
   manopola(manopolaDi("calore"),    G.calore / 100,    effG.calore / 100);
   manopola(manopolaDi("tregistro"), G.tRegistro / 100, effGT.registro / 100);
   manopola(manopolaDi("passo"),     G.tPasso / 100,    effGT.passo / 100);
-  // La quantità del paesaggio non ha un efficace: fra la mano e il velo non c'è
-  // nessuna deriva, quindi graduazioni e quadrato dicono lo stesso numero.
-  manopola(manopolaDi("pQuantita"), G.pQuantita / 100);
+  // La sosta del paesaggio non ha un efficace: fra la mano e il velo non c'è
+  // nessuna deriva, quindi graduazioni e quadrato dicono lo stesso numero. Fuori
+  // dal random si spegne, come la manopola che la comanda.
+  manopola(manopolaDi("pSosta"), G.pSosta / 100, undefined, G.pLettura !== LETTURA.random);
 
   // Le tre dell'inserto hanno una lettura sola e non due: fra la mano e il
   // suono non c'è né la deriva né l'ora, quindi le graduazioni e il quadrato

@@ -522,7 +522,7 @@ function istantaneaModello() {
     deriva: { ...deriva },
     quinta, passiQuinta, passoN, prossimaQuinta, ultimaQuinta,
     bookedUntil, LOOKAHEAD, ultimoGiro,
-    prossimoVelo, veliEmessi, testaOra,
+    prossimoVelo, veliEmessi, testaOra, versoTesta, sostaResta, prossimaArea, letturaVista,
     tenute: tenuteAperte.slice(),
     storia: storiaGocce.slice(),
   };
@@ -546,6 +546,8 @@ function ripristinaModello(s) {
 
   bookedUntil = s.bookedUntil; LOOKAHEAD = s.LOOKAHEAD; ultimoGiro = s.ultimoGiro;
   prossimoVelo = s.prossimoVelo; veliEmessi = s.veliEmessi; testaOra = s.testaOra;
+  versoTesta = s.versoTesta; sostaResta = s.sostaResta;
+  prossimaArea = s.prossimaArea; letturaVista = s.letturaVista;
   tenuteAperte.length = 0; for (const e of s.tenute) tenuteAperte.push(e);
   storiaGocce.length = 0; for (const g of s.storia) storiaGocce.push(g);
 }

@@ -597,6 +597,92 @@ const esito = await p.evaluate(async () => {
     if (Math.abs((testaOra - seg.a) - 1) > 0.15)
       R.errori.push("la testa non cammina al passo del rallentamento: " +
                     (testaOra - seg.a).toFixed(2) + " s di materiale in dieci di tempo");
+
+    /* (g) LE CINQUE LETTURE, sullo stesso segmento. Per ciascuna la testa non deve
+       mai uscire dalla corsa e deve fare quello che il nome dice: INDIETRO un
+       secondo di materiale all'indietro in dieci di tempo, PENDOLO rimbalzare e
+       tornare per la sua strada, FERMO non muoversi, RANDOM saltare una volta per
+       sosta e camminare al passo fra un salto e l'altro.
+
+       E per tutte LA PREVISIONE: il velo prenota gli strati chiedendo a
+       `camminaTesta` dove sarà la testa, e se la previsione e il cammino vero
+       divergono gli strati partono da un punto mentre la testa è in un altro — nel
+       pendolo è un rimbalzo nel posto sbagliato, nel random un salto doppio. Si
+       confronta un passo lungo quattro decimi con otto passi da cinque centesimi,
+       che è quello che succede fra lo scheduler e i giri del motore. */
+    {
+      const L = LETTURA;
+      const esce = (t) => t < seg.a - 1e-6 || t > seg.a + seg.corsa + 1e-6;
+      const modo = (m) => { G.pLettura = GT.pLettura = m; effettiviPaesaggio(); avanzaTesta(0); };
+      const cammina = (ogni) => {
+        let fuori = 0;
+        for (let k = 0; k < 200; k++) { avanzaTesta(0.05); if (esce(testaOra)) fuori++; if (ogni) ogni(); }
+        return fuori;
+      };
+      const dentro = (nome, fuori) => {
+        if (fuori) R.errori.push(nome + ": la testa esce dal segmento " + fuori + " volte su 200");
+      };
+      const letture = {};
+
+      modo(L.indietro); testaOra = seg.a + 2;
+      dentro("indietro", cammina());
+      letture.indietro = +(testaOra - seg.a).toFixed(2);
+      if (Math.abs(testaOra - (seg.a + 1)) > 0.15)
+        R.errori.push("indietro: la testa non torna di un secondo in dieci (" + letture.indietro + ")");
+
+      // a due decimi dal bordo, un secondo di strada: due all'andata, otto al ritorno
+      modo(L.pendolo); testaOra = seg.a + seg.corsa - 0.2; versoTesta = 1;
+      dentro("pendolo", cammina());
+      letture.pendolo = +(seg.a + seg.corsa - testaOra).toFixed(2);
+      if (versoTesta !== -1 || Math.abs(letture.pendolo - 0.8) > 0.15)
+        R.errori.push("pendolo: dopo il bordo la testa non torna per la sua strada (" +
+                      letture.pendolo + " s dal bordo)");
+      // a rallentamento uno la corsa si percorre tre volte in dieci secondi
+      G.pRallenta = GT.pRallenta = 1; effettiviPaesaggio();
+      let rimbalzi = 0, verso = versoTesta;
+      dentro("pendolo veloce", cammina(() => {
+        if (versoTesta !== verso) { rimbalzi++; verso = versoTesta; }
+      }));
+      letture.rimbalzi = rimbalzi;
+      if (rimbalzi < 2) R.errori.push("pendolo: " + rimbalzi + " rimbalzi in dieci secondi a rallentamento uno");
+      G.pRallenta = GT.pRallenta = 10; effettiviPaesaggio();
+
+      modo(L.fermo); testaOra = seg.a + 1.5;
+      dentro("fermo", cammina());
+      if (Math.abs(testaOra - (seg.a + 1.5)) > 1e-9)
+        R.errori.push("fermo: la testa si è mossa di " + (testaOra - seg.a - 1.5).toFixed(4) + " s");
+
+      // con la sosta al minimo, un salto al secondo
+      G.pSosta = GT.pSosta = 0; effettiviPaesaggio();
+      modo(L.random);
+      let salti = 0, prima = testaOra;
+      const passo = 0.05 / 10;
+      dentro("random", cammina(() => {
+        const d = testaOra - prima; prima = testaOra;
+        if (Math.abs(d - passo) > 1e-4 && Math.abs(d - passo + seg.corsa) > 1e-4) salti++;
+      }));
+      letture.salti = salti;
+      if (salti < 9 || salti > 11)
+        R.errori.push("random: " + salti + " salti in dieci secondi con un secondo di sosta");
+
+      let scarti = 0;
+      for (const m of [L.avanti, L.indietro, L.pendolo, L.fermo, L.random]) {
+        modo(m);
+        for (let n = 0; n < 20; n++) {
+          const atteso = camminaTesta(testaOra, versoTesta, sostaResta, 0.4, segmento()).t;
+          for (let k = 0; k < 8; k++) avanzaTesta(0.05);
+          const d = Math.abs(testaOra - atteso);
+          if (Math.min(d, seg.corsa - d) > 1e-6) scarti++;
+        }
+      }
+      letture.previsioniSbagliate = scarti;
+      if (scarti)
+        R.errori.push("la previsione del velo e il cammino della testa divergono " + scarti + " volte su 100");
+
+      R.paesaggio.letture = letture;
+      G.pSosta = GT.pSosta = 50;
+      modo(L.avanti);
+    }
     // rovesciando le maniglie il segmento non sparisce, si specchia
     G.pInizio = GT.pInizio = 80; G.pFine = GT.pFine = 20;
     effettiviPaesaggio();
@@ -840,7 +926,7 @@ const esito = await p.evaluate(async () => {
       t: tessuti.map((L) => [L.period, L.cycleStart, L.idx, L.idea.length, L.offset, L.prossimoRicambio]),
       d: [deriva.centro, deriva.dens, deriva.spread, deriva.head, deriva.corpo],
       q: [quinta, passiQuinta, passoN, prossimaQuinta],
-      g: [prossimoVelo, testaOra],
+      g: [prossimoVelo, testaOra, versoTesta, sostaResta],
       s: SCALE.slice(0, 3),
     });
 

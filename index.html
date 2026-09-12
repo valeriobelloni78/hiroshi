@@ -398,6 +398,7 @@
           <button type="button" class="modo" data-lettura="1" aria-pressed="false"><i aria-hidden="true">←</i><span data-i18n="lettura.indietro">Indietro</span></button>
           <button type="button" class="modo" data-lettura="2" aria-pressed="false"><i aria-hidden="true">⇄</i><span data-i18n="lettura.pendolo">Pendolo</span></button>
           <button type="button" class="modo" data-lettura="3" aria-pressed="false"><i aria-hidden="true">‖</i><span data-i18n="lettura.fermo">Fermo</span></button>
+          <button type="button" class="modo" data-lettura="4" aria-pressed="false"><i aria-hidden="true">⤮</i><span data-i18n="lettura.random">Random</span></button>
         </div>
 
         <!-- Le due maniglie del segmento sono due cursori nativi trasparenti stesi
@@ -413,11 +414,11 @@
 
         <div class="lato-paesaggio">
           <div class="manopola">
-            <div class="quadro" data-manopola="pQuantita">
-              <input id="pQuantita" type="range" min="0" max="100" step="1" value="50"
-                     data-i18n-aria="a11y.quantita">
+            <div class="quadro" data-manopola="pSosta">
+              <input id="pSosta" type="range" min="0" max="100" step="1" value="50"
+                     data-i18n-aria="a11y.sosta">
             </div>
-            <span class="fl" data-i18n="par.quantita">Quantità</span><span class="vl" id="vPquantita">0,50</span>
+            <span class="fl" data-i18n="fl.sosta">Sosta</span><span class="vl" id="vPsosta">5,5 s</span>
           </div>
         </div>
       </div>

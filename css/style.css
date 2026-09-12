@@ -678,8 +678,8 @@ input[type=range].verticale::-moz-range-thumb{width:9px;height:7px}
 .riga-paesaggio{display:grid;grid-template-columns:205px minmax(0,1fr) 205px;gap:0 27px;
                 align-items:center;margin-top:10px}
 .fascia-paesaggio{width:100%;height:82px;position:relative}
-/* LE QUATTRO LETTURE sono una scelta sola fra quattro, quindi pulsanti veri con
-   `aria-pressed`, come le lingue e il tema: la lettura scelta si riempie
+/* LE CINQUE LETTURE sono una scelta sola fra cinque, quindi pulsanti veri con
+   `aria-pressed`, come le lingue: la lettura scelta si riempie
    d'inchiostro. Le frecce sono notazione e non si traducono. Presa col tasto Tab,
    la scelta tiene il suo filo di fuoco DENTRO lo smusso, o lo smusso lo taglierebbe. */
 .modi-lettura{display:flex;flex-direction:column;gap:5px}

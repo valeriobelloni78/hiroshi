@@ -45,6 +45,36 @@ ripetuto a distanza fissa, cioè un filtro a pettine: si sente come un tubo. Uno
 scarto casuale su dove ciascuna comincia rompe la periodicità e lascia solo la
 materia.
 
+**LE CINQUE LETTURE MUOVONO LA TESTA, NON LE FINESTRE.** Avanti, indietro,
+pendolo, fermo e random dicono come la testa percorre la corsa; ogni strato suona
+in avanti a velocità naturale in tutte e cinque, perché è quello che tiene
+l'altezza e l'attacco del materiale. INDIETRO è la testa che torna verso il capo,
+non il suono rovesciato: letti all'indietro, i quattro toni della prova scendono
+invece di salire, e ciascuno resta un tono che comincia. Avanti e indietro si
+AVVOLGONO; il pendolo RIMBALZA — lì il verso che cambia è la lettura — e si tiene
+come una fase su andata e ritorno, così un passo che attraversa un bordo, o due,
+rimbalza giusto. Dove la testa rimbalza o sta ferma, lo sparpaglio SI SPECCHIA sui
+bordi invece di avvolgersi: avvolta, una finestra vicina a un bordo andrebbe a
+prendere l'altro capo del segmento, una materia che la testa non sta leggendo.
+
+RANDOM salta in un punto a caso della corsa, legge da lì in avanti per la SOSTA —
+da uno a trenta secondi veri, in scala esponenziale, sulla manopola a destra
+dell'onda — e salta di nuovo; entrando nel random si salta subito. Il salto non ha
+dissolvenza e non gliene serve: gli strati già partiti finiscono la loro campana
+dove erano, e la sovrapposizione incrocia da sé. La sosta serve solo al random, e
+con le altre quattro letture la manopola è `disabled`, come quelle di un inserto
+vuoto. La tavola tratteggia sull'onda il punto dove atterrerà il prossimo salto.
+
+**LA TESTA SI CALCOLA IN UN POSTO SOLO**, `camminaTesta()`, che non tocca niente:
+la usa `avanzaTesta()` per camminare e il velo per sapere dove sarà la testa
+quando uno strato prenotato comincerà. Due conti divergerebbero, e nel pendolo e
+nel random una previsione sbagliata è un rimbalzo o un salto nel posto sbagliato.
+Per questo IL PUNTO D'ARRIVO DEL RANDOM SI SORTEGGIA PRIMA DEL SALTO. Lo stato sono
+numeri RELATIVI — il verso, i secondi al salto, l'arrivo in frazione della corsa —
+e nessun tempo assoluto, per la ragione di `avvia()` fra le insidie: un salto
+fissato su un orologio resterebbe nel futuro dopo un render. E stanno nella
+fotografia di `rendiOffline`, con la testa.
+
 **Il riverbero del paesaggio sta DENTRO la sorgente, e altrove è il contrario.**
 Per le altre tre classi vale la regola di Rada — il riverbero è una mandata, non
 un inserto, e la stanza resta una sola. Qui no: per un drone la coda non è
@@ -1095,7 +1125,9 @@ misura sbagliata e non di quattro difetti. Sul **paesaggio**
 verifica che la testa cammini AL PASSO DEL RALLENTAMENTO (un accumulatore che
 accumula alla velocità sbagliata è un difetto muto: si sente solo come un
 paesaggio che non va da nessuna parte), che non esca mai dal segmento nemmeno
-rovesciandone le maniglie, che il drone arrivi all'uscita senza clippare, che
+rovesciandone le maniglie, che ciascuna delle CINQUE LETTURE faccia quello che
+dice senza uscire dalla corsa — e che la previsione con cui il velo prenota
+coincida col cammino vero della testa, cento volte su cento —, che il drone arrivi all'uscita senza clippare, che
 **il rallentamento non trasporti** — il baricentro dello spettro deve restare
 dov'è fra un rallentamento di quattro e uno di trentadue — e che la coda del suo
 riverbero scenda anche dopo due ritarature. E che **l'accordatura intoni**: su
@@ -1286,9 +1318,10 @@ vetro per classe, il banco e la deriva su uno ciascuno, il resto sulla carta:
   quello di sotto, uno per lato perché due cursori distesi sullo stesso
   rettangolo se li prenderebbe sempre quello davanti. Fuori dal segmento la
   carta si posa sopra; dentro, la finestra che si sta leggendo è una banda
-  chiara che cammina. A sinistra, sotto la colonna delle gocce, le
-  quattro letture — avanti, indietro, pendolo, fermo — e a destra, sotto quella
-  dei tessuti, la manopola della quantità; sotto, i filetti;
+  chiara che cammina, e nel random un tratteggio dove atterrerà il prossimo
+  salto. A sinistra, sotto la colonna delle gocce, le
+  cinque letture — avanti, indietro, pendolo, fermo, random — e a destra, sotto
+  quella dei tessuti, la manopola della sosta del random; sotto, i filetti;
 - **05 · deriva**: un pannello a sinistra, largo quanto la colonna delle gocce
   e il suo quadrante 
   Dentro, il circolo delle quinte in cerchio con la tonalità al centro, l'arco
@@ -1333,18 +1366,6 @@ Da fare, in ordine:
    il campo `fBm` che le sveglierebbe — è rimasto come spunta nella testata
    perché è una sorgente a sé, spenta e dichiarata; il giorno che se ne decide
    la sorte, quella se ne va con la stessa mano.
-
-3. **LE QUATTRO LETTURE DEL PAESAGGIO E LA QUANTITÀ HANNO L'INTERFACCIA E NON IL
-   MOTORE.** A sinistra dell'onda quattro pulsanti — avanti, indietro, pendolo,
-   fermo, nomi presi da come questo file descrive la testa: «si ferma, torna,
-   cammina» — e a destra una manopola «quantità». Scrivono nel modello,
-   `G.pLettura` e `GT.pQuantita`, e il velo non li legge ancora. È un'ECCEZIONE
-   DICHIARATA alla regola per cui un comando che si muove e non fa niente è peggio
-   di uno spento: l'interfaccia è stata chiesta prima delle funzioni, e questa riga
-   è la promessa scritta. Quando le funzioni si decidono, si leggono in
-   `paesaggio.js`; se una lettura non ha bisogno della quantità, la manopola si
-   spegne come quelle di un inserto vuoto. I nomi sono provvisori quanto le
-   funzioni.
 
 Aperti: `rendiOffline` percorre lo stesso modello che sta suonando, quindi
 esportare mentre si ascolta oggi disturberebbe la sessione in corso — va dato

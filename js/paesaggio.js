@@ -60,6 +60,7 @@ function aggiungiMateria(nome, buffer) {
   materiali.push({ nome, buffer, durata: buffer.duration });
   materiale = materiali.length - 1;
   testaOra = 0;                     // la testa riparte dal principio della cosa nuova
+  versoTesta = 1; sostaResta = 0;
   return materiale;
 }
 
@@ -101,17 +102,102 @@ function segmento() {
 
 /* ------------------------------------------------------- la testa di lettura
    È un accumulatore e non una posizione calcolata, perché il rallentamento si
-   muove sotto le dita: si avanza di `dt / rallentamento` e ci si avvolge dentro
-   la corsa. Il ritorno al capo è per avvolgimento e non per rimbalzo — un
-   rimbalzo si sente come un verso che cambia, un avvolgimento no, perché le
-   finestre stanno già sparpagliate e nessuno sa dove sia il bordo. */
+   muove sotto le dita: a ogni giro si cammina di `dt / rallentamento`.
+
+   LE CINQUE LETTURE dicono come la testa percorre la corsa, e NESSUNA TOCCA LE
+   FINESTRE: ogni strato suona in avanti a velocità naturale in tutte e cinque,
+   perché è quello che tiene l'altezza e l'attacco del materiale. INDIETRO è la
+   testa che torna verso il capo, non il suono rovesciato — i quattro toni della
+   prova, letti all'indietro, scendono invece di salire, e ciascuno resta un tono
+   che comincia.
+
+     · AVANTI e INDIETRO si avvolgono dentro la corsa. Un avvolgimento non si
+       sente, perché le finestre stanno già sparpagliate e nessuno sa dove sia
+       il bordo.
+     · PENDOLO rimbalza, ed è l'unico: lì il verso che cambia È la lettura. Si
+       tiene come una FASE su andata e ritorno, lunga due corse, così un passo
+       che attraversa un bordo — o due, a rallentamento uno su un segmento
+       corto — rimbalza giusto senza casi a parte.
+     · FERMO non cammina. La materia sta sotto la lente, e quello che si muove è
+       solo lo sparpaglio.
+     · RANDOM salta in un punto a caso della corsa, legge da lì in avanti per la
+       SOSTA — secondi veri, non di materiale — e salta di nuovo. Il salto non ha
+       bisogno di una dissolvenza: gli strati già partiti finiscono la loro
+       campana dove erano, i nuovi cominciano dall'altra parte, e la
+       sovrapposizione fa l'incrocio da sé.
+
+   LA TESTA SI CALCOLA IN UN POSTO SOLO, `camminaTesta`, che non tocca niente: la
+   usa `avanzaTesta` per camminare davvero, e il velo per sapere dove sarà la
+   testa quando uno strato prenotato comincerà. Due conti divergerebbero al primo
+   ritocco, e nel pendolo e nel random una previsione sbagliata non è un errore
+   piccolo: è un rimbalzo o un salto nel posto sbagliato. Per questo IL PUNTO
+   D'ARRIVO DEL RANDOM SI SORTEGGIA PRIMA DEL SALTO: la previsione deve sapere
+   dove si atterra prima che si atterri.
+
+   Lo stato sono numeri RELATIVI — il verso, i secondi che mancano al salto,
+   l'arrivo in frazione della corsa — e nessun tempo assoluto: il render fuori
+   tempo reale riparte da zero, e un salto fissato su un orologio resterebbe nel
+   futuro (vedi `avvia()` fra le insidie). L'arrivo è una FRAZIONE per la stessa
+   ragione per cui la testa si avvolge: se nel frattempo il segmento si stringe,
+   si atterra comunque dentro. */
+const LETTURA = { avanti: 0, indietro: 1, pendolo: 2, fermo: 3, random: 4 };
+
+/* La sosta è ESPONENZIALE, da uno a trenta secondi: fra uno e tre si sente la
+   differenza di mezzo secondo, fra venti e trenta no, e una corsa lineare
+   spenderebbe metà manopola dove l'orecchio non distingue niente. */
+const SOSTA_MIN = 1, SOSTA_MAX = 30;
+function sostaDi(v) {
+  return SOSTA_MIN * Math.pow(SOSTA_MAX / SOSTA_MIN, clamp(v, 0, 100) / 100);
+}
+
 let testaOra = 0;
+let versoTesta = 1;         // il pendolo: +1 verso la fine, −1 verso il capo
+let sostaResta = 0;         // il random: secondi veri al prossimo salto
+let prossimaArea = 0;       // il random: dove si atterra, in frazione della corsa
+let letturaVista = -1;
+
+/* Dove sarà la testa fra `d` secondi veri, partendo da `t`, senza muovere
+   niente. Restituisce anche il verso e la sosta che resta, e se c'è stato un
+   salto — che è l'unica cosa che `avanzaTesta` deve sapere per sorteggiare il
+   prossimo arrivo. */
+function camminaTesta(t, verso, resta, d, s) {
+  const corsa = s.corsa, passo = d / clamp(effGP.rallenta, 1, 64);
+  const giro = (x) => s.a + (((x - s.a) % corsa) + corsa) % corsa;
+  switch (G.pLettura) {
+    case LETTURA.indietro:
+      return { t: giro(t - passo), verso, resta, salto: false };
+    case LETTURA.pendolo: {
+      const x = clamp(t - s.a, 0, corsa), giroPieno = 2 * corsa;
+      const fase = (((verso > 0 ? x : giroPieno - x) + passo) % giroPieno + giroPieno) % giroPieno;
+      return fase <= corsa ? { t: s.a + fase, verso: 1, resta, salto: false }
+                           : { t: s.a + giroPieno - fase, verso: -1, resta, salto: false };
+    }
+    case LETTURA.fermo:
+      return { t: clamp(t, s.a, s.a + corsa), verso, resta, salto: false };
+    case LETTURA.random: {
+      if (d < resta) return { t: giro(t + passo), verso, resta: resta - d, salto: false };
+      const dopo = (d - resta) / clamp(effGP.rallenta, 1, 64);
+      return { t: giro(s.a + prossimaArea * corsa + dopo), verso,
+               resta: Math.max(0, resta - d + sostaDi(effGP.sosta)), salto: true };
+    }
+    default:
+      return { t: giro(t + passo), verso, resta, salto: false };
+  }
+}
 
 function avanzaTesta(dt) {
   const s = segmento();
   if (!s.durata) return;
-  testaOra += dt / clamp(effGP.rallenta, 1, 64);
-  testaOra = s.a + (((testaOra - s.a) % s.corsa) + s.corsa) % s.corsa;
+  if (G.pLettura !== letturaVista) {
+    // Entrando nel random si salta subito: un pulsante premuto deve sentirsi.
+    if (G.pLettura === LETTURA.random) { sostaResta = 0; prossimaArea = Math.random(); }
+    letturaVista = G.pLettura;
+  }
+  // Una sosta accorciata vale subito, invece di aspettare la fine di quella lunga.
+  sostaResta = Math.min(sostaResta, sostaDi(effGP.sosta));
+  const p = camminaTesta(testaOra, versoTesta, sostaResta, dt, s);
+  testaOra = p.t; versoTesta = p.verso; sostaResta = p.resta;
+  if (p.salto) prossimaArea = Math.random();
 }
 
 /* Dove sta la testa adesso, in secondi dentro il materiale: la legge la tavola
@@ -327,18 +413,26 @@ function prenotaVelo(now, orizzonte, attiva, dest) {
 
   const s = segmento();
   const passo = s.velo / SOVRAPPOSIZIONE;
-  const rallenta = clamp(effGP.rallenta, 1, 64);
   const scarto = (effGP.sparpaglio / 100) * Math.min(0.5, s.corsa / 2);
+  /* Dove la testa rimbalza o sta ferma, lo sparpaglio SI SPECCHIA sui bordi
+     invece di avvolgersi: avvolta, una finestra vicina a un bordo andrebbe a
+     prendere l'altro capo del segmento, cioè una materia che la testa non sta
+     leggendo e non leggerà. Dove la testa si avvolge da sé, si avvolge anche lui. */
+  const specchia = G.pLettura === LETTURA.pendolo || G.pLettura === LETTURA.fermo;
   let quanti = 0, guardia = 0;
 
   while (prossimoVelo < orizzonte && guardia++ < 200) {
     /* Dov'è la testa NELL'ISTANTE in cui questo strato comincia, non adesso:
        lo scheduler prenota fino a mezzo secondo avanti e fuori tempo reale
        anche di più, e una testa letta adesso farebbe camminare il paesaggio a
-       scatti lunghi quanto la finestra di prenotazione. */
-    const avanti = (prossimoVelo - now) / rallenta;
-    const grezzo = testaOra - s.a + avanti + (Math.random() * 2 - 1) * scarto;
-    const dentro = s.a + ((grezzo % s.corsa) + s.corsa) % s.corsa;
+       scatti lunghi quanto la finestra di prenotazione. La chiede alla stessa
+       funzione con cui la testa cammina, quindi rimbalzi e salti cadono dove
+       cadranno davvero. */
+    const t = camminaTesta(testaOra, versoTesta, sostaResta, prossimoVelo - now, s).t;
+    const grezzo = t - s.a + (Math.random() * 2 - 1) * scarto;
+    const giri = ((grezzo % (2 * s.corsa)) + 2 * s.corsa) % (2 * s.corsa);
+    const dentro = s.a + (specchia ? (giri <= s.corsa ? giri : 2 * s.corsa - giri)
+                                   : ((grezzo % s.corsa) + s.corsa) % s.corsa);
     // Gli strati si alternano fra i due lati: due campane che salgono e
     // scendono sfasate su lati opposti sono quello che allarga il paesaggio
     // senza che nessuno debba muovere niente.
