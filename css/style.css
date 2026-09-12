@@ -248,20 +248,24 @@ body{
    `[data-piano]` — perché l'impaginazione resta tutta in questo file.
 
    Le sporgenze sono prese dagli spazi che ci sono già e non ne chiedono uno in
-   più: nessun comando si sposta di un pixel. Di lato quattordici, dentro i
-   ventisette fra una colonna e l'altra; sopra e sotto il piano si ferma a
-   cinque pixel dal filo che gli sta sopra e a otto da quello che gli sta sotto.
-   Una banda parte con il filo in testa, quindi lì il piano rientra. */
+   più. Di lato quattordici, dentro i ventisette fra una colonna e l'altra, cioè
+   tredici dal filo verticale in mezzo alle classi; SOPRA IL PIANO SI FERMA ALLA
+   STESSA DISTANZA, tredici pixel dal filo che gli sta sopra, e sotto a otto da
+   quello che gli sta sotto. Prima sopra erano cinque: accanto ai tredici di lato
+   l'occhio li confrontava, e il piano sembrava schiacciato contro il filo. Una
+   banda parte con il filo in testa, quindi lì il piano rientra. */
 :root{--piano-smusso:9px}
 [data-piano]{--piano-sopra:0px;--piano-lato:14px;--piano-sotto:8px}
 /* I due piani di una classe non sporgono né sopra né sotto: l'aria la danno i
    vani da dentro, e fra due piani c'è il `gap` del quadrante. Solo il cerchio
-   sale fino a cinque pixel dal filo della testata. */
+   sale, fino a tredici pixel dal filo della testata. */
 .vano[data-piano]{--piano-sotto:0px}
 .vano.cerchio[data-piano]{--piano-sopra:9px}
-.banda[data-piano]{--piano-sopra:-6px}
+/* Il piano del banco è la banda stessa, che comincia SUL filo: rientra di
+   quattordici, e il filo più il vuoto fanno tredici più uno. */
+.banda[data-piano]{--piano-sopra:-14px}
 /* Il pannello della deriva comincia dentro la sua banda, dopo il filo e il suo
-   padding: sette in su lo fermano a cinque pixel dal filo, come gli altri. */
+   padding: sette in su lo fermano a tredici pixel dal filo, come gli altri. */
 .pannello-deriva[data-piano],.pannello-influenze[data-piano]{--piano-sopra:7px}
 /* Il colore di ogni piano: un token per sezione, che in chiaro e scuro è vetro.
    Il canvas lo legge da `--piano-tinta`, e lo rilegge quando il tema cambia. */
@@ -409,8 +413,13 @@ body{
 .lingua:focus-visible{outline:1px solid var(--ambra);outline-offset:3px}
 
 /* -------------------------------------------------------------------- le bande */
-.banda{border-top:1px solid var(--filo);margin-top:16px;padding-top:12px}
-.banda.classi{border-top:0;margin-top:0;padding-top:14px}
+/* Il padding sopra è quello di prima più otto: i piani stanno a tredici pixel dal
+   filo che hanno sopra, quanto dal filo verticale che hanno di lato (vedi i piani),
+   e i contenuti sono scesi con loro. Il paesaggio, che un piano non ce l'ha,
+   scende lo stesso, così le sei intestazioni stanno alla stessa distanza dal
+   loro filo. */
+.banda{border-top:1px solid var(--filo);margin-top:16px;padding-top:20px}
+.banda.classi{border-top:0;margin-top:0;padding-top:22px}
 .capo{display:flex;align-items:baseline;justify-content:space-between;gap:20px}
 .capo .titolo{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
 /* I NUMERI DI SEZIONE sono numeri, quindi vanno in ambra come tutti gli

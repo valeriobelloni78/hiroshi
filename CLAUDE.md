@@ -282,9 +282,21 @@ gli disegna dietro. `piani()` in `tavola.js` è la prima cosa di ogni
 fotogramma, e legge i riquadri degli elementi marcati `[data-piano]`; quanto il
 piano sporge lo dicono `--piano-sopra`, `--piano-lato`, `--piano-sotto` nel CSS,
 prese dagli spazi che c'erano già — quattordici di lato dentro i ventisette fra
-le colonne, cinque sotto il filo di sopra e otto sopra quello di sotto; i due piani di una
+le colonne, e otto sopra il filo di sotto; i due piani di una
 classe invece non sporgono né sopra né sotto, l'aria la danno da dentro i loro
-vani. Quando il vetro è arrivato nessun comando si è spostato di un pixel. Venendo dal canvas, il vetro finisce da sé
+vani. Quando il vetro è arrivato nessun comando si è spostato di un pixel.
+
+**IL VUOTO SOPRA UN PIANO È QUELLO DI LATO: TREDICI PIXEL.** Di lato un piano sta a
+tredici dal filo verticale in mezzo alle classi — i quattordici di sporgenza dentro
+i ventisette fra le colonne — e sopra all'inizio stava a cinque dal filo della sua
+banda: accanto ai tredici l'occhio li confrontava, e il piano sembrava schiacciato
+contro il filo. Il vuoto sopra è diventato tredici FACENDO SCENDERE I CONTENUTI di
+otto pixel, non accorciando i piani: il padding sopra delle bande è passato da
+dodici a venti e quello delle classi da quattordici a ventidue, così dentro i
+piani l'aria è rimasta quella misurata sull'inchiostro. Il banco, il cui piano è
+la banda stessa e comincia sul filo, rientra di quattordici invece che di sei.
+Scende anche il paesaggio, che un piano non ce l'ha, perché le intestazioni stiano
+tutte alla stessa distanza dal loro filo. Venendo dal canvas, il vetro finisce da sé
 nella tavola in png e nel canvas di design di `tavolo.mjs`.
 
 Lo STRAPPO sotto il quadrato di una manopola non cancella più se sta su un
