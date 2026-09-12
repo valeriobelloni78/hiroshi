@@ -213,6 +213,117 @@
   --retino:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='7'%3E%3Ccircle cx='3.5' cy='3.5' r='1.05' fill='%23ccc7aa'/%3E%3C/svg%3E");
 }
 
+/* ---------------------------------------------------------------------- alba
+   ALBA viene dalla prima delle quattro croci: rosa cipria, azzurro acciaio,
+   mattone, grigio salvia. È un tema CHIARO. La carta è il grigio salvia portato
+   quasi al bianco — la nebbia prima del sole — e l'inchiostro è l'azzurro
+   acciaio scurito a L* 16, il blu dell'ora prima. Gocce azzurro, tessuti
+   mattone, effetti rosa, banco salvia; deriva e influenze a croce, come in
+   meriggio. I toni sono tarati come in meriggio, sul piano più scuro. */
+:root[data-tema="alba"]{
+  color-scheme:light;
+  --carta:#e7ede4;
+  --vetro:#f1f5ef;
+  --inchiostro:#132a37;
+  --inchiostro-2:#244658;
+  --grigio:#4e585b;
+  --muto:#6d7474;
+  --filo:#808685;
+  --spento:#939996;
+  --filo-2:#9fa5a1;
+  --su-ambra:var(--carta);
+  --piano-gocce:#a8c8dd;
+  --piano-tessuti:#f1b5ad;
+  --piano-effetti:#e4c5c7;
+  --piano-banco:#c2c8bd;
+  --piano-deriva:var(--piano-tessuti);
+  --piano-influenze:var(--piano-gocce);
+  --retino:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='7'%3E%3Ccircle cx='3.5' cy='3.5' r='1.05' fill='%23c4cac3'/%3E%3C/svg%3E");
+}
+
+/* ----------------------------------------------------------------- primavera
+   PRIMAVERA viene dalla quarta croce: ruggine, rosa, giallo pallido, oliva. È un
+   tema CHIARO. La carta è il rosa portato quasi al bianco, un fiore di pesco, e
+   l'inchiostro è l'oliva scurito a L* 16, il verde dell'ombra sotto le foglie.
+   Gocce rosa, tessuti giallo — il piano più chiaro, perché un giallo scurito
+   diventa kaki —, effetti ruggine, banco oliva; deriva e influenze a croce. */
+:root[data-tema="primavera"]{
+  color-scheme:light;
+  --carta:#fde9eb;
+  --vetro:#fef4f5;
+  --inchiostro:#27291b;
+  --inchiostro-2:#41442e;
+  --grigio:#5a5550;
+  --muto:#7a716f;
+  --filo:#8d8281;
+  --spento:#a19594;
+  --filo-2:#aea1a1;
+  --su-ambra:var(--carta);
+  --piano-gocce:#e8bbc0;
+  --piano-tessuti:#eadda2;
+  --piano-effetti:#e2bbaf;
+  --piano-banco:#c3c5b3;
+  --piano-deriva:var(--piano-tessuti);
+  --piano-influenze:var(--piano-gocce);
+  --retino:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='7'%3E%3Ccircle cx='3.5' cy='3.5' r='1.05' fill='%23d7c6c8'/%3E%3C/svg%3E");
+}
+
+/* ------------------------------------------------------------------- autunno
+   AUTUNNO viene dalla seconda croce: rosso scuro, antracite, arancio, viola. È un
+   tema SCURO. La carta è l'antracite portata a L* 10 e l'inchiostro una crema
+   presa dall'arancio. Gocce viola, tessuti arancio scurito fino al bruno,
+   effetti rosso scuro, banco antracite — il piano più largo resta il più neutro —;
+   deriva e influenze a croce. L'arancio non può restare arancio: sotto l'ambra
+   sarebbe la stessa tinta alla stessa luce, e il valore non si troverebbe più. I
+   toni sono tarati come nel crepuscolo, sul piano più chiaro. */
+:root[data-tema="autunno"]{
+  color-scheme:dark;
+  --carta:#201a1c;
+  --vetro:#322b2a;
+  --inchiostro:#fee7d2;
+  --inchiostro-2:#d2bead;
+  --grigio:#b7a597;
+  --muto:#9d8e82;
+  --filo:#8a7d71;
+  --spento:#7c7066;
+  --filo-2:#756960;
+  --su-ambra:var(--inchiostro);
+  --piano-gocce:#4a385b;
+  --piano-tessuti:#5b3805;
+  --piano-effetti:#653125;
+  --piano-banco:#3d383a;
+  --piano-deriva:var(--piano-tessuti);
+  --piano-influenze:var(--piano-gocce);
+  --retino:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='7'%3E%3Ccircle cx='3.5' cy='3.5' r='1.05' fill='%233e3734'/%3E%3C/svg%3E");
+}
+
+/* ------------------------------------------------------------------- inverno
+   INVERNO viene dalla terza croce: menta, nero, cremisi, blu petrolio. È un tema
+   SCURO. La carta è il nero verdastro e l'inchiostro un bianco preso dalla menta.
+   Gocce blu petrolio, tessuti cremisi, effetti menta scurita fino al verde
+   bosco, banco il nero schiarito ad ardesia; deriva e influenze a croce. I toni
+   sono tarati come nel crepuscolo, sul piano più chiaro. */
+:root[data-tema="inverno"]{
+  color-scheme:dark;
+  --carta:#111b1d;
+  --vetro:#252c2c;
+  --inchiostro:#e4f1e5;
+  --inchiostro-2:#bdc8bf;
+  --grigio:#a4afa6;
+  --muto:#8d968e;
+  --filo:#7b837d;
+  --spento:#6f7771;
+  --filo-2:#686f6a;
+  --su-ambra:var(--inchiostro);
+  --piano-gocce:#2d4554;
+  --piano-tessuti:#732a28;
+  --piano-effetti:#2d4832;
+  --piano-banco:#30383a;
+  --piano-deriva:var(--piano-tessuti);
+  --piano-influenze:var(--piano-gocce);
+  --retino:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='7'%3E%3Ccircle cx='3.5' cy='3.5' r='1.05' fill='%23323837'/%3E%3C/svg%3E");
+}
+
 /* La grana della carta: rumore frattale generato dal browser, non un'immagine
    da scaricare. È un SVG scritto qui dentro come data URI, quindi la pagina
    continua ad aprirsi senza rete — che è una regola del progetto, non una

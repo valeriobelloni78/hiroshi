@@ -380,8 +380,8 @@ I COLORI DEI PIANI SONO SEI TOKEN — `--piano-gocce`, `--piano-tessuti`,
 chiaro e scuro valgono `var(--vetro)`; le influenze seguono la deriva dovunque un
 tema non le metta altrove. Ogni `[data-piano]` ne legge uno in `--piano-tinta`,
 `tavola.js` lo prende da lì e lo rilegge a ogni cambio di tema, e lo strappo
-sotto il quadrato di una manopola si riempie del colore del suo piano. MERIGGIO E
-CREPUSCOLO SI SCELGONO SOLO A MANO: `prefers-color-scheme` sa dire chiaro o scuro,
+sotto il quadrato di una manopola si riempie del colore del suo piano. I SEI TEMI A
+COLORI SI SCELGONO SOLO A MANO: `prefers-color-scheme` sa dire chiaro o scuro,
 e `tema.js` continua a chiedere solo quello.
 
 **MERIGGIO È IL ROVESCIO DEL CREPUSCOLO: un tema CHIARO che colora i piani.**
@@ -403,8 +403,8 @@ prende la senape dei tessuti; le influenze, sotto i tessuti, il bruno delle gocc
 È una SIMMETRIA RISPETTO AL CENTRO della tavola — omotetica, con il banco e il
 paesaggio in mezzo — invece di due colonne di un colore ciascuna, e non tocca
 l'impaginazione, che resta a specchio sull'asse verticale. Per questo le influenze
-hanno un token loro, `--piano-influenze`, che negli altri tre temi vale
-`var(--piano-deriva)`; in meriggio `--piano-deriva` vale `var(--piano-tessuti)` e
+hanno un token loro, `--piano-influenze`, che in chiaro, scuro e crepuscolo vale
+`var(--piano-deriva)`; in meriggio, e nei quattro temi venuti dopo, `--piano-deriva` vale `var(--piano-tessuti)` e
 `--piano-influenze` vale `var(--piano-gocce)`. Riferimenti e non numeri copiati:
 chi ritocca un colore lo ritocca nei suoi due piani.
 
@@ -425,6 +425,43 @@ serigrafia 8,2–9,2, etichette 4,2–4,7, muto 2,7–3,0, filo 2,1–2,35, spen
 Il vetro sta oltre la carta a 1,08 (`#f6f1da`), ed è il fondo delle tendine che
 stanno sulla carta.
 
+**ALBA, PRIMAVERA, AUTUNNO E INVERNO VENGONO DA QUATTRO CROCI DI COLORI**, una
+palette di quattro tinte ciascuna, e seguono le due ricette che c'erano già: le
+chiare quella di meriggio, le scure quella del crepuscolo. I nomi stanno fra le
+ore riflessive della giornata e le stagioni, come meriggio e crepuscolo.
+
+- ALBA, chiaro: carta il grigio salvia quasi bianco `#e7ede4`, inchiostro
+  l'azzurro acciaio scurito `#132a37`; gocce azzurro `#a8c8dd`, tessuti mattone
+  `#f1b5ad`, effetti rosa `#e4c5c7`, banco salvia `#c2c8bd`.
+- PRIMAVERA, chiaro: carta il rosa quasi bianco `#fde9eb`, inchiostro l'oliva
+  scurito `#27291b`; gocce rosa `#e8bbc0`, tessuti giallo `#eadda2`, effetti
+  ruggine `#e2bbaf`, banco oliva `#c3c5b3`.
+- AUTUNNO, scuro: carta l'antracite `#201a1c`, inchiostro una crema presa
+  dall'arancio `#fee7d2`; gocce viola `#4a385b`, tessuti l'arancio scurito fino al
+  bruno `#5b3805`, effetti rosso scuro `#653125`, banco antracite `#3d383a`.
+- INVERNO, scuro: carta il nero verdastro `#111b1d`, inchiostro un bianco preso
+  dalla menta `#e4f1e5`; gocce blu petrolio `#2d4554`, tessuti cremisi `#732a28`,
+  effetti la menta scurita a verde bosco `#2d4832`, banco ardesia `#30383a`.
+
+LA RICETTA CHIARA: carta a L* 93–94 con poca croma, inchiostro a L* 16 nella tinta
+della croce che gli sta meglio, piani in LCh a L* 79–88 tenendo la tinta, e i toni
+sulla retta fra inchiostro e carta tarati sul piano PIÙ SCURO — etichette 4,2, muto
+2,7, filo 2,1, spento 1,65, filo-2 1,42 — con il retino a 1,40 e il vetro a 1,08
+sulla carta. LA RICETTA SCURA: carta a L* 9–10, inchiostro a L* 93–94, piani a L*
+23–28, e i toni rifanno sul piano PIÙ CHIARO i rapporti minimi misurati nel
+crepuscolo — inchiostro tenue 5,84, etichette 4,40, muto 3,29, filo 2,58, spento
+2,16, filo-2 1,95 — con retino e vetro ai suoi 1,47 e 1,24 sulla carta. In tutti e
+quattro deriva e influenze stanno A CROCE come in meriggio, e l'ambra non cambia:
+sui piani sta fra 2,3 e 3,2.
+
+UN ARANCIO NON PUÒ ESSERE UN PIANO: sotto l'ambra sarebbe la stessa tinta alla
+stessa luce, e i valori non si troverebbero più. In autunno è scurito fino al
+bruno, ed è il piano dove l'ambra si stacca meno per tinta (ΔE 38), come il cremisi
+in inverno (36) e il mattone in alba (47): la stessa concessione del vinaccia nel
+crepuscolo, dove l'accento si trova per luce e non per colore. Il giallo di
+primavera è invece il piano più chiaro, L* 88: portato alla luce degli altri
+diventava kaki. Chi aggiunge un tema rifaccia il calcolo, non ne copi i numeri.
+
 **L'ambra non cambia col tema**, ed è il punto: l'accento dice ADESSO, e un
 accento che cambiasse tinta smetterebbe di essere una cosa sola. Sul fondo scuro
 il suo contrasto scende da 3,54 a 2,72, ma è l'unica cosa colorata di tutta la
@@ -436,7 +473,7 @@ strumento e la guida. È lo stesso mestiere — scrivere un attributo sulla radi
 e tenere in pari la tendina che lo sceglie — e due copie divergerebbero al primo
 ritocco, come sarebbe successo a `cattura.js` fra il microfono e il registratore.
 
-**I TEMI SONO QUATTRO E LI SCEGLIE UNA TENDINA**, `#tema`, dello stesso disegno
+**I TEMI SONO OTTO E LI SCEGLIE UNA TENDINA**, `#tema`, dello stesso disegno
 di tutte le altre. Due pulsanti stavano in una riga; quattro parole in fila
 accanto alle quattro lingue erano otto pulsanti dello stesso peso, e una scelta
 fra più di due voci su questa tavola è sempre stata una tendina. La tendina è
@@ -1332,8 +1369,8 @@ testata e un piede — i quadranti su due piani di
 vetro per classe, il banco e la deriva su uno ciascuno, il resto sulla carta:
 
 - la **testata**: la pausa, la guida, le
-  **quattro lingue** e la tendina dei **quattro temi** — chiaro, scuro, meriggio,
-  crepuscolo;
+  **quattro lingue** e la tendina degli **otto temi** — chiaro, scuro, alba, meriggio,
+  crepuscolo, primavera, autunno, inverno;
 - **01 · 02**, le due classi in cinque colonne — comandi, quadrante, filo,
   quadrante, comandi. Ogni quadrante è un cerchio di Rada Deriva: quattro anelli,
   uno per linea, con la crociera e il mirino al centro e il numerale romano fuori
