@@ -753,13 +753,20 @@ const FONDO_DB = -54;
 const tenutaPicco = [-99, -99];
 let ultimoPicco = 0;
 
+/* L E R STANNO DENTRO IL RIQUADRO, sul filo sinistro della colonna dove comincia
+   ogni altra scritta, e le tessere partono dopo di loro. Prima stavano fuori, otto
+   pixel a sinistra del riquadro: sul vetro del banco finivano a un pixel dal bordo
+   del piano, mentre tutto il resto della colonna ne sta a quattordici. */
+const LETTERE_MISURATORE = 12;
+
 function misuratoreLR(box, orologio) {
   if (!box) return;
   const dt = clamp(orologio - ultimoPicco, 0, 0.5);
   ultimoPicco = orologio;
   const p = banco ? banco.picchi() : [-Infinity, -Infinity];
-  const n = Math.max(8, Math.floor(box.w / 7));
-  const largo = box.w / n - 2;
+  const x0 = box.x + LETTERE_MISURATORE, w = box.w - LETTERE_MISURATORE;
+  const n = Math.max(8, Math.floor(w / 7));
+  const largo = w / n - 2;
   for (let lato = 0; lato < 2; lato++) {
     const y = box.y + lato * 9;
     tenutaPicco[lato] = Math.max(p[lato], tenutaPicco[lato] - 20 * dt);
@@ -768,9 +775,9 @@ function misuratoreLR(box, orologio) {
     const acceso = Math.round(u * n), tenuto = Math.round(tenuta * n) - 1;
     for (let k = 0; k < n; k++) {
       T.fillStyle = tinta(k < acceso ? "inchiostro" : (k === tenuto ? "grigio" : "spento"));
-      T.fillRect(box.x + k * (box.w / n), y, largo, 6);
+      T.fillRect(x0 + k * (w / n), y, largo, 6);
     }
-    scritta(lato ? "R" : "L", box.x - 8, y + 5.5, { dim: 7.5, sp: 0, all: "right" });
+    scritta(lato ? "R" : "L", box.x, y + 5.5, { dim: 7.5, sp: 0 });
   }
 }
 

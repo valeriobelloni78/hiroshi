@@ -20,10 +20,11 @@
    solo finché nessuno ha scelto a mano, perché dopo la scelta è di chi l'ha
    fatta.
 
-   I TEMI SONO OTTO E LI SCEGLIE UNA TENDINA. Due pulsanti stavano in una
-   riga, otto parole in fila no; e una tendina è un `select` nativo, che la
-   tastiera e un lettore di schermo conoscono già. I SEI TEMI A COLORI — alba,
-   meriggio, crepuscolo, primavera, autunno, inverno — SI SCELGONO SOLO A MANO: il
+   I TEMI SONO UNDICI E LI SCEGLIE UNA TENDINA. Due pulsanti stavano in una
+   riga, undici parole in fila no; e una tendina è un `select` nativo, che la
+   tastiera e un lettore di schermo conoscono già. I NOVE TEMI A COLORI — alba,
+   meriggio, crepuscolo, primavera, mietitura, estate, autunno, novembre,
+   inverno — SI SCELGONO SOLO A MANO: il
    sistema sa dire chiaro o scuro e nient'altro, quindi all'apertura e ai suoi
    cambi si continua a chiedere solo quello. */
 

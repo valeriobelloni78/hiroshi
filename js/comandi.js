@@ -46,7 +46,14 @@ const minsec = (s) => Math.floor(s / 60) + "′ " + String(Math.floor(s % 60)).p
    cambia mai — sono le PAROLE a cambiare, e il modello non se ne accorge. */
 const TENDINE = [];
 
-function tendina(id, chiavi, traduci, corrente, scegli) {
+/* LA VOCE VUOTA SI SCRIVE «- - -», e non «niente»: in una tendina che può non
+   avere niente di scelto — l'effetto sotto un cerchio, la sorgente del paesaggio
+   prima che arrivi un suono — una parola al posto del vuoto si legge come una
+   scelta fatta. Tre trattini sono un segno, non una parola, quindi non si
+   traducono; il lettore di schermo sente comunque il nome, dall'`aria-label`. */
+const VUOTO = "- - -";
+
+function tendina(id, chiavi, traduci, corrente, scegli, vuota) {
   const sel = el(id);
   for (const k of chiavi) {
     const o = document.createElement("option");
@@ -56,7 +63,11 @@ function tendina(id, chiavi, traduci, corrente, scegli) {
   }
   sel.addEventListener("change", () => scegli(sel.value));
   const scrivi = () => {
-    for (const o of sel.options) o.textContent = traduci ? traduci(o.value) : o.value;
+    for (const o of sel.options) {
+      const nome = traduci ? traduci(o.value) : o.value;
+      if (o.value === vuota) { o.textContent = VUOTO; o.setAttribute("aria-label", nome); }
+      else o.textContent = nome;
+    }
   };
   TENDINE.push(scrivi);
   scrivi();
@@ -300,7 +311,7 @@ function inserto(classe, pre, idTendina) {
   tendina(idTendina, EFFETTI_NOMI, nomeEffetto, EFFETTO[classe], (v) => {
     EFFETTO[classe] = v;
     rinomina();
-  });
+  }, "niente");
   rinomina();
   RINOMINA_INSERTI.push(rinomina);
 }
@@ -776,7 +787,8 @@ function aggiornaMaterie() {
   selMateria.innerHTML = "";
   if (!materiali.length) {
     const o = document.createElement("option");
-    o.value = "-1"; o.textContent = dice("pae.nienteAncora");
+    o.value = "-1"; o.textContent = VUOTO;
+    o.setAttribute("aria-label", dice("pae.nienteAncora"));
     selMateria.appendChild(o);
     return;
   }

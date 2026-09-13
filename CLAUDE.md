@@ -355,40 +355,36 @@ un'etichetta non bastava — e l'inchiostro tenue delle etichette: `#7f7f7b`,
 3.74 sulla carta a schermo e 3.41 sul vetro. Si legge, e resta un gradino sotto:
 dice ancora «non scelto», «spento». L'ordine dei toni scuri resta quello.
 
-**CREPUSCOLO COLORA I PIANI per funzione.** Si è chiamato meriggio finché quel
-nome non è passato al tema chiaro a colori, qui sotto. Viene dalle
-proposte «Hiroshi · meriggio», dai pannelli di un Mother-32: sul sintetizzatore il
-colore di un modulo dice che cosa fa, e Hiroshi è costruito sulla stessa idea — i
-piani sono le sezioni, i segni sono inchiostro. La cassa nera è la carta
-(`#1c1b19`), la serigrafia crema è l'inchiostro (`#f0e9d6`), e ogni piano prende
-il colore della sua funzione: GOCCE il blu dell'oscillatore `#394b59`, TESSUTI il
-vinaccia del filtro `#732f27`, EFFETTI il salvia del VCA `#3b4e3b`, BANCO il
-petrolio del sequencer `#2c3c40`, DERIVA E INFLUENZE il noce dei fianchi della
-cassa `#53311b`. I segni restano di un colore solo e l'accento resta uno: il
-colore torna sui piani e dice una funzione, mai un valore, quindi «la lunghezza
-codifica, l'ambra no» è intatta.
+**CREPUSCOLO COLORA I PIANI per funzione.** L'idea viene dai pannelli di un
+Mother-32 — sul sintetizzatore il colore di un modulo dice che cosa fa, e qui i
+piani sono le sezioni e i segni inchiostro — e da lì veniva la prima palette, che
+è stata poi sostituita. Il colore torna sui piani e dice una funzione, mai un
+valore, quindi «la lunghezza codifica, l'ambra no» è intatta.
 
-I colori della foto sono stati SCURITI IN LUCE LINEARE fino a L* 24–31, tenendo
-ciascuno la sua tinta: il canvas disegna i segni con un inchiostro solo, e alla
-luminosità della foto i fili tenui e l'ambra scendevano a 1,2 sui piani chiari. I
-TONI SONO TARATI CONTRO I PIANI e non contro la carta: sui piani la serigrafia sta
-fra 7,4 e 9,5, le etichette fra 4,4 e 5,6, `filo-2` fra 1,95 e 2,51 — e sulla
-cassa i fili stanno a 4,9, come la serigrafia di un pannello, non a 1,4 come nel
-tema scuro.
+OGGI LA PALETTE È A CINQUE FASCE: salvia `#8b9e82`, terracotta `#c4694f`, bordeaux
+`#6b1e2f`, ocra `#d8b47f`, petrolio `#2a5c5f`. È un tema scuro fatto con la RICETTA
+SCURA (vedi più sotto, con alba, primavera, autunno e inverno). La carta è un nero
+che tira al bordeaux, `#23191a`, e l'inchiostro una crema presa dall'ocra,
+`#fbe8d1`: l'ocra scurita fino a un piano sarebbe diventata un bruno qualunque, e
+come inchiostro resta riconoscibile. GOCCE petrolio `#14494c`, TESSUTI la
+terracotta scurita al mattone `#633225`, EFFETTI salvia `#34472d`, BANCO un petrolio
+spento `#263a3c`, DERIVA E INFLUENZE il bordeaux `#632330` — le stesse funzioni, e
+le stesse parentele, della prima palette. L'ambra sui piani sta fra 2,3 e 2,7; sul
+mattone dei tessuti si stacca meno per tinta, ΔE 40, e si trova per luce.
 
-L'AMBRA NON CAMBIA NEMMENO QUI, ed è stata una scelta: una variante col giallo del
-DFAM si leggeva meglio sui piani e avrebbe rotto la regola. Sui piani l'ambra sta
-a 2,0–2,6, e sul vinaccia è quasi la stessa tinta: si trova, con meno distanza che
-altrove. Per Deriva e Influenze sono state provate cinque tinte; il noce è la più
-contrastata — ambra a 2,63, serigrafia a 9,5 — ma calda come l'ambra, ΔE 45: lì
-l'accento si stacca per luminosità, non per tinta.
+La PRIMA PALETTE, quella del Mother-32, resta nella storia del progetto per due
+cose che ha insegnato. I colori di una foto vanno SCURITI IN LUCE LINEARE tenendo la
+tinta, perché alla loro luminosità i fili tenui e l'ambra scendevano a 1,2. E I
+TONI SI TARANO CONTRO I PIANI e non contro la carta: i rapporti minimi misurati allora
+— inchiostro tenue 5,84, etichette 4,40, muto 3,29, filo 2,58, spento 2,16, filo-2
+1,95 — sono diventati la ricetta scura, e anche il crepuscolo di oggi li rifà.
 
 I COLORI DEI PIANI SONO SEI TOKEN — `--piano-gocce`, `--piano-tessuti`,
 `--piano-effetti`, `--piano-banco`, `--piano-deriva`, `--piano-influenze` — che in
 chiaro e scuro valgono `var(--vetro)`; le influenze seguono la deriva dovunque un
 tema non le metta altrove. Ogni `[data-piano]` ne legge uno in `--piano-tinta`,
 `tavola.js` lo prende da lì e lo rilegge a ogni cambio di tema, e lo strappo
-sotto il quadrato di una manopola si riempie del colore del suo piano. I SEI TEMI A
+sotto il quadrato di una manopola si riempie del colore del suo piano. I NOVE TEMI A
 COLORI SI SCELGONO SOLO A MANO: `prefers-color-scheme` sa dire chiaro o scuro,
 e `tema.js` continua a chiedere solo quello.
 
@@ -412,7 +408,7 @@ prende la senape dei tessuti; le influenze, sotto i tessuti, il bruno delle gocc
 paesaggio in mezzo — invece di due colonne di un colore ciascuna, e non tocca
 l'impaginazione, che resta a specchio sull'asse verticale. Per questo le influenze
 hanno un token loro, `--piano-influenze`, che in chiaro, scuro e crepuscolo vale
-`var(--piano-deriva)`; in meriggio, e nei quattro temi venuti dopo, `--piano-deriva` vale `var(--piano-tessuti)` e
+`var(--piano-deriva)`; in meriggio, e nei temi venuti dopo, `--piano-deriva` vale `var(--piano-tessuti)` e
 `--piano-influenze` vale `var(--piano-gocce)`. Riferimenti e non numeri copiati:
 chi ritocca un colore lo ritocca nei suoi due piani.
 
@@ -457,7 +453,7 @@ sulla retta fra inchiostro e carta tarati sul piano PIÙ SCURO — etichette 4,2
 2,7, filo 2,1, spento 1,65, filo-2 1,42 — con il retino a 1,40 e il vetro a 1,08
 sulla carta. LA RICETTA SCURA: carta a L* 9–10, inchiostro a L* 93–94, piani a L*
 23–28, e i toni rifanno sul piano PIÙ CHIARO i rapporti minimi misurati nel
-crepuscolo — inchiostro tenue 5,84, etichette 4,40, muto 3,29, filo 2,58, spento
+primo crepuscolo — inchiostro tenue 5,84, etichette 4,40, muto 3,29, filo 2,58, spento
 2,16, filo-2 1,95 — con retino e vetro ai suoi 1,47 e 1,24 sulla carta. In tutti e
 quattro deriva e influenze stanno A CROCE come in meriggio, e l'ambra non cambia:
 sui piani sta fra 2,3 e 3,2.
@@ -465,10 +461,34 @@ sui piani sta fra 2,3 e 3,2.
 UN ARANCIO NON PUÒ ESSERE UN PIANO: sotto l'ambra sarebbe la stessa tinta alla
 stessa luce, e i valori non si troverebbero più. In autunno è scurito fino al
 bruno, ed è il piano dove l'ambra si stacca meno per tinta (ΔE 38), come il cremisi
-in inverno (36) e il mattone in alba (47): la stessa concessione del vinaccia nel
+in inverno (36) e il mattone in alba (47): la stessa concessione del mattone nel
 crepuscolo, dove l'accento si trova per luce e non per colore. Il giallo di
 primavera è invece il piano più chiaro, L* 88: portato alla luce degli altri
 diventava kaki. Chi aggiunge un tema rifaccia il calcolo, non ne copi i numeri.
+
+**MIETITURA, ESTATE E NOVEMBRE VENGONO DOPO, con le stesse due ricette**, e i nomi
+sono periodi dell'anno: in tendina stanno in ordine lungo l'anno, fra primavera e
+inverno. In giapponese sono 麦秋 — «l'autunno del grano», la stagione della
+mietitura — 夏 e 霜月, l'antico nome di novembre.
+
+- MIETITURA, chiaro: carta il grano quasi bianco `#f9ecd7`, inchiostro il petrolio
+  scuro `#132c2c`; gocce petrolio `#a4ccc6`, tessuti grano `#f0d7a9`, effetti
+  ruggine `#f4b5a0`, banco oliva `#c2c6ad`.
+- ESTATE, chiaro: carta osso `#f0ebdc`, inchiostro verde antracite `#1d2a2a`;
+  gocce grigio metallo `#b4c8c6`, tessuti albicocca `#ffc68d`, effetti corallo
+  `#ffaf94`, banco sabbia `#ccc3aa`.
+- NOVEMBRE, scuro: carta ardesia `#1b1c17`, inchiostro cipria `#fae7df`; gocce
+  grigio nebbia `#2f464c`, tessuti tortora `#513e33`, effetti vermiglio `#722712`,
+  banco ardesia `#373830`.
+
+IL COLORE PIÙ VICINO ALL'AMBRA VA AGLI EFFETTI. Nelle tre palette c'è un arancio o
+un rosso — ruggine, corallo, vermiglio — e sui tessuti, dove l'ambra disegna
+l'ultima tenuta e le cifre, si sarebbe letto male: sugli effetti l'ambra compare
+solo nelle cifre delle manopole. Il vermiglio di novembre è la tinta più vicina
+all'ambra di tutti i temi, ΔE 29, e lì fa i due rettangoli rossi dei portali
+nella pioggia. Fondo e inchiostro di novembre sono quasi quelli dello scuro — la
+ricetta scura dà sempre una carta quasi nera e una crema — e i due temi si
+distinguono per i piani, che nello scuro non ci sono.
 
 **L'ambra non cambia col tema**, ed è il punto: l'accento dice ADESSO, e un
 accento che cambiasse tinta smetterebbe di essere una cosa sola. Sul fondo scuro
@@ -481,7 +501,7 @@ strumento e la guida. È lo stesso mestiere — scrivere un attributo sulla radi
 e tenere in pari la tendina che lo sceglie — e due copie divergerebbero al primo
 ritocco, come sarebbe successo a `cattura.js` fra il microfono e il registratore.
 
-**I TEMI SONO OTTO E LI SCEGLIE UNA TENDINA**, `#tema`, dello stesso disegno
+**I TEMI SONO UNDICI E LI SCEGLIE UNA TENDINA**, `#tema`, dello stesso disegno
 di tutte le altre. Due pulsanti stavano in una riga; quattro parole in fila
 accanto alle quattro lingue erano otto pulsanti dello stesso peso, e una scelta
 fra più di due voci su questa tavola è sempre stata una tendina. La tendina è
@@ -980,6 +1000,22 @@ qualunque lista disegnata. Il triangolo sta nel contenitore e non nel `select`, 
 la sua altezza è misurata sulla targa: chi cambia il padding cambia anche
 `bottom`.
 
+**LA VOCE VUOTA DI UNA TENDINA SI SCRIVE «- - -».** Dove una tendina può non avere
+niente di scelto — l'effetto sotto i due cerchi, la sorgente del paesaggio prima
+che arrivi un suono — al posto di «niente» o «niente ancora» ci sono tre
+trattini: una parola al posto del vuoto si legge come una scelta fatta. Sono un
+segno e non una parola, quindi non si traducono, e stanno in una costante sola,
+`VUOTO` in `comandi.js`; `tendina()` la usa per la chiave che le si passa come
+vuota. Il lettore di schermo sente il nome vero, dall'`aria-label` della voce. La
+guida continua a chiamare l'effetto vuoto col suo nome, perché lì è un nome.
+
+**I SEGNI DEL CANVAS STANNO DENTRO LA COLONNA, come le scritte.** Le lettere L e R
+del misuratore stavano otto pixel a sinistra del loro riquadro, e sul vetro del
+banco finivano a un pixel dal bordo del piano; ora stanno sul filo sinistro della
+colonna, a quattordici come ogni altra scritta, e le tessere cominciano dodici
+pixel più in là. Chi disegna un segno fuori da un riquadro guardi dove cade il
+bordo del piano.
+
 **I comandi sono elementi HTML nativi** e funzionano identici col puntatore,
 col dito, col tasto Tab e con un lettore di schermo. Il disegno è puro
 display: non ascolta nulla, e il canvas porta `aria-hidden` perché quello che
@@ -1377,8 +1413,8 @@ testata e un piede — i quadranti su due piani di
 vetro per classe, il banco e la deriva su uno ciascuno, il resto sulla carta:
 
 - la **testata**: la pausa, la guida, le
-  **quattro lingue** e la tendina degli **otto temi** — chiaro, scuro, alba, meriggio,
-  crepuscolo, primavera, autunno, inverno;
+  **quattro lingue** e la tendina degli **undici temi** — chiaro, scuro, alba, meriggio,
+  crepuscolo, primavera, mietitura, estate, autunno, novembre, inverno;
 - **01 · 02**, le due classi in cinque colonne — comandi, quadrante, filo,
   quadrante, comandi. Ogni quadrante è un cerchio di Rada Deriva: quattro anelli,
   uno per linea, con la crociera e il mirino al centro e il numerale romano fuori

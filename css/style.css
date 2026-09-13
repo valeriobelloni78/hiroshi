@@ -132,40 +132,41 @@
 }
 
 /* ---------------------------------------------------------------- crepuscolo
-   CREPUSCOLO COLORA I PIANI PER FUNZIONE, come i pannelli di un Mother-32:
-   sul sintetizzatore il colore di un modulo dice che cosa fa, e Hiroshi è fatto
-   allo stesso modo — i piani sono le sezioni, i segni sono inchiostro. La cassa
-   nera è la carta, la serigrafia crema è l'inchiostro, e ogni piano prende la sua
-   funzione: le gocce il blu dell'oscillatore, i tessuti il vinaccia del filtro,
-   gli effetti il salvia del VCA, il banco il petrolio del sequencer, deriva e
-   influenze il noce dei fianchi della cassa. I segni restano di un colore solo e
-   l'ambra resta una: il colore dice una funzione, mai un valore.
+   CREPUSCOLO COLORA I PIANI PER FUNZIONE con una palette a cinque fasce: salvia
+   `#8b9e82`, terracotta `#c4694f`, bordeaux `#6b1e2f`, ocra `#d8b47f`, petrolio
+   `#2a5c5f`. È un tema SCURO. La carta è un nero che tira al bordeaux, L* 10, e
+   l'inchiostro una crema presa dall'ocra: l'ocra scurita fino a un piano sarebbe
+   diventata un bruno qualunque, come inchiostro resta riconoscibile. Gocce
+   petrolio, tessuti terracotta scurita al mattone, effetti salvia, banco un
+   petrolio spento, deriva e influenze il bordeaux — le stesse funzioni del
+   crepuscolo di prima, che veniva dai pannelli di un Mother-32.
 
-   I COLORI DELLA FOTO SONO SCURITI IN LUCE LINEARE fino a L* 24–31, tenendo la
-   loro tinta: il canvas disegna i segni con un inchiostro solo, e alla luminosità
-   della foto fili tenui e ambra scendevano a 1,2. I TONI SONO TARATI CONTRO I
-   PIANI, non contro la carta — serigrafia 7,4–9,5, etichette 4,4–5,6, filo-2
-   1,95–2,51 — e sulla cassa i fili stanno a 4,9, come una serigrafia.
+   È fatto con la RICETTA SCURA: piani in LCh a L* 23–28 tenendo la tinta, e i
+   toni sulla retta fra inchiostro e carta che rifanno sul piano più chiaro i
+   rapporti minimi del primo crepuscolo — inchiostro tenue 5,84, etichette 4,40,
+   muto 3,29, filo 2,58, spento 2,16, filo-2 1,95 — con retino e vetro a 1,47 e
+   1,24 sulla carta.
 
-   L'AMBRA NON CAMBIA NEMMENO QUI: sui piani sta a 2,0–2,6, sul noce a 2,63. */
+   L'AMBRA NON CAMBIA NEMMENO QUI: sui piani sta fra 2,3 e 2,7. Sul mattone dei
+   tessuti si stacca meno per tinta (ΔE 40), come si staccava sul vinaccia. */
 :root[data-tema="crepuscolo"]{
   color-scheme:dark;
-  --carta:#1c1b19;
-  --vetro:#2e2c28;
-  --inchiostro:#f0e9d6;
-  --inchiostro-2:#d8d0bb;
-  --grigio:#bdb5a0;
-  --muto:#a39c8b;
-  --filo:#8f897a;
-  --spento:#827c6f;
-  --filo-2:#7a7568;
+  --carta:#23191a;
+  --vetro:#342b28;
+  --inchiostro:#fbe8d1;
+  --inchiostro-2:#d3c2af;
+  --grigio:#b8a999;
+  --muto:#9f9283;
+  --filo:#8b7f73;
+  --spento:#7e7367;
+  --filo-2:#766c61;
   --su-ambra:var(--inchiostro);
-  --piano-gocce:#394b59;
-  --piano-tessuti:#732f27;
-  --piano-effetti:#3b4e3b;
-  --piano-banco:#2c3c40;
-  --piano-deriva:#53311b;
-  --retino:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='7'%3E%3Ccircle cx='3.5' cy='3.5' r='1.05' fill='%233a3833'/%3E%3C/svg%3E");
+  --piano-gocce:#14494c;
+  --piano-tessuti:#633225;
+  --piano-effetti:#34472d;
+  --piano-banco:#263a3c;
+  --piano-deriva:#632330;
+  --retino:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='7'%3E%3Ccircle cx='3.5' cy='3.5' r='1.05' fill='%233f3732'/%3E%3C/svg%3E");
 }
 
 /* ------------------------------------------------------------------ meriggio
@@ -322,6 +323,91 @@
   --piano-deriva:var(--piano-tessuti);
   --piano-influenze:var(--piano-gocce);
   --retino:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='7'%3E%3Ccircle cx='3.5' cy='3.5' r='1.05' fill='%23323837'/%3E%3C/svg%3E");
+}
+
+/* ----------------------------------------------------------------- mietitura
+   MIETITURA viene da una palette a sei colori: petrolio scuro, petrolio, oliva,
+   grano, ruggine, salvia. È un tema CHIARO, fatto con la ricetta di meriggio. La
+   carta è il grano portato quasi al bianco e l'inchiostro il petrolio scuro a L*
+   16. Gocce petrolio, tessuti grano, effetti ruggine, banco oliva; deriva e
+   influenze a croce. La ruggine è il colore più vicino all'ambra, e va agli
+   EFFETTI, dove l'ambra quasi non c'è: sui tessuti corrono gli archi e i valori. */
+:root[data-tema="mietitura"]{
+  color-scheme:light;
+  --carta:#f9ecd7;
+  --vetro:#fcf5ec;
+  --inchiostro:#132c2c;
+  --inchiostro-2:#224848;
+  --grigio:#535751;
+  --muto:#75746a;
+  --filo:#89857a;
+  --spento:#9d988a;
+  --filo-2:#aaa495;
+  --su-ambra:var(--carta);
+  --piano-gocce:#a4ccc6;
+  --piano-tessuti:#f0d7a9;
+  --piano-effetti:#f4b5a0;
+  --piano-banco:#c2c6ad;
+  --piano-deriva:var(--piano-tessuti);
+  --piano-influenze:var(--piano-gocce);
+  --retino:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='7'%3E%3Ccircle cx='3.5' cy='3.5' r='1.05' fill='%23d4c9b8'/%3E%3C/svg%3E");
+}
+
+/* -------------------------------------------------------------------- estate
+   ESTATE viene da una palette a cinque fasce: mandarino, verde antracite, grigio
+   metallo, osso, arancio. È un tema CHIARO, fatto con la ricetta di meriggio. La
+   carta è l'osso e l'inchiostro il verde antracite a L* 16. Gocce grigio metallo,
+   tessuti il mandarino schiarito ad albicocca, effetti l'arancio schiarito a
+   corallo, banco sabbia; deriva e influenze a croce. Il corallo, più vicino
+   all'ambra, sta sugli effetti per la stessa ragione della mietitura. */
+:root[data-tema="estate"]{
+  color-scheme:light;
+  --carta:#f0ebdc;
+  --vetro:#f6f3eb;
+  --inchiostro:#1d2a2a;
+  --inchiostro-2:#324646;
+  --grigio:#535551;
+  --muto:#72736c;
+  --filo:#85847c;
+  --spento:#99978d;
+  --filo-2:#a6a399;
+  --su-ambra:var(--carta);
+  --piano-gocce:#b4c8c6;
+  --piano-tessuti:#ffc68d;
+  --piano-effetti:#ffaf94;
+  --piano-banco:#ccc3aa;
+  --piano-deriva:var(--piano-tessuti);
+  --piano-influenze:var(--piano-gocce);
+  --retino:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='7'%3E%3Ccircle cx='3.5' cy='3.5' r='1.05' fill='%23ccc8bc'/%3E%3C/svg%3E");
+}
+
+/* ------------------------------------------------------------------ novembre
+   NOVEMBRE viene da un tempio sotto la pioggia d'autunno: vermiglio, ardesia,
+   tortora, cipria, grigio nebbia. È un tema SCURO, fatto con la ricetta del
+   crepuscolo. La carta è l'ardesia a L* 10 e l'inchiostro la cipria. Gocce grigio
+   nebbia, tessuti tortora, banco ardesia — la pioggia — e il vermiglio sugli
+   EFFETTI, due rettangoli rossi come i portali della foto; deriva e influenze a
+   croce. Il vermiglio è la tinta più vicina all'ambra di tutti i temi, ΔE 29, e
+   sugli effetti l'ambra compare solo nelle cifre delle manopole. */
+:root[data-tema="novembre"]{
+  color-scheme:dark;
+  --carta:#1b1c17;
+  --vetro:#2f2d28;
+  --inchiostro:#fae7df;
+  --inchiostro-2:#d3c3bc;
+  --grigio:#b7a9a3;
+  --muto:#9d928c;
+  --filo:#8a807a;
+  --spento:#7c736e;
+  --filo-2:#756c68;
+  --su-ambra:var(--inchiostro);
+  --piano-gocce:#2f464c;
+  --piano-tessuti:#513e33;
+  --piano-effetti:#722712;
+  --piano-banco:#373830;
+  --piano-deriva:var(--piano-tessuti);
+  --piano-influenze:var(--piano-gocce);
+  --retino:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='7'%3E%3Ccircle cx='3.5' cy='3.5' r='1.05' fill='%233b3834'/%3E%3C/svg%3E");
 }
 
 /* La grana della carta: rumore frattale generato dal browser, non un'immagine
