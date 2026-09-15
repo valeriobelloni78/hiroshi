@@ -1274,6 +1274,19 @@ strumento: non ha canvas, non apre un contesto audio, non ha un ciclo. Carica
 stare sulla pagina che deve far partire il suono in meno di un secondo — e usa
 lo stesso `dice()`, lo stesso `applicaTesti()` e gli stessi due selettori.
 
+**`guida.md` È LA COPIA DI LAVORO DELLA GUIDA, in italiano.** Si scrive lì e non in
+`guida-i18n.js`: un manuale si corregge meglio come testo che dentro un oggetto
+JavaScript fra virgolette. Sopra ogni testo c'è un commento con la sua chiave, e
+sopra ogni tabella la mappa delle sue celle — la parola dello strumento, la corsa
+scritta a mano, la descrizione — così le modifiche si riportano chiave per chiave
+in `guida-i18n.js` e poi si traducono nelle altre tre lingue. Un paragrafo nuovo
+entra senza commento e riceve una chiave quando lo si riporta. Il file è uscito
+dai dizionari veri e riletto: sessantuno testi e duecentodiciassette celle uguali.
+La pagina continua a leggere `guida-i18n.js`; `guida.md` può stare più avanti di
+lei, non più indietro — chi cambia la guida nel codice la cambia anche lì. Una
+parola dello strumento cambiata in una tabella cambia anche sul pannello, perché
+è la stessa chiave di `i18n.js`.
+
 **IL TONO DELLA GUIDA È QUELLO DI UN MANUALE**, e non è una preferenza di
 stile: è la funzione del documento. Non si racconta che cosa si prova ad
 ascoltare — quello lo fa lo strumento — si dice che cosa fa un comando, in che

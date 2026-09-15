@@ -27,7 +27,7 @@ const GUIDA = {
     "g.titolo":    "Hiroshi · Guida",
     "g.torna":     "Torna allo strumento",
     "g.occhiello": "Manuale d'uso",
-    "g.intro":     "Hiroshi è un generatore di musica d'ambiente che gira nel browser. Produce due classi di eventi — impulsi brevi e suoni tenuti — su otto linee cicliche indipendenti, li intona su un campo armonico che si sposta lentamente, e li somma in un banco d'uscita con equalizzatore, limitatore e registratore. Una quarta sorgente riproduce materiale registrato rallentato senza trasposizione. Questo documento descrive ogni comando: corsa, unità e effetto sul segnale.",
+    "g.intro":     "Hiroshi è un generatore di musica ambientale che gira nel browser. Produce due classi di eventi — impulsi brevi e suoni tenuti — su otto linee cicliche indipendenti, li intona su un campo armonico che si sposta lentamente, e li somma in un banco d'uscita con equalizzatore, limitatore e registratore. Una quarta sorgente riproduce materiale registrato rallentato senza trasposizione. Questo documento descrive ogni comando: corsa, unità e effetto sul segnale.",
 
     "g.col.par":   "Parametro",
     "g.col.corsa": "Corsa",
@@ -47,12 +47,12 @@ const GUIDA = {
     "g.pan.catena": "sorgente → normalizzatore → inserto → livello → somma → colore → equalizzatore → limitatore → uscita\nlivello → mandata → riverbero → somma",
     "g.pan.1": "Le tre sorgenti sono indipendenti e si possono spegnere una per una col tasto ON sotto il loro canale del mixer. Ogni sorgente ha un canale nel banco: normalizzatore, inserto d'effetto, cursore di livello e mandata al riverbero comune. La somma passa per un filtro di colore d'insieme, l'equalizzatore a otto bande e un limitatore a due stadi.",
     "g.pan.2": "Spegnere una sorgente non mette in pausa il modello: i cicli e il ricambio delle idee proseguono, e riaccendendola si sente il punto in cui il pezzo è arrivato, non quello in cui era stato lasciato.",
-    "g.pan.3": "Il riverbero della sorgente Paesaggio è interno e non usa la mandata comune: la sua coda è parte del suono, non l'ambiente in cui si trova.",
+    "g.pan.3": "Il riverbero della sorgente Paesaggio è interno e non usa la mandata comune: la sua coda è parte del suono.",
 
     /* 1 · struttura temporale */
     "g.tempo.t": "Struttura temporale",
     "g.tempo.1": "Otto linee cicliche, quattro per classe. Ogni linea ha un periodo proprio, regolabile fra 3 e 30 s per le gocce e fra 7 e 60 s per i tessuti, e mantiene una fase indipendente. Il generatore riempie un giro alla volta e prenota gli eventi con un anticipo di 0,15 s.",
-    "g.tempo.2": "I quattro periodi di una classe sono coprimi a due a due. La combinazione delle otto fasi si ripete solo dopo il minimo comune multiplo dei periodi: con i valori d'esordio il riallineamento cade oltre le sessanta ore. La lettura RIALLINEA in testa alla sezione 05 riporta quel tempo per i periodi correnti.",
+    "g.tempo.2": "Di default i quattro periodi di una classe sono coprimi a due a due. La combinazione delle otto fasi si ripete solo dopo il minimo comune multiplo dei periodi: con i valori d'esordio il riallineamento cade oltre le sessanta ore. La lettura RIALLINEA in testa alla sezione 05 riporta quel tempo per i periodi correnti.",
     "g.tempo.3": "Ogni riga di linea espone la durata del giro, un interruttore di silenziamento e un comando di rigenerazione, che sostituisce l'idea di quella linea senza toccare le altre.",
 
     /* 2 · gocce */
@@ -85,7 +85,7 @@ const GUIDA = {
 
     /* 3 · tessuti */
     "g.tess.t": "Tessuti",
-    "g.tess.1": "Suoni tenuti con inviluppo a due tempi, da pochi secondi a un minuto. A differenza delle gocce non sono materie diverse ma modi diversi di essere instabili: ciascuno degli otto muove un parametro interno, perché un tenuto perfettamente fermo dopo pochi secondi smette di essere percepito come suono.",
+    "g.tess.1": "Suoni tenuti, da pochi secondi a un minuto. A differenza delle gocce non sono materie diverse ma modi diversi di essere instabili.",
     "g.tess.2": "La somma del bus si normalizza sugli inviluppi e non sul numero di voci aperte: la compensazione legge la stessa funzione che scrive l'automazione, quindi non c'è un salto di livello nell'istante in cui una voce comincia ad aprirsi.",
     "g.tess.timbri": "Gli otto tenuti",
 
@@ -208,7 +208,7 @@ const GUIDA = {
     "g.titolo":    "Hiroshi · Guide",
     "g.torna":     "Retour à l'instrument",
     "g.occhiello": "Mode d'emploi",
-    "g.intro":     "Hiroshi est un générateur de musique d'ambiance qui fonctionne dans le navigateur. Il produit deux classes d'événements — impulsions brèves et sons tenus — sur huit lignes cycliques indépendantes, les accorde sur un champ harmonique qui se déplace lentement, et les somme dans une console de sortie avec égaliseur, limiteur et enregistreur. Une quatrième source lit un matériau enregistré ralenti sans transposition. Ce document décrit chaque commande : course, unité et effet sur le signal.",
+    "g.intro":     "Hiroshi est un générateur de musique ambient qui fonctionne dans le navigateur. Il produit deux classes d'événements — impulsions brèves et sons tenus — sur huit lignes cycliques indépendantes, les accorde sur un champ harmonique qui se déplace lentement, et les somme dans une console de sortie avec égaliseur, limiteur et enregistreur. Une quatrième source lit un matériau enregistré ralenti sans transposition. Ce document décrit chaque commande : course, unité et effet sur le signal.",
 
     "g.col.par":    "Paramètre",
     "g.col.corsa":  "Course",
@@ -227,11 +227,11 @@ const GUIDA = {
     "g.pan.catena": "source → normalisateur → insert → niveau → somme → couleur → égaliseur → limiteur → sortie\nniveau → départ → réverbération → somme",
     "g.pan.1": "Les trois sources sont indépendantes et se coupent une par une avec la touche ON sous leur voie de la console. Chaque source a une voie dans la console : normalisateur, insert d'effet, curseur de niveau et départ vers la réverbération commune. La somme passe par un filtre de couleur d'ensemble, l'égaliseur à huit bandes et un limiteur à deux étages.",
     "g.pan.2": "Couper une source ne met pas le modèle en pause : les cycles et le renouvellement des idées continuent, et en la rallumant on entend où la pièce est arrivée, non où on l'avait laissée.",
-    "g.pan.3": "La réverbération de la source Paysage est interne et n'utilise pas le départ commun : sa traîne fait partie du son, elle n'est pas le lieu où il se trouve.",
+    "g.pan.3": "La réverbération de la source Paysage est interne et n'utilise pas le départ commun : sa traîne fait partie du son.",
 
     "g.tempo.t": "Structure temporelle",
     "g.tempo.1": "Huit lignes cycliques, quatre par classe. Chaque ligne a sa propre période, réglable entre 3 et 30 s pour les gouttes et entre 7 et 60 s pour les tissus, et garde une phase indépendante. Le générateur remplit un tour à la fois et réserve les événements avec 0,15 s d'avance.",
-    "g.tempo.2": "Les quatre périodes d'une classe sont premières entre elles deux à deux. La combinaison des huit phases ne se répète qu'après le plus petit commun multiple des périodes : avec les valeurs de départ le réalignement dépasse soixante heures. La lecture RÉALIGNEMENT en tête de la section 05 donne ce temps pour les périodes courantes.",
+    "g.tempo.2": "Par défaut, les quatre périodes d'une classe sont premières entre elles deux à deux. La combinaison des huit phases ne se répète qu'après le plus petit commun multiple des périodes : avec les valeurs de départ le réalignement dépasse soixante heures. La lecture RÉALIGNEMENT en tête de la section 05 donne ce temps pour les périodes courantes.",
     "g.tempo.3": "Chaque ligne expose la durée du tour, un interrupteur de silence et une commande de régénération, qui remplace l'idée de cette ligne sans toucher aux autres.",
 
     "g.gocce.t": "Gouttes",
@@ -262,7 +262,7 @@ const GUIDA = {
     "g.tim.sabbia":  "Bruit large bande à enveloppe très brève : du grain, pas une hauteur.",
 
     "g.tess.t": "Tissus",
-    "g.tess.1": "Sons tenus à enveloppe en deux temps, de quelques secondes à une minute. Contrairement aux gouttes, ce ne sont pas des matières différentes mais des manières différentes d'être instable : chacun des huit fait bouger un paramètre interne, car un tenu parfaitement immobile cesse au bout de quelques secondes d'être perçu comme un son.",
+    "g.tess.1": "Sons tenus, de quelques secondes à une minute. Contrairement aux gouttes, ce ne sont pas des matières différentes mais des manières différentes d'être instable.",
     "g.tess.2": "La somme du bus se normalise sur les enveloppes et non sur le nombre de voix ouvertes : la compensation lit la fonction même qui écrit l'automation, donc il n'y a pas de saut de niveau à l'instant où une voix commence à s'ouvrir.",
     "g.tess.timbri": "Les huit tenues",
 
@@ -394,11 +394,11 @@ const GUIDA = {
     "g.pan.catena": "source → normaliser → insert → level → sum → colour → equaliser → limiter → output\nlevel → send → reverb → sum",
     "g.pan.1": "The three sources are independent and can be switched off one at a time with the ON button under their mixer channel. Each source has a channel in the desk: normaliser, effect insert, level fader and send to the shared reverb. The sum passes through an ensemble colour filter, the eight-band equaliser and a two-stage limiter.",
     "g.pan.2": "Switching a source off does not pause the model: cycles and idea renewal carry on, and switching it back on you hear where the piece has got to, not where you left it.",
-    "g.pan.3": "The Landscape source has its own internal reverb and does not use the shared send: its tail is part of the sound, not the room the sound is in.",
+    "g.pan.3": "The Landscape source has its own internal reverb and does not use the shared send: its tail is part of the sound.",
 
     "g.tempo.t": "Time structure",
     "g.tempo.1": "Eight cyclic lines, four per class. Each line has its own period, adjustable between 3 and 30 s for drops and between 7 and 60 s for weaves, and keeps an independent phase. The generator fills one cycle at a time and books events 0.15 s ahead.",
-    "g.tempo.2": "The four periods within a class are pairwise coprime. The combination of the eight phases repeats only after the least common multiple of the periods: with the opening values realignment falls beyond sixty hours. The REALIGN readout at the head of section 05 gives that time for the current periods.",
+    "g.tempo.2": "By default the four periods within a class are pairwise coprime. The combination of the eight phases repeats only after the least common multiple of the periods: with the opening values realignment falls beyond sixty hours. The REALIGN readout at the head of section 05 gives that time for the current periods.",
     "g.tempo.3": "Each line row exposes the cycle length, a mute switch and a regenerate control, which replaces that line's idea without touching the others.",
 
     "g.gocce.t": "Drops",
@@ -429,7 +429,7 @@ const GUIDA = {
     "g.tim.sabbia":  "Wide-band noise with a very short envelope: grain, not pitch.",
 
     "g.tess.t": "Weaves",
-    "g.tess.1": "Sustained tones with a two-stage envelope, from a few seconds to a minute. Unlike the drops these are not different materials but different ways of being unstable: each of the eight moves one internal parameter, because a perfectly still sustain stops being heard as a sound after a few seconds.",
+    "g.tess.1": "Sustained tones, from a few seconds to a minute. Unlike the drops these are not different materials but different ways of being unstable.",
     "g.tess.2": "The bus sum is normalised on the envelopes, not on the count of open voices: the compensation reads the same function that writes the automation, so there is no level step at the instant a voice begins to open.",
     "g.tess.timbri": "The eight sustains",
 
@@ -561,11 +561,11 @@ const GUIDA = {
     "g.pan.catena": "音源 → 正規化器 → 挿入効果 → 音量 → 合計 → 色 → 等化器 → 制限器 → 出力\n音量 → 送り → 残響 → 合計",
     "g.pan.1": "三つの音源は独立しており、卓の各系統の下にあるONで個別に切れます。各音源は卓に一系統ずつ持ち、正規化器、効果の挿入、音量、共通残響への送りの順に通ります。合計は全体の色を決める濾波器、八帯域の等化器、二段の制限器を経て出力されます。",
     "g.pan.2": "音源を切っても模型は止まりません。周期も楽想の入れ替わりも進み続けるので、入れ直すと止めた地点ではなく、いま到達している地点が聞こえます。",
-    "g.pan.3": "風景の残響は音源の内部にあり、共通の送りは使いません。その余韻は音の置かれた場所ではなく、音そのものの一部だからです。",
+    "g.pan.3": "風景の残響は音源の内部にあり、共通の送りは使いません。その余韻は音そのものの一部です。",
 
     "g.tempo.t": "時間の構造",
     "g.tempo.1": "循環する八本の線、各種類に四本。線ごとに周期を持ち、しずくは3〜30秒、織りは7〜60秒で調整でき、位相は互いに独立です。生成器は一周ずつ埋め、0.15秒先まで予約します。",
-    "g.tempo.2": "同じ種類の四つの周期は二つずつ互いに素です。八つの位相の組み合わせは周期の最小公倍数を経てはじめて繰り返します。初期値では一巡までに六十時間以上かかります。05節の冒頭にある「一巡」の表示が、現在の周期での値です。",
+    "g.tempo.2": "初期設定では、同じ種類の四つの周期は二つずつ互いに素です。八つの位相の組み合わせは周期の最小公倍数を経てはじめて繰り返します。初期値では一巡までに六十時間以上かかります。05節の冒頭にある「一巡」の表示が、現在の周期での値です。",
     "g.tempo.3": "各線の行には一周の長さ、消音の切り替え、楽想を作り直す操作子があります。作り直しはその線だけに効きます。",
 
     "g.gocce.t": "しずく",
@@ -596,7 +596,7 @@ const GUIDA = {
     "g.tim.sabbia":  "きわめて短い包絡の広帯域雑音。音高ではなく粒です。",
 
     "g.tess.t": "織り",
-    "g.tess.1": "二段の包絡を持つ持続音で、数秒から一分まで。しずくと違い、これらは異なる素材ではなく、異なる不安定さの型です。八つそれぞれが内部の変数をひとつ動かします。完全に静止した持続音は数秒で音として知覚されなくなるからです。",
+    "g.tess.1": "数秒から一分までの持続音です。しずくと違い、これらは異なる素材ではなく、異なる不安定さの型です。",
     "g.tess.2": "母線の合計は、開いている声の数ではなく包絡で正規化します。補正は自動化を書くのと同じ関数を読むので、声が開き始めた瞬間に音量が段になることがありません。",
     "g.tess.timbri": "八つの持続音",
 
