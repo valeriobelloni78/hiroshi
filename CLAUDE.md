@@ -955,6 +955,13 @@ indirizzi. Il sito si apre in un'ALTRA SCHEDA, qui e non negli altri progetti,
 perché lasciare questa pagina vorrebbe dire fermare il suono e perdere il
 paesaggio registrato.
 
+**IL CODICE SU GITHUB STA IN FONDO ALLA GUIDA**, accanto a «Torna allo strumento»
+e con lo stesso divisore della testata, come nella guida di Rada 2 e con le sue
+parole — «Il codice su GitHub», `g.foot.code` in tutte e quattro le lingue. Punta
+a `github.com/valeriobelloni78/hiroshi` e si apre in un'altra scheda. Non sta nella
+firma, che resta quella degli altri progetti, e non sta nello strumento, che come
+Rada 2 porta solo la firma.
+
 **LA SCELTA SI RIEMPIE D'INCHIOSTRO, e la parola diventa carta**: la lingua
 scelta, i pulsanti premuti — Ascolta, Registra, Microfono — i tasti delle linee,
 e dentro una tendina aperta la voce scelta. Viene dal mockup «Hiroshi · console». Il riempimento è uno
@@ -1473,7 +1480,8 @@ vetro per classe, il banco e la deriva su uno ciascuno, il resto sulla carta:
   tre filetti che qualcuno ha mosso. Una tavola che si muove da sé per tre
   quarti ha bisogno di dire quale quarto è stato deciso;
 - la **firma**, sotto il piede, nello strumento e nella guida: la frase dei
-  crediti, `valeriobelloni.art` e l'indirizzo di posta.
+  crediti, `valeriobelloni.art` e l'indirizzo di posta; nel piede della guida,
+  accanto al ritorno allo strumento, il collegamento al codice su GitHub.
 
 Sotto i 1180 px le cinque colonne diventano due e i quadranti si impilano; sotto
 i 720 una sola. I quadranti non crescono oltre 460 px: un cerchio da mezzo metro

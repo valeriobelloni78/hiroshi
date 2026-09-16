@@ -1138,6 +1138,7 @@ input[type=range].verticale::-moz-range-thumb{width:9px;height:7px}
 .guida .piede{margin-top:30px}
 .guida .piede a{color:var(--grigio);text-decoration:none}
 .guida .piede a:hover{color:var(--ambra)}
+.guida .piede .collegamenti{display:inline-flex;align-items:center;gap:14px}
 .guida a.chip{text-decoration:none}
 
 @media (max-width:720px){

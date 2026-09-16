@@ -26,6 +26,7 @@ const GUIDA = {
   it: {
     "g.titolo":    "Hiroshi · Guida",
     "g.torna":     "Torna allo strumento",
+    "g.foot.code": "Il codice su GitHub",
     "g.occhiello": "Manuale d'uso",
     "g.intro":     "Hiroshi è un generatore di musica ambientale che gira nel browser. Produce due classi di eventi — impulsi brevi e suoni tenuti — su otto linee cicliche indipendenti, li intona su un campo armonico che si sposta lentamente, e li somma in un banco d'uscita con equalizzatore, limitatore e registratore. Una quarta sorgente riproduce materiale registrato rallentato senza trasposizione. Questo documento descrive ogni comando: corsa, unità e effetto sul segnale.",
 
@@ -207,6 +208,7 @@ const GUIDA = {
   fr: {
     "g.titolo":    "Hiroshi · Guide",
     "g.torna":     "Retour à l'instrument",
+    "g.foot.code": "Le code sur GitHub",
     "g.occhiello": "Mode d'emploi",
     "g.intro":     "Hiroshi est un générateur de musique ambient qui fonctionne dans le navigateur. Il produit deux classes d'événements — impulsions brèves et sons tenus — sur huit lignes cycliques indépendantes, les accorde sur un champ harmonique qui se déplace lentement, et les somme dans une console de sortie avec égaliseur, limiteur et enregistreur. Une quatrième source lit un matériau enregistré ralenti sans transposition. Ce document décrit chaque commande : course, unité et effet sur le signal.",
 
@@ -374,6 +376,7 @@ const GUIDA = {
   en: {
     "g.titolo":    "Hiroshi · Guide",
     "g.torna":     "Back to the instrument",
+    "g.foot.code": "The code on GitHub",
     "g.occhiello": "Operating manual",
     "g.intro":     "Hiroshi is an ambient music generator that runs in the browser. It produces two classes of event — short impulses and sustained tones — on eight independent cyclic lines, tunes them to a slowly shifting harmonic field, and sums them in an output desk with equaliser, limiter and recorder. A fourth source plays recorded material slowed down without transposition. This document describes every control: range, unit and effect on the signal.",
 
@@ -541,6 +544,7 @@ const GUIDA = {
   ja: {
     "g.titolo":    "Hiroshi · 手引き",
     "g.torna":     "楽器に戻る",
+    "g.foot.code": "GitHubのコード",
     "g.occhiello": "取扱説明",
     "g.intro":     "Hiroshiはブラウザで動く環境音楽の生成器です。二種類の音——短い打点と持続音——を、位相の独立した八本の循環線の上に生成し、ゆっくり移動する音高の場に合わせ、等化器・制限器・録音を備えた出力卓でまとめます。第四の音源は、録音した素材を音高を変えずに減速して鳴らします。本書は各操作子の可動範囲、単位、信号への作用を記します。",
 

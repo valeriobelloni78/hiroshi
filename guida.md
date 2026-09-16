@@ -530,3 +530,6 @@ L'applicazione non fa richieste di rete: si apre da file locale e funziona senza
 
 <!-- g.torna -->
 [Torna allo strumento](index.html)
+
+<!-- g.foot.code -->
+[Il codice su GitHub](https://github.com/valeriobelloni78/hiroshi)

@@ -176,7 +176,7 @@ const tessuti = [9, 16, 25, 31].map((p, i) => nuovaLinea(i, p, ((1.5 - i) / 1.5)
    stato dello strumento, non un pezzo della macchina del suono. Chi lo
    trasforma in nodi sta più a valle e non è affar suo. */
 let timbroFrasi = "vetro";
-let timbroTessuti = "corrente";
+let timbroTessuti = "marea";
 
 /* ------------------------------------------------------- il modo del materiale
    **deriva** — il materiale si rinnova da sé: una goccia per volta ai tempi
