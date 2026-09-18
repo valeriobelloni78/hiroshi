@@ -146,6 +146,7 @@ function alCambioDiLingua() {
   elencaProfili();
   aggiornaMaterie();
   didascaliaDeriva();
+  scriviFormato();
   allinea();
   aggiornaRiallineo();
   // Le letture che cambiano da sé — la riga di stato, il baricentro, i picchi —
@@ -704,14 +705,28 @@ CANALI_MIXER.forEach((c) => {
   mostra();
 });
 
-/* ---------------------------------------------------- 03 banco · le uscite
-   Due comandi che danno due file diversi. La presa dal vivo registra la seduta
-   con dentro le mani: un cursore mosso resta nel file perché è successo.
-   L'esportazione rende il pezzo che l'apparecchio farebbe da solo, fuori tempo
-   reale, e non ha nessuna mano dentro. La prima è la registrazione di una
-   seduta, la seconda è una tiratura. */
-const btnPresa = el("presa"), btnEsporta = el("esporta");
+/* ----------------------------------------------------- 03 banco · l'uscita
+   UN COMANDO SOLO: la presa dal vivo, che registra la seduta con dentro le mani —
+   un cursore mosso resta nel file perché è successo. Accanto c'era l'esportazione
+   fuori tempo reale, la tavola in png e una scena che aspettava un seme: le prime
+   due se ne sono andate con la loro riga, la terza era un posto che aspettava, e
+   un posto che aspetta è una promessa. Il motore che rende fuori tempo reale —
+   `rendiOffline()` in `motore.js` — resta dov'è: lo percorre `prova.mjs` a ogni
+   corsa, ed è la promessa che il file suoni come l'ascolto.
+
+   LA FREQUENZA NON SI SCRIVE A MANO. Il wav esce alla frequenza del contesto —
+   48 kHz quasi sempre, 44,1 su qualche macchina — e l'etichetta la chiede a lui
+   invece di dichiararne una. Prima diceva «48 kHz» anche quando il file usciva a
+   44,1: una cifra sbagliata su un pannello vale meno di nessuna cifra. */
+const btnPresa = el("presa");
 let orologioPresa = null;
+
+function scriviFormato() {
+  const hz = (typeof ctx !== "undefined" && ctx) ? ctx.sampleRate : 48000;
+  const k = hz / 1000;
+  el("formato").textContent = dice("banco.formato", { khz: numero(k, k % 1 ? 1 : 0) });
+}
+scriviFormato();
 
 btnPresa.addEventListener("click", async () => {
   if (stoRegistrando()) {
@@ -728,7 +743,7 @@ btnPresa.addEventListener("click", async () => {
     await avviaPresa();
     btnPresa.setAttribute("aria-pressed", "true");
     el("etichettaPresa").textContent = dice("banco.fermaSalva");
-    el("formato").textContent = dice("banco.formato");
+    scriviFormato();
     orologioPresa = setInterval(() => {
       const s = secondiRegistrati();
       el("cronometro").textContent = mmss(s);
@@ -739,44 +754,6 @@ btnPresa.addEventListener("click", async () => {
   }
 });
 
-cursore("durata", "vDurata", {
-  valore: (x) => x, scrivi: () => {}, crudo: () => Number(el("durata").value),
-  testo: (v) => numero(v) + "′",
-});
-
-btnEsporta.addEventListener("click", async () => {
-  const sec = Number(el("durata").value) * 60;
-  btnEsporta.disabled = true;
-  el("esito").textContent = dice("banco.rendo");
-  // Un giro di eventi prima di partire, o l'etichetta non fa in tempo a
-  // comparire: il rendering tiene occupato il thread principale.
-  await new Promise((r) => setTimeout(r, 30));
-  try {
-    const t0 = performance.now();
-    const buf = await esporta(sec);
-    salvaComeWav(buf);
-    el("esito").textContent = numero((performance.now() - t0) / 1000, 1) + " s → " +
-                              numero(sec / 60) + "′";
-  } catch (e) {
-    el("esito").textContent = dice("banco.nonFatta");
-  }
-  btnEsporta.disabled = false;
-});
-
-/* La tavola come immagine. È l'unica esportazione che non passa per il suono:
-   il canvas sa già disegnarsi, e quello che si vede è quello che si porta via. */
-el("esportaPng").addEventListener("click", () => {
-  const tela = el("tavola");
-  tela.toBlob((b) => {
-    if (!b) { el("misuraPng").textContent = dice("banco.nonFatta"); return; }
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(b);
-    a.download = "hiroshi-" + new Date().toISOString().slice(0, 16).replace(/[:T]/g, "") + ".png";
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-    el("misuraPng").textContent = tela.width + " × " + tela.height;
-  }, "image/png");
-});
 
 /* -------------------------------------------------------- 04 paesaggio · materia
    Le due porte da cui entra la materia: un file scelto a mano e il microfono.

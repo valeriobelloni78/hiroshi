@@ -325,7 +325,7 @@ Uscita dello studio. Ogni canale ha un normalizzatore scritto dalla sorgente —
 L'equalizzatore ha otto bande a frequenza fissa, corsa ±8 dB. La curva disegnata sopra le aste è la risposta vera dei filtri, chiesta al grafo audio, non un'interpolazione delle posizioni.
 
 <!-- g.banco.3 -->
-Due uscite diverse. La registrazione dal vivo cattura la seduta con dentro i movimenti dei cursori. L'esportazione rende il pezzo fuori tempo reale, molto più in fretta del tempo reale, senza nessuna mano dentro: percorre lo stesso modello e le stesse tarature, quindi il file suona come quello che si sta ascoltando.
+La registrazione dal vivo cattura l'uscita del banco dopo il limitatore, con dentro i movimenti dei cursori: quello che si sente è quello che finisce nel file. Esce in wav 24 bit stereo alla frequenza del contesto audio, di solito 48 kHz, e si ferma da sé a quindici minuti.
 
 <!-- tabella
   intestazione: g.col.par | g.col.corsa | g.col.fun
@@ -334,7 +334,6 @@ Due uscite diverse. La registrazione dal vivo cattura la seduta con dentro i mov
   riga: fl.limitatore | a mano: corsa | g.p.limitatore
   riga: fl.picco | a mano: corsa | g.p.picco
   riga: banco.registra | a mano: corsa | g.p.registra
-  riga: banco.tracciaWav | g.corsa.min | g.p.esporta
 -->
 | Parametro | Corsa | Funzione |
 |---|---|---|
@@ -343,7 +342,6 @@ Due uscite diverse. La registrazione dal vivo cattura la seduta con dentro i mov
 | Limitatore | dB | Due stadi in cascata sull'uscita. La lettura indica la riduzione di guadagno istantanea. |
 | Picco | dB | Picco del segnale d'uscita, con tenuta di 20 dB al secondo. |
 | Registra | — | Presa dal vivo dall'uscita del banco. Il file esce in wav 24 bit stereo. |
-| Traccia wav | 1 – 20 min | Rendering fuori tempo reale della durata scelta, in wav 24 bit stereo. |
 
 ---
 

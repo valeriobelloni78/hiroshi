@@ -320,29 +320,12 @@
           <span class="et" data-i18n="et.registrazione">REGISTRAZIONE</span>
           <button class="chip" id="presa" aria-pressed="false">
             <span class="spia"></span><span id="etichettaPresa" data-i18n="banco.registra">Registra</span>
-            <span class="misura" id="formato" data-i18n="banco.formato">48 kHz · 24 bit</span>
+            <!-- La frequenza la scrive `scriviFormato()`: è quella del contesto
+                 audio, non un numero deciso qui. -->
+            <span class="misura" id="formato">48 kHz · 24 bit</span>
           </button>
           <div class="cronometro" id="cronometro">00:00</div>
           <div class="misuratore" data-quadro="misuratore"></div>
-          <div class="taglio"></div>
-
-          <span class="et" data-i18n="et.esporta">ESPORTA</span>
-          <button class="riga-comando" id="esporta">
-            <span class="mn" data-i18n="banco.tracciaWav">Traccia wav</span>
-            <span class="misura" id="esito"></span>
-          </button>
-          <label class="filetto">
-            <span class="fl" data-i18n="banco.durataReso">Durata del reso</span><span class="vl" id="vDurata">5′</span>
-            <input id="durata" type="range" min="1" max="20" step="1" value="5">
-          </label>
-          <button class="riga-comando" id="esportaPng">
-            <span class="mn" data-i18n="banco.tavolaPng">Tavola png</span>
-            <span class="misura" id="misuraPng">—</span>
-          </button>
-          <button class="riga-comando" id="esportaScena" disabled>
-            <span class="mn" data-i18n="banco.scena">Scena</span>
-            <span class="misura" data-i18n="banco.serveSeme">serve un seme</span>
-          </button>
         </div>
 
         <div class="eq">

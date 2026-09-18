@@ -39,7 +39,6 @@ const GUIDA = {
     "g.col.periodi": "Periodi",
     "g.corsa.ott":    "0 – 3,2 ott",
     "g.corsa.ottmov": "0 – 2 ott",
-    "g.corsa.min":    "1 – 20 min",
     "g.spec.krete":  "Rete",
     "g.spec.kmem":   "Memoria",
 
@@ -166,14 +165,13 @@ const GUIDA = {
     "g.banco.t": "Banco",
     "g.banco.1": "Uscita dello studio. Ogni canale ha un normalizzatore scritto dalla sorgente — che compensa quante voci sono aperte — un cursore di livello e una mandata al riverbero comune, in quest'ordine: il riverbero riceve il segnale già compensato.",
     "g.banco.2": "L'equalizzatore ha otto bande a frequenza fissa, corsa ±8 dB. La curva disegnata sopra le aste è la risposta vera dei filtri, chiesta al grafo audio, non un'interpolazione delle posizioni.",
-    "g.banco.3": "Due uscite diverse. La registrazione dal vivo cattura la seduta con dentro i movimenti dei cursori. L'esportazione rende il pezzo fuori tempo reale, molto più in fretta del tempo reale, senza nessuna mano dentro: percorre lo stesso modello e le stesse tarature, quindi il file suona come quello che si sta ascoltando.",
+    "g.banco.3": "La registrazione dal vivo cattura l'uscita del banco dopo il limitatore, con dentro i movimenti dei cursori: quello che si sente è quello che finisce nel file. Esce in wav 24 bit stereo alla frequenza del contesto audio, di solito 48 kHz, e si ferma da sé a quindici minuti.",
 
     "g.p.eq":         "Otto bande: 20 Hz shelf, 50 · 100 · 500 · 1k · 5k · 10k campana, 18 kHz shelf.",
     "g.p.mixer":      "Livello dei tre canali e dell'uscita. Sul canale dei tessuti si somma in decibel al parametro Livello del modello.",
     "g.p.limitatore": "Due stadi in cascata sull'uscita. La lettura indica la riduzione di guadagno istantanea.",
     "g.p.picco":      "Picco del segnale d'uscita, con tenuta di 20 dB al secondo.",
     "g.p.registra":   "Presa dal vivo dall'uscita del banco. Il file esce in wav 24 bit stereo.",
-    "g.p.esporta":    "Rendering fuori tempo reale della durata scelta, in wav 24 bit stereo.",
 
     /* 8 · mood */
     "g.mood.t": "Mood",
@@ -221,7 +219,6 @@ const GUIDA = {
     "g.col.periodi": "Périodes",
     "g.corsa.ott":    "0 – 3,2 oct.",
     "g.corsa.ottmov": "0 – 2 oct.",
-    "g.corsa.min":    "1 – 20 min",
     "g.spec.krete":  "Réseau",
     "g.spec.kmem":   "Mémoire",
 
@@ -340,14 +337,13 @@ const GUIDA = {
     "g.banco.t": "Console",
     "g.banco.1": "Sortie du studio. Chaque voie a un normalisateur écrit par la source — qui compense le nombre de voix ouvertes — un curseur de niveau et un départ vers la réverbération commune, dans cet ordre : la réverbération reçoit le signal déjà compensé.",
     "g.banco.2": "L'égaliseur a huit bandes à fréquence fixe, course ±8 dB. La courbe tracée au-dessus des tirettes est la réponse réelle des filtres, demandée au graphe audio, non une interpolation des positions.",
-    "g.banco.3": "Deux sorties différentes. L'enregistrement en direct capte la séance avec les mouvements des curseurs dedans. L'export rend la pièce hors temps réel, bien plus vite que le temps réel, sans aucune main dedans : il parcourt le même modèle et les mêmes réglages, donc le fichier sonne comme ce que l'on écoute.",
+    "g.banco.3": "L'enregistrement en direct capte la sortie de la console après le limiteur, avec les mouvements des curseurs dedans : ce que l'on entend est ce qui finit dans le fichier. Il sort en wav 24 bits stéréo à la fréquence du contexte audio, en général 48 kHz, et s'arrête de lui-même à quinze minutes.",
 
     "g.p.eq":         "Huit bandes : 20 Hz shelf, 50 · 100 · 500 · 1k · 5k · 10k cloche, 18 kHz shelf.",
     "g.p.mixer":      "Niveau des trois voies et de la sortie. Sur la voie des tissus il s'ajoute en décibels au paramètre Niveau du modèle.",
     "g.p.limitatore": "Deux étages en cascade sur la sortie. La lecture indique la réduction de gain instantanée.",
     "g.p.picco":      "Crête du signal de sortie, avec maintien de 20 dB par seconde.",
     "g.p.registra":   "Prise en direct sur la sortie de la console. Le fichier sort en wav 24 bits stéréo.",
-    "g.p.esporta":    "Rendu hors temps réel de la durée choisie, en wav 24 bits stéréo.",
 
     "g.mood.t": "Humeurs",
     "g.mood.1": "Seize configurations complètes, huit par classe. Une humeur écrit d'un coup les paramètres, les quatre périodes des lignes et le nom du timbre, car la configuration temporelle fait partie du caractère autant que le son. L'écriture est immédiate et non lissée : une humeur est un plan de coupe, pas un geste.",
@@ -389,7 +385,6 @@ const GUIDA = {
     "g.col.periodi": "Periods",
     "g.corsa.ott":    "0 – 3.2 oct",
     "g.corsa.ottmov": "0 – 2 oct",
-    "g.corsa.min":    "1 – 20 min",
     "g.spec.krete":  "Network",
     "g.spec.kmem":   "Memory",
 
@@ -508,14 +503,13 @@ const GUIDA = {
     "g.banco.t": "Desk",
     "g.banco.1": "Studio output. Each channel has a normaliser written by the source — compensating for how many voices are open — a level fader and a send to the shared reverb, in that order: the reverb receives the already compensated signal.",
     "g.banco.2": "The equaliser has eight fixed-frequency bands, ±8 dB range. The curve drawn above the faders is the real response of the filters, asked of the audio graph, not an interpolation of the fader positions.",
-    "g.banco.3": "Two different outputs. Live recording captures the session with the fader moves in it. Export renders the piece offline, far faster than real time, with no hand in it: it walks the same model and the same settings, so the file sounds like what you are hearing.",
+    "g.banco.3": "Live recording captures the desk output after the limiter, with the fader moves in it: what you hear is what lands in the file. It comes out as 24-bit stereo wav at the audio context sample rate, usually 48 kHz, and stops by itself at fifteen minutes.",
 
     "g.p.eq":         "Eight bands: 20 Hz shelf, 50 · 100 · 500 · 1k · 5k · 10k bell, 18 kHz shelf.",
     "g.p.mixer":      "Level of the three channels and of the output. On the weaves channel it adds in decibels to the model's Level parameter.",
     "g.p.limitatore": "Two cascaded stages on the output. The readout gives instantaneous gain reduction.",
     "g.p.picco":      "Peak of the output signal, with a 20 dB per second hold.",
     "g.p.registra":   "Live capture from the desk output. The file comes out as 24-bit stereo wav.",
-    "g.p.esporta":    "Offline render of the chosen length, as 24-bit stereo wav.",
 
     "g.mood.t": "Moods",
     "g.mood.1": "Sixteen complete configurations, eight per class. A mood writes the parameters, the four line periods and the timbre name in one go, because the time configuration is as much part of the character as the sound. The write is immediate and not smoothed: a mood is a cut, not a gesture.",
@@ -557,7 +551,6 @@ const GUIDA = {
     "g.col.periodi": "周期",
     "g.corsa.ott":    "0 – 3.2オクターブ",
     "g.corsa.ottmov": "0 – 2オクターブ",
-    "g.corsa.min":    "1 – 20分",
     "g.spec.krete":  "通信",
     "g.spec.kmem":   "記憶",
 
@@ -676,14 +669,13 @@ const GUIDA = {
     "g.banco.t": "卓",
     "g.banco.1": "工房の出口です。各系統は、音源が書き込む正規化器——開いている声の数を補正します——音量、共通残響への送りをこの順に持ちます。残響は補正後の信号を受け取ります。",
     "g.banco.2": "等化器は固定周波数の八帯域、可動範囲は±8 dBです。推子の上に描かれる曲線は推子の位置を補間したものではなく、音声グラフに問い合わせた濾波器の実際の応答です。",
-    "g.banco.3": "出口は二つあります。実時間の録音は、推子を動かした痕跡ごと演奏を捉えます。書き出しは実時間よりはるかに速く、手を加えずに曲を生成します。同じ模型と同じ設定をたどるので、聞いていたとおりの音がファイルに残ります。",
+    "g.banco.3": "実時間の録音は、制限器の後ろにある卓の出力を、推子を動かした痕跡ごと捉えます。聞こえているものがそのままファイルに残ります。音声文脈の標本化周波数（多くは48 kHz）で、24ビット・ステレオのwavとして書き出し、十五分で自動的に止まります。",
 
     "g.p.eq":         "八帯域：20 Hzシェルビング、50・100・500・1k・5k・10 kピーキング、18 kHzシェルビング。",
     "g.p.mixer":      "三系統と出力の音量。織りの系統では、模型側の「音量」にデシベルで加算されます。",
     "g.p.limitatore": "出力段の二段直列。表示は瞬時の利得減衰量です。",
     "g.p.picco":      "出力信号の尖頭値。毎秒20 dBで保持が下がります。",
     "g.p.registra":   "卓の出力からの実時間収録。24ビット・ステレオのwavで書き出します。",
-    "g.p.esporta":    "指定した長さの非実時間生成。24ビット・ステレオのwav。",
 
     "g.mood.t": "気分",
     "g.mood.1": "完成した設定が十六。各種類に八つずつ。気分は変数、四本の線の周期、音色の名前を一度に書き込みます。時間の設定も音と同じくらい性格の一部だからです。書き込みは滑らかにせず即時に行います。気分は身振りではなく場面の切り替えです。",

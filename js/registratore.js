@@ -58,19 +58,13 @@ function fermaPresa() {
   return buf;
 }
 
-/* L'esportazione. `rendiOffline` si porta dietro la fotografia del modello e
-   lo rimette a posto dopo, quindi si può esportare mentre si ascolta senza
-   scardinare la sessione — vedi `istantaneaModello()` in `motore.js`.
-
-   Il contesto vivo va costruito PRIMA, anche se non serve al render: senza,
-   una esportazione fatta senza aver mai premuto Ascolta partirebbe da un
-   modello che nessun `passo` ha mai toccato. Suonerebbe lo stesso, ma non
-   sarebbe quello che si sta ascoltando — e la promessa è proprio quella. */
-async function esporta(secondi) {
-  costruisciMotore();
-  const reso = await rendiOffline(secondi);
-  return reso;
-}
+/* L'ESPORTAZIONE FUORI TEMPO REALE NON HA PIÙ UN COMANDO. Il rendering resta nel
+   motore, `rendiOffline()` in `motore.js`, e `prova.mjs` lo percorre a ogni corsa:
+   è lì che si verifica che il wav suoni come l'ascolto. Quello che è caduto è la
+   riga «Traccia wav» del banco, insieme alla tavola in png e alla scena. Se un
+   giorno torna, il comando ricostruisce `costruisciMotore()` PRIMA del render:
+   senza, un'esportazione fatta prima di aver mai premuto Ascolta partirebbe da un
+   modello che nessun `passo` ha mai toccato. */
 
 /* Il wav dell'una e dell'altra passano di qui, così il formato è uno solo e
    non può divergere. */

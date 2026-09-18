@@ -972,6 +972,23 @@ Spegnere non è una pausa e non è un muto: cicli e ricambio avanzano comunque, 
 riaccendendo si ritrova quello che sarebbe successo. L'uscita non ha il suo ON,
 perché spegnerla sarebbe la pausa, che sta già nella testata.
 
+**IL BANCO HA UNA SOLA USCITA: LA PRESA DAL VIVO.** Sotto la registrazione c'erano
+altre tre righe, e non ci sono più: «Traccia wav» con la sua durata del reso —
+l'esportazione fuori tempo reale —, «Tavola png» e «Scena · serve un seme».
+Quest'ultima era un posto che aspettava, e un posto che aspetta è una promessa,
+la stessa ragione per cui se n'erano andate le voci e il cielo. Il RENDERING resta
+nel motore, `rendiOffline()`: lo percorre `prova.mjs` a ogni corsa, ed è lì che si
+verifica che il wav suoni come l'ascolto. Quello che è caduto è il comando, non la
+macchina; `esporta()` in `registratore.js`, che era solo l'involucro del comando,
+se n'è andato con lui.
+
+**LA FREQUENZA DEL WAV NON SI SCRIVE A MANO.** La presa esce a 24 bit stereo alla
+frequenza del CONTESTO — 48 kHz quasi sempre, 44,1 su qualche macchina — e
+l'etichetta accanto a «Registra» la chiede a lui, con `scriviFormato()` in
+`comandi.js` e la chiave `banco.formato` che ha un buco per i kHz. Prima diceva
+«48 kHz» scritto nell'HTML, anche quando il file usciva a 44,1: una cifra
+sbagliata su un pannello vale meno di nessuna cifra.
+
 **LA FIRMA È QUELLA DEGLI ALTRI PROGETTI**, e non si riscrive: stessa frase —
 «questo è un progetto open source ideato da Valerio Belloni», con le traduzioni
 di Rada, Rada 2 e Nuvole in `foot.credits` — stesso sito, stesso indirizzo, stessa
@@ -1450,9 +1467,10 @@ l'**esportazione deterministica**.
 Fatto anche il **paesaggio** (archivio dei materiali, cattura dal microfono,
 segmento scelto sull'onda, velo che distende senza trasporre, riverbero proprio)
 e il
-**registratore**: la presa dal vivo sull'uscita del banco e l'esportazione
-fuori tempo reale, tutte e due in wav a 24 bit stereo. **IL MOTORE È
-COMPLETO.**
+**registratore**: la presa dal vivo sull'uscita del banco, in wav a 24 bit
+stereo. Il rendering fuori tempo reale è nel motore e lo percorre solo la prova:
+il suo comando non c'è più (vedi la convenzione sull'uscita del banco). **IL
+MOTORE È COMPLETO.**
 
 **C'È ANCHE LA TAVOLA, ed è quella del mockup.** Il disegno ha sostituito
 l'impalcatura, e l'ha sostituita separandosi da lei: i comandi in `comandi.js`,
@@ -1478,7 +1496,6 @@ vetro per classe, il banco e la deriva su uno ciascuno, il resto sulla carta:
   le due manopole — registro e calore, registro e passo — e in un piano suo la
   tendina dell'**effetto** con le sue tre manopole;
 - **03 · banco**: registrazione con cronometro e misuratori a tessere,
-  esportazione (wav, la tavola in png, la scena che aspetta un seme),
   equalizzatore a otto aste con la curva vera sopra — chiesta ai filtri con
   `getFrequencyResponse` — e il mixer a quattro aste, con sotto le tre sorgenti
   il loro **ON**;
@@ -1544,8 +1561,10 @@ Da fare, in ordine:
    solo che manca qualcosa.
 
 Aperti: `rendiOffline` percorre lo stesso modello che sta suonando, quindi
-esportare mentre si ascolta oggi disturberebbe la sessione in corso — va dato
-al render un modello suo. E `deriva.js` sorteggia le fasi al caricamento: per
+esportare mentre si ascolta disturberebbe la sessione in corso — va dato al
+render un modello suo. Oggi non se ne accorge nessuno, perché a percorrerlo è
+rimasta solo `prova.mjs`; il giorno che l'esportazione torna fra i comandi, quel
+punto va chiuso prima. E `deriva.js` sorteggia le fasi al caricamento: per
 un'esportazione riproducibile servirà un seme. I **materiali del paesaggio non si
 conservano**: un file caricato o una registrazione vivono finché la pagina è
 aperta, e salvarli vorrebbe dire IndexedDB, cioè la prima cosa in tutto il
