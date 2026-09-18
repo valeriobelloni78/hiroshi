@@ -932,6 +932,8 @@ function disegnaOnda(m, largo, alto) {
   return ondaTela;
 }
 
+const VELO_ALFA = 0.45;
+
 /* La maniglia di un capo del segmento: un quadrato d'inchiostro fuori
    dall'onda, sul bordo dove sta il cursore che lo comanda, e la verticale che
    scende a dire dov'è il taglio. */
@@ -964,10 +966,14 @@ function fasciaPaesaggio(box, ora) {
   T.fillRect(box.x, box.y, Math.max(0, x0 - box.x), box.h);
   T.fillRect(x1, box.y, Math.max(0, box.x + box.w - x1), box.h);
 
-  // La finestra che si sta leggendo adesso, larga quanto il velo.
+  /* LA FINESTRA CHE SI STA LEGGENDO ADESSO, larga quanto il velo, ED È IN AMBRA:
+     è un ADESSO come la goccia appena scattata o il punto di fase, e prima, in
+     filo-2, era l'unico adesso della tavola scritto in inchiostro tenue. Sotto
+     l'ambra il materiale deve restare visibile — è quello che si sta guardando
+     per scegliere il segmento — quindi la campitura è velata, non piena. */
   const testa = testaPaesaggio();
   const tx = box.x + testa * perSec;
-  T.fillStyle = tinta("filo-2", 0.75);
+  T.fillStyle = tinta("ambra", VELO_ALFA);
   T.fillRect(tx, box.y, Math.max(1.5, seg.velo * perSec), box.h);
 
   maniglia(x0, box, true);

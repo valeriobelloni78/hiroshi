@@ -180,6 +180,29 @@ che il paesaggio serve a fare. IL RIENTRO: microfono aperto e altoparlanti
 accesi sono un anello, e un anello con dentro una coda di venti secondi è un
 fischio.
 
+**IL MICROFONO DICE PERCHÉ NON SI APRE.** Il tasto «Microfono» registra dal
+dispositivo in mono, con cancellazione dell'eco, riduzione del rumore e guadagno
+automatico SPENTI — sono tarati per la voce al telefono e toglierebbero proprio il
+fondo e la stanza — senza farsi sentire mentre registra; premuto di nuovo, la
+presa diventa una materia nuova, «microfono N», scelta subito come sorgente. Al
+tetto di `MICROFONO_MAX`, novanta secondi, si ferma da sé, come la registrazione
+del banco: prima smetteva di raccogliere in silenzio mentre il tasto diceva
+ancora «Ferma». Prima OGNI errore diventava «microfono negato», e cinque guasti
+diversi si riparano in cinque posti diversi: `erroreMicrofono()` in `comandi.js`
+li separa per nome — permesso rifiutato (`NotAllowedError`, dal browser o dal
+sistema), nessun microfono (`NotFoundError`), microfono occupato da un'altra
+applicazione (`NotReadableError`), microfono non disponibile in questa pagina
+(niente `navigator.mediaDevices`, `NotSupportedError`), e ogni altro guasto come
+«cattura non riuscita». L'errore vero va anche in console, come avviso e non come
+errore, perché la prova fallisce su un errore in console. E se il guasto arriva
+DOPO che il flusso si è aperto, le tracce si fermano: altrimenti il microfono
+resterebbe acceso, con la sua spia di sistema, senza registrare niente.
+
+Misurato in Chromium con un microfono finto: col permesso la presa funziona dalla
+prima all'ultima riga; «microfono negato» a schermo vuol dire quindi che la pagina
+il microfono non l'ha avuto — permesso del sito rifiutato, o il browser non
+abilitato in Impostazioni di Sistema › Privacy e sicurezza › Microfono.
+
 **Una tenuta che attraversa il passo di quinta sceglie un grado che
 sopravvive.** È l'unica dissonanza che questo strumento sapesse produrre, e non
 veniva dal materiale né dai modi: una tenuta viene intonata UNA VOLTA SOLA,
@@ -533,8 +556,8 @@ in tema scuro si aprirebbe un menù bianco in mezzo a una tavola nera.
 di Rada Deriva — e non dice mai *che cosa*. Quello che le cose SONO lo dice la
 geometria, una grandezza per classe: sulle gocce la lunghezza RADIALE della
 tacca è il registro, sui tessuti la lunghezza dell'ARCO è la durata. Tutto il
-resto è inchiostro — acceso, spento, muto, dove sta la mano, dove sta la testa
-di lettura.
+resto è inchiostro — acceso, spento, muto, dove sta la mano, e la RIGA della
+testa di lettura, che resta inchiostro dentro la sua finestra in ambra.
 
 **L'AMBRA È DOVE GUARDARE.** Su un foglio che per il resto è tutto inchiostro su
 carta, l'accento non dice una grandezza: dice *qui*. Sono quattro famiglie e
@@ -544,7 +567,12 @@ non una in più:
   tenuta entrata per ultima, il punto di fase — sugli anelli, sul circolo delle quinte, sull'ora del
   cerchio delle influenze —, i fili che le
   legano al mirino, il
-  legame fra due gocce cadute insieme;
+  legame fra due gocce cadute insieme, e LA FINESTRA CHE IL PAESAGGIO STA
+  LEGGENDO, larga quanto il velo: è l'adesso di quella sorgente, come una goccia
+  è l'adesso della sua. Sta in ambra VELATA, `VELO_ALFA` 0,45 in `tavola.js`,
+  perché sotto deve restare visibile il materiale su cui si sceglie il segmento:
+  a 0,60 lo copre, a 0,30 sbiadisce verso il rosa. Prima era `filo-2`, ed era
+  l'unico adesso della tavola scritto in inchiostro tenue;
 - IL VALORE: ogni `.vl`, il cronometro, i periodi dentro una didascalia — e i
   valori VIVI, quelli che cambiano da sé, in una targhetta a fondo pieno — e la
   curva dell'equalizzatore, che è i numeri delle otto aste disegnati invece che

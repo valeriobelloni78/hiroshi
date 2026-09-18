@@ -823,6 +823,21 @@ el("file").addEventListener("change", async (e) => {
 
 const btnReg = el("registra");
 let presa = null, flusso = null, orologioMic = null;
+
+/* PERCHÉ IL MICROFONO NON SI APRE, detto per nome. Prima ogni errore diventava
+   «microfono negato», e un permesso rifiutato, un microfono che manca, uno tenuto
+   da un'altra applicazione e un browser che il microfono a questa pagina non lo dà
+   sembravano la stessa cosa — mentre si riparano in quattro posti diversi. Le
+   frasi sono corte perché stanno nella targhetta accanto al tasto; l'errore vero,
+   col suo nome, va anche in console. */
+function erroreMicrofono(err) {
+  const nome = err && err.name;
+  if (!navigator.mediaDevices || nome === "NotSupportedError" || nome === "TypeError") return "pae.micNonQui";
+  if (nome === "NotAllowedError" || nome === "SecurityError") return "pae.negato";
+  if (nome === "NotFoundError" || nome === "OverconstrainedError") return "pae.micAssente";
+  if (nome === "NotReadableError" || nome === "AbortError") return "pae.micOccupato";
+  return "pae.micGuasto";
+}
 btnReg.addEventListener("click", async () => {
   if (presa) {
     const buf = presa.chiudi();
@@ -844,14 +859,22 @@ btnReg.addEventListener("click", async () => {
     const c = assicuraContesto();
     if (c.state === "suspended") await c.resume();
     flusso = await apriMicrofono();
-    presa = await apriCattura(c, c.createMediaStreamSource(flusso));
+    presa = await apriCattura(c, c.createMediaStreamSource(flusso), 1, MICROFONO_MAX);
     btnReg.setAttribute("aria-pressed", "true");
     el("etichettaRegistra").textContent = dice("pae.ferma");
+    // Al tetto la presa si ferma da sé, come la registrazione del banco: prima
+    // smetteva di raccogliere in silenzio mentre il tasto diceva ancora «Ferma».
     orologioMic = setInterval(() => {
-      if (presa) el("cattura").textContent = numero(presa.secondi, 1) + " s";
+      if (!presa) return;
+      el("cattura").textContent = numero(presa.secondi, 1) + " s";
+      if (presa.pieno) btnReg.click();
     }, 200);
   } catch (err) {
-    el("cattura").textContent = dice("pae.negato");
+    console.warn("microfono:", err && err.name, err && err.message);
+    el("cattura").textContent = dice(erroreMicrofono(err));
+    // Se il flusso si era aperto e il guasto è venuto dopo, il microfono va
+    // chiuso: altrimenti resterebbe acceso, con la sua spia, senza registrare.
+    if (flusso) flusso.getTracks().forEach((t) => t.stop());
     presa = null; flusso = null;
   }
 });

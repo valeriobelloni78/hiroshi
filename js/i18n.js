@@ -163,6 +163,10 @@ const TESTI = {
     "pae.nonLeggo":       "non riesco a leggerlo",
     "pae.nienteArrivato": "non è arrivato niente",
     "pae.negato":         "microfono negato",
+    "pae.micNonQui":      "microfono non disponibile qui",
+    "pae.micAssente":     "nessun microfono",
+    "pae.micOccupato":    "microfono occupato",
+    "pae.micGuasto":      "cattura non riuscita",
     "pae.nessunaMateria": "nessuna materia: carica un suono, o apri il microfono",
 
     "piede.inAscolto": "in ascolto",
@@ -333,6 +337,10 @@ const TESTI = {
     "pae.nonLeggo":       "je ne sais pas le lire",
     "pae.nienteArrivato": "rien n'est arrivé",
     "pae.negato":         "microphone refusé",
+    "pae.micNonQui":      "microphone indisponible ici",
+    "pae.micAssente":     "aucun microphone",
+    "pae.micOccupato":    "microphone occupé",
+    "pae.micGuasto":      "capture échouée",
     "pae.nessunaMateria": "aucune matière : chargez un son, ou ouvrez le microphone",
 
     "piede.inAscolto": `à l'écoute`,
@@ -503,6 +511,10 @@ const TESTI = {
     "pae.nonLeggo":       "I cannot read it",
     "pae.nienteArrivato": "nothing came in",
     "pae.negato":         "microphone refused",
+    "pae.micNonQui":      "microphone unavailable here",
+    "pae.micAssente":     "no microphone",
+    "pae.micOccupato":    "microphone busy",
+    "pae.micGuasto":      "capture failed",
     "pae.nessunaMateria": "no material: load a sound, or open the microphone",
 
     "piede.inAscolto": "playing",
@@ -673,6 +685,10 @@ const TESTI = {
     "pae.nonLeggo":       "読み込めません",
     "pae.nienteArrivato": "何も入りませんでした",
     "pae.negato":         "マイクが拒まれました",
+    "pae.micNonQui":      "ここではマイクを使えません",
+    "pae.micAssente":     "マイクがありません",
+    "pae.micOccupato":    "マイクが使用中です",
+    "pae.micGuasto":      "録音できませんでした",
     "pae.nessunaMateria": "素材がありません。音を読み込むか、マイクを開いてください",
 
     "piede.inAscolto": "再生中",
