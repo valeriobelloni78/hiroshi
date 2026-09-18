@@ -276,6 +276,34 @@ function avanzaDeriva(t) {
   }
 }
 
+/* UNA QUINTA A MANO, in senso orario. È il solo modo in cui una tonalità si
+   sceglie invece di aspettarla, e c'è solo quando TUTTI E DUE i materiali stanno
+   su «ancora»: lì il pezzo non rinnova più le idee, e la sola cosa che continua
+   a muoversi sotto le dita è l'armonia — sceglierla è finire di fermare lo
+   strumento. Con un materiale in deriva il comando non compare: sarebbe una mano
+   sul volante di una cosa che sta già guidando.
+
+   ORARIO VUOL DIRE SEMPRE +1, non il passo sturmiano: il cammino che sale nel
+   61,8% dei casi è la DERIVA, e la mano non ci entra. Per la stessa ragione
+   `passoN` non avanza — il cammino automatico riprende da dove sarebbe andato,
+   spostato di una quinta — mentre `passiQuinta` sì, perché conta le modulazioni
+   avvenute e questa è avvenuta.
+
+   E IL PROSSIMO PASSO SI RIMANDA di un giro intero: chi ha appena scelto una
+   tonalità non se la vede cambiare fra dieci secondi. Quattro clic per quattro
+   quinte lasciano comunque i due minuti e mezzo pieni dall'ultimo.
+
+   Quello che questo salto NON fa è proteggere le tenute già in aria:
+   `altezzaCheResta()` guarda il passo PREVISTO, e un salto a mano previsto non
+   è. Una tenuta lunga può restare fuori collezione finché finisce. È il prezzo
+   di una modulazione decisa adesso, e si sente come si sente una modulazione. */
+function spingiQuinta(t) {
+  quinta += 1;
+  passiQuinta++;
+  prossimaQuinta = t + PASSO_QUINTA;
+  costruisciCampo();
+}
+
 /* Dove sta il baricentro, in −1..1: lo legge la corsia lunga della fascia.
    Prima qui c'erano i centesimi di scarto della tonica, che adesso sono
    sempre zero per costruzione.                                            */

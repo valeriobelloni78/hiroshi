@@ -1073,6 +1073,51 @@ const esito = await p.evaluate(async () => {
     if (prima !== dopo) R.errori.push("esportare ha spostato il modello della sessione");
   }
 
+  /* 12 · LA TONALITÀ A MANO.
+
+        Col materiale di tutte e due le classi su «ancora» il centro del circolo
+        diventa un comando: una quinta oraria per clic. Qui si verifica il
+        modello, non il tasto — che è un `button` e non ha niente da misurare.
+
+        Il controllo su sé stessa è il giro completo: dodici quinte riportano
+        esattamente alla tonalità di partenza, quindi la prova finisce dove ha
+        cominciato e non sporca quelle che vengono dopo. Se una spinta sbagliasse
+        verso o salto, il giro non tornerebbe. */
+  {
+    const prima = tonalita();
+    const collezionePrima = new Set(GRADI.map((g) => (prima + g) % 12));
+    const passiPrima = passiQuinta, prossimaPrima = prossimaQuinta;
+
+    spingiQuinta(100);
+    const dopo = tonalita();
+    const rimandata = prossimaQuinta;   // il prossimo passo riparte da capo
+    const collezioneDopo = new Set(GRADI.map((g) => (dopo + g) % 12));
+    let comuni = 0;
+    for (const g of collezioneDopo) if (collezionePrima.has(g)) comuni++;
+
+    for (let k = 0; k < 11; k++) spingiQuinta(100);   // il giro si chiude
+    const chiuso = tonalita();
+    passiQuinta = passiPrima; prossimaQuinta = prossimaPrima;
+
+    R.tonalitaAMano = {
+      da: prima, a: dopo, dopoDodici: chiuso,
+      gradiComuni: comuni,
+      rimandaA: rimandata,
+    };
+    if (Math.abs(rimandata - (100 + PASSO_QUINTA)) > 1e-9) {
+      R.errori.push("una quinta a mano non rimanda il passo automatico: " + rimandata);
+    }
+    if (dopo !== (prima + 7) % 12) {
+      R.errori.push("una quinta a mano non è una quinta: da " + prima + " a " + dopo);
+    }
+    if (comuni !== 4) {
+      R.errori.push("una quinta a mano cambia " + (5 - comuni) + " note su cinque invece di una");
+    }
+    if (chiuso !== prima) {
+      R.errori.push("dodici quinte non chiudono il giro: " + prima + " → " + chiuso);
+    }
+  }
+
   return R;
 });
 

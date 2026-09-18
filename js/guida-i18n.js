@@ -157,6 +157,7 @@ const GUIDA = {
     "g.der.2": "Ogni 2′ 30″ esatti la collezione si sposta di una quinta. Fra una pentatonica e la sua quinta cambia una nota su cinque: quattro gradi su cinque restano validi in entrambe. Una tenuta destinata ad attraversare il passo viene intonata su un grado che sopravvive, così non resta fuori collezione mentre suona.",
     "g.der.3": "Il baricentro è il movimento continuo: le altezze restano ferme e a scorrere è il punto attorno a cui vengono scelte. Lo governano sei canali a rapporti irrazionali, quindi il pezzo non ripassa mai esattamente dove è già stato. La corsia in fondo alla sezione ne mostra quindici minuti; le colonne in ambra segnano i punti di inversione.",
     "g.der.4": "Il comando MATERIALE decide che cosa succede alle idee al passo di quinta.",
+    "g.der.5": "Con il MATERIALE di tutte e due le classi su «ancora», al centro del circolo delle quinte compare CAMBIA TONALITÀ: ogni clic sposta la collezione di una quinta in senso orario e rimanda di 2′ 30″ il passo automatico. Con una sola delle due classi in deriva il comando non compare. Il salto vale da subito e non protegge le tenute già in aria, che tengono la loro nota fino alla fine: la protezione del passo di quinta riguarda il passo previsto, non un salto deciso adesso.",
 
     "g.p.ancora": "Le idee restano quelle fissate dal mood: cambiano di altezza seguendo il campo, ma la sequenza resta la stessa.",
     "g.p.deriva": "Le idee si rigenerano a ogni passo di quinta.",
@@ -336,6 +337,7 @@ const GUIDA = {
     "g.der.2": "Toutes les 2′ 30″ exactement la collection se déplace d'une quinte. Entre une pentatonique et sa quinte une note sur cinq change : quatre degrés sur cinq restent valides des deux côtés. Une tenue destinée à traverser le pas est accordée sur un degré qui survit, pour ne pas rester hors collection pendant qu'elle sonne.",
     "g.der.3": "Le barycentre est le mouvement continu : les hauteurs restent en place et ce qui glisse est le point autour duquel elles sont choisies. Six canaux en rapports irrationnels le gouvernent, donc la pièce ne repasse jamais exactement où elle est déjà passée. La piste en bas de section en montre quinze minutes ; les colonnes en ambre marquent les points d'inversion.",
     "g.der.4": "La commande MATIÈRE décide de ce qui arrive aux idées au pas de quinte.",
+    "g.der.5": "Avec la MATIÈRE des deux classes sur « ancre », au centre du cycle des quintes apparaît CHANGER DE TONALITÉ : chaque clic déplace la collection d'une quinte dans le sens horaire et repousse de 2′ 30″ le pas automatique. Si une seule des deux classes dérive, la commande n'apparaît pas. Le saut vaut immédiatement et ne protège pas les tenues déjà en l'air, qui gardent leur note jusqu'au bout : la protection du pas de quinte concerne le pas prévu, non un saut décidé à l'instant.",
 
     "g.p.ancora": "Les idées restent celles qu'a fixées l'humeur : elles changent de hauteur en suivant le champ, mais la suite reste la même.",
     "g.p.deriva": "Les idées se régénèrent à chaque pas de quinte.",
@@ -508,6 +510,7 @@ const GUIDA = {
     "g.der.2": "Every 2′ 30″ exactly the collection moves by a fifth. Between a pentatonic and its fifth one note in five changes: four degrees out of five remain valid in both. A sustain due to cross the step is tuned to a degree that survives, so it does not sit outside the collection while sounding.",
     "g.der.3": "The centroid is the continuous motion: the pitches stay put and what glides is the point they are drawn around. Six channels at irrational ratios govern it, so the piece never passes exactly where it has already been. The lane at the foot of the section shows fifteen minutes of it; the amber columns mark the turning points.",
     "g.der.4": "The MATERIAL control decides what happens to the ideas at a fifth step.",
+    "g.der.5": "With the MATERIAL of both classes on “anchor”, CHANGE KEY appears at the centre of the circle of fifths: each click moves the collection one fifth clockwise and pushes the automatic step back by 2′ 30″. If either class is drifting, the control does not appear. The jump takes effect at once and does not protect holds already in the air, which keep their note to the end: the protection around the fifth step covers the expected step, not a jump decided now.",
 
     "g.p.ancora": "The ideas stay as the mood set them: they change pitch following the field, but the sequence stays the same.",
     "g.p.deriva": "The ideas are regenerated at every fifth step.",
@@ -680,6 +683,7 @@ const GUIDA = {
     "g.der.2": "正確に2′ 30″ごとに音組が五度動きます。ある五音音階とその五度上の音階では五音のうち一音だけが変わり、四つは両方に残ります。この切り替えをまたぐ持続音は、残るほうの度数に合わせて鳴らすので、鳴っている最中に音組から外れることがありません。",
     "g.der.3": "重心は連続的な動きです。音高そのものは動かず、音を選ぶ中心の位置が滑ります。無理数比の六系統がこれを支配するため、同じ場所を正確に二度通ることはありません。節の下端の帯が過去十五分を示し、琥珀色の列が折り返しの点です。",
     "g.der.4": "「素材」の操作子は、五度が進むときに楽想をどう扱うかを決めます。",
+    "g.der.5": "両方の種類の「素材」が錨のとき、五度圏の中心に「調を変える」が現れます。一度押すごとに集合は時計回りに五度動き、自動の歩みは2′ 30″先に延びます。どちらか一方でも漂流していれば、この操作は現れません。跳躍はその場で効き、すでに鳴っている持続音は守られません。持続音は最後まで自分の音を保ちます。五度の歩みの保護は、予定された歩みのためのもので、いま決めた跳躍のためのものではありません。",
 
     "g.p.ancora": "楽想は気分が定めたまま残ります。場に従って音高は変わりますが、並びは変わりません。",
     "g.p.deriva": "五度が進むたびに楽想を作り直します。",

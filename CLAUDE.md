@@ -222,6 +222,30 @@ goccia sta già scendendo quando il passo arriva, mentre un tenuto sta ancora
 aprendosi. Non dipende dal modo del materiale: «ancora» e «deriva» non c'entrano
 niente, il problema è una nota lunga che attraversa un cambio d'armonia.
 
+**CON TUTTI E DUE I MATERIALI SU «ANCORA» LA TONALITÀ SI SCEGLIE A MANO.** In
+quel modo il pezzo non rinnova più le idee, e la sola cosa che continua a
+cambiare sotto le dita è l'armonia: il centro del circolo delle quinte smette di
+essere un'etichetta e diventa un comando — CAMBIA TONALITÀ, una quinta ORARIA per
+clic. Basta che UNA delle due classi torni in deriva perché sparisca: una mano
+sul volante di una cosa che sta già guidando non è un comando, è un dubbio.
+
+Orario vuol dire sempre +1, non il passo sturmiano: il cammino che sale nel 61,8%
+dei casi è la DERIVA, e la mano non ci entra. Per la stessa ragione `spingiQuinta()`
+NON avanza `passoN` — il cammino automatico riprende da dove sarebbe andato,
+spostato di una quinta — mentre `passiQuinta` sì, perché conta le modulazioni
+avvenute e questa è avvenuta. E il prossimo passo SI RIMANDA di un giro intero:
+chi ha appena scelto una tonalità non se la vede cambiare fra dieci secondi.
+
+QUELLO CHE IL SALTO NON FA è proteggere le tenute già in aria: `altezzaCheResta()`
+guarda il passo PREVISTO, e un salto a mano previsto non è. Una tenuta lunga può
+restare fuori collezione finché finisce. È il prezzo di una modulazione decisa
+adesso, ed è dichiarato nella guida.
+
+L'etichetta e il tasto SI SCAMBIANO invece di stare uno sotto l'altro: sono la
+stessa riga sopra la nota, e due righe dove prima ce n'era una spingerebbero la
+nota fuori dal centro del cerchio. Il tasto si riprende i `pointer-events` che il
+centro cede al canvas che disegna sotto.
+
 **Un evento non contiene nessuna frequenza, contiene una POSIZIONE NEL CAMPO.**
 `rel` sta in −1÷1 e diventa un'altezza solo al momento della prenotazione, con
 `altezza()`, che legge il campo di quell'istante. È la ragione per cui un'idea
@@ -1390,7 +1414,10 @@ davvero lo spettro, che uno stadio di passa-tutto abbia **guadagno unitario**,
 che i due lati del riverbero stiano **pari**, che la coda **scenda** — che è
 il modo in cui una rete a retroazione sbaglia — che la compensazione dei
 tessuti sia **liscia** dove quella per conteggio di teste scatterebbe, che
-nessuna tenuta che attraversa un passo di quinta resti fuori collezione, e che i
+nessuna tenuta che attraversa un passo di quinta resti fuori collezione, che una
+quinta A MANO sia davvero una quinta — cambia una nota su cinque, rimanda il passo
+automatico, e dodici di fila chiudono il giro, che è anche il modo in cui quella
+prova rimette a posto quello che ha mosso — e che i
 sedici mood siano in regola: periodi coprimi dentro ogni serie, riallineamento
 sopra le 24 ore in tutte e 64 le combinazioni, ogni timbro una volta sola, e
 quattro accoppiate rese dal motore intero senza clippare. Sugli **inserti**
@@ -1637,7 +1664,8 @@ vetro per classe, il banco e la deriva su uno ciascuno, il resto sulla carta:
   quella dei tessuti, la manopola della sosta del random; sotto, i filetti;
 - **05 · deriva**: un pannello a sinistra, largo quanto la colonna delle gocce
   e il suo quadrante 
-  Dentro, il circolo delle quinte in cerchio con la tonalità al centro, l'arco
+  Dentro, il circolo delle quinte in cerchio con la tonalità al centro — che con
+  tutti e due i materiali su «ancora» diventa il tasto CAMBIA TONALITÀ —, l'arco
   delle note in uso e il punto di fase verso la prossima quinta; accanto le note
   scritte e le letture del tempo lungo; sotto, il baricentro su quindici minuti
   di passato;

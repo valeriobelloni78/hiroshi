@@ -780,6 +780,36 @@ const selTracce = tendina("tracce", Object.keys(TRACCE), nomeTracce, modoTracce,
   scriviFormato();
 });
 
+/* ---------------------------------------------------- 05 deriva · la tonalità
+   CON TUTTI E DUE I MATERIALI SU «ANCORA» LA TONALITÀ SI SCEGLIE. In quel modo
+   il pezzo non rinnova più le idee e l'unica cosa che continua a cambiare sotto
+   le dita è l'armonia: il centro del circolo smette di essere un'etichetta e
+   diventa un comando, una quinta oraria per clic. Basta che UNO dei due torni in
+   deriva perché sparisca — una mano sul volante di una cosa che sta già guidando
+   non è un comando, è un dubbio.
+
+   L'etichetta e il tasto si scambiano invece di stare uno sotto l'altro: sono la
+   stessa riga sopra la nota, e due righe dove prima ce n'era una sposterebbero
+   la nota giù dal centro del cerchio. */
+const btnTonalita = el("cambiaTonalita");
+function tonalitaAMano() {
+  return MODI.gocce === "ancora" && MODI.tessuti === "ancora";
+}
+function mostraCambioTonalita() {
+  const aMano = tonalitaAMano();
+  if (btnTonalita.hidden !== !aMano) {
+    btnTonalita.hidden = !aMano;
+    el("etTonalita").hidden = aMano;
+  }
+}
+btnTonalita.addEventListener("click", () => {
+  // Il tempo glielo passa chi lo conosce: `deriva.js` sta in cima alla catena e
+  // non ha mai visto un AudioContext. Senza motore acceso vale zero, che è
+  // esattamente dove sta la deriva prima del primo `passo()`.
+  spingiQuinta(typeof ctx !== "undefined" && ctx ? ctx.currentTime : 0);
+});
+mostraCambioTonalita();
+
 /* -------------------------------------------------------- 04 paesaggio · materia
    Le due porte da cui entra la materia: un file scelto a mano e il microfono.
    Da qui in poi sono la stessa cosa — un buffer con un nome — e il paesaggio
@@ -925,6 +955,7 @@ function battito() {
   el("quinteFatte").textContent = String(passiQuinta);
   el("prossima").textContent = minsec(Math.max(0, prossimaQuinta - t));
   el("tonalita").textContent = nomeNota(tonalita());
+  mostraCambioTonalita();
   // Le note in uso, dalla tonica in su nell'ordine della scala: sul circolo sono
   // un arco, qui si leggono. I nomi vengono da `nomeNota`, quindi dalla lingua.
   el("collezione").textContent = GRADI.map((g) => nomeNota((tonalita() + g) % 12)).join(" ");

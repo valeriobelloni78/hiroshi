@@ -474,8 +474,15 @@
           <div class="cella cerchio-quinte">
             <span class="et" data-i18n="et.circolo">CIRCOLO DELLE QUINTE</span>
             <div class="tela-quinte" data-quadro="quinte">
+              <!-- Col materiale di tutte e due le classi su «ancora» l'etichetta
+                   diventa un comando: la tonalità si sceglie invece di aspettarla,
+                   una quinta oraria per clic. Il centro ha pointer-events:none
+                   perché il canvas ci disegna sotto: il tasto se li riprende. -->
               <span class="centro-quinte">
-                <span class="et" data-i18n="et.tonalita">TONALITÀ</span>
+                <span class="et" id="etTonalita" data-i18n="et.tonalita">TONALITÀ</span>
+                <button type="button" class="tasto cambia-tonalita" id="cambiaTonalita"
+                        data-i18n="et.cambiaTonalita" data-i18n-aria="a11y.cambiaTonalita"
+                        hidden>CAMBIA TONALITÀ</button>
                 <span class="tonalita" id="tonalita">do</span>
               </span>
             </div>
