@@ -435,6 +435,23 @@ function avvia(now) {
    separate lo stesso, perché un mood deve poter scrivere il carattere senza
    spostare il missaggio, e viceversa. */
 const LIVELLI = { frasi: -4, tessuti: 0, paesaggio: -6, uscita: -0.9 };
+/* IL COMPRESSORE FINALE, e sta qui accanto ai livelli per la stessa ragione:
+   il banco di un rendering fuori tempo reale è un banco NUOVO, che nasce coi
+   valori d'esordio. Scritti solo nei nodi, un'esportazione uscirebbe con un
+   limitatore diverso da quello che si sta ascoltando. `tara()` li rilegge. */
+const LIMITE = { soglia: -1.5, rilascio: 250 };   // dB, millesimi
+
+/* LE DUE CORSE STANNO QUI, in un posto solo, perché le leggono in tre: la
+   manopola che scrive, la targa che mostra e il canvas che disegna il quadrato
+   dov'è la mano. Tre formule uguali in tre file divergerebbero al primo ritocco.
+
+   La SOGLIA è lineare in decibel, che è già la scala dell'orecchio: −50÷0 dB.
+   Il RILASCIO è esponenziale, 30÷1500 ms, perché fra trenta e sessanta
+   millesimi si sente la stessa differenza che fra settecento e millequattro. */
+const sogliaDi    = (v) => -50 + v * 0.5;
+const giroSoglia  = (dB) => (dB + 50) * 2;
+const rilascioDi  = (v) => 30 * Math.pow(50, v / 100);
+const giroRilascio = (ms) => 100 * Math.log(ms / 30) / Math.log(50);
 const EQ_DB = [0, 0, 0, 0, 0, 0, 0, 0];
 
 /* La taratura d'esordio dei canali. Sta in una funzione sola perché il motore
@@ -445,6 +462,7 @@ function tara() {
   banco.livello("frasi", LIVELLI.frasi);
   banco.livello("paesaggio", LIVELLI.paesaggio);
   EQ_DB.forEach((dB, i) => banco.banda(i, dB));
+  banco.limite(LIMITE.soglia, LIMITE.rilascio);
   ultimo.spazio = ultimo.colore = ultimo.livello = ultimo.tSpazio = -1;
   // Il banco è NUOVO e non ha nessun inserto montato: `quale` torna a null
   // perché la scelta va rifatta valere su questi nodi, non su quelli di prima.

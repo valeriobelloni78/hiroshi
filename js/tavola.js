@@ -1296,6 +1296,13 @@ function disegna() {
     }
   }
 
+  // LE DUE DEL LIMITATORE non hanno un efficace e non si spengono mai: sono
+  // decisioni di missaggio, come le aste del mixer, e fra la mano e il nodo non
+  // c'è nessuna deriva. Le due corse le sa `motore.js`, che è anche l'unico
+  // posto dove sono scritte: qui si legge la posizione, non si rifà il conto.
+  manopola(manopolaDi("soglia"),   giroSoglia(LIMITE.soglia) / 100);
+  manopola(manopolaDi("rilascio"), giroRilascio(LIMITE.rilascio) / 100);
+
   misuratoreLR(quadro("misuratore"), orologio);
   spettro(quadro("spettro"));
   zeroAste(quadro("aste"));

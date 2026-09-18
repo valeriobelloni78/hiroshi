@@ -165,10 +165,15 @@ const GUIDA = {
     "g.banco.t": "Banco",
     "g.banco.1": "Uscita dello studio. Ogni canale ha un normalizzatore scritto dalla sorgente — che compensa quante voci sono aperte — un cursore di livello e una mandata al riverbero comune, in quest'ordine: il riverbero riceve il segnale già compensato.",
     "g.banco.2": "L'equalizzatore ha otto bande a frequenza fissa, corsa ±8 dB. La curva disegnata sopra le aste è la risposta vera dei filtri, chiesta al grafo audio, non un'interpolazione delle posizioni.",
-    "g.banco.3": "La registrazione dal vivo cattura l'uscita del banco dopo il limitatore, con dentro i movimenti dei cursori: quello che si sente è quello che finisce nel file. Esce in wav 24 bit stereo alla frequenza del contesto audio, di solito 48 kHz, e si ferma da sé a quindici minuti.",
+    "g.banco.3": "La registrazione dal vivo cattura il banco mentre suona, con dentro i movimenti dei cursori: quello che si sente è quello che finisce nel file. Esce in wav 24 bit stereo alla frequenza del contesto audio, di solito 48 kHz.",
+    "g.banco.4": "La tendina TRACCE decide che cosa viene catturato. «mix» prende l'uscita dopo il limitatore, cioè il segnale che esce davvero, in un file solo. «sorgenti» apre una presa su ciascuno dei tre canali, dopo il suo cursore di livello e prima della somma: tre file. «sorgenti + stanza» aggiunge il ritorno del riverbero comune, che non appartiene a nessun canale perché la mandata è di tutti e tre; senza quella traccia il multitraccia suona più asciutto del mix. «tutto» aggiunge anche il mix come riferimento. I file di una seduta portano lo stesso nome con la data e il nome della traccia in fondo.",
+    "g.banco.5": "Sommando le tracce delle sorgenti e quella della stanza si ritrova l'uscita prima del colore d'insieme, dell'equalizzatore e del limitatore: quei tre stanno sulla somma e non sui canali. Il tetto è di memoria e non di minuti — la presa sta tutta in RAM, un quarto d'ora di stereo sono circa 350 MB — quindi i minuti si dividono per il numero di tracce: quindici per il file unico, cinque con tre tracce, tre e tre quarti con quattro, tre con cinque. Il tetto scritto sotto la tendina è quello che vale, e la registrazione si ferma da sé quando lo raggiunge. Il browser chiede il permesso di scaricare più file: è una domanda sola per seduta.",
 
     "g.p.eq":         "Otto bande: 20 Hz shelf, 50 · 100 · 500 · 1k · 5k · 10k campana, 18 kHz shelf.",
     "g.p.mixer":      "Livello dei tre canali e dell'uscita. Sul canale dei tessuti si somma in decibel al parametro Livello del modello.",
+    "g.p.soglia":   "Soglia del limitatore finale. Più bassa, più il limitatore lavora e più la dinamica si schiaccia. Rapporto 20:1 e attacco di 3 ms fissi.",
+    "g.p.rilascio": "Tempo con cui il limitatore lascia andare il guadagno dopo un picco. Corto rende il fondo denso, lungo lo lascia respirare.",
+    "g.p.tracce":   "Che cosa cattura la registrazione: il mix solo, le tre sorgenti una per file, con o senza il ritorno del riverbero, o tutto insieme.",
     "g.p.limitatore": "Due stadi in cascata sull'uscita. La lettura indica la riduzione di guadagno istantanea.",
     "g.p.picco":      "Picco del segnale d'uscita, con tenuta di 20 dB al secondo.",
     "g.p.registra":   "Presa dal vivo dall'uscita del banco. Il file esce in wav 24 bit stereo.",
@@ -181,6 +186,7 @@ const GUIDA = {
     /* 9 · influenze */
     "g.infl.t": "Influenze esterne",
     "g.infl.1": "Due grandezze prese dall'orologio di sistema modificano i valori efficaci senza toccare la posizione dei cursori. L'ora del giorno muove calore, spazio e colore d'insieme delle gocce; la stagione muove registro, apertura, chiusura e passo dei tessuti. La differenza fra la posizione del cursore e il valore efficace si legge confrontando il filetto in colonna con la corona attorno al quadrante.",
+    "g.infl.2": "Le stagioni sono quelle meteorologiche, cioè blocchi di tre mesi interi: inverno dicembre-febbraio, primavera marzo-maggio, estate giugno-agosto, autunno settembre-novembre. Il cambio scatta col primo giorno del mese e non agli equinozi o ai solstizi, quindi il 18 settembre lo strumento è già in autunno. Le fasce orarie sono sei: alba 5-8, mattino 8-12, pomeriggio 12-17, tramonto 17-20, sera 20-23, notturna 23-5.",
 
     /* 10 · tavola */
     "g.tav.t": "Lettura della tavola",
@@ -337,10 +343,15 @@ const GUIDA = {
     "g.banco.t": "Console",
     "g.banco.1": "Sortie du studio. Chaque voie a un normalisateur écrit par la source — qui compense le nombre de voix ouvertes — un curseur de niveau et un départ vers la réverbération commune, dans cet ordre : la réverbération reçoit le signal déjà compensé.",
     "g.banco.2": "L'égaliseur a huit bandes à fréquence fixe, course ±8 dB. La courbe tracée au-dessus des tirettes est la réponse réelle des filtres, demandée au graphe audio, non une interpolation des positions.",
-    "g.banco.3": "L'enregistrement en direct capte la sortie de la console après le limiteur, avec les mouvements des curseurs dedans : ce que l'on entend est ce qui finit dans le fichier. Il sort en wav 24 bits stéréo à la fréquence du contexte audio, en général 48 kHz, et s'arrête de lui-même à quinze minutes.",
+    "g.banco.3": "L'enregistrement en direct capte la console pendant qu'elle sonne, avec les mouvements des curseurs dedans : ce que l'on entend est ce qui finit dans le fichier. Il sort en wav 24 bits stéréo à la fréquence du contexte audio, en général 48 kHz.",
+    "g.banco.4": "Le menu PISTES décide de ce qui est capté. « mix » prend la sortie après le limiteur, c'est-à-dire le signal qui sort vraiment, en un seul fichier. « sources » ouvre une prise sur chacune des trois voies, après son curseur de niveau et avant la somme : trois fichiers. « sources + salle » ajoute le retour de la réverbération commune, qui n'appartient à aucune voie puisque le départ est celui des trois ; sans cette piste le multipiste sonne plus sec que le mix. « tout » ajoute encore le mix comme référence. Les fichiers d'une séance portent le même nom, avec la date et le nom de la piste à la fin.",
+    "g.banco.5": "En additionnant les pistes des sources et celle de la salle on retrouve la sortie avant la couleur d'ensemble, l'égaliseur et le limiteur : ces trois-là sont sur la somme et non sur les voies. Le plafond est celui de la mémoire et non des minutes — la prise tient entièrement en RAM, un quart d'heure de stéréo fait environ 350 Mo — donc les minutes se divisent par le nombre de pistes : quinze pour le fichier unique, cinq avec trois pistes, trois minutes quarante-cinq avec quatre, trois avec cinq. Le plafond écrit sous le menu est celui qui vaut, et l'enregistrement s'arrête de lui-même en l'atteignant. Le navigateur demande l'autorisation de télécharger plusieurs fichiers : une seule question par séance.",
 
     "g.p.eq":         "Huit bandes : 20 Hz shelf, 50 · 100 · 500 · 1k · 5k · 10k cloche, 18 kHz shelf.",
     "g.p.mixer":      "Niveau des trois voies et de la sortie. Sur la voie des tissus il s'ajoute en décibels au paramètre Niveau du modèle.",
+    "g.p.soglia":   "Seuil du limiteur final. Plus il est bas, plus le limiteur travaille et plus la dynamique s'écrase. Rapport 20:1 et attaque de 3 ms fixes.",
+    "g.p.rilascio": "Temps que met le limiteur à relâcher le gain après une crête. Court, le fond devient dense ; long, il respire.",
+    "g.p.tracce":   "Ce que l'enregistrement capte : le mix seul, les trois sources une par fichier, avec ou sans le retour de la réverbération, ou tout ensemble.",
     "g.p.limitatore": "Deux étages en cascade sur la sortie. La lecture indique la réduction de gain instantanée.",
     "g.p.picco":      "Crête du signal de sortie, avec maintien de 20 dB par seconde.",
     "g.p.registra":   "Prise en direct sur la sortie de la console. Le fichier sort en wav 24 bits stéréo.",
@@ -351,6 +362,7 @@ const GUIDA = {
 
     "g.infl.t": "Influences extérieures",
     "g.infl.1": "Deux grandeurs prises à l'horloge du système modifient les valeurs effectives sans toucher à la position des curseurs. L'heure du jour déplace chaleur, espace et couleur d'ensemble des gouttes ; la saison déplace registre, émergence, fondu et allure des tissus. L'écart entre la position du curseur et la valeur effective se lit en comparant le curseur en colonne avec la couronne autour du cadran.",
+    "g.infl.2": `Les saisons sont les saisons météorologiques, c'est-à-dire des blocs de trois mois entiers${NNBSP}: hiver décembre-février, printemps mars-mai, été juin-août, automne septembre-novembre. Le changement tombe le premier jour du mois et non aux équinoxes ni aux solstices, donc le 18 septembre l'instrument est déjà en automne. Les tranches horaires sont six${NNBSP}: aube 5-8, matin 8-12, après-midi 12-17, crépuscule 17-20, soir 20-23, nuit 23-5.`,
 
     "g.tav.t": "Lecture de la planche",
     "g.tav.1": "Chaque classe a un cadran avec quatre anneaux concentriques, un par ligne, numérotés en chiffres romains. Un point parcourt chaque anneau et indique la phase audible, non celle de l'ordonnanceur.",
@@ -503,10 +515,15 @@ const GUIDA = {
     "g.banco.t": "Desk",
     "g.banco.1": "Studio output. Each channel has a normaliser written by the source — compensating for how many voices are open — a level fader and a send to the shared reverb, in that order: the reverb receives the already compensated signal.",
     "g.banco.2": "The equaliser has eight fixed-frequency bands, ±8 dB range. The curve drawn above the faders is the real response of the filters, asked of the audio graph, not an interpolation of the fader positions.",
-    "g.banco.3": "Live recording captures the desk output after the limiter, with the fader moves in it: what you hear is what lands in the file. It comes out as 24-bit stereo wav at the audio context sample rate, usually 48 kHz, and stops by itself at fifteen minutes.",
+    "g.banco.3": "Live recording captures the desk as it sounds, with the fader moves in it: what you hear is what lands in the file. It comes out as 24-bit stereo wav at the audio context sample rate, usually 48 kHz.",
+    "g.banco.4": "The TRACKS menu decides what gets captured. “mix” takes the output after the limiter, that is the signal that actually leaves, in a single file. “sources” opens a tap on each of the three channels, after its level fader and before the sum: three files. “sources + room” adds the return of the shared reverb, which belongs to no single channel because the send is common to all three; without that track the multitrack sounds drier than the mix. “everything” adds the mix as a reference too. The files of one session share a name, with the date and the track name at the end.",
+    "g.banco.5": "Summing the source tracks and the room track gives back the output before ensemble colour, equaliser and limiter: those three sit on the sum, not on the channels. The cap is one of memory, not of minutes — the take is held entirely in RAM, and a quarter of an hour of stereo is about 350 MB — so the minutes divide by the number of tracks: fifteen for the single file, five with three tracks, three and three quarters with four, three with five. The cap written under the menu is the one that applies, and recording stops by itself when it is reached. The browser asks permission to download several files: one question per session.",
 
     "g.p.eq":         "Eight bands: 20 Hz shelf, 50 · 100 · 500 · 1k · 5k · 10k bell, 18 kHz shelf.",
     "g.p.mixer":      "Level of the three channels and of the output. On the weaves channel it adds in decibels to the model's Level parameter.",
+    "g.p.soglia":   "Threshold of the final limiter. The lower it is, the more the limiter works and the flatter the dynamics. Ratio 20:1 and 3 ms attack are fixed.",
+    "g.p.rilascio": "How long the limiter takes to let the gain go after a peak. Short makes the bed dense, long lets it breathe.",
+    "g.p.tracce":   "What the recording captures: the mix alone, the three sources one per file, with or without the reverb return, or all of it together.",
     "g.p.limitatore": "Two cascaded stages on the output. The readout gives instantaneous gain reduction.",
     "g.p.picco":      "Peak of the output signal, with a 20 dB per second hold.",
     "g.p.registra":   "Live capture from the desk output. The file comes out as 24-bit stereo wav.",
@@ -517,6 +534,7 @@ const GUIDA = {
 
     "g.infl.t": "External influences",
     "g.infl.1": "Two quantities taken from the system clock modify the effective values without moving the faders. The hour of day moves warmth, space and ensemble colour of the drops; the season moves register, surfacing, fading and pace of the weaves. The gap between fader position and effective value is read by comparing the fader in the column with the crown around the dial.",
+    "g.infl.2": "The seasons are the meteorological ones, that is whole three-month blocks: winter December-February, spring March-May, summer June-August, autumn September-November. The change falls on the first day of the month, not on the equinoxes or solstices, so on 18 September the instrument is already in autumn. There are six hour bands: dawn 5-8, morning 8-12, afternoon 12-17, sunset 17-20, evening 20-23, night 23-5.",
 
     "g.tav.t": "Reading the board",
     "g.tav.1": "Each class has a dial with four concentric rings, one per line, numbered in Roman numerals. A dot travels each ring and shows the audible phase, not the scheduler's.",
@@ -669,10 +687,15 @@ const GUIDA = {
     "g.banco.t": "卓",
     "g.banco.1": "工房の出口です。各系統は、音源が書き込む正規化器——開いている声の数を補正します——音量、共通残響への送りをこの順に持ちます。残響は補正後の信号を受け取ります。",
     "g.banco.2": "等化器は固定周波数の八帯域、可動範囲は±8 dBです。推子の上に描かれる曲線は推子の位置を補間したものではなく、音声グラフに問い合わせた濾波器の実際の応答です。",
-    "g.banco.3": "実時間の録音は、制限器の後ろにある卓の出力を、推子を動かした痕跡ごと捉えます。聞こえているものがそのままファイルに残ります。音声文脈の標本化周波数（多くは48 kHz）で、24ビット・ステレオのwavとして書き出し、十五分で自動的に止まります。",
+    "g.banco.3": "実時間の録音は、鳴っている卓をそのまま捉えます。操作子の動きも入ります。聞こえたものがそのまま file になります。書き出しは24ビット・ステレオのwavで、周波数は音声文脈のもの、普通は48 kHzです。",
+    "g.banco.4": "「トラック」の一覧が、何を録るかを決めます。「ミックス」はリミッターの後、つまり実際に出ている信号を一つのファイルに。「音源」は三つの系統それぞれに、音量の操作子の後・合計の前で口を開けます。ファイルは三つ。「音源＋残響」は共通の残響の戻りを加えます。送りは三系統に共通なので、この戻りはどの系統のものでもありません。これがないと多重録音は本体のミックスより乾いて聞こえます。「すべて」はさらにミックスを参照として加えます。一回のセッションのファイルは同じ名前を持ち、日付とトラック名が末尾に付きます。",
+    "g.banco.5": "音源のトラックと残響のトラックを足すと、全体の色・等化器・制限器より前の出力に戻ります。その三つは各系統ではなく合計にあるからです。上限は分ではなく記憶容量です。録音はすべてRAMに載り、ステレオ十五分でおよそ350 MB。ですから分数はトラック数で割られます。単一ファイルで十五分、三トラックで五分、四トラックで三分四十五秒、五トラックで三分。一覧の下に書かれた上限が有効で、達すると録音は自ら止まります。複数のファイルの保存には閲覧器が許可を求めます。一回のセッションにつき一度だけです。",
 
     "g.p.eq":         "八帯域：20 Hzシェルビング、50・100・500・1k・5k・10 kピーキング、18 kHzシェルビング。",
     "g.p.mixer":      "三系統と出力の音量。織りの系統では、模型側の「音量」にデシベルで加算されます。",
+    "g.p.soglia":   "最終段リミッターの閾値。低いほどリミッターが働き、強弱の幅は平らになります。比は20:1、アタックは3 msで固定です。",
+    "g.p.rilascio": "山を越えたあと、リミッターが利得を戻すまでの時間。短いと下地は密に、長いと呼吸します。",
+    "g.p.tracce":   "録音が捉えるもの。ミックスだけ、三つの音源を一つずつ、残響の戻りを足すかどうか、あるいはすべて。",
     "g.p.limitatore": "出力段の二段直列。表示は瞬時の利得減衰量です。",
     "g.p.picco":      "出力信号の尖頭値。毎秒20 dBで保持が下がります。",
     "g.p.registra":   "卓の出力からの実時間収録。24ビット・ステレオのwavで書き出します。",
@@ -683,6 +706,7 @@ const GUIDA = {
 
     "g.infl.t": "外からの影響",
     "g.infl.1": "系統時計から取った二つの量が、操作子の位置を動かさずに実効値を変えます。時刻はしずくの温かみ・空間・全体の色を、季節は織りの音域・立ち上がり・消えぎわ・速さを動かします。操作子の位置と実効値の差は、列の中の操作子と円盤を囲む円環を見比べれば読めます。",
+    "g.infl.2": "季節は気象学上の区分、つまり三か月ずつのまとまりです。冬は十二月から二月、春は三月から五月、夏は六月から八月、秋は九月から十一月。切り替わるのは月の初日で、分点や至点ではありません。ですから九月十八日でも本体はすでに秋です。時刻の帯は六つ、暁5〜8時、朝8〜12時、昼下がり12〜17時、夕暮れ17〜20時、宵20〜23時、夜半23〜5時です。",
 
     "g.tav.t": "画面の読み方",
     "g.tav.1": "各種類に円盤が一つあり、線ごとに同心の輪が四つ、ローマ数字で番号が振られます。各輪を点が回り、予定ではなく実際に聞こえている位相を示します。",

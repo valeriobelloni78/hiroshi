@@ -965,6 +965,14 @@ telefono modesto non ce la fa: ogni buffer mancato è un raschio. Qui non si
 risponde a nessun gesto in tempo reale, quindi il ritardo d'uscita non si
 percepisce. **Non rimetterlo com'era per «ridurre la latenza».**
 
+**Il `DynamicsCompressor` di Web Audio ALZA IL GUADAGNO mentre stringe.** Si
+porta dietro una compensazione che nessuno gli ha chiesto: abbassando la soglia
+da 0 a −24 dB il picco in uscita SALE — misurato, da 0,38 a 0,54 — invece di
+scendere. Una prova che pretendesse il contrario fallirebbe col limitatore
+perfettamente funzionante, e chi cerca il difetto lo cercherebbe dalla parte
+sbagliata. Quello che la compressione cambia davvero è il rapporto fra picco e
+valore efficace: 4,4 a soglia zero, 2,9 a −24, ed è quello che `prova.mjs` misura.
+
 **Una Karplus-Strong vera non si può fare con i nodi.** Un anello su un
 `DelayNode` non scende sotto un blocco di rendering — 128 campioni, 2,7 ms a
 48 kHz — e quel minimo fissa l'altezza massima attorno ai 375 Hz. Per questo
@@ -1017,7 +1025,45 @@ Spegnere non è una pausa e non è un muto: cicli e ricambio avanzano comunque, 
 riaccendendo si ritrova quello che sarebbe successo. L'uscita non ha il suo ON,
 perché spegnerla sarebbe la pausa, che sta già nella testata.
 
-**IL BANCO HA UNA SOLA USCITA: LA PRESA DAL VIVO.** Sotto la registrazione c'erano
+**LA REGISTRAZIONE HA QUATTRO MODI, E CAMBIA SOLO DOVE SI ATTACCA.** La tendina
+TRACCE, sotto i misuratori, sceglie fra il mix solo, le tre sorgenti, le tre più
+la stanza e tutto insieme. I punti li dice `puntoDi()` in `registratore.js`: il
+mix da `banco.uscita`, cioè DOPO il limitatore — registrare prima vorrebbe dire
+un file che clippa dove l'ascolto non clippava — e le sorgenti da `c.livello`,
+dopo il loro cursore e prima della somma.
+
+**LA STANZA HA UNA TRACCIA SUA, e non è una comodità.** Il riverbero del banco è
+una mandata comune ai tre canali — la stanza è una sola, ed è una regola — quindi
+la sua coda non appartiene a nessuna sorgente: senza quella traccia il
+multitraccia suonerebbe più asciutto del mix e chi lo apre altrove non saprebbe
+che cosa gli manca. Sommando sorgenti e stanza si ritrova l'uscita PRIMA di
+colore, equalizzatore e limitatore, che stanno sulla somma e non sui canali.
+
+**IL TETTO È DI MEMORIA, NON DI MINUTI.** La presa sta tutta in RAM — un quarto
+d'ora di stereo sono circa 350 MB — quindi `tettoSessione()` divide
+`SESSIONE_MAX` per il numero di tracce: 15′ per il file unico, 5′ per tre, 3′45″
+per quattro, 3′ per cinque. Un tetto uguale in tutti i modi sarebbe un gigabyte e
+mezzo, cioè una pagina che esaurisce la memoria proprio quando si ferma la
+registrazione. Il tetto sta scritto sotto la tendina, e a presa aperta la tendina
+è `disabled`: cambiarla a metà seduta darebbe tracce di lunghezze diverse. I
+salvataggi sono scaglionati di un quarto di secondo — cinque `click()` nello
+stesso istante il browser li prende per uno — e la prima volta chiede il permesso
+di scaricare più file.
+
+**IL LIMITATORE HA DUE MANOPOLE E NON QUATTRO.** Soglia e rilascio stanno sotto i
+misuratori, in `LIMITE` dentro `motore.js` accanto ai livelli del mixer e alle
+otto bande, e `tara()` le rilegge: un rendering fuori tempo reale nasce col
+limitatore che si sta ascoltando. Rapporto 20:1, ginocchio zero e attacco di tre
+millesimi restano fissi, perché quello che sta in fondo al banco è un limitatore
+e un limitatore col rapporto girevole diventa un'altra cosa. La soglia è lineare
+in decibel, −50÷0; il rilascio è esponenziale, 30÷1500 ms, perché fra trenta e
+sessanta millesimi si sente quello che si sente fra settecento e millequattro. Le
+due corse stanno in un posto solo — `sogliaDi`, `giroSoglia`, `rilascioDi`,
+`giroRilascio` — perché le leggono la manopola, la targa e il canvas. La manopola
+si chiama «Soglia» come il tenuto omonimo: quello è un nome proprio di timbro,
+questa è la parola tecnica, e sul banco non ce n'è un'altra.
+
+**IL BANCO NON ESPORTA FUORI TEMPO REALE.** Sotto la registrazione c'erano
 altre tre righe, e non ci sono più: «Traccia wav» con la sua durata del reso —
 l'esportazione fuori tempo reale —, «Tavola png» e «Scena · serve un seme».
 Quest'ultima era un posto che aspettava, e un posto che aspetta è una promessa,
@@ -1030,7 +1076,9 @@ se n'è andato con lui.
 **LA FREQUENZA DEL WAV NON SI SCRIVE A MANO.** La presa esce a 24 bit stereo alla
 frequenza del CONTESTO — 48 kHz quasi sempre, 44,1 su qualche macchina — e
 l'etichetta accanto a «Registra» la chiede a lui, con `scriviFormato()` in
-`comandi.js` e la chiave `banco.formato` che ha un buco per i kHz. Prima diceva
+`comandi.js` e la chiave `banco.formato` che ha un buco per i kHz. Il TETTO sta
+in una riga sua sotto la tendina, `banco.tetto`, e non sul tasto: dipende da
+quante tracce si registrano, e sul tasto faceva andare a capo il formato. Prima diceva
 «48 kHz» scritto nell'HTML, anche quando il file usciva a 44,1: una cifra
 sbagliata su un pannello vale meno di nessuna cifra.
 
@@ -1429,6 +1477,18 @@ tocca il modello, quindi non può rompere il suono. Quello che la difende è che
 un errore nel disegno si vede — e che `prova.mjs` fallisce se la pagina scrive
 un solo errore in console, il che comprende quelli della tavola.
 
+Sul **banco** verifica che le due manopole del limitatore mordano — soglia a
+−24 dB contro soglia a zero, misurando il rapporto fra picco e valore efficace e
+non il picco, per l'insidia del guadagno di compensazione — e che il rilascio
+lungo lasci uscire meno energia del corto. Sulle **tracce** manda un segnale nel
+solo canale delle frasi e misura che cosa arriva ai cinque punti di presa:
+tessuti e paesaggio devono restare muti, stanza e mix suonare. È il difetto che
+sarebbe muto — cinque tracce prese dallo stesso punto danno cinque copie del mix,
+e i file si aprono, durano quanto devono e suonano — quindi non si guarda dove le
+prese sono attaccate, si guarda che cosa ci passa. Si rende fuori tempo reale e
+non dal vivo: una presa in tempo reale dipenderebbe dal permesso di suonare che
+una pagina aperta senza un gesto non ha.
+
 **Il wav si verifica per ANDATA E RITORNO, non guardando l'intestazione.** I
 44 byte davanti non hanno nulla di negoziabile e, se un campo è sbagliato, il
 file non si apre e guardandolo non c'è modo di accorgersene. La prova scrive un
@@ -1512,8 +1572,8 @@ l'**esportazione deterministica**.
 Fatto anche il **paesaggio** (archivio dei materiali, cattura dal microfono,
 segmento scelto sull'onda, velo che distende senza trasporre, riverbero proprio)
 e il
-**registratore**: la presa dal vivo sull'uscita del banco, in wav a 24 bit
-stereo. Il rendering fuori tempo reale è nel motore e lo percorre solo la prova:
+**registratore**: la presa dal vivo in wav a 24 bit stereo, in un file solo o in
+multitraccia — le tre sorgenti, la stanza, il mix. Il rendering fuori tempo reale è nel motore e lo percorre solo la prova:
 il suo comando non c'è più (vedi la convenzione sull'uscita del banco). **IL
 MOTORE È COMPLETO.**
 
@@ -1540,7 +1600,9 @@ vetro per classe, il banco e la deriva su uno ciascuno, il resto sulla carta:
   colonna mostrano la mano. Sotto il cerchio, sullo stesso piano,
   le due manopole — registro e calore, registro e passo — e in un piano suo la
   tendina dell'**effetto** con le sue tre manopole;
-- **03 · banco**: registrazione con cronometro e misuratori a tessere,
+- **03 · banco**: registrazione con cronometro e misuratori a tessere, sotto di
+  loro la tendina delle **tracce** col suo tetto e le due manopole del
+  **limitatore** — soglia e rilascio —
   equalizzatore a otto aste con la curva vera sopra — chiesta ai filtri con
   `getFrequencyResponse` — e il mixer a quattro aste, con sotto le tre sorgenti
   il loro **ON**;

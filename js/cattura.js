@@ -294,9 +294,12 @@ function salvaFile(blob, nome) {
   setTimeout(() => URL.revokeObjectURL(url), 30000);
 }
 
-/* Un nome che si ordina da sé: hiroshi-2026-09-01-1543.wav */
-function nomeSessione(estensione) {
+/* Un nome che si ordina da sé: hiroshi-2026-09-01-1543.wav, e col suffisso di
+   una traccia hiroshi-2026-09-01-1543-tessuti.wav. La data sta davanti perché i
+   file di una seduta restino vicini in una cartella ordinata per nome. */
+function nomeSessione(estensione, suffisso) {
   const d = new Date(), due = (x) => String(x).padStart(2, "0");
   return "hiroshi-" + d.getFullYear() + "-" + due(d.getMonth() + 1) + "-" + due(d.getDate()) +
-         "-" + due(d.getHours()) + due(d.getMinutes()) + "." + estensione;
+         "-" + due(d.getHours()) + due(d.getMinutes()) +
+         (suffisso ? "-" + suffisso : "") + "." + estensione;
 }

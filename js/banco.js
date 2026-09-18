@@ -368,6 +368,13 @@ function costruisciBanco(ctx, nomiCanali) {
   return {
     canali, eq, uscita, compressore, riverbero, filtroColore: colore,
 
+    /* Il RITORNO DELLA STANZA, cioè il riverbero comune appena prima della
+       somma. Esce di qui per una ragione sola: la registrazione multitraccia.
+       La coda è di tutti e tre i canali insieme — la stanza è una sola, ed è
+       una regola, non un risparmio — quindi non appartiene a nessuna delle tre
+       tracce e ha bisogno della sua. */
+    ritornoStanza: ritorno,
+
     /* Il colore d'insieme, in hertz. Lo scrive l'ora del giorno. Costante di
        tempo lunga — mezzo secondo — perché non è un gesto ma una luce che
        cambia: uno scalino su una frequenza di taglio si sente come un clic. */
@@ -430,6 +437,20 @@ function costruisciBanco(ctx, nomiCanali) {
     parametriInserto(nome, valori, quando) {
       const c = canali[nome];
       if (c && c.inserto) c.inserto.scrivi(valori, quando, 1);
+    },
+
+    /* I DUE NUMERI DEL COMPRESSORE FINALE: la soglia in dB e il rilascio in
+       millesimi. Il rapporto, il ginocchio e l'attacco restano dove sono —
+       20:1, zero, tre millesimi — perché quello che sta in fondo al banco è un
+       limitatore, e un limitatore con un rapporto girevole diventa un'altra
+       cosa. La soglia dice quanto lavora, il rilascio come respira: su un fondo
+       lungo sono i due che si sentono. Costante di lisciamento corta, 0,05:
+       sono numeri che si muovono a mano e non devono scalinare, ma nemmeno
+       arrivare dopo la mano. */
+    limite(soglia, rilascioMs, quando) {
+      const t = quando === undefined ? ctx.currentTime : quando;
+      compressore.threshold.setTargetAtTime(clamp(soglia, -40, 0), t, 0.05);
+      compressore.release.setTargetAtTime(clamp(rilascioMs, 30, 1500) / 1000, t, 0.05);
     },
 
     /* Una banda dell'equalizzatore, in dB dentro la corsa dichiarata. */

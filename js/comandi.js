@@ -700,39 +700,85 @@ CANALI_MIXER.forEach((c) => {
 const btnPresa = el("presa");
 let orologioPresa = null;
 
+/* L'etichetta sotto il tasto: la frequenza vera del contesto — non una cifra
+   scritta a mano, che sarebbe sbagliata sulle macchine a 44,1 — e il tetto, che
+   dipende da quante tracce si stanno per registrare. */
 function scriviFormato() {
   const hz = (typeof ctx !== "undefined" && ctx) ? ctx.sampleRate : 48000;
   const k = hz / 1000;
   el("formato").textContent = dice("banco.formato", { khz: numero(k, k % 1 ? 1 : 0) });
+  el("tetto").textContent = dice("banco.tetto", { t: minsec(tettoSessione()) });
 }
 scriviFormato();
 
 btnPresa.addEventListener("click", async () => {
   if (stoRegistrando()) {
-    const buf = fermaPresa();
+    const tracce = fermaPresa();
     clearInterval(orologioPresa);
     btnPresa.setAttribute("aria-pressed", "false");
+    selTracce.disabled = false;
     el("etichettaPresa").textContent = dice("banco.registra");
-    el("formato").textContent = salvaComeWav(buf)
-      ? numero(buf.duration, 1) + " s salvati"
-      : "non è arrivato niente";
+    const quanti = salvaSessione(tracce);
+    const s = quanti ? numero(tracce[0].buffer.duration, 1) : 0;
+    el("formato").textContent =
+      !quanti      ? dice("banco.nulla")
+      : quanti > 1 ? dice("banco.salvatiN", { n: numero(quanti), s })
+                   : dice("banco.salvato", { s });
     return;
   }
   try {
     await avviaPresa();
     btnPresa.setAttribute("aria-pressed", "true");
+    // A presa aperta il modo non si cambia: le tracce nascono insieme, e una
+    // tendina girata a metà seduta darebbe file di lunghezze diverse.
+    selTracce.disabled = true;
     el("etichettaPresa").textContent = dice("banco.fermaSalva");
     scriviFormato();
+    const tetto = tettoSessione();
     orologioPresa = setInterval(() => {
       const s = secondiRegistrati();
       el("cronometro").textContent = mmss(s);
-      if (s >= SESSIONE_MAX - 0.5) btnPresa.click();     // il tetto si ferma da sé
+      if (s >= tetto - 0.5) btnPresa.click();            // il tetto si ferma da sé
     }, 200);
   } catch (e) {
+    selTracce.disabled = false;
     el("formato").textContent = dice("banco.presaNegata");
   }
 });
 
+
+/* ------------------------------------------------------- 03 banco · uscita
+   LE DUE MANOPOLE DEL LIMITATORE scrivono su `LIMITE`, che sta in `motore.js`
+   accanto ai livelli del mixer e alle otto bande: sono decisioni di missaggio,
+   non parametri del modello, quindi non passano da `GT` e non hanno niente da
+   lisciare — a lisciare è il banco, con la sua costante. È anche il motivo per
+   cui stanno lì: `tara()` le rilegge, e un rendering fuori tempo reale nasce
+   col limitatore che si sta ascoltando invece che con quello d'esordio. */
+function scriviLimite() {
+  if (typeof banco !== "undefined" && banco) banco.limite(LIMITE.soglia, LIMITE.rilascio);
+}
+cursore("soglia", "vSoglia", {
+  valore: sogliaDi,
+  scrivi: (v) => { LIMITE.soglia = sogliaDi(v); scriviLimite(); },
+  crudo:  () => giroSoglia(LIMITE.soglia),
+  testo:  (v) => dB(v) + " dB",
+});
+cursore("rilascio", "vRilascio", {
+  valore: rilascioDi,
+  scrivi: (v) => { LIMITE.rilascio = rilascioDi(v); scriviLimite(); },
+  crudo:  () => giroRilascio(LIMITE.rilascio),
+  testo:  (v) => numero(v) + " ms",
+});
+
+/* LA TENDINA DELLE TRACCE dice che cosa esce dalla registrazione: il mix solo,
+   o le sorgenti una per file. Cambiando modo cambia anche il tetto — la memoria
+   è quella, e cinque tracce durano un quinto — quindi si riscrive l'etichetta
+   accanto al tasto. Non si può cambiare a presa aperta, o le tracce nascerebbero
+   di lunghezze diverse: la tendina resta `disabled` finché si registra. */
+const selTracce = tendina("tracce", Object.keys(TRACCE), nomeTracce, modoTracce, (v) => {
+  modoTracce = v;
+  scriviFormato();
+});
 
 /* -------------------------------------------------------- 04 paesaggio · materia
    Le due porte da cui entra la materia: un file scelto a mano e il microfono.

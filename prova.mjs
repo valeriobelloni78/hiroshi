@@ -913,7 +913,133 @@ const esito = await p.evaluate(async () => {
     if (peggio > 1e-5) R.errori.push("il wav torna diverso da com'è andato: " + peggio.toExponential(2));
   }
 
-  /* 9 · L'ESPORTAZIONE NON DEVE TOCCARE LA SESSIONE.
+  /* 9 · IL LIMITATORE RISPONDE ALLE SUE DUE MANOPOLE.
+
+        I due numeri stanno in `LIMITE`, dentro `motore.js`, e `tara()` li
+        rilegge a ogni costruzione: un rendering fuori tempo reale nasce col
+        limitatore che si sta ascoltando. Qui si rende lo stesso pezzo con la
+        soglia in cima e in fondo alla corsa e si guarda il PICCO — non si
+        sottraggono due render, che è la misura sbagliata spiegata accanto agli
+        inserti: il modello sorteggia le idee mentre il render cammina.
+
+        NON SI GUARDA IL PICCO, e qui c'è un'insidia misurata: il
+        `DynamicsCompressor` di Web Audio ALZA IL GUADAGNO mentre stringe, cioè
+        si porta dietro una compensazione che nessuno gli ha chiesto. Abbassando
+        la soglia da 0 a −24 dB il picco in uscita SALE — misurato, da 0,38 a
+        0,54 — e una prova che pretendesse il contrario fallirebbe con il
+        limitatore perfettamente funzionante. Quello che la compressione cambia
+        davvero è il rapporto fra picco e valore efficace: la dinamica si
+        schiaccia, e quel rapporto scende.
+
+        La prova verifica anche sé stessa: se il limitatore fosse scollegato, o
+        se le manopole scrivessero nel vuoto, i due rapporti sarebbero lo stesso
+        numero e la prova cadrebbe. */
+  {
+    const soglia0 = LIMITE.soglia, rilascio0 = LIMITE.rilascio;
+    const cresta = (m) => +(m.picco / m.rms).toFixed(2);
+
+    LIMITE.soglia = 0;    LIMITE.rilascio = 250;
+    const aperto = misura(await rendiOffline(8));
+    LIMITE.soglia = -24;
+    const chiuso = misura(await rendiOffline(8));
+
+    // Il rilascio: a soglia bassa il limitatore lavora quasi sempre, e una coda
+    // lunga tiene il guadagno giù più a lungo — quindi meno energia in uscita.
+    LIMITE.rilascio = 30;
+    const corto = misura(await rendiOffline(8));
+    LIMITE.rilascio = 1500;
+    const lungo = misura(await rendiOffline(8));
+
+    LIMITE.soglia = soglia0; LIMITE.rilascio = rilascio0;
+
+    R.limitatore = {
+      crestaASoglia0:  cresta(aperto),
+      crestaASoglia24: cresta(chiuso),
+      rmsRilascio30:   corto.rms,
+      rmsRilascio1500: lungo.rms,
+    };
+    if (!(cresta(chiuso) < cresta(aperto) * 0.85)) {
+      R.errori.push("la soglia del limitatore non morde: cresta " + cresta(chiuso) +
+                    " a −24 dB contro " + cresta(aperto) + " a 0 dB");
+    }
+    if (!(lungo.rms < corto.rms)) {
+      R.errori.push("il rilascio del limitatore non cambia niente: rms " + lungo.rms +
+                    " a 1500 ms contro " + corto.rms + " a 30 ms");
+    }
+  }
+
+  /* 10 · IL MULTITRACCIA PRENDE DA CINQUE PUNTI DIVERSI.
+
+        Il difetto che questa prova cerca è uno solo e sarebbe muto: cinque
+        tracce prese tutte dallo stesso punto danno cinque copie del mix, e i
+        file si aprono, durano quanto devono e suonano — solo, non sono quello
+        che dicono di essere. Quindi non si guarda dove le prese sono attaccate:
+        si manda un segnale nel canale delle FRASI e basta, e si misura che cosa
+        arriva a ciascun punto. Tessuti e paesaggio devono restare muti; la
+        stanza deve suonare, perché la mandata è aperta; il mix anche.
+
+        Si rende fuori tempo reale, non dal vivo: una presa in tempo reale
+        dentro la prova dipenderebbe dal permesso di suonare che una pagina
+        aperta senza un gesto non ha. */
+  {
+    const sr = 48000;
+    const c = new OfflineAudioContext(10, sr, sr);   // cinque tracce, due canali l'una
+    const suo = costruisciBanco(c, ["frasi", "tessuti", "paesaggio"]);
+    suo.uscita.gain.value = 1;
+    suo.spazio("frasi", 1);                          // la stanza deve ricevere qualcosa
+
+    const osc = c.createOscillator();
+    osc.frequency.value = 220;
+    const peso = c.createGain(); peso.gain.value = 0.5;
+    osc.connect(peso); peso.connect(suo.canali.frasi.ingresso);
+    osc.start(0);
+
+    // `puntoDi()` guarda il banco vivo: gli si presta questo e glielo si rimette,
+    // come fa `rendiOffline` con tutto il resto.
+    const salvato = banco;
+    banco = suo;
+    const nomi = TRACCE.tutto;
+    const punti = nomi.map(puntoDi);
+    banco = salvato;
+
+    const unione = c.createChannelMerger(10);
+    punti.forEach((nodo, i) => {
+      const divide = c.createChannelSplitter(2);
+      nodo.connect(divide);
+      divide.connect(unione, 0, i * 2);
+      divide.connect(unione, 1, i * 2 + 1);
+    });
+    unione.connect(c.destination);
+
+    const reso = await c.startRendering();
+    const energia = {};
+    nomi.forEach((nome, i) => {
+      let somma = 0;
+      for (const canale of [i * 2, i * 2 + 1]) {
+        const d = reso.getChannelData(canale);
+        for (let k = 0; k < d.length; k++) somma += d[k] * d[k];
+      }
+      energia[nome] = +Math.sqrt(somma / (reso.length * 2)).toFixed(5);
+    });
+
+    R.tracce = {
+      tetti: { mix: tettoSessione("mix"), sorgenti: tettoSessione("sorgenti"),
+               stanza: tettoSessione("stanza"), tutto: tettoSessione("tutto") },
+      energia,
+    };
+    if (R.tracce.tetti.mix !== 900 || R.tracce.tetti.tutto !== 180) {
+      R.errori.push("il tetto delle tracce non si divide: " + JSON.stringify(R.tracce.tetti));
+    }
+    if (!(energia.frasi > 0.01)) R.errori.push("la traccia delle frasi è muta: " + energia.frasi);
+    if (!(energia.mix > 0.01))   R.errori.push("la traccia del mix è muta: " + energia.mix);
+    if (!(energia.stanza > 1e-4)) R.errori.push("la traccia della stanza è muta: " + energia.stanza);
+    if (energia.tessuti > 1e-6 || energia.paesaggio > 1e-6) {
+      R.errori.push("le tracce non sono separate: tessuti " + energia.tessuti +
+                    ", paesaggio " + energia.paesaggio);
+    }
+  }
+
+  /* 11 · L'ESPORTAZIONE NON DEVE TOCCARE LA SESSIONE.
 
         `rendiOffline` percorre lo stesso modello che sta suonando e riparte da
         zero: senza la fotografia, esportare mentre si ascolta riporterebbe

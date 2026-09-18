@@ -326,6 +326,37 @@
           </button>
           <div class="cronometro" id="cronometro">00:00</div>
           <div class="misuratore" data-quadro="misuratore"></div>
+
+          <!-- SOTTO I MISURATORI, quello che riguarda l'uscita e non il pezzo:
+               che cosa si porta via la registrazione, e i due numeri del
+               limitatore che sta in fondo alla catena. Il taglio li separa dal
+               tasto e dal cronometro, che sono il gesto. -->
+          <div class="taglio"></div>
+          <span class="et" data-i18n="et.tracce">TRACCE</span>
+          <label class="tendina piccola">
+            <select id="tracce"></select>
+          </label>
+          <!-- Il tetto sta QUI e non sul tasto: dipende da quante tracce si
+               registrano, e sul tasto faceva andare a capo la riga del formato. -->
+          <span class="misura" id="tetto">max 15′ 00″</span>
+
+          <span class="et" data-i18n="et.limitatore">LIMITATORE</span>
+          <div class="sotto-misuratore">
+            <div class="manopola piccola">
+              <div class="quadro" data-manopola="soglia">
+                <input id="soglia" type="range" min="0" max="100" step="1" value="97"
+                       data-i18n-aria="a11y.soglia">
+              </div>
+              <span class="fl" data-i18n="fl.soglia">Soglia</span><span class="vl" id="vSoglia">−1,5 dB</span>
+            </div>
+            <div class="manopola piccola">
+              <div class="quadro" data-manopola="rilascio">
+                <input id="rilascio" type="range" min="0" max="100" step="1" value="54"
+                       data-i18n-aria="a11y.rilascio">
+              </div>
+              <span class="fl" data-i18n="fl.rilascio">Rilascio</span><span class="vl" id="vRilascio">248 ms</span>
+            </div>
+          </div>
         </div>
 
         <div class="eq">

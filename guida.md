@@ -325,22 +325,34 @@ Uscita dello studio. Ogni canale ha un normalizzatore scritto dalla sorgente —
 L'equalizzatore ha otto bande a frequenza fissa, corsa ±8 dB. La curva disegnata sopra le aste è la risposta vera dei filtri, chiesta al grafo audio, non un'interpolazione delle posizioni.
 
 <!-- g.banco.3 -->
-La registrazione dal vivo cattura l'uscita del banco dopo il limitatore, con dentro i movimenti dei cursori: quello che si sente è quello che finisce nel file. Esce in wav 24 bit stereo alla frequenza del contesto audio, di solito 48 kHz, e si ferma da sé a quindici minuti.
+La registrazione dal vivo cattura il banco mentre suona, con dentro i movimenti dei cursori: quello che si sente è quello che finisce nel file. Esce in wav 24 bit stereo alla frequenza del contesto audio, di solito 48 kHz.
+
+<!-- g.banco.4 -->
+La tendina TRACCE decide che cosa viene catturato. «mix» prende l'uscita dopo il limitatore, cioè il segnale che esce davvero, in un file solo. «sorgenti» apre una presa su ciascuno dei tre canali, dopo il suo cursore di livello e prima della somma: tre file. «sorgenti + stanza» aggiunge il ritorno del riverbero comune, che non appartiene a nessun canale perché la mandata è di tutti e tre; senza quella traccia il multitraccia suona più asciutto del mix. «tutto» aggiunge anche il mix come riferimento. I file di una seduta portano lo stesso nome con la data e il nome della traccia in fondo.
+
+<!-- g.banco.5 -->
+Sommando le tracce delle sorgenti e quella della stanza si ritrova l'uscita prima del colore d'insieme, dell'equalizzatore e del limitatore: quei tre stanno sulla somma e non sui canali. Il tetto è di memoria e non di minuti — la presa sta tutta in RAM, un quarto d'ora di stereo sono circa 350 MB — quindi i minuti si dividono per il numero di tracce: quindici per il file unico, cinque con tre tracce, tre e tre quarti con quattro, tre con cinque. Il tetto scritto sotto la tendina è quello che vale, e la registrazione si ferma da sé quando lo raggiunge. Il browser chiede il permesso di scaricare più file: è una domanda sola per seduta.
 
 <!-- tabella
   intestazione: g.col.par | g.col.corsa | g.col.fun
   riga: et.mixer | a mano: corsa | g.p.mixer
   riga: et.profilo | a mano: corsa | g.p.eq
+  riga: fl.soglia | a mano: corsa | g.p.soglia
+  riga: fl.rilascio | a mano: corsa | g.p.rilascio
   riga: fl.limitatore | a mano: corsa | g.p.limitatore
   riga: fl.picco | a mano: corsa | g.p.picco
+  riga: et.tracce | a mano: corsa | g.p.tracce
   riga: banco.registra | a mano: corsa | g.p.registra
 -->
 | Parametro | Corsa | Funzione |
 |---|---|---|
 | MIXER | −24 – +6 dB | Livello dei tre canali e dell'uscita. Sul canale dei tessuti si somma in decibel al parametro Livello del modello. |
 | PROFILO | ±8 dB | Otto bande: 20 Hz shelf, 50 · 100 · 500 · 1k · 5k · 10k campana, 18 kHz shelf. |
+| Soglia | −50 – 0 dB | Soglia del limitatore finale. Più bassa, più il limitatore lavora e più la dinamica si schiaccia. Rapporto 20:1 e attacco di 3 ms fissi. |
+| Rilascio | 30 – 1500 ms | Tempo con cui il limitatore lascia andare il guadagno dopo un picco. Corto rende il fondo denso, lungo lo lascia respirare. |
 | Limitatore | dB | Due stadi in cascata sull'uscita. La lettura indica la riduzione di guadagno istantanea. |
 | Picco | dB | Picco del segnale d'uscita, con tenuta di 20 dB al secondo. |
+| TRACCE | — | Che cosa cattura la registrazione: il mix solo, le tre sorgenti una per file, con o senza il ritorno del riverbero, o tutto insieme. |
 | Registra | — | Presa dal vivo dall'uscita del banco. Il file esce in wav 24 bit stereo. |
 
 ---
@@ -480,6 +492,9 @@ Ogni timbro compare una volta sola per tabella: girando gli otto si attraversano
 
 <!-- g.infl.1 -->
 Due grandezze prese dall'orologio di sistema modificano i valori efficaci senza toccare la posizione dei cursori. L'ora del giorno muove calore, spazio e colore d'insieme delle gocce; la stagione muove registro, apertura, chiusura e passo dei tessuti. La differenza fra la posizione del cursore e il valore efficace si legge confrontando il filetto in colonna con la corona attorno al quadrante.
+
+<!-- g.infl.2 -->
+Le stagioni sono quelle meteorologiche, cioè blocchi di tre mesi interi: inverno dicembre-febbraio, primavera marzo-maggio, estate giugno-agosto, autunno settembre-novembre. Il cambio scatta col primo giorno del mese e non agli equinozi o ai solstizi, quindi il 18 settembre lo strumento è già in autunno. Le fasce orarie sono sei: alba 5-8, mattino 8-12, pomeriggio 12-17, tramonto 17-20, sera 20-23, notturna 23-5.
 
 ---
 
