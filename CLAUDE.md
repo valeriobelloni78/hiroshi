@@ -335,6 +335,38 @@ solida vale infinitamente più di una presa che non c'è. Misurato simulando il
 guasto: col worklet che esplode alla costruzione, la presa dal microfono esce
 lunga come quella buona.
 
+**`colori.md` È LA FONTE DELLE UNDICI PALETTE, e `colori.mjs` la riversa nel CSS.**
+Le tinte si scrivono lì, in tabelle che si leggono a occhio — un tema per
+intestazione, i sei pannelli in una tabella e i toni nell'altra — e `node colori.mjs`
+le porta in `css/style.css`. Il verso opposto, `node colori.mjs --leggi`, rifà il file
+dal CSS per chi ha ritoccato una tinta a mano.
+
+L'APP NON LEGGE QUEL FILE, e non è una mancanza: su `file://` il CORS blocca ogni
+richiesta, quindi un foglio di stile che andasse a prendersi i colori da un
+markdown lascerebbe la tavola senza palette proprio al doppio clic, che è il caso
+che questo progetto promette di reggere. È la stessa ragione per cui i dizionari
+sono oggetti JavaScript e non JSON caricati.
+
+NON RISCRIVE I BLOCCHI, cambia i valori dentro di loro. Nel CSS, accanto a ogni
+tinta, c'è il conto che l'ha decisa — i rapporti di contrasto, le misure fatte
+sullo schermo, le eccezioni — e un generatore che rifacesse i blocchi da capo
+butterebbe via la sola cosa che dai numeri non si ricava. Un token che nel blocco
+non c'era si appende in fondo, segnato `/* da colori.md */`.
+
+IL RETINO È UN COLORE TRAVESTITO DA IMMAGINE — la grana è un `url(data:image/svg+xml…)`
+e a cambiare da un tema all'altro è solo il `fill` del suo cerchietto — quindi nel
+file si mostra come colore e torna dentro l'url senza toccare il resto: ricopiare
+un svg in una tabella di palette è invitare a sbagliarlo.
+
+**L'ETICHETTA «default» DICE QUALE TEMA SI APRE.** Accanto al nome di un tema in
+`colori.md`, diventa `TEMA_ESORDIO` in `tema.js`: quando c'è comanda lei e il sistema
+non viene consultato — chi l'ha scritta ha già risposto a quella domanda — e
+quando non c'è si torna a chiedere `prefers-color-scheme` e a seguirlo finché
+nessuno sceglie a mano. Su più di un tema lo strumento si ferma invece di
+indovinare. In nessuno dei due casi si scrive niente sul disco di chi ascolta: il
+tema d'apertura sta nel codice, cioè in mano a chi pubblica, e la regola «la
+lingua si scrive sul disco, il tema no» resta intatta.
+
 **La palette è definita una volta sola**, nelle variabili CSS di
 `css/style.css`. Anche il canvas le legge da lì, al caricamento, con
 `getComputedStyle`. Non introdurre colori scritti direttamente nel JavaScript:

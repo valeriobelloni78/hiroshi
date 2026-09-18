@@ -24,9 +24,20 @@
    riga, undici parole in fila no; e una tendina è un `select` nativo, che la
    tastiera e un lettore di schermo conoscono già. I NOVE TEMI A COLORI — alba,
    meriggio, crepuscolo, primavera, mietitura, estate, autunno, novembre,
-   inverno — SI SCELGONO SOLO A MANO: il
-   sistema sa dire chiaro o scuro e nient'altro, quindi all'apertura e ai suoi
-   cambi si continua a chiedere solo quello. */
+   inverno — NON LI SA DIRE IL SISTEMA: sa dire chiaro o scuro e nient'altro.
+
+   E UNO PUÒ ESSERE IL TEMA D'APERTURA. `TEMA_ESORDIO` lo scrive `colori.mjs`
+   leggendo l'etichetta «default» in `colori.md`, che è la fonte di tutte le
+   palette. Quando c'è, comanda lui e il sistema non viene più consultato: chi
+   ha scritto «default» accanto a un tema ha già risposto alla domanda che si
+   farebbe al sistema. Quando è `null` — e di suo lo è — si torna a chiedere
+   `prefers-color-scheme` e a seguirlo finché nessuno sceglie a mano.
+
+   In nessuno dei due casi si scrive niente sul disco di chi ascolta: il tema
+   d'apertura sta nel codice, cioè nelle mani di chi pubblica, non in una
+   preferenza salvata nel browser di chi passa. */
+
+const TEMA_ESORDIO = null;   // lo scrive colori.mjs dall'etichetta «default»
 
 let SCELTA_TEMA = null;
 let temaAMano = false;
@@ -44,6 +55,7 @@ function avviaTema(idScelta) {
       scegliTema(SCELTA_TEMA.value);
     });
   }
+  if (TEMA_ESORDIO) { scegliTema(TEMA_ESORDIO); return; }
   const scuro = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)");
   scegliTema(scuro && scuro.matches ? "scuro" : "chiaro");
   if (scuro && scuro.addEventListener) {
