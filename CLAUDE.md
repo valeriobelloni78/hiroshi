@@ -277,6 +277,21 @@ carattere fuori dal Latin-1: basterebbe un accento in un commento dentro il
 processore. Il codice è in `preparaCattura()`, dentro `cattura.js`, e il
 registratore userà lo stesso.
 
+**UN WORKLET VIVE DENTRO IL SUO CONTESTO, e il segno che è caricato va tenuto PER
+CONTESTO.** `preparaCattura()` aveva un booleano solo: il primo contesto che
+caricava il modulo faceva credere a tutti gli altri di averlo già, e
+`new AudioWorkletNode(unAltroContesto, "cattura")` rispondeva `InvalidStateError`.
+A schermo diventava «cattura non riuscita» col microfono appena aperto e tutto il
+resto a posto — un guasto che si presenta come un permesso negato. Adesso i
+contesti che hanno il modulo stanno in una `WeakSet`.
+
+**E LA CATTURA HA UN RIPIEGO VERO.** Se il nodo del worklet non si costruisce, per
+qualunque ragione, `apriCattura()` non fallisce: passa allo `ScriptProcessor`, che
+è deprecato ma registra, e scrive un avviso in console. Una presa un po' meno
+solida vale infinitamente più di una presa che non c'è. Misurato simulando il
+guasto: col worklet che esplode alla costruzione, la presa dal microfono esce
+lunga come quella buona.
+
 **La palette è definita una volta sola**, nelle variabili CSS di
 `css/style.css`. Anche il canvas le legge da lì, al caricamento, con
 `getComputedStyle`. Non introdurre colori scritti direttamente nel JavaScript:

@@ -52,22 +52,30 @@ registerProcessor("cattura", Cattura);
    un carattere fuori dal Latin-1 e basterebbe un accento in un commento a
    farlo esplodere — cioè un difetto che aspetta il primo che scrive una parola
    in italiano dentro il processore. */
-let modulozzoCaricato = false;
+/* IL MODULO SI SEGNA PER CONTESTO, non con un interruttore solo. Un worklet vive
+   dentro il contesto in cui è stato caricato: con un booleano globale, il primo
+   contesto che lo carica faceva credere a tutti gli altri di averlo già, e la
+   costruzione del nodo falliva con un `InvalidStateError` — cioè «cattura non
+   riuscita» a schermo, con il microfono appena aperto e tutto il resto a posto. */
+const contestiColModulo = new WeakSet();
 async function preparaCattura(ctx) {
-  if (modulozzoCaricato || !ctx.audioWorklet) return modulozzoCaricato;
+  if (contestiColModulo.has(ctx)) return true;
+  if (!ctx.audioWorklet) return false;
   const strade = [
     "data:text/javascript," + encodeURIComponent(CODICE_CATTURA),
     URL.createObjectURL(new Blob([CODICE_CATTURA], { type: "text/javascript" })),
   ];
+  let fatto = false;
   for (const url of strade) {
     try {
       await ctx.audioWorklet.addModule(url);
-      modulozzoCaricato = true;
+      contestiColModulo.add(ctx);
+      fatto = true;
       break;
     } catch (e) { /* si prova la prossima */ }
   }
   try { URL.revokeObjectURL(strade[1]); } catch (e) {}
-  return modulozzoCaricato;
+  return fatto;
 }
 
 /* ------------------------------------------------------------- la cattura
@@ -111,14 +119,25 @@ async function apriCattura(ctx, sorgente, canali = 1, secondiMax = 90) {
     campioni += arrivo[0].length;
   };
 
-  let nodo;
+  /* DUE STRADE, E LA SECONDA È UN RIPIEGO VERO. Il worklet è la strada buona —
+     gira sul thread audio — ma se il modulo non c'è, o il nodo non si costruisce
+     per qualunque ragione, la cattura NON deve fallire: uno `ScriptProcessor`
+     registra lo stesso, e una presa un po' meno solida vale infinitamente più di
+     un «cattura non riuscita». */
+  let nodo = null;
   if (await preparaCattura(ctx)) {
-    nodo = new AudioWorkletNode(ctx, "cattura", {
-      numberOfInputs: 1, numberOfOutputs: 1,
-      channelCount: canali, channelCountMode: "explicit",
-    });
-    nodo.port.onmessage = (e) => raccogli(e.data);
-  } else {
+    try {
+      nodo = new AudioWorkletNode(ctx, "cattura", {
+        numberOfInputs: 1, numberOfOutputs: 1,
+        channelCount: canali, channelCountMode: "explicit",
+      });
+      nodo.port.onmessage = (e) => raccogli(e.data);
+    } catch (e) {
+      console.warn("cattura: il worklet non si costruisce, ripiego:", e && e.name, e && e.message);
+      nodo = null;
+    }
+  }
+  if (!nodo) {
     nodo = ctx.createScriptProcessor(4096, canali, canali);
     nodo.onaudioprocess = (e) => {
       const a = [];
