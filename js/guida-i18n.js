@@ -195,6 +195,7 @@ const GUIDA = {
     "g.tav.2": "Una goccia è una tacca radiale che attraversa l'anello: la sua lunghezza è il registro della nota. Una tenuta è un arco lungo quanto la nota resta in aria; è tenue quando è passata, a inchiostro pieno mentre suona.",
     "g.tav.3": "L'ambra segna quattro cose e non di più: quello che sta suonando adesso, ogni valore numerico, il punto in cui il baricentro ha invertito, e l'inizio di una sezione. Quando una goccia suona un filo la unisce al centro del quadrante; se due gocce di linee diverse cadono a meno di 0,18 s l'una dall'altra, un secondo filo unisce anche loro.",
     "g.tav.4": "La corona attorno al quadrante mostra i valori efficaci dei tre comandi dell'Insieme; i filetti nella colonna mostrano dove sta la mano. Fra i due c'è la deriva, l'ora e la stagione.",
+    "g.tav.5": "Nel pannello Deriva il circolo delle quinte ha due anelli. Su quello esterno stanno i dodici nomi, l'arco delle cinque note in uso e il tratteggio dove entrerà la nota del prossimo passo. Su quello interno due barrette dicono le toniche: in ambra, verso l'esterno, quella di adesso; in grigio, verso l'interno, quella del passo che verrà. Quanto manca al passo si legge in cifre alla voce Prossima.",
 
     /* 11 · specifiche */
     "g.spec.t": "Specifiche",
@@ -371,6 +372,7 @@ const GUIDA = {
     "g.tav.2": "Une goutte est un trait radial qui traverse l'anneau : sa longueur est le registre de la note. Une tenue est un arc aussi long que la note reste en l'air ; il est ténu quand elle est passée, à l'encre pleine pendant qu'elle sonne.",
     "g.tav.3": "L'ambre marque quatre choses et pas davantage : ce qui sonne maintenant, chaque valeur numérique, le point où le barycentre s'est inversé, et le début d'une section. Quand une goutte sonne, un fil la relie au centre du cadran ; si deux gouttes de lignes différentes tombent à moins de 0,18 s l'une de l'autre, un second fil les relie entre elles.",
     "g.tav.4": "La couronne autour du cadran montre les valeurs effectives des trois commandes de l'Ensemble ; les curseurs en colonne montrent où est la main. Entre les deux il y a la dérive, l'heure et la saison.",
+    "g.tav.5": "Dans le panneau Dérive, le cycle des quintes a deux anneaux. Sur l'extérieur se trouvent les douze noms, l'arc des cinq notes en usage et le pointillé là où entrera la note du prochain pas. Sur l'intérieur, deux barrettes donnent les toniques : en ambre, vers l'extérieur, celle de maintenant ; en gris, vers l'intérieur, celle du pas à venir. Le temps restant se lit en chiffres à la ligne Prochaine.",
 
     "g.spec.t": "Spécifications",
     "g.spec.1": "L'application ne fait aucune requête réseau : elle s'ouvre depuis un fichier local et fonctionne hors connexion. Les fichiers audio de l'utilisateur sont décodés dans le navigateur et ne quittent pas la machine.",
@@ -544,6 +546,7 @@ const GUIDA = {
     "g.tav.2": "A drop is a radial tick crossing the ring: its length is the register of the note. A sustain is an arc as long as the note stays up; faint once it has passed, full ink while it sounds.",
     "g.tav.3": "Amber marks four things and no more: what is sounding now, every numeric value, the point where the centroid turned, and the start of a section. When a drop sounds a thread joins it to the centre of the dial; if two drops on different lines fall less than 0.18 s apart, a second thread joins them to each other.",
     "g.tav.4": "The crown around the dial shows the effective values of the three Together controls; the faders in the column show where the hand is. Between the two sit the drift, the hour and the season.",
+    "g.tav.5": "In the Drift panel the circle of fifths has two rings. The outer one carries the twelve names, the arc of the five notes in use and the dashed mark where the next step's note will come in. On the inner one two bars give the tonics: in amber, growing outwards, the current one; in grey, growing inwards, the one of the step to come. How long is left is read as figures on the Next line.",
 
     "g.spec.t": "Specifications",
     "g.spec.1": "The application makes no network requests: it opens from a local file and works offline. The user's audio files are decoded in the browser and never leave the machine.",
@@ -717,6 +720,7 @@ const GUIDA = {
     "g.tav.2": "しずくは輪を横切る放射状の目盛りで、その長さが音の高さです。持続音は鳴っているあいだの長さの弧で、過ぎたものは淡く、鳴っているあいだは濃く描かれます。",
     "g.tav.3": "琥珀色が示すのは四つだけです。いま鳴っているもの、あらゆる数値、重心が折り返した点、そして節の始まり。しずくが鳴ると円盤の中心へ糸が伸び、異なる線のしずくが0.18秒以内に重なると、その二つを結ぶ二本目の糸が出ます。",
     "g.tav.4": "円盤を囲む円環は「全体」の三つの実効値を、列の中の操作子は手の位置を示します。その差が漂流と時刻と季節です。",
+    "g.tav.5": "漂流の枠では、五度圏が二重の輪になっています。外側には十二の名前、使われている五音の弧、そして次の歩みで入る音を示す破線。内側では二本の短い線が主音を示します。琥珀色で外へ伸びるのが今の調、灰色で内へ伸びるのが次の歩みの調です。歩みまでの残りは「次」の数字で読めます。",
 
     "g.spec.t": "仕様",
     "g.spec.1": "本体は通信を一切行いません。ローカルのファイルから開き、接続がなくても動きます。利用者の音声ファイルはブラウザ内で復号され、機械の外に出ることはありません。",

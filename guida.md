@@ -516,6 +516,9 @@ L'ambra segna quattro cose e non di più: quello che sta suonando adesso, ogni v
 <!-- g.tav.4 -->
 La corona attorno al quadrante mostra i valori efficaci dei tre comandi dell'Insieme; i filetti nella colonna mostrano dove sta la mano. Fra i due c'è la deriva, l'ora e la stagione.
 
+<!-- g.tav.5 -->
+Nel pannello Deriva il circolo delle quinte ha due anelli. Su quello esterno stanno i dodici nomi, l'arco delle cinque note in uso e il tratteggio dove entrerà la nota del prossimo passo. Su quello interno due barrette dicono le toniche: in ambra, verso l'esterno, quella di adesso; in grigio, verso l'interno, quella del passo che verrà. Quanto manca al passo si legge in cifre alla voce Prossima.
+
 ---
 
 <!-- g.spec.t -->

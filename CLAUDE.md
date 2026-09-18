@@ -622,10 +622,11 @@ carta, l'accento non dice una grandezza: dice *qui*. Sono quattro famiglie e
 non una in più:
 
 - ADESSO, e sta sul canvas: la goccia scattata nell'ultimo mezzo secondo, la
-  tenuta entrata per ultima, il punto di fase — sugli anelli, sul circolo delle quinte, sull'ora del
+  tenuta entrata per ultima, il punto di fase — sugli anelli e sull'ora del
   cerchio delle influenze —, i fili che le
   legano al mirino, il
-  legame fra due gocce cadute insieme, e LA FINESTRA CHE IL PAESAGGIO STA
+  legame fra due gocce cadute insieme, LA TONICA DI ADESSO sull'anello interno del
+  circolo delle quinte, e LA FINESTRA CHE IL PAESAGGIO STA
   LEGGENDO, larga quanto il velo: è l'adesso di quella sorgente, come una goccia
   è l'adesso della sua. Sta in ambra VELATA, `VELO_ALFA` 0,45 in `tavola.js`,
   perché sotto deve restare visibile il materiale su cui si sceglie il segmento:
@@ -740,13 +741,30 @@ una nota, dall'altro ne entra una, ed è il tratteggio in fondo all'arco. Il ver
 lo sa `tonalitaFra(1)`, che legge la stessa parola sturmiana dello scatto vero:
 se si sale entra la nota dopo l'ultima, se si scende quella prima della tonica.
 
-Il PUNTO IN AMBRA cammina dalla tonica verso la meta nei centocinquanta secondi
-del passo, contati sullo stesso `ctx.currentTime` della lettura «prossima»: è un
-punto di fase come quelli degli anelli, quindi ADESSO, e non una famiglia nuova
-dell'ambra. Tonica e meta restano inchiostro — sono dove si è e dove si va, non un
-istante — e le note in uso scritte accanto sono parole, quindi inchiostro anche
-loro. La TONALITÀ AL CENTRO è testo vero steso sopra il disegno, come i cursori
-sopra le manopole: si traduce e un lettore di schermo la trova.
+**E HA DUE ANELLI, come il cerchio delle influenze.** Fuori stanno le NOTE — i
+dodici nomi, le tacche e l'arco della collezione col suo tratteggio —, dentro
+stanno le TONICHE: una barretta in AMBRA sulla tonalità di adesso, che cresce
+dall'anello verso FUORI, e una in grigio muto su quella del prossimo passo, che
+cresce verso DENTRO. I due versi opposti sono quello che le tiene distinte a colpo
+d'occhio: sono due istanti dello stesso cammino, e due segni che crescessero dalla
+stessa parte si conterebbero come uno lungo il doppio. Le dodici posizioni tornano
+sull'anello interno come taccine brevi: senza una scala sotto, una barretta dice
+«da qualche parte».
+
+LA BARRETTA DI FUORI NON ARRIVA all'anello grande. Toccandolo diventerebbe un
+raggio fra i due cerchi, cioè un legame fra la tonica e la collezione: vero, ma
+già detto dall'arco, e un secondo modo di dire la stessa cosa è il modo in cui un
+disegno comincia a mentire.
+
+L'AMBRA SULLA TONICA È ADESSO, la prima delle quattro famiglie. Prima la tonica
+era inchiostro e l'ambra era un PUNTO DI FASE che camminava verso la meta nei
+centocinquanta secondi del passo; il punto se n'è andato con l'anello nuovo,
+perché nei primi secondi dopo un passo stava addosso alla barretta e si leggeva
+come la sua capocchia invece che come un cammino. Quanto manca resta in cifre
+nella lettura «prossima», che è dove un tempo si legge davvero. Le note in uso
+scritte accanto sono parole, quindi inchiostro. La TONALITÀ AL CENTRO è testo vero
+steso sopra il disegno, come i cursori sopra le manopole: si traduce, un lettore
+di schermo la trova, e con tutti e due i materiali su «ancora» diventa un tasto.
 
 **LA DERIVA A SINISTRA, LE INFLUENZE A DESTRA, a specchio.** I due pannelli in
 fondo occupano le stesse colonne delle due classi — la deriva sotto le gocce, le

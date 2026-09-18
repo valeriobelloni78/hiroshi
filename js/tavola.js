@@ -1009,22 +1009,39 @@ function fasciaPaesaggio(box, ora) {
    `deriva.js` — e `tonalitaFra(1)` lo sa già: se si sale entra la nota dopo
    l'ultima, se si scende quella prima della tonica.
 
-   IL PUNTO IN AMBRA È UN PUNTO DI FASE: cammina dalla tonica verso quella di
-   dopo nei centocinquanta secondi del passo, come il punto che percorre un
-   anello. È ADESSO, la prima delle quattro famiglie dell'ambra, e non una
-   famiglia nuova. La tonica e la meta restano inchiostro, come sulla striscia:
-   sono dove si è e dove si va, non un istante. */
-function circoloQuinte(box, ora) {
+   DUE ANELLI CONCENTRICI, come il cerchio delle influenze. FUORI stanno le note
+   — i dodici nomi, le tacche e l'arco della collezione —, DENTRO stanno le due
+   toniche: una barretta in AMBRA sulla tonalità di adesso, che dall'anello
+   cresce verso FUORI, e una in grigio muto su quella del prossimo passo, che
+   cresce verso DENTRO. I due versi opposti sono quello che le tiene distinte a
+   colpo d'occhio: sono due istanti dello stesso cammino, e due segni che
+   crescessero dalla stessa parte si conterebbero come uno lungo il doppio.
+
+   La barretta di fuori NON ARRIVA all'anello grande. Toccandolo diventerebbe un
+   raggio che unisce i due cerchi, cioè un legame fra la tonica e la collezione:
+   vero, ma già detto dall'arco, e un secondo modo di dire la stessa cosa è il
+   modo in cui un disegno comincia a mentire.
+
+   L'AMBRA SULLA TONICA È ADESSO, la prima delle quattro famiglie. Prima la
+   tonica era inchiostro e l'ambra era un punto che camminava verso la meta; il
+   punto se n'è andato con l'anello nuovo, perché nei primi secondi dopo un passo
+   stava addosso alla barretta e si leggeva come la sua capocchia. Quanto manca
+   resta scritto in cifre nella lettura «prossima», che è dove un tempo si legge
+   davvero. */
+function circoloQuinte(box) {
   if (!box) return;
   const cx = box.cx, cy = box.cy;
   const R = Math.min(box.w, box.h) / 2 - 17;          // fuori, lo spazio dei nomi
+  const r = R * 0.78;                                 // dentro, l'anello delle toniche
   const qui = CIRCOLO.indexOf(tonalita());
   const poi = CIRCOLO.indexOf(tonalitaFra(1));
   const verso = ((poi - qui + 12) % 12) === 1 ? 1 : -1;
   const entra = ((verso > 0 ? qui + 5 : qui - 1) + 12) % 12;
   const giro = (k) => k / 12;
+  const vano = R - r;                                 // lo spazio fra i due anelli
 
   cerchio(cx, cy, R, 1, tinta("filo"));
+  cerchio(cx, cy, r, 1, tinta("filo"));
 
   // Le cinque in uso: la barra della corona, da poco prima della prima tacca a
   // poco dopo l'ultima, così si legge «queste cinque» e non «da qui a qui».
@@ -1042,20 +1059,31 @@ function circoloQuinte(box, ora) {
     const tonica = k === qui, meta = k === poi;
     const a = ang(giro(k));
     tacca(cx, cy, giro(k), R - (tonica ? 9 : 4), R, 1, tinta(tonica ? "inchiostro" : "filo"));
+    // Le dodici posizioni tornano anche sull'anello di dentro, brevi: le due
+    // barrette dicono DOVE, e senza una scala sotto direbbero «da qualche parte».
+    tacca(cx, cy, giro(k), r, r + 3, 1, tinta("filo-2"));
     scritta(nomeNota(CIRCOLO[k]), cx + Math.cos(a) * (R + 11), cy + Math.sin(a) * (R + 11), {
       dim: tonica ? 10 : 8.5, sans: true, sp: 0.2, all: "center", base: "middle",
       col: tonica ? "inchiostro" : meta ? "inchiostro-2" : inUso ? "grigio" : "muto",
     });
   }
-  quadrettoSuGiro(cx, cy, R - 14, giro(poi), 4, tinta("muto"), 0);
 
-  // Il punto di fase, dalla tonica verso la meta al passo del passo di quinta.
-  const fatto = clamp(1 - (prossimaQuinta - ora) / PASSO_QUINTA, 0, 1);
-  const p = ang(giro(qui + verso * fatto));
-  T.fillStyle = tinta("ambra");
-  T.beginPath();
-  T.arc(cx + Math.cos(p) * R, cy + Math.sin(p) * R, Math.max(2, R * 0.03), 0, RADIANTI);
-  T.fill();
+  // LE DUE BARRETTE DELL'ANELLO INTERNO, e crescono in versi opposti: la tonica
+  // di ADESSO va dall'anello verso FUORI, la prossima verso DENTRO. Non è
+  // decorazione: sono due istanti diversi dello stesso cammino, e due segni che
+  // crescessero dalla stessa parte si conterebbero come uno lungo il doppio.
+  // Quella di fuori NON ARRIVA all'anello grande — si ferma a metà del vano, a
+  // buona distanza dall'arco delle note in uso — o si leggerebbe come un raggio
+  // che unisce i due cerchi, cioè come un legame fra la tonica e la collezione,
+  // che è vero ma è già detto dall'arco.
+  tacca(cx, cy, giro(qui), r, r + vano * 0.62, Math.max(2.2, R * 0.034), tinta("ambra"));
+  tacca(cx, cy, giro(poi), r - vano * 0.52, r, Math.max(2, R * 0.028), tinta("muto"));
+
+  // IL PUNTO DI FASE SE N'È ANDATO CON LE DUE BARRETTE. Camminava sull'anello
+  // dalla tonica verso la meta, e per i primi secondi dopo un passo stava
+  // addosso alla barretta della tonica: si leggeva come la sua capocchia, non
+  // come un cammino. Quanto manca resta scritto in cifre nella lettura
+  // «prossima», che è il posto dove un tempo si legge davvero.
 }
 /* ------------------------------------------------------------ ora e stagione
    Il cerchio del tempo che non è musica: fuori le ventiquattro ore, dentro i
@@ -1307,7 +1335,7 @@ function disegna() {
   spettro(quadro("spettro"));
   zeroAste(quadro("aste"));
   fasciaPaesaggio(quadro("paesaggio"), ora);
-  circoloQuinte(quadro("quinte"), ora);
+  circoloQuinte(quadro("quinte"));
   cerchioInfluenze(quadro("influenze"));
   fasciaBaricentro(quadro("baricentro"), ora);
 }
