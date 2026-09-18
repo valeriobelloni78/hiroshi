@@ -173,14 +173,50 @@ async function apriCattura(ctx, sorgente, canali = 1, secondiMax = 90) {
 
 /* Il microfono. `echoCancellation` e compagnia vanno SPENTE: sono tarate per
    la voce al telefono e su un field recording tolgono proprio ciò che si è
-   andati a registrare — il fondo, la stanza, il riverbero del posto. */
+   andati a registrare — il fondo, la stanza, il riverbero del posto.
+
+   LA SESSIONE AUDIO VA CHIESTA PRIMA, e senza questo Safari non registra. WebKit
+   tiene una `navigator.audioSession` con una categoria, e una pagina che sta
+   suonando la mette su «playback»: da lì `getUserMedia` risponde
+   `InvalidStateError` — «AudioSession category is not compatible with audio
+   capture» — che NON è un permesso negato, ma gli somiglia abbastanza da mandare
+   fuori strada. Si chiede «play-and-record», cioè suonare e registrare insieme,
+   che è esattamente quello che fa questo studio: il paesaggio continua mentre il
+   microfono raccoglie.
+
+   E SI RIMETTE COM'ERA quando la presa finisce. Su iPhone e iPad «play-and-record»
+   abbassa l'uscita e la manda all'auricolare: lasciarla accesa vorrebbe dire uno
+   strumento che dopo una registrazione suona piano, e nessuno collegherebbe le due
+   cose. Dove `audioSession` non esiste — Chrome, Firefox — non si tocca niente. */
+let sessionePrima = null;
+
 async function apriMicrofono() {
+  try {
+    if (navigator.audioSession && navigator.audioSession.type !== "play-and-record") {
+      sessionePrima = navigator.audioSession.type;
+      navigator.audioSession.type = "play-and-record";
+    }
+  } catch (e) { /* una categoria che non si può scrivere non è un motivo per fermarsi */ }
   return navigator.mediaDevices.getUserMedia({
     audio: {
       echoCancellation: false, noiseSuppression: false,
       autoGainControl: false, channelCount: 1,
     },
   });
+}
+
+/* Chiude il microfono: ferma le tracce — la spia del sistema si spegne — e
+   rimette la sessione audio dov'era. Sta qui e non nei comandi perché è il
+   contrario esatto di `apriMicrofono()`, e due pezzi che si annullano stanno
+   vicini. */
+function chiudiMicrofono(flusso) {
+  if (flusso) flusso.getTracks().forEach((t) => t.stop());
+  try {
+    if (navigator.audioSession && sessionePrima !== null) {
+      navigator.audioSession.type = sessionePrima;
+      sessionePrima = null;
+    }
+  } catch (e) {}
 }
 
 /* ================================================================== il wav

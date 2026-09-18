@@ -187,12 +187,13 @@ fondo e la stanza — senza farsi sentire mentre registra; premuto di nuovo, la
 presa diventa una materia nuova, «microfono N», scelta subito come sorgente. Al
 tetto di `MICROFONO_MAX`, novanta secondi, si ferma da sé, come la registrazione
 del banco: prima smetteva di raccogliere in silenzio mentre il tasto diceva
-ancora «Ferma». Prima OGNI errore diventava «microfono negato», e cinque guasti
-diversi si riparano in cinque posti diversi: `erroreMicrofono()` in `comandi.js`
+ancora «Ferma». Prima OGNI errore diventava «microfono negato», e sei guasti
+diversi si riparano in sei posti diversi: `erroreMicrofono()` in `comandi.js`
 li separa per nome — permesso rifiutato (`NotAllowedError`, dal browser o dal
 sistema), nessun microfono (`NotFoundError`), microfono occupato da un'altra
 applicazione (`NotReadableError`), microfono non disponibile in questa pagina
-(niente `navigator.mediaDevices`, `NotSupportedError`), e ogni altro guasto come
+(niente `navigator.mediaDevices`, `NotSupportedError`), sessione audio non pronta
+(`InvalidStateError`, la categoria di WebKit qui sotto), e ogni altro guasto come
 «cattura non riuscita». L'errore vero va anche in console, come avviso e non come
 errore, perché la prova fallisce su un errore in console. E se il guasto arriva
 DOPO che il flusso si è aperto, le tracce si fermano: altrimenti il microfono
@@ -284,6 +285,24 @@ caricava il modulo faceva credere a tutti gli altri di averlo già, e
 A schermo diventava «cattura non riuscita» col microfono appena aperto e tutto il
 resto a posto — un guasto che si presenta come un permesso negato. Adesso i
 contesti che hanno il modulo stanno in una `WeakSet`.
+
+**SAFARI NON REGISTRA MENTRE SUONA, se prima non glielo si chiede.** WebKit tiene
+una sessione audio con una CATEGORIA, `navigator.audioSession.type`, e un
+AudioContext che sta suonando la mette su «playback»: da lì `getUserMedia`
+risponde `InvalidStateError` — «AudioSession category is not compatible with audio
+capture» — che a schermo diventava «cattura non riuscita» e che somiglia
+abbastanza a un permesso negato da far cercare il guasto dalla parte sbagliata.
+Non c'entra il `latencyHint: "playback"` del contesto e non si ripara toccandolo
+(quella regola resta). `apriMicrofono()` chiede «play-and-record» PRIMA della
+richiesta, cioè suonare e registrare insieme, che è esattamente quello che fa
+questo studio: il paesaggio continua mentre il microfono raccoglie.
+
+E LA CATEGORIA SI RIMETTE COM'ERA quando la presa finisce, in `chiudiMicrofono()`,
+che sta accanto al suo contrario e non nei comandi. Su iPhone e iPad
+«play-and-record» abbassa l'uscita e la manda all'auricolare: lasciarla accesa
+vorrebbe dire uno strumento che dopo una registrazione suona piano, e nessuno
+collegherebbe le due cose. Dove `audioSession` non esiste — Chrome, Firefox — non
+si tocca niente, e la prova lo verifica in tutti e due i casi.
 
 **E LA CATTURA HA UN RIPIEGO VERO.** Se il nodo del worklet non si costruisce, per
 qualunque ragione, `apriCattura()` non fallisce: passa allo `ScriptProcessor`, che

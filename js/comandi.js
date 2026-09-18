@@ -810,6 +810,7 @@ let presa = null, flusso = null, orologioMic = null;
 function erroreMicrofono(err) {
   const nome = err && err.name;
   if (!navigator.mediaDevices || nome === "NotSupportedError" || nome === "TypeError") return "pae.micNonQui";
+  if (nome === "InvalidStateError") return "pae.micSessione";
   if (nome === "NotAllowedError" || nome === "SecurityError") return "pae.negato";
   if (nome === "NotFoundError" || nome === "OverconstrainedError") return "pae.micAssente";
   if (nome === "NotReadableError" || nome === "AbortError") return "pae.micOccupato";
@@ -820,7 +821,7 @@ btnReg.addEventListener("click", async () => {
     const buf = presa.chiudi();
     presa = null;
     clearInterval(orologioMic);
-    if (flusso) { flusso.getTracks().forEach((t) => t.stop()); flusso = null; }
+    chiudiMicrofono(flusso); flusso = null;
     btnReg.setAttribute("aria-pressed", "false");
     el("etichettaRegistra").textContent = dice("pae.microfono");
     if (buf && buf.length) {
@@ -851,7 +852,7 @@ btnReg.addEventListener("click", async () => {
     el("cattura").textContent = dice(erroreMicrofono(err));
     // Se il flusso si era aperto e il guasto è venuto dopo, il microfono va
     // chiuso: altrimenti resterebbe acceso, con la sua spia, senza registrare.
-    if (flusso) flusso.getTracks().forEach((t) => t.stop());
+    chiudiMicrofono(flusso);
     presa = null; flusso = null;
   }
 });
