@@ -879,15 +879,33 @@ input[type=range]:focus-visible{outline:1px solid var(--ambra);outline-offset:3p
 /* L'equalizzatore: lo spettro sopra, le otto aste sotto. Le aste sono cursori
    nativi messi in verticale — `writing-mode` e non una rotazione, perché una
    rotazione lascia il rettangolo del fuoco dov'era. */
+/* LE TRE COLONNE DEL BANCO FINISCONO ALLA STESSA ALTEZZA, e a deciderla è la
+   registrazione: è la colonna col contenuto fisso — tasto, cronometro,
+   misuratori, tracce, limitatore — mentre l'equalizzatore e il mixer hanno aste,
+   e un'asta è un cursore, cioè una cosa che sta bene lunga quanto le si dà.
+   Quando la registrazione è cresciuta, le altre due sono rimaste corte e sotto è
+   apparso il vuoto; adesso le aste sono ALTE QUANTO SERVE A RIEMPIRLO — 160 px le
+   otto dell'equalizzatore sotto uno spettro passato da 84 a 100, 196 px le
+   quattro del mixer — e i tre fondi cadono sullo stesso pixel.
+
+   SONO MISURE SCRITTE, e non un `flex:1` che se le prenda da sé: provato, e non
+   funziona. Le colonne stanno in una griglia le cui righe si misurano sul
+   contenuto, quindi un figlio che cresce per riempire la riga fa crescere la
+   riga — misurato, la colonna passava da 278 a 1310 px, cioè il banco si
+   allungava fino a mangiare la pagina. Chi cambia l'altezza della colonna di
+   sinistra rifaccia i conti qui, e li verifichi col righello: in giapponese la
+   registrazione è due pixel più alta, ed è tutto lo scarto che resta.
+   Il canvas non c'entra: legge i riquadri, e disegna dove li trova. */
 .eq{display:flex;flex-direction:column}
-.spettro{width:100%;height:84px}
+.spettro{width:100%;height:100px}
 .scala-eq{display:grid;grid-template-columns:repeat(8,1fr);height:14px;align-items:center}
 .scala-eq span{font-family:var(--mono);font-size:7.5px;letter-spacing:.06em;color:var(--grigio);
                text-align:center}
-.aste{display:grid;grid-template-columns:repeat(8,1fr);height:90px;align-items:center;
+.aste{display:grid;grid-template-columns:repeat(8,1fr);height:164px;align-items:center;
       justify-items:center;position:relative}
-.asta{position:relative;height:90px;display:flex;align-items:center;justify-content:center}
+.asta{position:relative;height:164px;display:flex;align-items:center;justify-content:center}
 input[type=range].verticale{writing-mode:vertical-rl;direction:rtl;width:14px;height:86px}
+.aste input[type=range].verticale{height:160px}
 input[type=range].verticale::-webkit-slider-runnable-track{
   width:1px;height:100%;background:var(--filo-2)}
 input[type=range].verticale::-webkit-slider-thumb{width:9px;height:7px;margin-top:0;margin-left:-4px}
@@ -895,14 +913,18 @@ input[type=range].verticale::-moz-range-track{width:1px;background:var(--filo-2)
 input[type=range].verticale::-moz-range-thumb{width:9px;height:7px}
 
 .mixer{display:flex;flex-direction:column;gap:12px}
-.faders{display:grid;grid-template-columns:repeat(5,1fr);justify-items:center;gap:0}
-.faders input[type=range].verticale{height:128px}
-.fader{display:flex;flex-direction:column;align-items:center;gap:6px}
+/* Quattro colonne e non cinque: il quinto posto era delle VOCI, e quando se ne
+   sono andate è rimasto vuoto — le quattro aste stavano spinte a sinistra e
+   l'ultimo quinto della colonna era aria. Con quattro, ciascuna ha dieci pixel
+   in più e le etichette non si toccano. */
+.faders{display:grid;grid-template-columns:repeat(4,1fr);justify-items:center;gap:0}
+.faders input[type=range].verticale{height:196px}
+.fader{display:flex;flex-direction:column;align-items:center;gap:8px}
 .fader .fl{font-size:7px;letter-spacing:.10em}
 .fader .vl{font-size:7.5px}
 /* L'ON di una sorgente sotto il suo canale: lo stesso tasto del muto di una
    linea, premuto quando la sorgente è accesa. */
-.fader .tasto{margin-top:3px;padding:3px 7px}
+.fader .tasto{margin-top:5px;padding:3px 7px}
 
 /* --------------------------------------------------------------- il paesaggio
    La fascia porta sopra due cursori nativi trasparenti: l'inizio del segmento

@@ -1050,6 +1050,23 @@ salvataggi sono scaglionati di un quarto di secondo — cinque `click()` nello
 stesso istante il browser li prende per uno — e la prima volta chiede il permesso
 di scaricare più file.
 
+**LE TRE COLONNE DEL BANCO FINISCONO ALLA STESSA ALTEZZA, e a deciderla è la
+registrazione.** È la colonna col contenuto fisso; l'equalizzatore e il mixer
+hanno aste, e un'asta sta bene lunga quanto le si dà. Cresciuta la registrazione
+— tracce e limitatore — le altre due sono state allungate fino a chiudere alla
+stessa riga: spettro da 84 a 100, le otto aste dell'equalizzatore a 160, le
+quattro del mixer a 196, con un filo d'aria in più fra le etichette e il tasto ON.
+Sono MISURE SCRITTE e non un `flex:1`: la griglia del banco misura le righe sul
+contenuto, quindi un figlio che cresce per riempire la riga fa crescere la riga —
+misurato, la colonna passava da 278 a 1310 px. Chi tocca la colonna di sinistra
+rifaccia i conti col righello.
+
+E IL MIXER HA QUATTRO COLONNE, non cinque. Il quinto posto era delle VOCI, e
+quando se ne sono andate è rimasto vuoto: le quattro aste stavano spinte a
+sinistra e l'ultimo quinto della colonna era aria. Con quattro, ciascuna ha dieci
+pixel in più e le etichette non si toccano più. Se un giorno le voci tornano,
+questo è uno dei posti che tornano a cinque.
+
 **IL LIMITATORE HA DUE MANOPOLE E NON QUATTRO.** Soglia e rilascio stanno sotto i
 misuratori, in `LIMITE` dentro `motore.js` accanto ai livelli del mixer e alle
 otto bande, e `tara()` le rilegge: un rendering fuori tempo reale nasce col
