@@ -266,7 +266,7 @@ strumento cambia i valori, non riscrive i blocchi.
 | cifre sull'ambra | --su-ambra | var(--inchiostro) |
 | grana della carta | --retino | #3b3834 |
 
-## inverno
+## inverno «default»
 
 | pannello | token | colore |
 |---|---|---|
