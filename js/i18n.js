@@ -14,10 +14,9 @@
    «Hollow» e non «Cable».
 
    LE FRASI STANNO INTERE NEL DIZIONARIO, non si compongono concatenando pezzi.
-   La riga di stato dell'italiano — «in ascolto · tonalità do · gocce Vetro» —
-   in giapponese mette il genitivo dopo il nome e cambia l'ordine: nessuna
-   concatenazione può prevederlo, e infatti `piede.stato` è una frase sola con
-   dentro i buchi.
+   «Durata del giro, linea 3» in giapponese diventa «線3の一周の長さ»: il numero
+   passa davanti e il genitivo si attacca al nome. Nessuna concatenazione può
+   prevederlo, e infatti `a11y.durataGiro` è una frase sola con dentro il buco.
 
    I NUMERI PASSANO DA `Intl`, e i formattatori si costruiscono UNA VOLTA per
    lingua. Prima `numero()` scriveva la virgola a mano — `toFixed().replace(".",
@@ -162,11 +161,6 @@ const TESTI = {
     "pae.micGuasto":      "cattura non riuscita",
     "pae.nessunaMateria": "nessuna materia: carica un suono, o apri il microfono",
 
-    "piede.inAscolto": "in ascolto",
-    "piede.fermo":     "fermo",
-    "piede.stato":     "{stato} · tonalità {nota} · gocce {timbro} · tessuti {tenuto} · {ora} · {stagione}",
-    "piede.aMano":     "a mano: {elenco}",
-    "piede.legenda":   "la lunghezza è il registro, l'arco la durata; in ambra i numeri e quello che suona adesso",
     "foot.credits":    "questo è un progetto open source ideato da Valerio Belloni",
 
     "a11y.durataGiro":  "Durata del giro, linea {n}",
@@ -329,11 +323,6 @@ const TESTI = {
     "pae.micGuasto":      "capture échouée",
     "pae.nessunaMateria": "aucune matière : chargez un son, ou ouvrez le microphone",
 
-    "piede.inAscolto": `à l'écoute`,
-    "piede.fermo":     `à l'arrêt`,
-    "piede.stato":     "{stato} · tonalité {nota} · gouttes {timbro} · tissus {tenuto} · {ora} · {stagione}",
-    "piede.aMano":     `à la main${NNBSP}: {elenco}`,
-    "piede.legenda":   `la longueur est le registre, l'arc la durée${NNBSP}; en ambre les nombres et ce qui sonne maintenant`,
     "foot.credits":    "ce projet libre est une idée de Valerio Belloni",
 
     "a11y.durataGiro":  "Durée du tour, ligne {n}",
@@ -496,11 +485,6 @@ const TESTI = {
     "pae.micGuasto":      "capture failed",
     "pae.nessunaMateria": "no material: load a sound, or open the microphone",
 
-    "piede.inAscolto": "playing",
-    "piede.fermo":     "stopped",
-    "piede.stato":     "{stato} · key {nota} · drops {timbro} · weaves {tenuto} · {ora} · {stagione}",
-    "piede.aMano":     "by hand: {elenco}",
-    "piede.legenda":   "length is the register, the arc is the duration; in amber the numbers and what is sounding now",
     "foot.credits":    "this is an open source project by Valerio Belloni",
 
     "a11y.durataGiro":  "Cycle length, line {n}",
@@ -663,11 +647,6 @@ const TESTI = {
     "pae.micGuasto":      "録音できませんでした",
     "pae.nessunaMateria": "素材がありません。音を読み込むか、マイクを開いてください",
 
-    "piede.inAscolto": "再生中",
-    "piede.fermo":     "停止中",
-    "piede.stato":     "{stato} · {nota}調 · しずく{timbro} · 織り{tenuto} · {ora} · {stagione}",
-    "piede.aMano":     "手で動かした：{elenco}",
-    "piede.legenda":   "長さは音域、弧は持続。琥珀色は数値と、いま鳴っているもの",
     "foot.credits":    "Valerio Belloniによる、オープンソースの企画です。",
 
     "a11y.durataGiro":  "線{n}の一周の長さ",

@@ -117,7 +117,7 @@ function cursore(id, targaId, def) {
     targa.textContent = def.testo(def.valore(Number(input.value)));
     input.style.setProperty("--u", frazione(input).toFixed(4));
   };
-  const scrivi = () => { def.scrivi(Number(input.value)); mostra(); segnaMano(input); };
+  const scrivi = () => { def.scrivi(Number(input.value)); mostra(); };
   input.addEventListener("input", scrivi);
   const voce = { input, def, mostra };
   CURSORI.push(voce);
@@ -166,26 +166,6 @@ costruisciSelettoreLingua(el("lingue"));
 applicaTesti();
 didascaliaDeriva();
 avviaTema("tema");
-
-/* «A mano»: gli ultimi filetti che qualcuno ha mosso, in fondo al foglio. Una
-   tavola che si muove da sé per tre quarti ha bisogno di dire quale quarto è
-   stato deciso, e questa riga è tutta la differenza fra «sta derivando» e
-   «l'ho messo io lì». Il nome lo prende dall'etichetta che sta sopra al
-   cursore, quindi non c'è una seconda lista di nomi da tenere in pari. */
-const MANI = [];
-function segnaMano(input) {
-  // Il nome sta accanto al filetto o sotto la manopola: si cerca in tutti e due
-  // i posti, o le due manopole di ogni classe non finirebbero mai in questa
-  // riga — e sono proprio quelle che si girano di più.
-  const cassa = input.closest(".filetto, .manopola");
-  const et = cassa && cassa.querySelector(".fl");
-  if (!et) return;
-  const nome = et.textContent.trim().toLowerCase();
-  const k = MANI.indexOf(nome);
-  if (k >= 0) MANI.splice(k, 1);
-  MANI.unshift(nome);
-  if (MANI.length > 3) MANI.pop();
-}
 
 /* Rimette i cursori dove il modello li ha messi. Serve dopo un mood, che è
    l'unico gesto che scrive su tutto in una volta. */
@@ -371,7 +351,6 @@ function maniglia(id) {
   const scrivi = () => {
     G[chiaveG] = GT[chiaveG] = Number(input.value);
     input.style.setProperty("--u", frazione(input).toFixed(4));
-    segnaMano(input);
   };
   input.addEventListener("input", scrivi);
   CURSORI.push({ input, def: { crudo: () => G[chiaveG], testo: () => "" },
@@ -919,20 +898,6 @@ function battito() {
      scala. Il fattore è lo stesso che usa `altezza()`. */
   el("vBaricentro").textContent = (deriva.centro >= 0 ? "+" : "") +
     numero(deriva.centro * AMPIEZZA_CENTRO, 1);
-
-  el("piedeMano").textContent = MANI.length
-    ? dice("piede.aMano", { elenco: MANI.join(", ") })
-    : dice("piede.legenda");
-
-  el("piedeStato").textContent =
-    dice("piede.stato", {
-      stato:    dice(running ? "piede.inAscolto" : "piede.fermo"),
-      nota:     nomeNota(tonalita()),
-      timbro:   nomeTimbro(timbroFrasi),
-      tenuto:   nomeTenuto(timbroTessuti),
-      ora:      nomeOra(tavolozzaOraria(oraCorrente()).nome),
-      stagione: nomeStagione(tavolozzaStagionale(meseCorrente()).nome),
-    });
 
   setTimeout(battito, 33);
 }

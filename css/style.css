@@ -988,7 +988,13 @@ input[type=range].verticale::-moz-range-thumb{width:9px;height:7px}
    «pomeriggio» a ventisei pixel non ci starebbe. */
 .nome-tempo{font-size:15px;font-weight:300;letter-spacing:.02em;line-height:1}
 
-/* --------------------------------------------------------------------- il piede */
+/* --------------------------------------------------------------------- il piede
+   NELLO STRUMENTO IL PIEDE È SOLO ARIA: ventisei pixel, cioè quanto era alto —
+   dodici di respiro sopra la riga e quattordici di testo — più i sedici di
+   margine che aveva. Le regole qui sotto restano perché il piede della GUIDA le
+   usa: lì porta il ritorno allo strumento e il codice su GitHub. */
+.piede-vuoto{height:26px;margin-top:16px}
+
 .piede{display:flex;align-items:baseline;justify-content:space-between;gap:20px;
        margin-top:16px;padding-top:12px;border-top:1px solid var(--filo);
        font-family:var(--mono);font-size:8px;letter-spacing:.16em;text-transform:uppercase;

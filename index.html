@@ -516,10 +516,12 @@
       </div>
     </section>
 
-    <footer class="piede">
-      <span id="piedeStato" data-i18n="piede.fermo">fermo</span>
-      <span id="piedeMano" data-i18n="piede.legenda">la lunghezza è il registro, l'arco la durata; in ambra i numeri e quello che suona adesso</span>
-    </footer>
+    <!-- Il piede portava lo stato, la tonalità, i due timbri, l'ora e la stagione
+         da una parte e «a mano» dall'altra, ed è rimasto solo come ARIA: sotto
+         l'ultima sezione resta il vuoto che quelle due righe lasciavano, così la
+         firma sta dov'era. Un contenitore vuoto e non un `footer`: un landmark
+         senza niente dentro un lettore di schermo lo annuncia lo stesso. -->
+    <div class="piede-vuoto"></div>
 
     <!-- La firma, la stessa di Rada, Rada 2 e Nuvole. L'indirizzo non è un
          collegamento, ed è voluto: un mailto: che contenga "[at]" aprirebbe una

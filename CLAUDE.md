@@ -784,10 +784,10 @@ scegliere, sta vicino a QUELLO CHE IL SUONO FA e non alla parola italiana:
 «Cavo» è un tenuto che pronuncia una vocale lentissima, quindi in inglese è
 *Hollow* e non *Cable*.
 
-**Le frasi stanno intere nel dizionario.** La riga di stato — «in ascolto ·
-tonalità do · gocce Vetro» — in giapponese cambia l'ordine e attacca il
-genitivo al nome: nessuna concatenazione può prevederlo, e infatti
-`piede.stato` è una frase sola con dentro i buchi. Lo stesso vale per le unità:
+**Le frasi stanno intere nel dizionario.** «Durata del giro, linea 3» in
+giapponese diventa «線3の一周の長さ»: il numero passa davanti e il genitivo si
+attacca al nome. Nessuna concatenazione può prevederlo, e infatti
+`a11y.durataGiro` è una frase sola con dentro il buco. Lo stesso vale per le unità:
 `unita.ott` è «{n} ott» e «{n}オクターブ», perché fra la cifra e l'unità il
 giapponese non mette spazio e una concatenazione con lo spazio dentro non
 saprebbe toglierlo.
@@ -993,7 +993,18 @@ muta all'apertura: è già successo, dividendo il file in moduli.
 ## Convenzioni
 
 **Le etichette dei comandi descrivono l'azione, non lo stato** («Pausa», non
-«In ascolto»). Lo stato lo racconta la riga in alto e il punto che pulsa.
+«In ascolto»). Lo stato lo raccontano il tasto stesso, che premuto si riempie
+d'inchiostro, e la sua spia.
+
+**IL PIEDE È RIMASTO SOLO COME ARIA.** Portava lo stato con la tonalità, i due
+timbri, l'ora e la stagione da una parte, e «a mano» — gli ultimi tre filetti
+mossi — dall'altra. Tolto il testo, il vuoto resta: `.piede-vuoto`, ventisei
+pixel più i sedici di margine, cioè esattamente quello che quelle due righe
+occupavano, così la firma non sale. Non è un `footer` vuoto, che un lettore di
+schermo annuncerebbe lo stesso. Con le righe se ne sono andati `MANI` e
+`segnaMano()` — raccogliere nomi che nessuno legge è peggio che non raccoglierli
+— e le cinque chiavi `piede.*`. Le regole CSS `.piede` restano perché le usa il
+piede della GUIDA, dove ci sono il ritorno allo strumento e il codice su GitHub.
 
 **L'ACCENSIONE DI UNA SORGENTE STA SOTTO IL SUO CANALE DEL MIXER**: un tasto ON
 sotto le aste di frasi, tessuti e paesaggio, e non più una spunta nella testata.
@@ -1555,9 +1566,6 @@ vetro per classe, il banco e la deriva su uno ciascuno, il resto sulla carta:
   le ventiquattro ore fuori e i dodici mesi dentro, e per ciascuna fonte — ora,
   stagione, deriva — di quanto sposta i suoi parametri oltre alla mano, in
   targhette;
-- il **piede**: lo stato, le due influenze esterne, e «a mano», cioè gli ultimi
-  tre filetti che qualcuno ha mosso. Una tavola che si muove da sé per tre
-  quarti ha bisogno di dire quale quarto è stato deciso;
 - la **firma**, sotto il piede, nello strumento e nella guida: la frase dei
   crediti, `valeriobelloni.art` e l'indirizzo di posta; nel piede della guida,
   accanto al ritorno allo strumento, il collegamento al codice su GitHub.
