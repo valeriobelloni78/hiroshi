@@ -341,6 +341,13 @@ intestazione, i sei pannelli in una tabella e i toni nell'altra — e `node colo
 le porta in `css/style.css`. Il verso opposto, `node colori.mjs --leggi`, rifà il file
 dal CSS per chi ha ritoccato una tinta a mano.
 
+SCRIVERE NEL FILE NON BASTA, ed è l'unica insidia di questo arnese: la fonte è il
+markdown, ma quello che l'app legge è il CSS, e finché il comando non gira un
+colore cambiato è un colore cambiato in una nota. È già successo con l'etichetta
+«default». Per questo c'è `node colori.mjs --guarda`, che applica a ogni salvataggio
+finché resta aperto, e per questo la prima cosa scritta dentro `colori.md` è che il
+comando va lanciato.
+
 L'APP NON LEGGE QUEL FILE, e non è una mancanza: su `file://` il CORS blocca ogni
 richiesta, quindi un foglio di stile che andasse a prendersi i colori da un
 markdown lascerebbe la tavola senza palette proprio al doppio clic, che è il caso

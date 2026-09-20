@@ -37,7 +37,7 @@
    d'apertura sta nel codice, cioè nelle mani di chi pubblica, non in una
    preferenza salvata nel browser di chi passa. */
 
-const TEMA_ESORDIO = null;   // lo scrive colori.mjs dall'etichetta «default»
+const TEMA_ESORDIO = "inverno";   // lo scrive colori.mjs dall'etichetta «default»
 
 let SCELTA_TEMA = null;
 let temaAMano = false;

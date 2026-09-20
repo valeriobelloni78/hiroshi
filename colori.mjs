@@ -13,7 +13,13 @@
    legge — si aggiorna.
 
      node colori.mjs            da `colori.md` al CSS e al tema d'apertura
+     node colori.mjs --guarda   lo stesso, e resta in ascolto: a ogni salvataggio
      node colori.mjs --leggi    rifà `colori.md` dal CSS, com'è adesso
+
+   SCRIVERE NEL FILE NON BASTA, e la cosa va detta forte perché è la sola insidia
+   di questo arnese: il markdown è la fonte, ma quello che l'app legge è il CSS.
+   Finché non si lancia il comando, un colore cambiato è un colore cambiato in una
+   nota. `--guarda` esiste per questo: si apre una volta e si lavora sul file.
 
    NON RISCRIVE I BLOCCHI, cambia i valori dentro di loro: nel CSS, accanto a
    ogni tinta, c'è il conto che l'ha decisa — i rapporti di contrasto, le misure
@@ -25,7 +31,7 @@
    l'apertura torna a chiedere `prefers-color-scheme`, come ha sempre fatto.
 ============================================================================= */
 
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync, watch } from "node:fs";
 
 const CSS = new URL("./css/style.css", import.meta.url);
 const MD = new URL("./colori.md", import.meta.url);
@@ -104,10 +110,19 @@ function scriviMarkdown() {
     "node colori.mjs",
     "```",
     "",
-    "e i valori finiscono in `css/style.css`, che è quello che l'app legge. L'app non",
-    "legge questo file: su `file://` il CORS blocca ogni richiesta, e il doppio clic su",
-    "`index.html` deve funzionare anche senza rete. Il verso opposto — rifare questo",
-    "file dal CSS, dopo averlo ritoccato a mano — è `node colori.mjs --leggi`.",
+    "e i valori finiscono in `css/style.css`, che è quello che l'app legge.",
+    "",
+    "**Scrivere qui non basta: il comando va lanciato.** L'app non legge questo file —",
+    "su `file://` il CORS blocca ogni richiesta, e il doppio clic su `index.html` deve",
+    "funzionare anche senza rete — quindi finché non si lancia il comando un colore",
+    "cambiato resta una nota. Per non pensarci si apre",
+    "",
+    "```bash",
+    "node colori.mjs --guarda",
+    "```",
+    "",
+    "che applica a ogni salvataggio finché resta aperto. Il verso opposto — rifare",
+    "questo file dal CSS, dopo averlo ritoccato a mano — è `node colori.mjs --leggi`.",
     "",
     "**L'etichetta «default»** accanto al nome di un tema dice quale si apre all'avvio.",
     "Se non ce l'ha nessuno, all'apertura si chiede al sistema operativo se vuole",
@@ -225,5 +240,25 @@ function applica() {
   }
 }
 
+/* L'ASCOLTO. `fs.watch` batte due o tre volte per un salvataggio solo — un editor
+   scrive, tronca e rinomina — quindi si aspetta un attimo e si applica una volta
+   sola. Un errore nel file non ferma l'ascolto: si scrive che cos'è e si resta lì,
+   perché chi sta scrivendo una palette la sta scrivendo adesso e la riparerà fra
+   dieci secondi. */
+function guarda() {
+  applica();
+  let sospeso = null;
+  console.log("in ascolto su colori.md — ctrl-c per smettere");
+  watch(MD, () => {
+    clearTimeout(sospeso);
+    sospeso = setTimeout(() => {
+      const quando = new Date().toTimeString().slice(0, 8);
+      try { process.stdout.write(quando + "  "); applica(); }
+      catch (e) { console.error(quando + "  " + e.message); }
+    }, 150);
+  });
+}
+
 if (process.argv.includes("--leggi")) scriviMarkdown();
+else if (process.argv.includes("--guarda")) guarda();
 else applica();
