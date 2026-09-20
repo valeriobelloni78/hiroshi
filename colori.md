@@ -6,19 +6,10 @@ Questo file è la FONTE delle undici palette. Si scrive qui, poi si lancia
 node colori.mjs
 ```
 
-e i valori finiscono in `css/style.css`, che è quello che l'app legge.
-
-**Scrivere qui non basta: il comando va lanciato.** L'app non legge questo file —
-su `file://` il CORS blocca ogni richiesta, e il doppio clic su `index.html` deve
-funzionare anche senza rete — quindi finché non si lancia il comando un colore
-cambiato resta una nota. Per non pensarci si apre
-
-```bash
-node colori.mjs --guarda
-```
-
-che applica a ogni salvataggio finché resta aperto. Il verso opposto — rifare
-questo file dal CSS, dopo averlo ritoccato a mano — è `node colori.mjs --leggi`.
+e i valori finiscono in `css/style.css`, che è quello che l'app legge. L'app non
+legge questo file: su `file://` il CORS blocca ogni richiesta, e il doppio clic su
+`index.html` deve funzionare anche senza rete. Il verso opposto — rifare questo
+file dal CSS, dopo averlo ritoccato a mano — è `node colori.mjs --leggi`.
 
 **L'etichetta «default»** accanto al nome di un tema dice quale si apre all'avvio.
 Se non ce l'ha nessuno, all'apertura si chiede al sistema operativo se vuole
@@ -250,7 +241,7 @@ strumento cambia i valori, non riscrive i blocchi.
 | cifre sull'ambra | --su-ambra | var(--inchiostro) |
 | grana della carta | --retino | #3e3734 |
 
-## novembre
+## novembre - default
 
 | pannello | token | colore |
 |---|---|---|
@@ -275,7 +266,7 @@ strumento cambia i valori, non riscrive i blocchi.
 | cifre sull'ambra | --su-ambra | var(--inchiostro) |
 | grana della carta | --retino | #3b3834 |
 
-## inverno — default
+## inverno 
 
 | pannello | token | colore |
 |---|---|---|
