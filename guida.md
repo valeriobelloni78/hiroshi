@@ -370,7 +370,7 @@ Il rallentamento non si ottiene leggendo il buffer più piano, che abbasserebbe 
 L'intonazione non trasporta il materiale ma gli mette dietro un banco di passa-banda accordati sui gradi della collezione corrente, fra 110 e 1500 Hz. Il banco tiene gli indici del campo, non le frequenze: al passo di quinta i filtri si spostano con una costante lunga, e quattro filtri su cinque riscrivono lo stesso valore.
 
 <!-- g.pae.4 -->
-Il segmento si sceglie con le due maniglie sopra l'onda. Rovesciandole il segmento si specchia invece di annullarsi. La banda chiara che cammina dentro il segmento è la finestra di lettura corrente.
+Il segmento si sceglie con le due maniglie sopra l'onda, che è un pettine di linee verticali alte quanto il picco del materiale in quel punto. Rovesciando le maniglie il segmento si specchia invece di annullarsi. Le linee in ambra, dentro il segmento, sono la finestra di lettura corrente: cammina con la testa, e nel random un tratteggio verticale segna dove atterrerà il prossimo salto.
 
 <!-- g.pae.5 -->
 La testa di lettura ha cinque modi. AVANTI la fa camminare verso la fine del segmento e la riporta al capo; INDIETRO la fa camminare verso l'inizio. PENDOLO la fa rimbalzare fra i due estremi. FERMO la tiene nel punto in cui si trova. RANDOM la fa saltare in un punto casuale del segmento, legge da lì in avanti per la durata della sosta e poi salta di nuovo; il punto d'arrivo del salto successivo è segnato sull'onda con un tratteggio. In tutti i modi le finestre suonano in avanti a velocità naturale: a cambiare verso è la testa, non il materiale.

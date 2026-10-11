@@ -861,15 +861,44 @@ function zeroAste(box) {
    Fuori dal segmento la carta si posa sopra: il materiale resta visibile — è
    quello che si sta scegliendo, e sceglierlo alla cieca non si può — ma
    arretra, e quello che si sente resta in primo piano. */
-const ALTEZZE_ONDA = 7;          // quanti quadratini per mezza altezza
-const PASSO_ONDA = 5.4;          // il passo delle colonne, come sul baricentro
-const LATO_ONDA = 3;
+/* L'onda è UN PETTINE DI LINEE VERTICALI, una per colonna, alte quanto il picco
+   di quel tratto e simmetriche sulla riga di mezzo. Prima era un istogramma di
+   quadratini in scala di grigi: il grigio dava un peso alla colonna, ma su una
+   fascia alta ottantadue pixel sette quadratini sono sette gradini, e un suono
+   che sale piano si vedeva salire a scatti. Una linea ha tutte le altezze.
+
+   UN COLORE SOLO, l'inchiostro. Nella palette non c'è un «bianco»: c'è
+   l'inchiostro, che nel tema scuro È la crema chiara e nel chiaro è quasi nero —
+   cioè sempre il tratto pieno sul suo fondo, che è quello che un'onda deve
+   essere. Un bianco scritto a mano starebbe fermo mentre il foglio si gira, e
+   sulla carta chiara sparirebbe.
+
+   E LE LINEE DELLA FINESTRA CHE SI STA LEGGENDO SONO IN AMBRA. Prima lì ci si
+   posava sopra una campitura velata, che doveva restare trasparente per non
+   coprire il materiale; adesso il materiale È il segno, quindi si colora lui e
+   non gli si mette niente davanti. Quelle linee si ridisegnano a ogni fotogramma
+   sul canvas grande — una ventina, non la fascia intera — leggendo gli stessi
+   picchi della tela: due geometrie diverse si scollerebbero di mezzo pixel e si
+   vedrebbe. */
+const PASSO_ONDA = 4;            // il passo delle linee: meno fitte di un pettine vero
+const SPESSORE_ONDA = 1.6;
 
 /* L'onda si calcola una volta per materiale e per riquadro, e si tiene disegnata
    su una tela sua. Un file di novanta secondi sono quattro milioni di campioni e
-   duecentocinquanta colonne di quadratini: rifarli sessanta volte al secondo
-   sarebbe l'unica cosa in tutta la tavola capace di far saltare il suono. */
+   trecento colonne: rifarle sessanta volte al secondo sarebbe l'unica cosa in
+   tutta la tavola capace di far saltare il suono. I PICCHI RESTANO IN CACHE con
+   la tela, perché le linee in ambra li rileggono. */
 let ondaTela = null, ondaChiave = "";
+let ondaPicchi = null, ondaLargoCol = 0;
+
+/* Una linea sola, dalla riga di mezzo in su e in giù. A materiale muto resta un
+   trattino sulla riga: una colonna che sparisse si leggerebbe come un buco nel
+   file, e la riga di mezzo come un taglio. */
+function lineaOnda(C, x, mezzo, mezzaAltezza, u, colore) {
+  const h = Math.max(0.6, u * mezzaAltezza);
+  C.fillStyle = colore;
+  C.fillRect(x - SPESSORE_ONDA / 2, mezzo - h, SPESSORE_ONDA, h * 2);
+}
 
 function disegnaOnda(m, largo, alto) {
   const chiave = m.nome + "|" + m.durata + "|" + Math.round(largo) + "|" + Math.round(alto);
@@ -892,6 +921,7 @@ function disegnaOnda(m, largo, alto) {
   // Si normalizza sul picco del materiale: una registrazione presa piano
   // altrimenti sarebbe una riga piatta, e non ci si potrebbe mirare niente.
   const scala = massimo > 1e-4 ? 1 / massimo : 0;
+  for (let i = 0; i < n; i++) picchi[i] = clamp(picchi[i] * scala, 0, 1);
 
   ondaTela = ondaTela || document.createElement("canvas");
   ondaTela.width = Math.round(largo * DPR);
@@ -901,38 +931,24 @@ function disegnaOnda(m, largo, alto) {
   O.clearRect(0, 0, largo, alto);
 
   const mezzo = alto / 2;
-  const salto = (alto / 2 - 2) / ALTEZZE_ONDA;
+  const mezzaAltezza = alto / 2 - 2;
   const largoCol = largo / n;
-  const grigio = (k) => {
-    // La scala di grigi: pieno sulla riga, sempre più tenue verso la punta. È
-    // il modo di dare un peso alla colonna senza annerirla tutta.
-    const u = k / Math.max(1, ALTEZZE_ONDA - 1);
-    return u < 0.45 ? tinta("inchiostro-2", 0.9) : u < 0.75 ? tinta("grigio") : tinta("spento");
-  };
+
+  // La riga di mezzo, tenue: tiene insieme la fascia dove il materiale tace, e
+  // nel silenzio dice «qui il file continua» invece di «qui il file finisce».
+  O.fillStyle = tinta("filo-2");
+  O.fillRect(0, mezzo - 0.5, largo, 1);
+
+  const inchiostro = tinta("inchiostro");
   for (let i = 0; i < n; i++) {
-    const x = (i + 0.5) * largoCol - LATO_ONDA / 2;
-    const quanti = Math.round(clamp(picchi[i] * scala, 0, 1) * ALTEZZE_ONDA);
-    if (!quanti) {
-      // La colonna muta non sparisce: resta un segno chiarissimo sulla riga di
-      // mezzo. Una colonna vuota si leggerebbe come un buco nel file.
-      O.fillStyle = tinta("filo-2");
-      O.fillRect(x + 0.5, mezzo - 1, 2, 2);
-      continue;
-    }
-    // Il primo quadratino sta SULLA riga, gli altri salgono e scendono da lì.
-    O.fillStyle = grigio(0);
-    O.fillRect(x, mezzo - LATO_ONDA / 2, LATO_ONDA, LATO_ONDA);
-    for (let k = 1; k < quanti; k++) {
-      O.fillStyle = grigio(k);
-      O.fillRect(x, mezzo - k * salto - LATO_ONDA / 2, LATO_ONDA, LATO_ONDA);
-      O.fillRect(x, mezzo + k * salto - LATO_ONDA / 2, LATO_ONDA, LATO_ONDA);
-    }
+    lineaOnda(O, (i + 0.5) * largoCol, mezzo, mezzaAltezza, picchi[i], inchiostro);
   }
+
+  ondaPicchi = picchi;
+  ondaLargoCol = largoCol;
   ondaChiave = chiave;
   return ondaTela;
 }
-
-const VELO_ALFA = 0.45;
 
 /* La maniglia di un capo del segmento: un quadrato d'inchiostro fuori
    dall'onda, sul bordo dove sta il cursore che lo comanda, e la verticale che
@@ -967,14 +983,25 @@ function fasciaPaesaggio(box, ora) {
   T.fillRect(x1, box.y, Math.max(0, box.x + box.w - x1), box.h);
 
   /* LA FINESTRA CHE SI STA LEGGENDO ADESSO, larga quanto il velo, ED È IN AMBRA:
-     è un ADESSO come la goccia appena scattata o il punto di fase, e prima, in
-     filo-2, era l'unico adesso della tavola scritto in inchiostro tenue. Sotto
-     l'ambra il materiale deve restare visibile — è quello che si sta guardando
-     per scegliere il segmento — quindi la campitura è velata, non piena. */
+     è un ADESSO come la goccia appena scattata o il punto di fase. Prima era una
+     campitura velata stesa sopra l'onda, e velata doveva restare per non coprire
+     il materiale; adesso che l'onda è fatta di linee si colorano LE LINEE, e
+     niente sta davanti a niente. Si ridisegnano dai picchi in cache, con la
+     stessa geometria della tela: ricalcolarla qui vorrebbe dire due conti che
+     divergono di mezzo pixel, e mezzo pixel su una linea larga uno e sei si
+     vede. */
   const testa = testaPaesaggio();
   const tx = box.x + testa * perSec;
-  T.fillStyle = tinta("ambra", VELO_ALFA);
-  T.fillRect(tx, box.y, Math.max(1.5, seg.velo * perSec), box.h);
+  const larghezzaVelo = Math.max(1.5, seg.velo * perSec);
+  if (ondaPicchi && ondaLargoCol > 0) {
+    const mezzo = box.cy, mezzaAltezza = box.h / 2 - 2;
+    const ambra = tinta("ambra");
+    const da = Math.max(0, Math.floor((tx - box.x) / ondaLargoCol));
+    const a = Math.min(ondaPicchi.length - 1, Math.ceil((tx + larghezzaVelo - box.x) / ondaLargoCol));
+    for (let i = da; i <= a; i++) {
+      lineaOnda(T, box.x + (i + 0.5) * ondaLargoCol, mezzo, mezzaAltezza, ondaPicchi[i], ambra);
+    }
+  }
 
   maniglia(x0, box, true);
   maniglia(x1, box, false);
@@ -984,7 +1011,10 @@ function fasciaPaesaggio(box, ora) {
   // quinta sul circolo.
   if (G.pLettura === LETTURA.random) {
     const ax = box.x + (seg.a + prossimaArea * seg.corsa) * perSec;
-    riga(ax, box.y, ax, box.y + box.h, 1, tinta("inchiostro-2"), [2, 3]);
+    // Sporge di quattro pixel sopra e sotto, come la verticale di una maniglia:
+    // dentro la fascia è un tratteggio tenue in mezzo a un pettine fitto, e basta
+    // che cada su una linea per sparire. Fuori non ha niente davanti.
+    riga(ax, box.y - 4, ax, box.y + box.h + 4, 1, tinta("inchiostro-2"), [2, 3]);
   }
 
   scritta("0″", box.x, box.y + box.h + 9, { dim: 7.5, sp: .6, base: "top" });

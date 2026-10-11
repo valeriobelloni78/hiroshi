@@ -665,12 +665,13 @@ non una in più:
   cerchio delle influenze —, i fili che le
   legano al mirino, il
   legame fra due gocce cadute insieme, LA TONICA DI ADESSO sull'anello interno del
-  circolo delle quinte, e LA FINESTRA CHE IL PAESAGGIO STA
-  LEGGENDO, larga quanto il velo: è l'adesso di quella sorgente, come una goccia
-  è l'adesso della sua. Sta in ambra VELATA, `VELO_ALFA` 0,45 in `tavola.js`,
-  perché sotto deve restare visibile il materiale su cui si sceglie il segmento:
-  a 0,60 lo copre, a 0,30 sbiadisce verso il rosa. Prima era `filo-2`, ed era
-  l'unico adesso della tavola scritto in inchiostro tenue;
+  circolo delle quinte, e LE LINEE DELL'ONDA CHE IL PAESAGGIO STA LEGGENDO, quelle
+  che cadono dentro la finestra larga quanto il velo: è l'adesso di quella
+  sorgente, come una goccia è l'adesso della sua. Sono le linee stesse a essere in
+  ambra, non una campitura stesa sopra: finché l'onda era di quadratini grigi
+  serviva un velo trasparente — `VELO_ALFA` 0,45 — per non coprire il materiale su
+  cui si sceglie il segmento, e un velo che copre è un velo che mente; adesso il
+  materiale È il segno, quindi cambia colore lui e davanti non ci sta niente;
 - IL VALORE: ogni `.vl`, il cronometro, i periodi dentro una didascalia — e i
   valori VIVI, quelli che cambiano da sé, in una targhetta a fondo pieno — e la
   curva dell'equalizzatore, che è i numeri delle otto aste disegnati invece che
@@ -1707,10 +1708,15 @@ vetro per classe, il banco e la deriva su uno ciascuno, il resto sulla carta:
   equalizzatore a otto aste con la curva vera sopra — chiesta ai filtri con
   `getFrequencyResponse` — e il mixer a quattro aste, con sotto le tre sorgenti
   il loro **ON**;
-- **04 · paesaggio**: LA MATERIA INTERA distesa per il lungo, come istogramma
-  di quadratini in scala di grigi che PARTONO DALLA RIGA DI MEZZO — il primo ci
-  sta sopra, non accanto, o resterebbe una riga vuota in mezzo alla fascia che
-  si legge come un taglio. Sopra ci stanno le due maniglie del segmento, che
+- **04 · paesaggio**: LA MATERIA INTERA distesa per il lungo, come PETTINE DI
+  LINEE VERTICALI — una ogni quattro pixel, larghe uno e sei, alte quanto il
+  picco di quel tratto e simmetriche sulla riga di mezzo, tutte dello stesso
+  inchiostro. Prima erano quadratini in scala di grigi: il grigio dava un peso
+  alla colonna, ma sette quadratini su una fascia alta ottantadue pixel sono
+  sette gradini, e un suono che sale piano si vedeva salire a scatti — una linea
+  ha tutte le altezze. Dove il materiale tace resta un trattino sulla riga di
+  mezzo, che attraversa la fascia tenue perché una colonna che sparisse si
+  leggerebbe come un buco nel file. Sopra ci stanno le due maniglie del segmento, che
   sono due cursori nativi trasparenti — l'inizio sul bordo di sopra, la fine su
   quello di sotto, uno per lato perché due cursori distesi sullo stesso
   rettangolo se li prenderebbe sempre quello davanti. Fuori dal segmento la
