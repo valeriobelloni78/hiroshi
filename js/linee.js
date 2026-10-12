@@ -127,18 +127,43 @@ function effettiviFrasi() {
    I due estremi si mettono in ordine qui e non nei comandi: le due maniglie
    sono indipendenti, e trascinandone una oltre l'altra il segmento si rovescia
    invece di sparire. */
+/* LE CORSE DEL PAESAGGIO STANNO QUI, in un posto solo, perché le leggono in tre:
+   il `min`/`max` dei cursori, che `comandi.js` scrive da qui invece di tenerli
+   nell'HTML; i clamp dei valori efficaci qui sotto; e la tavola, che da un valore
+   in unità vera deve ricavare DOVE STA LA MANO sull'arco di una manopola. Erano
+   scritte due volte — nell'attributo e nel clamp — e due numeri uguali in due
+   posti restano uguali finché qualcuno non ne cambia uno.
+
+   `giroP()` è la frazione 0÷1 di una corsa: la manopola disegnata vuole quella, e
+   un conto rifatto nel disegno sarebbe la terza copia. */
+const CORSA_P = {
+  pInizio:      [0, 100],
+  pFine:        [0, 100],
+  pRallenta:    [1, 64],
+  pVelo:        [80, 2000],
+  pSparpaglio:  [0, 100],
+  pAccordatura: [0, 100],
+  pFuoco:       [8, 80],
+  pCoda:        [1, 40],
+  pTono:        [300, 12000],
+  pRiverbero:   [0, 100],
+  pSosta:       [0, 100],
+};
+const fraP = (k) => clamp(G[k], CORSA_P[k][0], CORSA_P[k][1]);
+const giroP = (k) => clamp((G[k] - CORSA_P[k][0]) / (CORSA_P[k][1] - CORSA_P[k][0]), 0, 1);
+
 function effettiviPaesaggio() {
-  effGP.inizio     = clamp(Math.min(G.pInizio, G.pFine), 0, 100);
-  effGP.fine       = clamp(Math.max(G.pInizio, G.pFine), 0, 100);
-  effGP.rallenta   = clamp(G.pRallenta, 1, 64);
-  effGP.velo       = clamp(G.pVelo, 80, 2000);
-  effGP.sparpaglio = clamp(G.pSparpaglio, 0, 100);
-  effGP.accordatura = clamp(G.pAccordatura, 0, 100);
-  effGP.fuoco      = clamp(G.pFuoco, 8, 80);
-  effGP.coda       = clamp(G.pCoda, 0.5, 40);
-  effGP.tono       = clamp(G.pTono, 300, 12000);
-  effGP.riverbero  = clamp(G.pRiverbero, 0, 100);
-  effGP.sosta      = clamp(G.pSosta, 0, 100);
+  effGP.inizio      = clamp(Math.min(G.pInizio, G.pFine), 0, 100);
+  effGP.fine        = clamp(Math.max(G.pInizio, G.pFine), 0, 100);
+  effGP.rallenta    = fraP("pRallenta");
+  effGP.velo        = fraP("pVelo");
+  effGP.sparpaglio  = fraP("pSparpaglio");
+  effGP.accordatura = fraP("pAccordatura");
+  effGP.fuoco       = fraP("pFuoco");
+  effGP.coda        = fraP("pCoda");
+  effGP.tono        = fraP("pTono");
+  effGP.riverbero   = fraP("pRiverbero");
+  effGP.sosta       = fraP("pSosta");
 }
 
 function effettiviTessuti() {

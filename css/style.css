@@ -962,8 +962,13 @@ input[type=range].verticale::-moz-range-thumb{width:9px;height:7px}
 .fascia-paesaggio .maniglia.alto{top:-5px}
 .fascia-paesaggio .maniglia.basso{bottom:-5px}
 .fascia-paesaggio .maniglia:focus-visible{opacity:1;outline:1px solid var(--ambra)}
+/* GLI OTTO COMANDI DEL PAESAGGIO SONO MANOPOLE, la stessa figura delle due
+   classi e del limitatore. Otto in fila su una riga da 1360 fanno colonne da
+   centoquarantaquattro, e un quadro da cento ci sta con la sua aria: `justify-items`
+   le centra, e sotto i 1180 px la griglia si richiude a quattro e poi a due senza
+   che il disegno sappia niente, perché legge i riquadri dove sono finiti. */
 .comandi-paesaggio{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));
-                   gap:0 26px;padding-top:26px}
+                   justify-items:center;gap:14px 26px;padding-top:18px}
 
 /* ------------------------------------------------------------------- la deriva
    Un pannello a sinistra, sulle prime due colonne della griglia delle classi:

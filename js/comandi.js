@@ -305,6 +305,31 @@ inserto("tessuti", "tE", "effTessuti");
    cifre nel capo della sezione, «3″ → 1′ 15″», perché un inizio senza la sua
    fine non dice niente e due targhe separate costringerebbero a fare la
    sottrazione a mente. */
+/* LE CORSE ARRIVANO DA `CORSA_P`, non dall'HTML. Gli otto cursori del paesaggio
+   sono manopole, e una manopola ha bisogno della sua corsa in due posti: qui,
+   per il `min` e il `max` dell'input, e nel disegno, per sapere dove sta la mano
+   sull'arco. Scriverla anche nell'attributo sarebbe la terza copia dello stesso
+   numero. Si fa PRIMA di costruire i cursori: `cursore()` legge subito il valore,
+   e un input ancora a 0÷100 lo taglierebbe — settecento millesimi di velo
+   diventerebbero cento.
+
+   Le due maniglie del segmento restano fuori: hanno la loro corsa nell'HTML
+   perché non sono manopole ma due cursori distesi sull'onda, e il loro passo
+   decimale è parte di come si trascinano. */
+for (const k in CORSA_P) {
+  const input = document.getElementById(k);
+  if (!input || input.classList.contains("maniglia")) continue;
+  input.min = String(CORSA_P[k][0]);
+  input.max = String(CORSA_P[k][1]);
+  // E IL VALORE VA RIMESSO. Un `input[type=range]` senza `max` ne ha uno di
+  // default, cento, e al parse ci clampa dentro il valore scritto: `value="700"`
+  // diventa 100 e non torna indietro da sé quando la corsa arriva — il browser
+  // ricontrolla i limiti, non li riapre. Senza questa riga il velo nasceva a
+  // cento millesimi e il tono a trecento hertz, cioè ai bordi, e lo si sentiva
+  // prima di vederlo. L'attributo è il valore d'esordio e lo tiene lui.
+  input.value = input.getAttribute("value");
+}
+
 cursore("pRallenta",   "vRallenta",    con(suGT("pRallenta"), (v) => numero(v) + "×"));
 cursore("pVelo",       "vVelo",        con(suGT("pVelo"), (v) => numero(v) + " ms"));
 cursore("pSparpaglio", "vPsparpaglio", con(suGT("pSparpaglio"), (v) => numero(v / 100, 2)));

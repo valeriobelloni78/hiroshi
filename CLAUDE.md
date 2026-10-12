@@ -374,6 +374,21 @@ indovinare. In nessuno dei due casi si scrive niente sul disco di chi ascolta: i
 tema d'apertura sta nel codice, cioè in mano a chi pubblica, e la regola «la
 lingua si scrive sul disco, il tema no» resta intatta.
 
+**GLI OTTO COMANDI DEL PAESAGGIO SONO MANOPOLE**, come le due di ogni classe, le
+tre di un inserto e le due del limitatore: la stessa figura per la stessa cosa —
+un valore solo, girato a mano. Erano filetti, ed erano gli ultimi rimasti in una
+sezione che per il resto è fatta di archi. Stanno su una griglia di otto colonne
+che si richiude a quattro e poi a due, e il disegno non ne sa niente: legge i
+riquadri dove la griglia li ha messi.
+
+**LE CORSE DEL PAESAGGIO STANNO IN UN POSTO SOLO**, `CORSA_P` in `linee.js`, e le
+leggono in tre: `comandi.js` per scrivere `min` e `max` sugli input,
+`effettiviPaesaggio()` per i clamp, e la tavola — con `giroP()` — per sapere dove
+sta la mano sull'arco. Prima erano scritte due volte, nell'attributo e nel clamp,
+e due numeri uguali in due posti restano uguali finché qualcuno non ne cambia uno.
+Le due maniglie del segmento restano fuori: non sono manopole ma cursori distesi
+sull'onda, e il loro passo decimale è parte di come si trascinano.
+
 **La palette è definita una volta sola**, nelle variabili CSS di
 `css/style.css`. Anche il canvas le legge da lì, al caricamento, con
 `getComputedStyle`. Non introdurre colori scritti direttamente nel JavaScript:
@@ -1074,6 +1089,16 @@ quindi cancellare rimette la carta con la sua grana e non una toppa di colore �
 ma vuol dire anche che uno strappo dentro un gruppo dimezzato d'opacità
 cancella lo stesso.
 
+**UN `input[type=range]` SENZA `max` NE HA UNO DI DEFAULT, CENTO, e ci clampa
+dentro il valore scritto — poi non lo restituisce.** Dando la corsa vera dal
+JavaScript dopo il parse, il browser ricontrolla i limiti ma non riapre quello
+che ha già stretto: `value="700"` era diventato 100 e tale restava, così il velo
+nasceva a cento millesimi e il tono a trecento hertz, cioè ai bordi. Si vedeva
+solo come un paesaggio che partiva strano, perché la targa — che legge il cursore
+— diceva la stessa bugia del modello. La riga che ripara è una: dopo `min` e
+`max` si riscrive `input.value = input.getAttribute("value")`, cioè il valore
+d'esordio, che nell'attributo c'è ancora.
+
 **Il modello si popola da sé.** In fondo a `linee.js` c'è
 `frasi.forEach(rigenera)`. Senza quella riga le frasi nascono vuote e l'app è
 muta all'apertura: è già successo, dividendo il file in moduli.
@@ -1724,7 +1749,9 @@ vetro per classe, il banco e la deriva su uno ciascuno, il resto sulla carta:
   chiara che cammina, e nel random un tratteggio dove atterrerà il prossimo
   salto. A sinistra, sotto la colonna delle gocce, le
   cinque letture — avanti, indietro, pendolo, fermo, random — e a destra, sotto
-  quella dei tessuti, la manopola della sosta del random; sotto, i filetti;
+  quella dei tessuti, la manopola della sosta del random; sotto, le OTTO MANOPOLE
+  — rallentamento, velo, sparpaglio, accordatura, fuoco, coda, tono, riverbero —
+  su una griglia che si richiude a quattro e poi a due;
 - **05 · deriva**: un pannello a sinistra, largo quanto la colonna delle gocce
   e il suo quadrante 
   Dentro, il circolo delle quinte in cerchio con la tonalità al centro — che con

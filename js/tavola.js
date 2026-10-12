@@ -1342,7 +1342,17 @@ function disegna() {
   // La sosta del paesaggio non ha un efficace: fra la mano e il velo non c'è
   // nessuna deriva, quindi graduazioni e quadrato dicono lo stesso numero. Fuori
   // dal random si spegne, come la manopola che la comanda.
-  manopola(manopolaDi("pSosta"), G.pSosta / 100, undefined, G.pLettura !== LETTURA.random);
+  manopola(manopolaDi("pSosta"), giroP("pSosta"), undefined, G.pLettura !== LETTURA.random);
+
+  // GLI OTTO DEL PAESAGGIO, e nessuno di loro ha un efficace diverso dalla mano:
+  // la deriva, l'ora e la stagione non toccano questa sorgente. Le corse non sono
+  // 0÷100 — un velo va da ottanta a duemila millesimi, un tono da trecento a
+  // dodicimila hertz — quindi la frazione la dà `giroP()`, che sta accanto alle
+  // corse: il disegno non rifà nessun conto che qualcun altro fa già.
+  for (const k of ["pRallenta", "pVelo", "pSparpaglio", "pAccordatura",
+                   "pFuoco", "pCoda", "pTono", "pRiverbero"]) {
+    manopola(manopolaDi(k), giroP(k));
+  }
 
   // Le tre dell'inserto hanno una lettura sola e non due: fra la mano e il
   // suono non c'è né la deriva né l'ora, quindi le graduazioni e il quadrato

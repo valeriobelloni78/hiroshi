@@ -434,23 +434,68 @@
         </div>
       </div>
 
+      <!-- GLI OTTO DEL PAESAGGIO SONO MANOPOLE, come quelle delle due classi e
+           del limitatore: la stessa figura per la stessa cosa — un valore solo,
+           girato a mano. Il canvas disegna l'arco leggendo il riquadro; il
+           cursore trasparente ci sta sopra, e la corsa la sa `CORSA_P` in
+           `linee.js`, che scrive anche il min e il max di questi input. -->
       <div class="comandi-paesaggio">
-        <label class="filetto"><span class="fl" data-i18n="fl.rallentamento">Rallentamento</span><span class="vl" id="vRallenta">8×</span>
-          <input id="pRallenta" type="range" min="1" max="64" step="1" value="8"></label>
-        <label class="filetto"><span class="fl" data-i18n="fl.velo">Velo</span><span class="vl" id="vVelo">700 ms</span>
-          <input id="pVelo" type="range" min="80" max="2000" step="10" value="700"></label>
-        <label class="filetto"><span class="fl" data-i18n="fl.sparpaglio">Sparpaglio</span><span class="vl" id="vPsparpaglio">0,35</span>
-          <input id="pSparpaglio" type="range" min="0" max="100" step="1" value="35"></label>
-        <label class="filetto"><span class="fl" data-i18n="fl.accordatura">Accordatura</span><span class="vl" id="vAccordatura">0,55</span>
-          <input id="pAccordatura" type="range" min="0" max="100" step="1" value="55"></label>
-        <label class="filetto"><span class="fl" data-i18n="fl.fuoco">Fuoco</span><span class="vl" id="vFuoco">18</span>
-          <input id="pFuoco" type="range" min="8" max="80" step="1" value="18"></label>
-        <label class="filetto"><span class="fl" data-i18n="fl.coda">Coda</span><span class="vl" id="vCoda">12,0 s</span>
-          <input id="pCoda" type="range" min="1" max="40" step="1" value="12"></label>
-        <label class="filetto"><span class="fl" data-i18n="fl.tono">Tono</span><span class="vl" id="vTono">2,0 kHz</span>
-          <input id="pTono" type="range" min="300" max="12000" step="100" value="2000"></label>
-        <label class="filetto"><span class="fl" data-i18n="fl.riverbero">Riverbero</span><span class="vl" id="vRiverbero">0,70</span>
-          <input id="pRiverbero" type="range" min="0" max="100" step="1" value="70"></label>
+        <div class="manopola">
+          <div class="quadro" data-manopola="pRallenta">
+            <input id="pRallenta" type="range" step="1" value="8"
+                   data-i18n-aria="a11y.rallentamento">
+          </div>
+          <span class="fl" data-i18n="fl.rallentamento">Rallentamento</span><span class="vl" id="vRallenta">8×</span>
+        </div>
+        <div class="manopola">
+          <div class="quadro" data-manopola="pVelo">
+            <input id="pVelo" type="range" step="10" value="700"
+                   data-i18n-aria="a11y.velo">
+          </div>
+          <span class="fl" data-i18n="fl.velo">Velo</span><span class="vl" id="vVelo">700 ms</span>
+        </div>
+        <div class="manopola">
+          <div class="quadro" data-manopola="pSparpaglio">
+            <input id="pSparpaglio" type="range" step="1" value="35"
+                   data-i18n-aria="a11y.sparpaglio">
+          </div>
+          <span class="fl" data-i18n="fl.sparpaglio">Sparpaglio</span><span class="vl" id="vPsparpaglio">0,35</span>
+        </div>
+        <div class="manopola">
+          <div class="quadro" data-manopola="pAccordatura">
+            <input id="pAccordatura" type="range" step="1" value="55"
+                   data-i18n-aria="a11y.accordatura">
+          </div>
+          <span class="fl" data-i18n="fl.accordatura">Accordatura</span><span class="vl" id="vAccordatura">0,55</span>
+        </div>
+        <div class="manopola">
+          <div class="quadro" data-manopola="pFuoco">
+            <input id="pFuoco" type="range" step="1" value="18"
+                   data-i18n-aria="a11y.fuoco">
+          </div>
+          <span class="fl" data-i18n="fl.fuoco">Fuoco</span><span class="vl" id="vFuoco">18</span>
+        </div>
+        <div class="manopola">
+          <div class="quadro" data-manopola="pCoda">
+            <input id="pCoda" type="range" step="1" value="12"
+                   data-i18n-aria="a11y.coda">
+          </div>
+          <span class="fl" data-i18n="fl.coda">Coda</span><span class="vl" id="vCoda">12,0 s</span>
+        </div>
+        <div class="manopola">
+          <div class="quadro" data-manopola="pTono">
+            <input id="pTono" type="range" step="100" value="2000"
+                   data-i18n-aria="a11y.tono">
+          </div>
+          <span class="fl" data-i18n="fl.tono">Tono</span><span class="vl" id="vTono">2,0 kHz</span>
+        </div>
+        <div class="manopola">
+          <div class="quadro" data-manopola="pRiverbero">
+            <input id="pRiverbero" type="range" step="1" value="70"
+                   data-i18n-aria="a11y.riverbero">
+          </div>
+          <span class="fl" data-i18n="fl.riverbero">Riverbero</span><span class="vl" id="vRiverbero">0,70</span>
+        </div>
       </div>
     </section>
 
