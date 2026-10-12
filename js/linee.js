@@ -46,7 +46,7 @@ const G  = {
   tPasso: 38, tLivello: 32, tSpazio: 55,
   /* paesaggio */
   pInizio: 0, pFine: 100, pRallenta: 8, pVelo: 700, pSparpaglio: 35,
-  pAccordatura: 55, pFuoco: 18, pCoda: 12, pTono: 2000, pRiverbero: 70,
+  pAccordatura: 100, pFuoco: 18, pCoda: 12, pTono: 2000, pRiverbero: 70,
   // La lettura del paesaggio è un indice fra cinque, non una corsa: i nomi
   // stanno in `LETTURA`, dentro `paesaggio.js`. La sosta è quella del random,
   // in 0÷100; i secondi li fa `sostaDi()`.
@@ -139,7 +139,7 @@ function effettiviFrasi() {
 const CORSA_P = {
   pInizio:      [0, 100],
   pFine:        [0, 100],
-  pRallenta:    [1, 64],
+  pRallenta:    [1, 10],
   pVelo:        [80, 2000],
   pSparpaglio:  [0, 100],
   pAccordatura: [0, 100],

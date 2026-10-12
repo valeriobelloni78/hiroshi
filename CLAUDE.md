@@ -381,6 +381,16 @@ sezione che per il resto è fatta di archi. Stanno su una griglia di otto colonn
 che si richiude a quattro e poi a due, e il disegno non ne sa niente: legge i
 riquadri dove la griglia li ha messi.
 
+**IL RALLENTAMENTO ARRIVA A DIECI, e l'accordatura nasce tutta aperta.** La corsa
+era 1÷64: oltre il dieci la testa cammina così piano che due veli lontani un
+minuto prendono la stessa materia, e il paesaggio smette di andare da qualche
+parte — quello che resta è la lente, non il cammino. L'accordatura parte da 1,00,
+cioè tutto il paesaggio passa per il banco di risonatori: l'intonazione è quello
+che questa sorgente fa di suo, e chi la vuole cruda la gira indietro. L'esordio
+sta in due posti che devono dire lo stesso numero — `G` in `linee.js` e
+l'attributo `value` dell'input — perché i comandi, dopo aver scritto la corsa,
+rimettono il valore proprio dall'attributo (vedi l'insidia del clamp al parse).
+
 **LE CORSE DEL PAESAGGIO STANNO IN UN POSTO SOLO**, `CORSA_P` in `linee.js`, e le
 leggono in tre: `comandi.js` per scrivere `min` e `max` sugli input,
 `effettiviPaesaggio()` per i clamp, e la tavola — con `giroP()` — per sapere dove
@@ -1524,7 +1534,7 @@ rovesciandone le maniglie, che ciascuna delle CINQUE LETTURE faccia quello che
 dice senza uscire dalla corsa — e che la previsione con cui il velo prenota
 coincida col cammino vero della testa, cento volte su cento —, che il drone arrivi all'uscita senza clippare, che
 **il rallentamento non trasporti** — il baricentro dello spettro deve restare
-dov'è fra un rallentamento di quattro e uno di trentadue — e che la coda del suo
+dov'è fra un rallentamento di due e uno di dieci, i due capi utili della corsa — e che la coda del suo
 riverbero scenda anche dopo due ritarature. E che **l'accordatura intoni**: su
 rumore bianco l'energia deve spostarsi sui gradi della collezione di almeno
 quattro decibel rispetto al semitono accanto — il semitono e non un quarto di
@@ -1624,10 +1634,22 @@ bit lo scarto atteso è il passo di quantizzazione, 2⁻²³ ≈ 1,2·10⁻⁷. 
 anche che esportare **non sposti il modello della sessione**, prendendo
 un'impronta prima e dopo.
 
-**La prova si porta una materia sua**: il paesaggio all'apertura è muto per
+**La prova si porta DUE materie sue**: il paesaggio all'apertura è muto per
 costruzione — non c'è nessun suono in dotazione da percorrere — quindi la prova
-sintetizza sei secondi di quattro toni, che sono riconoscibili e permettono di
-vedere se la testa si sposta e se l'altezza resta dov'era.
+sintetizza sei secondi di quattro toni in fila, che sono riconoscibili e fanno
+vedere se la testa si sposta e in che verso.
+
+MA LA PROVA DEL TRASPORTO VUOLE UN TONO FERMO, e ha il suo: un seno solo. Con
+quattro toni in fila è DOVE CADE LA TESTA a decidere quale si misura, e due
+rallentamenti diversi percorrono tratti diversi — misurato, il baricentro ballava
+fino al 18% con la soglia al 20, cioè una prova che falliva a caso senza che
+niente fosse rotto. Riportare la testa al capo prima di ciascuna passata peggiora:
+a due si arriva al secondo tono e a dieci no. Con un tono solo la risposta non
+dipende più da dove si legge — misurato, 301 Hz contro 301 su quattro corse — e se
+il baricentro si sposta, a spostarlo è il rallentamento. Chi cambia la corsa del
+rallentamento rifaccia questo conto: i due valori confrontati devono stare dentro
+la corsa, o il clamp li riporta allo stesso numero e la prova passa senza provare
+niente.
 
 **La prova fissa l'ora e la stagione** (`ORA = 14`, `MESE = 9`). Senza,
 misurerebbe cose diverse a seconda di quando la si lancia — il calore, lo

@@ -361,7 +361,7 @@ Sommando le tracce delle sorgenti e quella della stanza si ritrova l'uscita prim
 ## 04 · Paesaggio
 
 <!-- g.pae.1 -->
-Riproduce materiale registrato — un file caricato o una presa dal microfono — rallentato di un fattore fra 1 e 64 senza trasporlo. Il materiale non si conserva: vive finché la pagina resta aperta.
+Riproduce materiale registrato — un file caricato o una presa dal microfono — rallentato di un fattore fra 1 e 10 senza trasporlo. Il materiale non si conserva: vive finché la pagina resta aperta.
 
 <!-- g.pae.2 -->
 Il rallentamento non si ottiene leggendo il buffer più piano, che abbasserebbe anche l'altezza. La materia si legge a velocità naturale in finestre sovrapposte, e a camminare piano è il punto da cui le finestre vengono prese. Le finestre sono quattro per istante, con campane sfasate: con meno si sente il confine fra una e l'altra.
@@ -394,7 +394,7 @@ La testa di lettura ha cinque modi. AVANTI la fa camminare verso la fine del seg
 | Segmento | 0 – 100 % | Estremi del segmento percorso, in centesimi della durata del materiale. |
 | LETTURA | — | Modo in cui la testa percorre il segmento: avanti, indietro, pendolo, fermo, random. |
 | Sosta | 1 – 30 s | Durata di lettura di ciascuna area nel modo RANDOM, in scala esponenziale. Negli altri modi è disattivata. |
-| Rallentamento | 1 – 64 × | Fattore di rallentamento della testa di lettura. |
+| Rallentamento | 1 – 10 × | Fattore di rallentamento della testa di lettura. |
 | Velo | 80 – 2000 ms | Durata di una finestra di lettura. |
 | Sparpaglio | 0 – 1 | Scarto casuale sul punto di partenza di ogni finestra. A zero le finestre partono tutte dallo stesso punto e la somma diventa un filtro a pettine. |
 | Accordatura | 0 – 1 | Miscelazione fra materiale crudo e materiale passato per il banco risonante. |

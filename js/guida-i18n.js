@@ -133,7 +133,7 @@ const GUIDA = {
 
     /* 5 · paesaggio */
     "g.pae.t": "Paesaggio",
-    "g.pae.1": "Riproduce materiale registrato — un file caricato o una presa dal microfono — rallentato di un fattore fra 1 e 64 senza trasporlo. Il materiale non si conserva: vive finché la pagina resta aperta.",
+    "g.pae.1": "Riproduce materiale registrato — un file caricato o una presa dal microfono — rallentato di un fattore fra 1 e 10 senza trasporlo. Il materiale non si conserva: vive finché la pagina resta aperta.",
     "g.pae.2": "Il rallentamento non si ottiene leggendo il buffer più piano, che abbasserebbe anche l'altezza. La materia si legge a velocità naturale in finestre sovrapposte, e a camminare piano è il punto da cui le finestre vengono prese. Le finestre sono quattro per istante, con campane sfasate: con meno si sente il confine fra una e l'altra.",
     "g.pae.3": "L'intonazione non trasporta il materiale ma gli mette dietro un banco di passa-banda accordati sui gradi della collezione corrente, fra 110 e 1500 Hz. Il banco tiene gli indici del campo, non le frequenze: al passo di quinta i filtri si spostano con una costante lunga, e quattro filtri su cinque riscrivono lo stesso valore.",
     "g.pae.4": "Il segmento si sceglie con le due maniglie sopra l'onda, che è un pettine di linee verticali alte quanto il picco del materiale in quel punto. Rovesciando le maniglie il segmento si specchia invece di annullarsi. Le linee in ambra, dentro il segmento, sono la finestra di lettura corrente: cammina con la testa, e nel random un tratteggio verticale segna dove atterrerà il prossimo salto.",
@@ -315,7 +315,7 @@ const GUIDA = {
     "g.pe.movimento":  "Excursion de l'oscillateur lent sur la coupure, en octaves autour de la fréquence réglée.",
 
     "g.pae.t": "Paysage",
-    "g.pae.1": "Lit un matériau enregistré — un fichier chargé ou une prise au microphone — ralenti d'un facteur de 1 à 64 sans le transposer. Le matériau n'est pas conservé : il vit tant que la page reste ouverte.",
+    "g.pae.1": "Lit un matériau enregistré — un fichier chargé ou une prise au microphone — ralenti d'un facteur de 1 à 10 sans le transposer. Le matériau n'est pas conservé : il vit tant que la page reste ouverte.",
     "g.pae.2": "Le ralenti ne s'obtient pas en lisant le tampon plus lentement, ce qui baisserait aussi la hauteur. La matière se lit à vitesse naturelle dans des fenêtres qui se recouvrent, et ce qui avance lentement est le point d'où les fenêtres sont prises. Il y a quatre fenêtres à chaque instant, en cloches décalées : avec moins, on entend la limite de l'une à l'autre.",
     "g.pae.3": "L'accord ne transpose pas le matériau : il place derrière lui un banc de passe-bandes accordés sur les degrés de la collection courante, entre 110 et 1500 Hz. Le banc tient les indices du champ, non les fréquences : au pas de quinte les filtres se déplacent avec une constante longue, et quatre filtres sur cinq réécrivent la même valeur.",
     "g.pae.4": "Le segment se choisit avec les deux poignées au-dessus de l'onde, un peigne de lignes verticales hautes comme la crête du matériau à cet endroit. En inversant les poignées le segment se reflète au lieu de s'annuler. Les lignes en ambre, à l'intérieur du segment, sont la fenêtre de lecture courante : elle avance avec la tête, et en mode aléatoire un pointillé vertical marque le point d'atterrissage du prochain saut.",
@@ -489,7 +489,7 @@ const GUIDA = {
     "g.pe.movimento":  "Excursion of the slow oscillator on the cutoff, in octaves around the set frequency.",
 
     "g.pae.t": "Landscape",
-    "g.pae.1": "Plays recorded material — a loaded file or a microphone take — slowed by a factor between 1 and 64 without transposing it. The material is not kept: it lives as long as the page stays open.",
+    "g.pae.1": "Plays recorded material — a loaded file or a microphone take — slowed by a factor between 1 and 10 without transposing it. The material is not kept: it lives as long as the page stays open.",
     "g.pae.2": "The slowdown is not obtained by reading the buffer more slowly, which would lower the pitch as well. The material is read at natural speed in overlapping windows, and what walks slowly is the point the windows are taken from. There are four windows at any instant, in offset bells: with fewer, the edge from one to the next becomes audible.",
     "g.pae.3": "Tuning does not transpose the material: it places behind it a bank of band-pass filters tuned to the degrees of the current collection, between 110 and 1500 Hz. The bank holds the indices of the field, not the frequencies: at a fifth step the filters move with a long time constant, and four filters out of five rewrite the same value.",
     "g.pae.4": "The segment is set with the two handles above the waveform, a comb of vertical lines as tall as the material's peak at that point. Reversing the handles mirrors the segment instead of collapsing it. The amber lines inside the segment are the current read window: it travels with the head, and in random a dashed vertical marks where the next jump will land.",
@@ -663,7 +663,7 @@ const GUIDA = {
     "g.pe.movimento":  "遮断周波数に加わる低速発振の振れ幅。設定周波数を中心としたオクターブ数で表します。",
 
     "g.pae.t": "風景",
-    "g.pae.1": "録音した素材——読み込んだファイル、またはマイクからの収録——を1〜64倍の範囲で減速し、音高を変えずに鳴らします。素材は保存されません。頁を開いているあいだだけ存在します。",
+    "g.pae.1": "録音した素材——読み込んだファイル、またはマイクからの収録——を1〜10倍の範囲で減速し、音高を変えずに鳴らします。素材は保存されません。頁を開いているあいだだけ存在します。",
     "g.pae.2": "減速は緩衝記憶をゆっくり読むのではありません。それでは音高も下がります。素材は自然な速さのまま、重なり合う窓で読み、ゆっくり進むのは窓を取り出す位置のほうです。各瞬間に四枚の窓がずれた釣鐘状で重なります。これより少ないと窓の継ぎ目が聞こえます。",
     "g.pae.3": "調律は素材を移調しません。現在の音組の各音に合わせた帯域通過濾波器の列を、110〜1500 Hzの範囲で背後に置きます。列は周波数ではなく場の指標を保持するので、五度が進むと濾波器は長い時定数で移動し、五つのうち四つは同じ値を書き直します。",
     "g.pae.4": "区間は波形の上の二つの取っ手で決めます。波形はその地点の素材の山と同じ高さの縦線の櫛です。取っ手の前後を入れ替えると区間は消えず鏡像になります。区間の中で琥珀色になっている線が、いま読んでいる窓です。窓は読み取り点とともに進み、無作為では次の着地点を縦の破線が示します。",

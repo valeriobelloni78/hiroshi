@@ -705,7 +705,23 @@ const esito = await p.evaluate(async () => {
     if (R.paesaggio.veli < 20)
       R.errori.push("in otto secondi sono usciti solo " + R.paesaggio.veli + " strati");
 
-    // (d) il rallentamento non trasporta: il baricentro spettrale resta dov'è
+    /* (d) il rallentamento non trasporta: il baricentro spettrale resta dov'è.
+
+       QUESTA MISURA SI PORTA UN MATERIALE SUO, un tono fermo. Gli altri quattro
+       toni in fila servono a vedere se la testa si sposta, ma qui rovinano la
+       domanda: dove cade la testa decide quale tono si misura, e due rallentamenti
+       diversi percorrono tratti diversi — misurato, il baricentro ballava fino al
+       18% con la soglia al 20, e la prova falliva a caso senza che niente fosse
+       rotto. Riportare la testa al capo prima di ciascuna passata peggiora, perché
+       a due si arriva al secondo tono e a dieci no. Con un tono solo la risposta
+       non dipende più da dove si legge: se il baricentro si sposta, a spostarlo è
+       il rallentamento, che è esattamente quello che la prova vuole sapere. */
+    {
+      const fermo = new OfflineAudioContext(1, sr * 6, sr).createBuffer(1, sr * 6, sr);
+      const f = fermo.getChannelData(0);
+      for (let i = 0; i < f.length; i++) f[i] = 0.5 * Math.sin((2 * Math.PI * 300 * i) / sr);
+      aggiungiMateria("tono fermo", fermo);     // `aggiungiMateria` la sceglie da sé
+    }
     const baricentroDi = async (rallenta) => {
       G.pRallenta = GT.pRallenta = rallenta; effettiviPaesaggio();
       const buf = await rendiOffline(4);
@@ -725,14 +741,15 @@ const esito = await p.evaluate(async () => {
       }
       return peso > 0 ? somma / peso : 0;
     };
-    const lento = await baricentroDi(4), lentissimo = await baricentroDi(32);
-    R.paesaggio.altezza = { a4: Math.round(lento), a32: Math.round(lentissimo) };
+    const lento = await baricentroDi(2), lentissimo = await baricentroDi(10);
+    R.paesaggio.altezza = { a2: Math.round(lento), a10: Math.round(lentissimo) };
     const scarto = Math.abs(lento - lentissimo) / Math.max(1, lento);
     if (scarto > 0.2)
       R.errori.push("il rallentamento trasporta: il baricentro passa da " +
                     Math.round(lento) + " a " + Math.round(lentissimo) + " Hz");
     frasiOn = prima[0]; tessutiOn = prima[1];
     G.pRallenta = GT.pRallenta = 8; effettiviPaesaggio();
+    materiale = 0;                              // si torna ai quattro toni
 
     // (e) la coda del riverbero del paesaggio, ritarata due volte
     {
