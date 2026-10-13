@@ -471,7 +471,7 @@ function costruisciLinee(contenitore, lista, min, max, rigenerala) {
     });
 
     const nuova = document.createElement("button");
-    nuova.className = "tasto";
+    nuova.className = "tasto segno";
     nuova.textContent = "↻";
     nuova.setAttribute("aria-label", dice("a11y.nuovaIdea", { n: i + 1 }));
     nuova.addEventListener("click", () => {

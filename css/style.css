@@ -851,6 +851,16 @@ input[type=range]:focus-visible{outline:1px solid var(--ambra);outline-offset:3p
        color:var(--grigio);background:transparent;border:1px solid var(--filo);border-radius:0;
        padding:2px 5px;cursor:pointer;line-height:1}
 .tasto:hover{color:var(--inchiostro);border-color:var(--inchiostro)}
+/* UN SEGNO NON SI MISURA COME UNA PAROLA: a sette pixel «MUTE» si legge
+   benissimo, mentre la freccia dell'idea nuova era un puntino. Sta a undici e il
+   pulsante resta alto uguale all'altro senza che l'altezza sia scritta da
+   nessuna parte: la parola porta sette pixel più i due di aria sopra e sotto, il
+   segno ne porta undici e nessuna aria, e fanno tredici tutti e due. La
+   spaziatura fra le lettere non ha più niente da spaziare e se ne va, o il
+   vuoto che mette dopo l'ultima spingerebbe la freccia a sinistra del suo
+   quadrato. */
+.tasto.segno{display:grid;place-items:center;font-size:11px;line-height:1;
+             padding-top:0;padding-bottom:0;letter-spacing:0}
 .tasto[aria-pressed=true]{background:var(--inchiostro);border-color:var(--inchiostro);
                           color:var(--carta);
                           clip-path:polygon(3px 0,100% 0,100% calc(100% - 3px),calc(100% - 3px) 100%,0 100%,0 3px)}

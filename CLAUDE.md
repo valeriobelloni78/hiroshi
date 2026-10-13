@@ -1566,6 +1566,14 @@ linea si leggerebbero come due linee diverse; la colonna chiude ancora esatta su
 piano dell'effetto, perché il vuoto che la regola qui sopra mette sopra le righe
 è quello che si sono prese.
 
+UN SEGNO NON SI MISURA COME UNA PAROLA. A sette pixel «MUTE» si legge benissimo,
+e alla stessa misura la freccia dell'idea nuova era un puntino: le lettere si
+riconoscono dalla forma d'insieme, un segno solo va guardato. Sta a undici, e i
+due pulsanti restano alti uguali SENZA CHE L'ALTEZZA SIA SCRITTA da nessuna
+parte — la parola porta sette pixel più i due di aria sopra e sotto, il segno ne
+porta undici e nessuna aria, e fanno tredici tutti e due. Chi tocca uno dei due
+numeri rifaccia la somma, o i tasti di una riga finiranno a due altezze.
+
 **I numeri che cambiano** usano cifre a larghezza fissa, altrimenti tremolano
 a ogni aggiornamento.
 
