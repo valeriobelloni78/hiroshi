@@ -1550,6 +1550,22 @@ del suono accanto al cerchio, le righe delle linee accanto all'effetto — invec
 di tre colonne che finiscono a tre altezze. Sotto i 720 px la colonna sta da sola
 nella sua riga e la regola non fa niente, com'è giusto.
 
+**OGNI LINEA STA SU DUE RIGHE.** Erano cinque cose in fila dentro una colonna da
+205 px — numero, corsa, cifra, silenzio, idea nuova — e alla corsa ne restavano
+ottanta: un cursore che non si riesce a mirare, con due pulsanti larghi quanto la
+loro parola stretti uno contro l'altro. Adesso sopra ci sono il numero e la
+DURATA per tutto lo spazio che c'è (188 px a colonna piena), e sotto il silenzio
+a sinistra e l'idea nuova a destra, ai due capi della stessa corsa. LA CIFRA STA
+IN MEZZO AI DUE PULSANTI: la corsa si è presa tutta la riga di sopra, e quello è
+il solo posto rimasto che stia accanto al cursore che la scrive — resta una targa
+che legge il cursore, in riga e non in targhetta, perché la durata la decide una
+mano. Le due righe stanno nel canale del cursore e il numero resta nel suo, a
+sinistra: la cifra fa da etichetta al blocco intero invece che alla sola corsa.
+Il vuoto fra una linea e l'altra è salito da sei a undici, o le due righe di una
+linea si leggerebbero come due linee diverse; la colonna chiude ancora esatta sul
+piano dell'effetto, perché il vuoto che la regola qui sopra mette sopra le righe
+è quello che si sono prese.
+
 **I numeri che cambiano** usano cifre a larghezza fissa, altrimenti tremolano
 a ogni aggiornamento.
 

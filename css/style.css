@@ -827,12 +827,26 @@ input[type=range]:focus-visible{outline:1px solid var(--ambra);outline-offset:3p
 /* --------------------------------------------------------------- le otto linee
    Quattro righe per classe: il numero, la durata del giro, il silenzio e una
    idea nuova. Il disegno non ha modo di farle — sono comandi per una linea
-   sola — e la tavola le nomina sugli anelli con le stesse cifre. */
-.linee{display:flex;flex-direction:column;gap:6px}
-.linea{display:grid;grid-template-columns:9px minmax(0,1fr) 34px auto auto;
-       align-items:center;gap:8px}
+   sola — e la tavola le nomina sugli anelli con le stesse cifre.
+
+   OGNI LINEA STA SU DUE RIGHE, e prima stava su una: cinque cose in fila dentro
+   una colonna da 205 px lasciavano al cursore una sessantina di pixel, cioè una
+   corsa che non si riesce a mirare, e due pulsanti larghi quanto la loro parola
+   stretti uno contro l'altro. Sopra, il numero e la durata per tutto lo spazio
+   che c'è; sotto, il silenzio a sinistra e l'idea nuova a destra, ai due capi
+   della stessa corsa. La cifra della durata sta in mezzo a loro: la corsa si è
+   presa tutta la riga di sopra, e quello è il solo posto rimasto che stia
+   accanto al cursore che la scrive. */
+.linee{display:flex;flex-direction:column;gap:11px}
+.linea{display:grid;grid-template-columns:9px minmax(0,1fr);align-items:center;gap:5px 8px}
+/* Il numero resta nel suo canale a sinistra e le due righe stanno nell'altro,
+   incolonnate sul capo del cursore: la cifra fa da etichetta a tutto il blocco
+   invece che alla sola corsa. */
+.linea>input[type=range],.linea>.tasti{grid-column:2}
+.linea .tasti{display:grid;grid-template-columns:auto minmax(0,1fr) auto;
+              align-items:center;gap:8px}
 .linea .n{font-family:var(--mono);font-size:7.5px;color:var(--muto);text-align:center}
-.linea .vl{font-size:7.5px;text-align:right}
+.linea .vl{font-size:8.5px;text-align:center}
 .tasto{font-family:var(--mono);font-size:7px;letter-spacing:.12em;text-transform:uppercase;
        color:var(--grigio);background:transparent;border:1px solid var(--filo);border-radius:0;
        padding:2px 5px;cursor:pointer;line-height:1}

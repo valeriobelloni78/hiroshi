@@ -479,7 +479,14 @@ function costruisciLinee(contenitore, lista, min, max, rigenerala) {
       if (ctx) riposizionaIdx(L, orizzonteSicuro(ctx.currentTime));
     });
 
-    riga.append(n, dur, val, muto, nuova);
+    /* I due pulsanti e la cifra stanno in una riga loro, sotto il cursore: è
+       quella riga a tenerli ai due capi dello spazio, e il cursore a prendersi
+       tutto quello spazio invece di dividerlo in cinque. */
+    const tasti = document.createElement("div");
+    tasti.className = "tasti";
+    tasti.append(muto, val, nuova);
+
+    riga.append(n, dur, tasti);
     box.appendChild(riga);
     L._cursoreDurata = dur;
     L._aggiornaDurata = aggiorna;
