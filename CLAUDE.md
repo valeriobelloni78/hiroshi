@@ -1574,6 +1574,30 @@ parte — la parola porta sette pixel più i due di aria sopra e sotto, il segno
 porta undici e nessuna aria, e fanno tredici tutti e due. Chi tocca uno dei due
 numeri rifaccia la somma, o i tasti di una riga finiranno a due altezze.
 
+E UN TASTO SI CENTRA SULL'INCHIOSTRO, non sul riquadro — la stessa regola
+dell'aria dentro un piano, in piccolo. Misurato contando i pixel di una
+schermata a otto ingrandimenti, non le metriche del carattere: «MUTE» stava UN
+PIXEL A SINISTRA del centro, perché la spaziatura mette un vuoto anche dopo
+l'ultima lettera. L'aria resta dieci pixel, ma sei stanno davanti e quattro
+dietro, e i due margini dell'inchiostro vengono uguali; lo stesso vale per l'ON
+del mixer, che ha l'aria più larga e la divide allo stesso modo. La freccia
+stava 1,25 px SOTTO, perché la sua riga tiene da parte il posto per una discesa
+che una freccia non ha, e nessuna altezza di riga la rimette in mezzo — la linea
+di base non si sposta — quindi si sposta lei, di UN PIXEL INTERO, dentro un
+elemento suo: il browser arrotonda comunque al pixel la posizione verticale del
+testo, e una cifra più fine è una cifra che non arriva a schermo. IN VERTICALE
+LA PAROLA NON SI RADDRIZZA, e vale la pena saperlo prima di provarci: per lo
+stesso arrotondamento mezzo pixel di aria in più non la muove e un pixel la
+sposta troppo, e in un riquadro alto tredici con un inchiostro alto 4,2 quel
+mezzo pixel è il meglio che la griglia permetta.
+
+E `hidden` DEVE VINCERE: `[hidden]{display:none !important}` in cima al foglio.
+L'attributo nasconde con una regola del browser che pesa quanto una classe,
+quindi qualunque regola che scriva un `display` lo scopre. Visto davvero,
+provando a centrare i tasti con una griglia: il tasto CAMBIA TONALITÀ è
+ricomparso sotto il circolo delle quinte a passo NON fermo, cioè un comando
+offerto proprio dove non si può usare.
+
 **I numeri che cambiano** usano cifre a larghezza fissa, altrimenti tremolano
 a ogni aggiornamento.
 

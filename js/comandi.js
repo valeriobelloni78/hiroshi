@@ -470,9 +470,15 @@ function costruisciLinee(contenitore, lista, min, max, rigenerala) {
       muto.setAttribute("aria-pressed", String(L.muted));
     });
 
+    /* Il segno sta in un elemento suo perché va spostato dentro il pulsante —
+       la sua riga tiene da parte il posto per una discesa che non ha — e un
+       nodo di testo nudo non si sposta. */
     const nuova = document.createElement("button");
     nuova.className = "tasto segno";
-    nuova.textContent = "↻";
+    const glifo = document.createElement("span");
+    glifo.className = "glifo";
+    glifo.textContent = "↻";
+    nuova.appendChild(glifo);
     nuova.setAttribute("aria-label", dice("a11y.nuovaIdea", { n: i + 1 }));
     nuova.addEventListener("click", () => {
       rigenerala(L);

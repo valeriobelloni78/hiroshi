@@ -422,6 +422,16 @@
 }
 
 *{box-sizing:border-box}
+/* `hidden` DEVE VINCERE, e di suo non vince. L'attributo nasconde con una regola
+   del browser che pesa quanto una classe, quindi QUALUNQUE regola di questo
+   foglio che scriva un `display` su un elemento nascosto lo rimette in pagina.
+   Visto davvero: provando a centrare i tasti con una griglia, il tasto CAMBIA
+   TONALITÀ è ricomparso sotto il circolo delle quinte a passo non fermo, cioè
+   un comando offerto proprio dove non si può usare. Quella griglia se n'è
+   andata per un'altra ragione, questa riga resta: `hidden` qui nasconde il tasto
+   della tonalità, la sua etichetta e altre otto cose, e nessuna regola scritta
+   in un punto lontano deve poterle scoprire. */
+[hidden]{display:none !important}
 html,body{margin:0}
 body{
   background-color:var(--carta);
@@ -847,20 +857,47 @@ input[type=range]:focus-visible{outline:1px solid var(--ambra);outline-offset:3p
               align-items:center;gap:8px}
 .linea .n{font-family:var(--mono);font-size:7.5px;color:var(--muto);text-align:center}
 .linea .vl{font-size:8.5px;text-align:center}
+/* UN TASTO SI CENTRA SULL'INCHIOSTRO E NON SUL RIQUADRO, come l'aria dentro un
+   piano. Una parola composta non sta in mezzo al suo riquadro da sé: la
+   spaziatura mette un vuoto anche DOPO l'ultima lettera, e quel vuoto spinge le
+   lettere a sinistra del centro. Misurato sui pixel di una schermata a otto
+   ingrandimenti — l'inchiostro vero, non le metriche del carattere — «MUTE»
+   stava un pixel a sinistra: l'aria è la stessa di prima, dieci pixel, ma sei
+   stanno davanti e quattro dietro, e adesso i due margini dell'inchiostro sono
+   uguali al centesimo. Lo stesso scarto vale per l'ON del mixer, che ha l'aria
+   più larga e la divide allo stesso modo.
+
+   IN VERTICALE NON SI PUÒ, e vale la pena saperlo prima di provarci: la riga
+   comprende la discesa che le maiuscole non hanno, quindi la parola sta mezzo
+   pixel in alto, e il browser ARROTONDA AL PIXEL la posizione verticale del
+   testo. Mezzo pixel di aria in più sopra non sposta niente, un pixel intero lo
+   sposta troppo: in un riquadro alto tredici con un inchiostro alto 4,2 il mezzo
+   pixel è il meglio che la griglia dei pixel permetta. Chi ci riprova rifaccia
+   questo conto invece di aggiungere decimali che non arrivano a schermo. */
 .tasto{font-family:var(--mono);font-size:7px;letter-spacing:.12em;text-transform:uppercase;
        color:var(--grigio);background:transparent;border:1px solid var(--filo);border-radius:0;
-       padding:2px 5px;cursor:pointer;line-height:1}
+       padding:2px 4px 2px 6px;cursor:pointer;line-height:1}
 .tasto:hover{color:var(--inchiostro);border-color:var(--inchiostro)}
 /* UN SEGNO NON SI MISURA COME UNA PAROLA: a sette pixel «MUTE» si legge
    benissimo, mentre la freccia dell'idea nuova era un puntino. Sta a undici e il
    pulsante resta alto uguale all'altro senza che l'altezza sia scritta da
    nessuna parte: la parola porta sette pixel più i due di aria sopra e sotto, il
-   segno ne porta undici e nessuna aria, e fanno tredici tutti e due. La
-   spaziatura fra le lettere non ha più niente da spaziare e se ne va, o il
-   vuoto che mette dopo l'ultima spingerebbe la freccia a sinistra del suo
-   quadrato. */
+   segno ne porta undici e nessuna aria, e fanno tredici tutti e due.
+
+   E UN SEGNO NON SI CENTRA COME UNA PAROLA. La spaziatura fra le lettere non ha
+   più niente da spaziare e se ne va, e con lei l'aria sbilanciata che la
+   compensava; in verticale lo scarto va dall'altra parte ed è grande abbastanza
+   da vedersi — misurato, la freccia stava 1,25 px SOTTO il centro, perché la sua
+   riga tiene da parte il posto per una discesa che una freccia non ha. Non è un
+   difetto che si raddrizzi con un'altra altezza di riga: qualunque altezza si
+   scelga, la linea di base resta dov'è. L'unico modo è spostare il segno, e per
+   spostarlo gli serve un elemento suo — un nodo di testo nudo non si sposta.
+   UN PIXEL INTERO e non 1,25: il browser arrotonda comunque al pixel quello che
+   si scrive, e una cifra che non arriva a schermo è una cifra che mente. Quello
+   che resta è un quarto di pixel, sotto quanto la griglia sa rendere. */
 .tasto.segno{display:grid;place-items:center;font-size:11px;line-height:1;
-             padding-top:0;padding-bottom:0;letter-spacing:0}
+             padding:0 5px;letter-spacing:0}
+.tasto.segno .glifo{position:relative;top:-1px}
 .tasto[aria-pressed=true]{background:var(--inchiostro);border-color:var(--inchiostro);
                           color:var(--carta);
                           clip-path:polygon(3px 0,100% 0,100% calc(100% - 3px),calc(100% - 3px) 100%,0 100%,0 3px)}
@@ -948,7 +985,9 @@ input[type=range].verticale::-moz-range-thumb{width:9px;height:7px}
 .fader .vl{font-size:7.5px}
 /* L'ON di una sorgente sotto il suo canale: lo stesso tasto del muto di una
    linea, premuto quando la sorgente è accesa. */
-.fader .tasto{margin-top:5px;padding:3px 7px}
+/* Lo stesso scarto del muto, su un'aria più larga: il totale non cambia, cambia
+   da che parte sta. */
+.fader .tasto{margin-top:5px;padding:3px 6px 3px 8px}
 
 /* --------------------------------------------------------------- il paesaggio
    La fascia porta sopra due cursori nativi trasparenti: l'inizio del segmento
