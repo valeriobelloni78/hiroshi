@@ -219,7 +219,7 @@ tutte e due le collezioni. `altezzaCheResta()` in `deriva.js` sceglie fra quelli
 il più vicino a quello voluto — misurato, sposta il 20% delle tenute lunghe di
 tre semitoni al massimo, mai di un'ottava. Non tocca le gocce: la coda di una
 goccia sta già scendendo quando il passo arriva, mentre un tenuto sta ancora
-aprendosi. Non dipende dal modo del materiale: «ancora» e «deriva» non c'entrano
+aprendosi. Non dipende dal MOVIMENTO: «ancora» e «deriva» non c'entrano
 niente, il problema è una nota lunga che attraversa un cambio d'armonia.
 
 **CON TUTTI E DUE I MATERIALI SU «ANCORA» LA TONALITÀ SI SCEGLIE A MANO.** In
@@ -1463,6 +1463,27 @@ quello che sta DENTRO il suono da quello che gli viene DOPO — prima lo faceva 
 linea — e senza quella separazione sarebbero cinque manopole in fila senza una
 ragione per cui tre cambiano nome quando si tocca una tendina.
 
+**LA TENDINA «ANCORA · DERIVA» SI CHIAMA MOTO**, e si chiamava MATERIALE. Decide
+che cosa succede alle idee al passo di quinta — se restano quelle che sono o si
+rinnovano — e «materiale» diceva la cosa su cui agisce, non quello che fa; per di
+più la stessa parola è il campione del paesaggio, che è un'altra cosa ancora. La
+chiave è cambiata col nome, `et.moto`: una chiave che si chiama «materiale» e dice
+un'altra parola è una bugia che si scopre tardi.
+
+MOTO E NON MOVIMENTO, perché nei tessuti «Movimento» è già un filetto: il
+movimento INTERNO del tenuto — centesimi di semitono, battimenti, banda — contro
+il moto del materiale nel tempo lungo. Due nomi uguali a quindici centimetri
+l'uno dall'altro nella stessa colonna sono due comandi che si scambiano di posto
+nella testa di chi legge.
+
+LE ALTRE TRE LINGUE HANNO DOVUTO SCEGLIERE, e si vede come la regola lavora. In
+francese «Mouvement» è il filetto e «Allure» è già il passo, quindi il moto è
+MARCHE. In giapponese il filetto è 「動き」 e il moto 「動き方」, «il modo di
+muoversi». In inglese il moto è MOTION — in musica è proprio quello, `contrary`
+`motion` — e il filetto è passato da «Motion» a «Movement», che è la traduzione
+fedele di «Movimento»: l'italiano è la lingua in cui i nomi sono stati inventati, e
+quando due parole si contendono un posto si guarda quale traduce meglio l'originale.
+
 **LE DUE CLASSI SONO SIMMETRICHE, comando per comando**, e la simmetria è una
 cosa da difendere: cinque filetti, tre tracce di corona, due manopole, la
 tendina dell'effetto con le sue tre manopole, quattro righe di linee, il modo
@@ -1736,7 +1757,7 @@ per canale, colore d'insieme, equalizzatore a otto bande, limitatore doppio,
 misuratori), la **deriva** trapiantata intatta, il **modello delle linee** con
 piani, trame e ricambio, gli **otto timbri** delle gocce, gli **otto tenuti**
 dei tessuti con la normalizzazione del bus, i **sedici mood**, le **due
-influenze esterne**, i **comandi per linea**, il **modo del materiale** col
+influenze esterne**, i **comandi per linea**, il **movimento del materiale** col
 rinnovo al passo di quinta, l'**accensione per classe**, lo **scheduler** e
 l'**esportazione fuori tempo reale**.
 

@@ -420,17 +420,17 @@ Ogni 2′ 30″ esatti la collezione si sposta di una quinta. Fra una pentatonic
 Il baricentro è il movimento continuo: le altezze restano ferme e a scorrere è il punto attorno a cui vengono scelte. Lo governano sei canali a rapporti irrazionali, quindi il pezzo non ripassa mai esattamente dove è già stato. La corsia in fondo alla sezione ne mostra quindici minuti; le colonne in ambra segnano i punti di inversione.
 
 <!-- g.der.4 -->
-Il comando MATERIALE decide che cosa succede alle idee al passo di quinta.
+Il comando MOTO decide che cosa succede alle idee al passo di quinta.
 
 <!-- g.der.5 -->
-Con il MATERIALE di tutte e due le classi su «ancora», al centro del circolo delle quinte compare CAMBIA TONALITÀ: ogni clic sposta la collezione di una quinta in senso orario e rimanda di 2′ 30″ il passo automatico. Con una sola delle due classi in deriva il comando non compare. Il salto vale da subito e non protegge le tenute già in aria, che tengono la loro nota fino alla fine: la protezione del passo di quinta riguarda il passo previsto, non un salto deciso adesso.
+Con il MOTO di tutte e due le classi su «ancora», al centro del circolo delle quinte compare CAMBIA TONALITÀ: ogni clic sposta la collezione di una quinta in senso orario e rimanda di 2′ 30″ il passo automatico. Con una sola delle due classi in deriva il comando non compare. Il salto vale da subito e non protegge le tenute già in aria, che tengono la loro nota fino alla fine: la protezione del passo di quinta riguarda il passo previsto, non un salto deciso adesso.
 
 <!-- tabella
-  intestazione: et.materiale | g.col.fun
+  intestazione: et.moto | g.col.fun
   riga: modo.ancora | g.p.ancora
   riga: modo.deriva | g.p.deriva
 -->
-| MATERIALE | Funzione |
+| MOTO | Funzione |
 |---|---|
 | ancora | Le idee restano quelle fissate dal mood: cambiano di altezza seguendo il campo, ma la sequenza resta la stessa. |
 | deriva | Le idee si rigenerano a ogni passo di quinta. |
