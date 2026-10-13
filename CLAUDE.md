@@ -222,12 +222,32 @@ goccia sta già scendendo quando il passo arriva, mentre un tenuto sta ancora
 aprendosi. Non dipende dal MOVIMENTO: «ancora» e «deriva» non c'entrano
 niente, il problema è una nota lunga che attraversa un cambio d'armonia.
 
-**CON TUTTI E DUE I MATERIALI SU «ANCORA» LA TONALITÀ SI SCEGLIE A MANO.** In
-quel modo il pezzo non rinnova più le idee, e la sola cosa che continua a
-cambiare sotto le dita è l'armonia: il centro del circolo delle quinte smette di
-essere un'etichetta e diventa un comando — CAMBIA TONALITÀ, una quinta ORARIA per
-clic. Basta che UNA delle due classi torni in deriva perché sparisca: una mano
-sul volante di una cosa che sta già guidando non è un comando, è un dubbio.
+**CON TUTTI E DUE I MOTI SU «ANCORA» IL PASSO DI QUINTA SI FERMA, e la tonalità la
+sceglie la mano.** In quel modo il pezzo non rinnova più le idee: fermare anche
+l'armonia è dire la stessa frase fino in fondo — lo strumento è congelato e la
+sola cosa che si muove è la mano. Il centro del circolo smette di essere
+un'etichetta e diventa un comando, CAMBIA TONALITÀ, una quinta ORARIA per clic.
+Basta che UNA delle due classi torni in deriva perché il comando sparisca e la
+modulazione riprenda: una mano sul volante di una cosa che sta già guidando non è
+un comando, è un dubbio.
+
+IL CONTO ALLA ROVESCIA SI CONGELA, non si azzera: a passo fermo `prossimaQuinta`
+scorre insieme al tempo, quindi tornando in deriva restano i secondi che
+restavano — la stessa promessa della pausa, estesa alla modulazione. Nel frattempo
+la lettura «prossima» scrive un trattino e il circolo non disegna né il tratteggio
+della nota che entra né la barretta della prossima tonica: un segno che indica una
+meta che non arriverà è un disegno che mente. IL BARICENTRO CONTINUA, ed è voluto:
+quello è il respiro del campo e non l'armonia, e fermarlo vorrebbe dire fermare il
+pezzo invece di tenerlo in una tonalità.
+
+LA CONDIZIONE STA IN UN POSTO SOLO, `passoFermo()` in `linee.js`, e la leggono in
+tre: il motore per non far scattare la quinta, i comandi per mostrare il tasto e
+scrivere il trattino, la tavola per non disegnare la meta. E `deriva.js` NON la
+guarda: sta in cima alla catena e non sa che cosa sia un moto, quindi `avanzaDeriva`
+riceve un booleano da chi lo sa. `prova.mjs` percorre dieci minuti a passo fermo e
+pretende zero quinte, poi ne percorre cinque con un moto in deriva e ne pretende
+almeno una: senza il secondo conto starebbe misurando un motore fermo invece di un
+passo fermo.
 
 Orario vuol dire sempre +1, non il passo sturmiano: il cammino che sale nel 61,8%
 dei casi è la DERIVA, e la mano non ci entra. Per la stessa ragione `spingiQuinta()`

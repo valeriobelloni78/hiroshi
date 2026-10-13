@@ -256,7 +256,23 @@ function altezzaCheResta(rel, spread) {
    è sospeso, quindi in pausa la deriva aspetta invece di correre di nascosto.
    È la stessa promessa che la pausa fa già per i cicli — si riprende da dov'era
    — estesa alla sola cosa che in Rada non aveva un "dov'era".              */
-function avanzaDeriva(t) {
+/* L'ULTIMO ISTANTE VISTO, per congelare il conto alla rovescia invece di
+   fermarlo in un punto qualunque: a passo fermo `prossimaQuinta` scorre insieme al
+   tempo, quindi quando il moto torna in deriva riparte con i secondi che
+   restavano, non da capo e non in ritardo. È la stessa promessa della pausa — si
+   riprende da dov'era — estesa alla modulazione.
+
+   Se il tempo torna indietro, cioè a ogni rendering fuori tempo reale, il passo
+   vale zero: un `dt` negativo spingerebbe la prossima quinta nel passato e la farebbe
+   scattare subito. */
+let ultimoT = 0;
+
+/* `fermo` glielo dice il motore: con tutti e due i MOTI su «ancora» la collezione
+   non si sposta più da sé, e la tonalità la sceglie la mano col tasto al centro
+   del circolo. Il baricentro continua: quello è il respiro del campo, non
+   l'armonia, e fermarlo vorrebbe dire fermare il pezzo invece di tenerlo in una
+   tonalità. */
+function avanzaDeriva(t, fermo) {
   /* Ogni parametro pesca da una terna diversa: se due parametri condividessero
      tutti e tre i canali si muoverebbero all'unisono, e la deriva si
      ridurrebbe a una manopola sola tirata da una mano invisibile.         */
@@ -265,6 +281,10 @@ function avanzaDeriva(t) {
   deriva.spread = misto(t, 2, 0, 4);
   deriva.head   = misto(t, 3, 1, 5);
   deriva.corpo  = misto(t, 4, 5, 0);
+
+  const dt = t > ultimoT ? t - ultimoT : 0;
+  ultimoT = t;
+  if (fermo) { prossimaQuinta += dt; return; }
 
   if (t >= prossimaQuinta) {
     const su = Math.floor((passoN + 1) * ALFA) - Math.floor(passoN * ALFA);

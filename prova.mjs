@@ -1156,6 +1156,61 @@ const esito = await p.evaluate(async () => {
     }
   }
 
+  /* 13 · A PASSO FERMO LA TONALITÀ NON SI MUOVE DA SÉ.
+
+        Con tutti e due i MOTI su «ancora» la collezione resta dov'è finché non la
+        sposta una mano: il pezzo non rinnova le idee e non cambia armonia. Qui si
+        percorre il tempo con `passo()`, che è il modo in cui questo motore lo fa
+        anche per scrivere un wav, e si contano le quinte.
+
+        La prova verifica anche sé stessa: lo stesso tempo percorso con un moto in
+        deriva DEVE far scattare la quinta, o starebbe misurando un motore fermo
+        invece di un passo fermo. E rimette tutto dov'era, perché le prove che
+        vengono dopo trovino il modello che si aspettano. */
+  {
+    const salva = { g: MODI.gocce, t: MODI.tessuti, quinta, passiQuinta, passoN,
+                    prossimaQuinta, ultimoT };
+    const percorri = (da, quanti) => { for (let t = da; t < da + quanti; t += 0.5) passo(t, false); };
+
+    /* LE CONDIZIONI SI FISSANO, o la prova misura quello che capita: le verifiche
+       di prima hanno percorso il tempo e lasciato `prossimaQuinta` dove sono
+       arrivate. Qui il prossimo passo si mette a trenta secondi da adesso, così
+       dentro i dieci minuti di passo fermo ce ne stanno quattro mancati e la
+       ripresa non deve aspettarne uno intero. */
+    costruisciMotore();
+    MODI.gocce = MODI.tessuti = "ancora";
+    ultimoT = 0; prossimaQuinta = 30;
+    const zero = passiQuinta, tonica = tonalita();
+    percorri(0, 4 * PASSO_QUINTA);                 // dieci minuti: quattro passi mancati
+    const fermi = passiQuinta - zero;
+    const rimandata = prossimaQuinta;              // il conto si è spostato col tempo
+
+    MODI.gocce = "deriva";
+    percorri(4 * PASSO_QUINTA, 2 * PASSO_QUINTA + 5);
+    const ripresi = passiQuinta - zero - fermi;
+
+    Object.assign(MODI, { gocce: salva.g, tessuti: salva.t });
+    quinta = salva.quinta; passiQuinta = salva.passiQuinta; passoN = salva.passoN;
+    prossimaQuinta = salva.prossimaQuinta; ultimoT = salva.ultimoT;
+    costruisciCampo();
+
+    R.passoFermo = { tonicaDiPartenza: tonica, quinteAPassoFermo: fermi,
+                     quinteDopo: ripresi, contoCongelatoA: +rimandata.toFixed(0) };
+    // Il conto alla rovescia si congela invece di fermarsi in un punto: dopo dieci
+    // minuti di passo fermo i trenta secondi che restavano devono essere ancora
+    // trenta, cioè la prossima quinta è scivolata avanti con il tempo.
+    if (Math.abs(rimandata - (4 * PASSO_QUINTA + 30)) > 1) {
+      R.errori.push("il conto alla rovescia non si congela: prossima quinta a " +
+                    rimandata.toFixed(1) + " invece di " + (4 * PASSO_QUINTA + 30));
+    }
+    if (fermi !== 0) {
+      R.errori.push("a passo fermo la tonalità si è mossa da sé: " + fermi + " quinte in dieci minuti");
+    }
+    if (ripresi < 1) {
+      R.errori.push("tornando in deriva il passo non riprende: " + ripresi + " quinte in cinque minuti");
+    }
+  }
+
   return R;
 });
 

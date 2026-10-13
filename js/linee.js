@@ -217,6 +217,17 @@ let timbroTessuti = "marea";
    luce sulla stessa idea. */
 const MODI = { gocce: "deriva", tessuti: "deriva" };
 
+/* CON TUTTI E DUE I MOTI SU «ANCORA» IL PASSO DI QUINTA SI FERMA. In quel modo il
+   pezzo non rinnova più le idee, e fermare anche l'armonia è dire la stessa frase
+   fino in fondo: lo strumento è congelato e la sola cosa che si muove è la mano,
+   col tasto CAMBIA TONALITÀ al centro del circolo. Basta che UNA delle due classi
+   torni in deriva perché la modulazione riprenda, coi secondi che le restavano.
+
+   La leggono in tre — il motore per non far scattare la quinta, i comandi per
+   mostrare il tasto e scrivere «—» dove c'era il conto alla rovescia, la tavola per
+   non disegnare una meta che non arriverà — quindi sta qui una volta sola. */
+const passoFermo = () => MODI.gocce === "ancora" && MODI.tessuti === "ancora";
+
 /* L'effetto inserito su ciascuna classe. È una scelta discreta come il timbro
    e come il modo, quindi non passa da `GT`: non c'è niente da lisciare fra
    «eco» e «coro». La dissolvenza che evita il clic la fa il banco, dove stanno

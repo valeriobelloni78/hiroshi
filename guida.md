@@ -423,7 +423,7 @@ Il baricentro è il movimento continuo: le altezze restano ferme e a scorrere è
 Il comando MOTO decide che cosa succede alle idee al passo di quinta.
 
 <!-- g.der.5 -->
-Con il MOTO di tutte e due le classi su «ancora», al centro del circolo delle quinte compare CAMBIA TONALITÀ: ogni clic sposta la collezione di una quinta in senso orario e rimanda di 2′ 30″ il passo automatico. Con una sola delle due classi in deriva il comando non compare. Il salto vale da subito e non protegge le tenute già in aria, che tengono la loro nota fino alla fine: la protezione del passo di quinta riguarda il passo previsto, non un salto deciso adesso.
+Con il MOTO di tutte e due le classi su «ancora» il passo di quinta si ferma: la collezione resta dov'è finché non la sposta una mano, e al centro del circolo delle quinte compare CAMBIA TONALITÀ — ogni clic la sposta di una quinta in senso orario. Il conto alla rovescia si congela e riprende coi secondi che restavano appena una delle due classi torna in deriva; nel frattempo la lettura «prossima» scrive un trattino, e il circolo non segna nessuna meta. Il baricentro continua a muoversi: quello è il respiro del campo, non l'armonia. Il salto a mano vale da subito e non protegge le tenute già in aria, che tengono la loro nota fino alla fine.
 
 <!-- tabella
   intestazione: et.moto | g.col.fun

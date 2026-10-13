@@ -188,7 +188,7 @@ function passo(now, nascosta) {
   const dt = clamp(now - ultimoGiro, 0, 0.5);
   ultimoGiro = now;
 
-  avanzaDeriva(now);
+  avanzaDeriva(now, passoFermo());
 
   // I VALORI EFFICACI SI CALCOLANO QUI, non nel ciclo del disegno. Il disegno
   // gira solo quando c'è uno schermo davanti; il rendering fuori tempo reale
@@ -538,7 +538,7 @@ function istantaneaModello() {
     frasi: frasi.map(istantaneaLinea),
     tessuti: tessuti.map(istantaneaLinea),
     deriva: { ...deriva },
-    quinta, passiQuinta, passoN, prossimaQuinta, ultimaQuinta,
+    quinta, passiQuinta, passoN, prossimaQuinta, ultimaQuinta, ultimoT,
     bookedUntil, LOOKAHEAD, ultimoGiro,
     prossimoVelo, veliEmessi, testaOra, versoTesta, sostaResta, prossimaArea, letturaVista,
     tenute: tenuteAperte.slice(),
@@ -559,7 +559,7 @@ function ripristinaModello(s) {
 
   Object.assign(deriva, s.deriva);
   quinta = s.quinta; passiQuinta = s.passiQuinta; passoN = s.passoN;
-  prossimaQuinta = s.prossimaQuinta; ultimaQuinta = s.ultimaQuinta;
+  prossimaQuinta = s.prossimaQuinta; ultimaQuinta = s.ultimaQuinta; ultimoT = s.ultimoT;
   costruisciCampo();                     // la scala dipende dalla quinta rimessa
 
   bookedUntil = s.bookedUntil; LOOKAHEAD = s.LOOKAHEAD; ultimoGiro = s.ultimoGiro;

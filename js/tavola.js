@@ -1104,10 +1104,17 @@ function circoloQuinte(box) {
   arco(cx, cy, R, giro(qui - 0.4), giro(4.8), spessore, tinta("inchiostro-2"));
 
   // Quella che entrerà al prossimo passo: la stessa barra, tratteggiata e muta.
-  T.save();
-  T.setLineDash([2, 2.5]);
-  arco(cx, cy, R, giro(entra - 0.4), giro(0.8), spessore * 0.6, tinta("muto"));
-  T.restore();
+  // A PASSO FERMO NON SI DISEGNA, come la barretta della prossima tonica più
+  // sotto: con tutti e due i moti su «ancora» la collezione non si sposta finché
+  // non la sposta una mano, e un segno che indica una meta che non arriverà è un
+  // disegno che mente.
+  const fermo = passoFermo();
+  if (!fermo) {
+    T.save();
+    T.setLineDash([2, 2.5]);
+    arco(cx, cy, R, giro(entra - 0.4), giro(0.8), spessore * 0.6, tinta("muto"));
+    T.restore();
+  }
 
   for (let k = 0; k < 12; k++) {
     const inUso = ((k - qui + 12) % 12) <= 4;
@@ -1132,7 +1139,7 @@ function circoloQuinte(box) {
   // che unisce i due cerchi, cioè come un legame fra la tonica e la collezione,
   // che è vero ma è già detto dall'arco.
   tacca(cx, cy, giro(qui), r, r + vano * 0.62, Math.max(2.2, R * 0.034), tinta("ambra"));
-  tacca(cx, cy, giro(poi), r - vano * 0.52, r, Math.max(2, R * 0.028), tinta("muto"));
+  if (!fermo) tacca(cx, cy, giro(poi), r - vano * 0.52, r, Math.max(2, R * 0.028), tinta("muto"));
 
   // IL PUNTO DI FASE SE N'È ANDATO CON LE DUE BARRETTE. Camminava sull'anello
   // dalla tonica verso la meta, e per i primi secondi dopo un passo stava

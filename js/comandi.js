@@ -822,9 +822,9 @@ const selTracce = tendina("tracce", Object.keys(TRACCE), nomeTracce, modoTracce,
    stessa riga sopra la nota, e due righe dove prima ce n'era una sposterebbero
    la nota giù dal centro del cerchio. */
 const btnTonalita = el("cambiaTonalita");
-function tonalitaAMano() {
-  return MODI.gocce === "ancora" && MODI.tessuti === "ancora";
-}
+// La condizione è `passoFermo()`, in `linee.js`: tasto e passo fermo sono la
+// stessa frase detta due volte, e due copie si scollerebbero al primo ritocco.
+const tonalitaAMano = passoFermo;
 function mostraCambioTonalita() {
   const aMano = tonalitaAMano();
   if (btnTonalita.hidden !== !aMano) {
@@ -983,7 +983,10 @@ function battito() {
   if (running && avvioSessione === null) avvioSessione = t;
   el("sessione").textContent = mmss(running ? t - (avvioSessione || 0) : 0);
   el("quinteFatte").textContent = String(passiQuinta);
-  el("prossima").textContent = minsec(Math.max(0, prossimaQuinta - t));
+  // A passo fermo non c'è un conto alla rovescia da mostrare: un numero che non
+  // scende racconterebbe un'attesa che non finisce, e inventarne uno sarebbe
+  // peggio. Il trattino dice che non si va da nessuna parte.
+  el("prossima").textContent = passoFermo() ? "—" : minsec(Math.max(0, prossimaQuinta - t));
   el("tonalita").textContent = nomeNota(tonalita());
   mostraCambioTonalita();
   // Le note in uso, dalla tonica in su nell'ordine della scala: sul circolo sono
