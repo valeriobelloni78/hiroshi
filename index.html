@@ -423,13 +423,24 @@
                  value="100" data-i18n-aria="a11y.fine">
         </div>
 
+        <!-- DUE MANOPOLE ACCANTO ALL'ONDA: la sosta, che serve solo al random, e il
+             guadagno del campione. Sono quelle del limitatore — quadro da
+             settantaquattro — perché due da cento in una colonna da duecentocinque
+             si toccherebbero. -->
         <div class="lato-paesaggio">
-          <div class="manopola">
+          <div class="manopola piccola">
             <div class="quadro" data-manopola="pSosta">
-              <input id="pSosta" type="range" min="0" max="100" step="1" value="50"
+              <input id="pSosta" type="range" step="1" value="50"
                      data-i18n-aria="a11y.sosta">
             </div>
             <span class="fl" data-i18n="fl.sosta">Sosta</span><span class="vl" id="vPsosta">5,5 s</span>
+          </div>
+          <div class="manopola piccola">
+            <div class="quadro" data-manopola="pGuadagno">
+              <input id="pGuadagno" type="range" step="0.5" value="0"
+                     data-i18n-aria="a11y.guadagno">
+            </div>
+            <span class="fl" data-i18n="fl.guadagno">Guadagno</span><span class="vl" id="vGuadagno">0,0 dB</span>
           </div>
         </div>
       </div>

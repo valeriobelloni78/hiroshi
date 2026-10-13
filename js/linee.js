@@ -50,7 +50,7 @@ const G  = {
   // La lettura del paesaggio è un indice fra cinque, non una corsa: i nomi
   // stanno in `LETTURA`, dentro `paesaggio.js`. La sosta è quella del random,
   // in 0÷100; i secondi li fa `sostaDi()`.
-  pLettura: 0, pSosta: 50,
+  pLettura: 0, pSosta: 50, pGuadagno: 0,
   /* le tre manopole dell'inserto, una terna per classe. Stanno in 0÷100 e
      basta: che cosa vogliano dire lo decide l'effetto scelto, e la conversione
      nell'unità vera sta in `effetti.js`. Chi le mettesse in unità reali
@@ -63,7 +63,8 @@ const GT = { ...G };
 const effG  = { registro: 45, calore: 70, spazio: 72, densita: 5, addensamento: 30, colore: 2500 };
 const effGT = { registro: 55, intreccio: 45, apertura: 3.0, chiusura: 4.3, passo: 38, livello: 32, spazio: 55 };
 const effGP = { inizio: 0, fine: 100, rallenta: 8, velo: 700, sparpaglio: 35,
-                accordatura: 55, fuoco: 18, coda: 12, tono: 2000, riverbero: 70 };
+                accordatura: 55, fuoco: 18, coda: 12, tono: 2000, riverbero: 70,
+                guadagno: 0 };
 
 /* ------------------------------------------------- le due influenze esterne
    Sono simmetriche e non si toccano: **l'ora del giorno inclina le gocce, la
@@ -147,6 +148,7 @@ const CORSA_P = {
   pCoda:        [1, 40],
   pTono:        [300, 12000],
   pRiverbero:   [0, 100],
+  pGuadagno:    [-24, 12],
   pSosta:       [0, 100],
 };
 const fraP = (k) => clamp(G[k], CORSA_P[k][0], CORSA_P[k][1]);
@@ -164,6 +166,7 @@ function effettiviPaesaggio() {
   effGP.tono        = fraP("pTono");
   effGP.riverbero   = fraP("pRiverbero");
   effGP.sosta       = fraP("pSosta");
+  effGP.guadagno    = fraP("pGuadagno");
 }
 
 function effettiviTessuti() {

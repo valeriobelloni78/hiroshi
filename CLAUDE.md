@@ -391,6 +391,37 @@ sta in due posti che devono dire lo stesso numero — `G` in `linee.js` e
 l'attributo `value` dell'input — perché i comandi, dopo aver scritto la corsa,
 rimettono il valore proprio dall'attributo (vedi l'insidia del clamp al parse).
 
+**IL GUADAGNO DEL CAMPIONE STA ALL'INGRESSO DELLA CATENA**, prima
+dell'accordatura e prima del riverbero: è il livello della MATERIA, non un
+livello d'uscita. Dopo il banco di risonatori una registrazione presa da lontano
+arriverebbe ai filtri senza energia da dargli, e la coda crescerebbe o calerebbe
+insieme al secco invece di stare dov'è. Non è l'asta del mixer, che sta in fondo
+al banco e dosa questa sorgente contro le altre due: quella è una decisione di
+missaggio, questa dice quanto vale il suono che si è caricato.
+
+È UN NODO E NON UN FATTORE SUGLI STRATI. Moltiplicare la `vel` di ciascuno
+lascerebbe fuori quelli già prenotati, e muovendo la manopola il livello
+arriverebbe col ritardo di una finestra intera — fino a due secondi su un velo
+lungo. Il nodo lo scrive `taraPaesaggio()`, quindi vale anche dentro un rendering
+fuori tempo reale, e `prova.mjs` lo verifica: dodici decibel in meno devono farsi
+sentire all'uscita — misurato, −11,6, il mezzo decibel di scarto è la coda del
+riverbero che si spegne più tardi.
+
+**E L'ONDA SI COMPRIME CON LUI.** Una manopola che muove il suono e non muove il
+disegno di quel suono è una manopola che mente piano. Alle punte le linee si
+fermano al bordo della fascia: una linea che uscisse direbbe una quantità che non
+si può leggere, mentre una punta schiacciata contro il filo dice «oltre», che è
+l'informazione vera.
+
+PER QUESTO IL DISEGNO HA DUE CACHE E NON UNA. Leggere il buffer — quattro milioni
+di campioni per trecento colonne — dipende solo dal materiale e dalla larghezza, e
+si fa una volta; disegnare le trecento linee dipende anche dal guadagno, che è una
+mano su una manopola. Con una cache sola, mezzo decibel rifarebbe anche la
+scansione e il trascinamento striderebbe sull'audio. E il guadagno NON entra nella
+normalizzazione dei picchi: lì c'è il materiale com'è, se no la normalizzazione si
+rimangerebbe tutto quello che la mano aggiunge e girare la manopola non
+cambierebbe niente.
+
 **LE CORSE DEL PAESAGGIO STANNO IN UN POSTO SOLO**, `CORSA_P` in `linee.js`, e le
 leggono in tre: `comandi.js` per scrivere `min` e `max` sugli input,
 `effettiviPaesaggio()` per i clamp, e la tavola — con `giroP()` — per sapere dove
@@ -1771,7 +1802,8 @@ vetro per classe, il banco e la deriva su uno ciascuno, il resto sulla carta:
   chiara che cammina, e nel random un tratteggio dove atterrerà il prossimo
   salto. A sinistra, sotto la colonna delle gocce, le
   cinque letture — avanti, indietro, pendolo, fermo, random — e a destra, sotto
-  quella dei tessuti, la manopola della sosta del random; sotto, le OTTO MANOPOLE
+  quella dei tessuti, due manopole: la sosta del random e il GUADAGNO del campione,
+  che comprime e espande anche l'onda disegnata; sotto, le OTTO MANOPOLE
   — rallentamento, velo, sparpaglio, accordatura, fuoco, coda, tono, riverbero —
   su una griglia che si richiude a quattro e poi a due;
 - **05 · deriva**: un pannello a sinistra, largo quanto la colonna delle gocce

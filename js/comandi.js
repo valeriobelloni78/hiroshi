@@ -348,6 +348,11 @@ cursore("pRiverbero",  "vRiverbero",   con(suGT("pRiverbero"), (v) => numero(v /
    quattro la manopola si spegne davvero — `disabled` — come quelle di un inserto
    vuoto: un comando che si muove e non fa niente è peggio di uno che dice di no. */
 cursore("pSosta",      "vPsosta",      con(suGT("pSosta"), (v) => numero(sostaDi(v), 1) + " s"));
+/* IL GUADAGNO DEL CAMPIONE è il livello della materia, non quello della sorgente:
+   l'asta del mixer dosa il paesaggio contro frasi e tessuti, questa manopola dice
+   quanto vale il suono che si è caricato. Si legge in decibel col segno, come le
+   aste del banco, perché è la stessa grandezza detta nella stessa unità. */
+cursore("pGuadagno",   "vGuadagno",    con(suGT("pGuadagno"), (v) => dB(v) + " dB"));
 const MODI_LETTURA = [...document.querySelectorAll(".modo[data-lettura]")];
 function segnaLettura() {
   for (const b of MODI_LETTURA)

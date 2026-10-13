@@ -883,13 +883,25 @@ function zeroAste(box) {
 const PASSO_ONDA = 4;            // il passo delle linee: meno fitte di un pettine vero
 const SPESSORE_ONDA = 1.6;
 
-/* L'onda si calcola una volta per materiale e per riquadro, e si tiene disegnata
-   su una tela sua. Un file di novanta secondi sono quattro milioni di campioni e
-   trecento colonne: rifarle sessanta volte al secondo sarebbe l'unica cosa in
-   tutta la tavola capace di far saltare il suono. I PICCHI RESTANO IN CACHE con
-   la tela, perché le linee in ambra li rileggono. */
+/* DUE CACHE E NON UNA, perché le due cose costano in modo diverso. LEGGERE IL
+   BUFFER — quattro milioni di campioni per trecento colonne — dipende solo dal
+   materiale e dalla larghezza, e si fa una volta. DISEGNARE le trecento linee
+   dipende anche dal GUADAGNO del campione, che è una manopola: girandola l'onda
+   si comprime e si espande, e se ogni mezzo decibel rifacesse anche la scansione
+   il trascinamento striderebbe sull'audio. Separate, muovere il guadagno costa
+   trecento rettangoli.
+
+   I PICCHI RESTANO IN CACHE anche per le linee in ambra della finestra, che li
+   rileggono col medesimo fattore: due scale diverse si vedrebbero subito. */
 let ondaTela = null, ondaChiave = "";
+let picchiChiave = "";
 let ondaPicchi = null, ondaLargoCol = 0;
+
+/* Il guadagno in ampiezza, com'è adesso. L'onda lo porta fino al bordo e lì si
+   ferma: una linea che uscisse dalla fascia direbbe una quantità che non si può
+   leggere, mentre una punta schiacciata contro il filo dice «oltre», che è
+   l'informazione vera. */
+const fattoreOnda = () => Math.pow(10, effGP.guadagno / 20);
 
 /* Una linea sola, dalla riga di mezzo in su e in giù. A materiale muto resta un
    trattino sulla riga: una colonna che sparisse si leggerebbe come un buco nel
@@ -901,27 +913,38 @@ function lineaOnda(C, x, mezzo, mezzaAltezza, u, colore) {
 }
 
 function disegnaOnda(m, largo, alto) {
-  const chiave = m.nome + "|" + m.durata + "|" + Math.round(largo) + "|" + Math.round(alto);
+  const guadagno = fattoreOnda();
+  const chiave = m.nome + "|" + m.durata + "|" + Math.round(largo) + "|" + Math.round(alto) +
+                 "|" + guadagno.toFixed(3);
   if (ondaChiave === chiave && ondaTela) return ondaTela;
 
   const n = Math.max(8, Math.floor(largo / PASSO_ONDA));
-  const d = m.buffer.getChannelData(0);
-  const picchi = new Float32Array(n);
-  const passo = d.length / n;
-  let massimo = 0;
-  for (let i = 0; i < n; i++) {
-    const a = Math.floor(i * passo), b = Math.min(d.length, Math.floor((i + 1) * passo));
-    let max = 0;
-    // Su buffer lunghi non serve guardarli tutti: un campione ogni tre dà lo
-    // stesso profilo a occhio e costa un terzo.
-    for (let k = a; k < b; k += 3) { const x = Math.abs(d[k]); if (x > max) max = x; }
-    picchi[i] = max;
-    if (max > massimo) massimo = max;
+  const suo = m.nome + "|" + m.durata + "|" + n;
+  if (picchiChiave !== suo || !ondaPicchi || ondaPicchi.length !== n) {
+    const d = m.buffer.getChannelData(0);
+    const picchi = new Float32Array(n);
+    const passo = d.length / n;
+    let massimo = 0;
+    for (let i = 0; i < n; i++) {
+      const a = Math.floor(i * passo), b = Math.min(d.length, Math.floor((i + 1) * passo));
+      let max = 0;
+      // Su buffer lunghi non serve guardarli tutti: un campione ogni tre dà lo
+      // stesso profilo a occhio e costa un terzo.
+      for (let k = a; k < b; k += 3) { const x = Math.abs(d[k]); if (x > max) max = x; }
+      picchi[i] = max;
+      if (max > massimo) massimo = max;
+    }
+    // Si normalizza sul picco del materiale: una registrazione presa piano
+    // altrimenti sarebbe una riga piatta, e non ci si potrebbe mirare niente. Il
+    // guadagno NON entra qui: qui c'è il materiale com'è, e la manopola lo scala
+    // al disegno — altrimenti alzandola non succederebbe niente, perché la
+    // normalizzazione rimangerebbe tutto quello che la mano aggiunge.
+    const scala = massimo > 1e-4 ? 1 / massimo : 0;
+    for (let i = 0; i < n; i++) picchi[i] = clamp(picchi[i] * scala, 0, 1);
+    ondaPicchi = picchi;
+    picchiChiave = suo;
   }
-  // Si normalizza sul picco del materiale: una registrazione presa piano
-  // altrimenti sarebbe una riga piatta, e non ci si potrebbe mirare niente.
-  const scala = massimo > 1e-4 ? 1 / massimo : 0;
-  for (let i = 0; i < n; i++) picchi[i] = clamp(picchi[i] * scala, 0, 1);
+  const picchi = ondaPicchi;
 
   ondaTela = ondaTela || document.createElement("canvas");
   ondaTela.width = Math.round(largo * DPR);
@@ -941,10 +964,10 @@ function disegnaOnda(m, largo, alto) {
 
   const inchiostro = tinta("inchiostro");
   for (let i = 0; i < n; i++) {
-    lineaOnda(O, (i + 0.5) * largoCol, mezzo, mezzaAltezza, picchi[i], inchiostro);
+    lineaOnda(O, (i + 0.5) * largoCol, mezzo, mezzaAltezza,
+              Math.min(1, picchi[i] * guadagno), inchiostro);
   }
 
-  ondaPicchi = picchi;
   ondaLargoCol = largoCol;
   ondaChiave = chiave;
   return ondaTela;
@@ -998,8 +1021,10 @@ function fasciaPaesaggio(box, ora) {
     const ambra = tinta("ambra");
     const da = Math.max(0, Math.floor((tx - box.x) / ondaLargoCol));
     const a = Math.min(ondaPicchi.length - 1, Math.ceil((tx + larghezzaVelo - box.x) / ondaLargoCol));
+    const guadagno = fattoreOnda();
     for (let i = da; i <= a; i++) {
-      lineaOnda(T, box.x + (i + 0.5) * ondaLargoCol, mezzo, mezzaAltezza, ondaPicchi[i], ambra);
+      lineaOnda(T, box.x + (i + 0.5) * ondaLargoCol, mezzo, mezzaAltezza,
+                Math.min(1, ondaPicchi[i] * guadagno), ambra);
     }
   }
 
@@ -1295,7 +1320,7 @@ function seCambiaTema() {
   temaVisto = t;
   leggiTinte();
   leggiPiani();
-  ondaChiave = "";
+  ondaChiave = "";   // i picchi restano: non hanno colore
 }
 
 function disegna() {
@@ -1343,6 +1368,7 @@ function disegna() {
   // nessuna deriva, quindi graduazioni e quadrato dicono lo stesso numero. Fuori
   // dal random si spegne, come la manopola che la comanda.
   manopola(manopolaDi("pSosta"), giroP("pSosta"), undefined, G.pLettura !== LETTURA.random);
+  manopola(manopolaDi("pGuadagno"), giroP("pGuadagno"));
 
   // GLI OTTO DEL PAESAGGIO, e nessuno di loro ha un efficace diverso dalla mano:
   // la deriva, l'ora e la stagione non toccano questa sorgente. Le corse non sono

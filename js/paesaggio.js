@@ -305,9 +305,22 @@ const PASSATUTTO_PAESAGGIO = [[11, 19], [13, 17]];
 
 let catena = null, ctxCatena = null, destCatena = null;
 
+/* IL GUADAGNO DEL CAMPIONE STA ALL'INGRESSO, prima dell'accordatura e prima del
+   riverbero: è il livello della MATERIA, non un livello d'uscita. Dopo il banco
+   di risonatori una materia presa piano arriverebbe ai filtri senza energia da
+   dargli, e la coda del riverbero crescerebbe o calerebbe insieme al secco invece
+   di stare dov'è. Non è l'asta del mixer, che sta in fondo al banco e dosa questa
+   sorgente contro le altre due: questa dice quanto vale il suono che si è
+   caricato, e una registrazione fatta da lontano la si alza qui.
+
+   È un nodo e non un fattore sugli strati: moltiplicare la `vel` di ciascuno
+   lascerebbe fuori quelli già prenotati, e muovendo la manopola il livello
+   arriverebbe con il ritardo di una finestra intera — fino a due secondi. */
 function catenaPaesaggio(ctx, dest) {
   if (catena && ctxCatena === ctx && destCatena === dest) return catena;
+  const guadagno = ctx.createGain();
   const ingresso = ctx.createGain();
+  guadagno.connect(ingresso);
 
   /* L'accordatura sta PRIMA del riverbero, e conta: la coda deve prendere le
      note già intonate, o la stanza si riempirebbe del materiale crudo mentre
@@ -328,8 +341,9 @@ function catenaPaesaggio(ctx, dest) {
   misto.connect(riverbero.ingresso);
   riverbero.uscita.connect(bagnato); bagnato.connect(dest);
 
-  catena = { ingresso, risonanza, crudo, accordato, riverbero, secco, bagnato,
-             coda: -1, tono: -1, quanto: -1, accordo: -1 };
+  catena = { ingresso: guadagno, guadagno, risonanza, crudo, accordato,
+             riverbero, secco, bagnato,
+             coda: -1, tono: -1, quanto: -1, accordo: -1, gain: null };
   ctxCatena = ctx; destCatena = dest;
   return catena;
 }
@@ -343,6 +357,12 @@ function catenaPaesaggio(ctx, dest) {
    metà corsa un incrocio lineare farebbe un buco di tre decibel. */
 function taraPaesaggio(c, quando) {
   accordaRisonanza(c.risonanza, quando);
+  // Il guadagno del campione: decibel in ampiezza, con la costante corta dei
+  // gesti — è una mano su una manopola, e deve arrivare quando arriva.
+  if (c.gain === null || Math.abs(effGP.guadagno - c.gain) > 0.05) {
+    c.gain = effGP.guadagno;
+    c.guadagno.gain.setTargetAtTime(Math.pow(10, effGP.guadagno / 20), quando, 0.06);
+  }
   if (Math.abs(effGP.accordatura - c.accordo) > 0.5) {
     c.accordo = effGP.accordatura;
     const a = clamp(effGP.accordatura / 100, 0, 1);

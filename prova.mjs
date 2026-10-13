@@ -747,6 +747,27 @@ const esito = await p.evaluate(async () => {
     if (scarto > 0.2)
       R.errori.push("il rallentamento trasporta: il baricentro passa da " +
                     Math.round(lento) + " a " + Math.round(lentissimo) + " Hz");
+    /* (d2) IL GUADAGNO DEL CAMPIONE ARRIVA AL SUONO. È un nodo all'ingresso della
+       catena, quindi lo costruisce anche il banco del rendering fuori tempo reale:
+       se `taraPaesaggio` smettesse di scriverlo, la manopola muoverebbe solo il
+       disegno dell'onda — un comando che si gira e non fa niente, che è il difetto
+       peggiore di tutti perché si vede funzionare. Dodici decibel in meno devono
+       farsi sentire come un buon dimezzamento abbondante dell'ampiezza. */
+    {
+      const rmsCon = async (dB) => {
+        G.pGuadagno = GT.pGuadagno = dB; effettiviPaesaggio();
+        return misura(await rendiOffline(4)).rms;
+      };
+      const pieno = await rmsCon(0), basso = await rmsCon(-12);
+      G.pGuadagno = GT.pGuadagno = 0; effettiviPaesaggio();
+      R.paesaggio.guadagno = { a0: pieno, a12: basso,
+                               scarto: +(20 * Math.log10((basso + 1e-9) / (pieno + 1e-9))).toFixed(1) };
+      if (!(basso < pieno * 0.5)) {
+        R.errori.push("il guadagno del campione non arriva al suono: rms " + basso +
+                      " a −12 dB contro " + pieno + " a zero");
+      }
+    }
+
     frasiOn = prima[0]; tessutiOn = prima[1];
     G.pRallenta = GT.pRallenta = 8; effettiviPaesaggio();
     materiale = 0;                              // si torna ai quattro toni

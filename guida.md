@@ -380,6 +380,7 @@ La testa di lettura ha cinque modi. AVANTI la fa camminare verso la fine del seg
   riga: fl.segmento | a mano: corsa | g.p.segmento
   riga: et.lettura | a mano: corsa | g.p.lettura
   riga: fl.sosta | a mano: corsa | g.p.sosta
+  riga: fl.guadagno | a mano: corsa | g.p.guadagno
   riga: fl.rallentamento | a mano: corsa | g.p.rallenta
   riga: fl.velo | a mano: corsa | g.p.velo
   riga: fl.sparpaglio | a mano: corsa | g.p.sparpaglio
@@ -394,6 +395,7 @@ La testa di lettura ha cinque modi. AVANTI la fa camminare verso la fine del seg
 | Segmento | 0 – 100 % | Estremi del segmento percorso, in centesimi della durata del materiale. |
 | LETTURA | — | Modo in cui la testa percorre il segmento: avanti, indietro, pendolo, fermo, random. |
 | Sosta | 1 – 30 s | Durata di lettura di ciascuna area nel modo RANDOM, in scala esponenziale. Negli altri modi è disattivata. |
+| Guadagno | −24 – +12 dB | Livello del materiale, all'ingresso della catena: prima dell'intonazione e del riverbero, così una registrazione presa da lontano arriva ai risonatori con l'energia da eccitarli. Non è l'asta del mixer, che dosa il paesaggio contro le altre due sorgenti. L'onda disegnata si comprime e si espande con lui, e alle punte si ferma al bordo della fascia. |
 | Rallentamento | 1 – 10 × | Fattore di rallentamento della testa di lettura. |
 | Velo | 80 – 2000 ms | Durata di una finestra di lettura. |
 | Sparpaglio | 0 – 1 | Scarto casuale sul punto di partenza di ogni finestra. A zero le finestre partono tutte dallo stesso punto e la somma diventa un filtro a pettine. |
