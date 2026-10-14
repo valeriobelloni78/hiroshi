@@ -511,7 +511,7 @@ body{
    si fa trovare con la tinta e non con la luminanza, che è quello che un arancio
    fa comunque su una pagina di soli grigi. */
 .vl{font-family:var(--mono);font-size:8px;color:var(--ambra);
-    font-variant-numeric:tabular-nums;line-height:1.2}
+    font-variant-numeric:tabular-nums;line-height:10px}
 /* IL VALORE VIVO STA IN UNA TARGHETTA, e viene dal mockup «Hiroshi · console»:
    ambra a fondo pieno, cifre chiare. Vivo vuol dire che cambia DA SÉ — il tempo
    della seduta, il picco, il limitatore, la deriva — e non perché una mano ha
@@ -683,7 +683,7 @@ body{
 .intesta .num{font-family:var(--mono);font-size:28px;font-weight:200;letter-spacing:-.02em;
               color:var(--ambra);line-height:.85}
 .intesta .voce{font-size:12px;font-weight:400;letter-spacing:.30em;text-transform:uppercase;
-               line-height:1.15;display:block}
+               line-height:14px;display:block}
 .intesta .dida{font-family:var(--mono);font-size:8px;letter-spacing:.10em;color:var(--grigio);
                display:block;margin-top:7px}
 
@@ -796,7 +796,18 @@ input[type=range]:focus-visible{outline:1px solid var(--ambra);outline-offset:3p
 /* Il quadrante non cresce oltre una certa misura: su uno schermo largo
    diventerebbe un cerchio da mezzo metro con quattro anelli lontanissimi, e la
    fase di una linea si leggerebbe peggio, non meglio. */
-.tela-quadrante{position:relative;width:100%;max-width:460px;margin:0 auto;padding-bottom:min(100%,460px)}
+/* IL QUADRANTE SI ARROTONDA AL PIXEL, e non è il disegno a chiederlo — è quello
+   che gli sta sotto. Il cerchio è alto quanto è largo, cioè metà della luce
+   meno i fissi: a 1440 fa 420,5, e quel mezzo pixel scende in fondo alla colonna
+   e ci mette le quattro corse delle linee, che a quel punto cadono su una fase
+   diversa da quella degli otto filetti. Un filo alto un pixel messo a metà fra
+   due pixel dello schermo non si disegna mezzo: si smussa su due righe, cioè più
+   spesso e più chiaro — e due gruppi di corse su due fasi diverse si leggono
+   come due spessori. La riga senza `round()` resta sopra per chi non lo conosce:
+   là il quadrante torna mezzo pixel più alto, che è l'unico guasto possibile. */
+.tela-quadrante{position:relative;width:100%;max-width:460px;margin:0 auto;
+                padding-bottom:min(100%,460px);
+                padding-bottom:round(down,min(100%,460px),1px)}
 /* LE MANOPOLE STANNO SU UNA GRIGLIA A SESTI. Le due di sopra hanno il centro a un
    terzo e a due terzi, le tre dell'effetto a un sesto, a metà e a cinque sesti:
    ognuna delle due cade esattamente fra due delle tre. Messe in fila ciascuna
@@ -985,7 +996,11 @@ input[type=range].verticale::-moz-range-thumb{width:9px;height:7px}
 .faders input[type=range].verticale{height:196px}
 .fader{display:flex;flex-direction:column;align-items:center;gap:8px}
 .fader .fl{font-size:7px;letter-spacing:.10em}
-.fader .vl{font-size:7.5px}
+/* La targa del mixer tiene la sua riga da nove: a dieci la colonna del mixer
+   cresceva di un pixel e diventava lei a decidere l'altezza delle tre, che è un
+   mestiere della registrazione (vedi le tre colonne del banco). Nove è intero
+   come dieci, che è tutto quello che serve al filo. */
+.fader .vl{font-size:7.5px;line-height:9px}
 /* L'ON di una sorgente sotto il suo canale: lo stesso tasto del muto di una
    linea, premuto quando la sorgente è accesa. */
 /* Lo stesso scarto del muto, su un'aria più larga: il totale non cambia, cambia

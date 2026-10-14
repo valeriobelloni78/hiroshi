@@ -1608,6 +1608,35 @@ provando a centrare i tasti con una griglia: il tasto CAMBIA TONALITÀ è
 ricomparso sotto il circolo delle quinte a passo NON fermo, cioè un comando
 offerto proprio dove non si può usare.
 
+**IL RITMO VERTICALE DELLE COLONNE STA IN PIXEL INTERI, perché la corsa è un
+filo alto UN PIXEL.** Un pixel messo a metà fra due pixel dello schermo non si
+disegna mezzo: si smussa su due righe, cioè più spesso e più chiaro. Chromium lo
+aggancia alla griglia e non si vede; WebKit no, e lì otto filetti su otto fasi
+diverse sono otto corse di otto spessori — il difetto si vede su Safari e non
+sulla prova, che gira su Chromium. Le fasi venivano da due altezze di riga
+scritte in RAPPORTO invece che in pixel: la targa a 1,2 di un carattere da otto
+faceva 9,6, quindi un filetto alto 27,59 e i suoi fratelli a 0,59 · 0,18 · 0,77;
+il titolo di una classe a 1,15 di dodici faceva 13,8, e spostava tutta la colonna
+di otto decimi. Adesso la targa ha la riga da DIECI e il titolo da QUATTORDICI, e
+le trentaquattro corse delle due classi cadono tutte sulla stessa fase a ogni
+larghezza. L'eccezione è la targa del MIXER, che tiene la sua riga da nove: a
+dieci la colonna del mixer cresceva di un pixel e diventava lei a decidere
+l'altezza delle tre, che è un mestiere della registrazione. Nove è intero quanto
+dieci, e al filo serve solo che sia intero.
+
+E IL QUADRANTE SI ARROTONDA COL `round()`. Il cerchio è alto quanto è largo, cioè
+metà della luce meno i fissi: a 1440 fa 420,5. Quel mezzo pixel scendeva in fondo
+alla colonna e ci metteva le quattro corse delle linee, che restavano su una fase
+diversa da quella degli otto filetti — gli stessi due spessori, in due gruppi.
+`padding-bottom:round(down,min(100%,460px),1px)` lo toglie, e sopra resta la riga
+senza `round()` per chi non lo conosce: là il quadrante torna mezzo pixel più
+alto, che è l'unico guasto possibile. Il disegno non se ne accorge, perché il
+raggio è `min(larghezza, altezza)`.
+
+CHI AGGIUNGE UNA RIGA A UNA COLONNA la scriva in pixel interi. Si verifica
+guardando la FASE, non l'aspetto: la frazione di `getBoundingClientRect().top` di
+ogni cursore deve essere la stessa per tutti.
+
 **I numeri che cambiano** usano cifre a larghezza fissa, altrimenti tremolano
 a ogni aggiornamento.
 
