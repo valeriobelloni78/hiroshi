@@ -905,6 +905,16 @@ non ha una mano e quindi non ha uno spostamento: si scrive il taglio intero, in
 kHz, che è tutto dell'ora — e così il pannello non ricopia le costanti della
 formula del motore.
 
+LE DUE INTESTAZIONI IN FONDO AL FOGLIO SONO NUDE: numero e nome, niente
+didascalia. Quella delle influenze — «chi muove i parametri oltre alla mano» —
+diceva a parole quello che le tre fonti scritte dentro il pannello dicono per
+esteso, ORA → GOCCE, STAGIONE → TESSUTI, DERIVA → GOCCE · TESSUTI, e la chiave
+se n'è andata con lei in tutte e quattro le lingue: una chiave che nessuno legge
+è una riga da tradurre per sempre. Quella della deriva non è sparita, è SCESA in
+fondo al suo pannello (vedi `dida.deriva` e la regola del baricentro): dice un
+tempo, e un tempo sta meglio sotto i quindici minuti di passato che accanto a un
+numero di sezione.
+
 Il CERCHIO ha fuori le ventiquattro ore e dentro i dodici mesi, mezzanotte e
 inverno in alto: il buio e il freddo dalla stessa parte. Fasce e stagioni non
 sono scritte nel disegno, si leggono chiedendo a `tavolozzaOraria()` e
@@ -1901,7 +1911,8 @@ vetro per classe, il banco e la deriva su uno ciascuno, il resto sulla carta:
   tutti e due i materiali su «ancora» diventa il tasto CAMBIA TONALITÀ —, l'arco
   delle note in uso e il punto di fase verso la prossima quinta; accanto le note
   scritte e le letture del tempo lungo; sotto, il baricentro su quindici minuti
-  di passato;
+  di passato e, in fondo, il passo della deriva — «una modulazione ogni 2′ 30″»,
+  col tempo vero preso da `PASSO_QUINTA`;
 - **06 · influenze**: a specchio della deriva, sotto i tessuti. Un cerchio con
   le ventiquattro ore fuori e i dodici mesi dentro, e per ciascuna fonte — ora,
   stagione, deriva — di quanto sposta i suoi parametri oltre alla mano, in

@@ -72,7 +72,6 @@ const TESTI = {
     "sez.influenze":  "Influenze",
     "dida.banco":     "registrazione, equalizzatore, mixer",
     "dida.deriva":    "una modulazione ogni {t}",
-    "dida.influenze": "chi muove i parametri oltre alla mano",
 
     "et.mood":          "MOOD",
     "et.timbro":        "TIMBRO",
@@ -258,7 +257,6 @@ const TESTI = {
     "sez.influenze":  "Influences",
     "dida.banco":     "enregistrement, égaliseur, mixage",
     "dida.deriva":    "une modulation toutes les {t}",
-    "dida.influenze": "ce qui déplace les paramètres en plus de la main",
 
     "et.mood":          "HUMEUR",
     "et.timbro":        "TIMBRE",
@@ -444,7 +442,6 @@ const TESTI = {
     "sez.influenze":  "Influences",
     "dida.banco":     "recording, equaliser, mixer",
     "dida.deriva":    "one modulation every {t}",
-    "dida.influenze": "what moves the parameters besides the hand",
 
     "et.mood":          "MOOD",
     "et.timbro":        "TIMBRE",
@@ -630,7 +627,6 @@ const TESTI = {
     "sez.influenze":  "影響",
     "dida.banco":     "録音、等化器、混合",
     "dida.deriva":    "{t}ごとに転調",
-    "dida.influenze": "手のほかに値を動かすもの",
 
     "et.mood":          "気分",
     "et.timbro":        "音色",

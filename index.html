@@ -520,7 +520,6 @@
           <span class="titolo">
             <span class="num">05</span>
             <span class="voce" data-i18n="sez.deriva">Deriva</span>
-            <span class="dida" id="didaDeriva">il tempo lungo · una quinta ogni 2′ 30″</span>
           </span>
         </div>
 
@@ -556,6 +555,12 @@
           <div class="cella baricentro">
             <span class="et"><span data-i18n="et.baricentro">BARICENTRO · 15 MIN</span> <span class="vl vivo" id="vBaricentro">+0,0</span></span>
             <div class="tela-baricentro" data-quadro="baricentro"></div>
+            <!-- Il passo della deriva sta in fondo al pannello e non più accanto
+                 al numero di sezione: è una misura del tempo lungo, e in fondo
+                 chiude il pannello sotto i quindici minuti di passato che il
+                 baricentro racconta. Il testo lo scrive `comandi.js` col tempo
+                 vero del passo. -->
+            <span class="dida" id="didaDeriva">una modulazione ogni 2′ 30″</span>
           </div>
         </div>
       </div>
@@ -568,7 +573,6 @@
           <span class="titolo">
             <span class="num">06</span>
             <span class="voce" data-i18n="sez.influenze">Influenze</span>
-            <span class="dida" data-i18n="dida.influenze">chi muove i parametri oltre alla mano</span>
           </span>
         </div>
 

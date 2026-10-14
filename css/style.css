@@ -641,7 +641,10 @@ body{
    punti fermi che si trovano scorrendo il foglio senza leggere una parola. */
 .capo .num{font-family:var(--mono);font-size:13px;font-weight:200;color:var(--ambra)}
 .capo .voce{font-size:11px;font-weight:400;letter-spacing:.30em;text-transform:uppercase}
-.capo .dida{font-family:var(--mono);font-size:8px;letter-spacing:.10em;color:var(--grigio)}
+/* Una didascalia è la stessa cosa dovunque stia, e adesso sta in due posti: in
+   testa a una sezione e in fondo alla deriva, sotto il baricentro. Le due
+   regole che la vestivano erano la stessa riga scritta due volte. */
+.dida{font-family:var(--mono);font-size:8px;letter-spacing:.10em;color:var(--grigio)}
 /* Anche i numeri dentro una didascalia: i quattro periodi di una classe sono
    valori, e stanno in un `b` proprio per poterli distinguere da quello che li
    circonda. Sotto «gocce» e «tessuti» intorno non c'è più prosa ma soltanto la
@@ -1073,6 +1076,16 @@ input[type=range].verticale::-moz-range-thumb{width:9px;height:7px}
 .collezione{font-family:var(--mono);font-size:11px;letter-spacing:.12em;
             color:var(--inchiostro);line-height:1.4}
 .tela-baricentro{width:100%;flex:1;min-height:44px}
+/* IL PASSO DELLA DERIVA CHIUDE IL PANNELLO, sotto i quindici minuti di passato
+   del baricentro, dove prima stava accanto al numero di sezione. In fondo a
+   questi due pannelli l'inchiostro sta lontano dal bordo quanto di lato, cioè
+   quattordici, e i dieci pixel di `padding-bottom` li contava il baricentro,
+   che finisce dove finisce il suo riquadro: una riga di testo no — la coda
+   della «g» arriva quasi al filo di sotto. Cinque pixel in più, e l'inchiostro
+   più basso sta a 13,75, misurato sui pixel disegnati e non sui riquadri. Li
+   paga il baricentro, che si accorcia di altrettanto: i due pannelli chiudono
+   alla stessa altezza, e quella non si tocca. */
+.deriva .baricentro .dida{margin-bottom:5px}
 /* ---------------------------------------------------------------- le influenze
    Lo specchio della deriva: il pannello sulle due colonne di destra, le letture
    sotto il quadrante dei tessuti e il cerchio nella colonna da 205 dalla parte
