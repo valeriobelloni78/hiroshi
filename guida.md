@@ -14,6 +14,9 @@
     cambiarla qui vuol dire cambiarla anche sui comandi. «corsa» è scritta a
     mano in guida.html, ed è l'unica cifra che la guida non legge dal motore.
     Le tabelle che nella pagina non hanno intestazione qui ce l'hanno vuota.
+  · I NUMERI DELLE SEZIONI li scrive la pagina da sé, in ambra, accanto al
+    titolo: scritti anche qui dentro il titolo comparirebbero due volte
+    («02 · 02 · Tessuti»).
   · I simboli e le unità (dB, Hz, ms, ×, °) non si traducono.
 -->
 
@@ -44,8 +47,6 @@ livello → mandata → riverbero → somma
 <!-- g.pan.2 -->
 Spegnere una sorgente non mette in pausa il modello che la genera.
 
-<!-- g.pan.3 -->
-Il riverbero del materiale usato dalla sorgente Paesaggio è interno e non usa la mandata comune.
 
 ---
 
@@ -64,7 +65,7 @@ Ogni riga di linea espone la durata del giro, un interruttore di silenziamento e
 ---
 
 <!-- g.gocce.t -->
-## 01 · Gocce
+## Gocce
 
 <!-- g.gocce.1 -->
 Impulsi brevi con inviluppo percussivo. Ogni linea tiene una sequenza di posizioni nel campo armonico e la ripete a ogni giro finché non viene sostituita. 
@@ -144,13 +145,10 @@ Impulsi brevi con inviluppo percussivo. Ogni linea tiene una sequenza di posizio
 ---
 
 <!-- g.tess.t -->
-## 02 · Tessuti
+## Tessuti
 
 <!-- g.tess.1 -->
-Suoni tenuti, da pochi secondi a un minuto. A differenza delle gocce non sono materie diverse ma modi diversi di essere instabili.
-
-<!-- g.tess.2 -->
-La somma del bus si normalizza sugli inviluppi e non sul numero di voci aperte: la compensazione legge la stessa funzione che scrive l'automazione, quindi non c'è un salto di livello nell'istante in cui una voce comincia ad aprirsi.
+Suoni tenuti, da pochi secondi a un minuto.
 
 <!-- g.gocce.forma -->
 ### Forma del suono
@@ -167,8 +165,8 @@ La somma del bus si normalizza sugli inviluppi e non sul numero di voci aperte: 
 |---|---|---|
 | Apertura | 0,3 – 12,0 s | Tempo di salita dell'inviluppo. |
 | Chiusura | 0,3 – 15,0 s | Tempo di discesa. |
-| Movimento | 0 – 1 | Ampiezza del movimento interno. Che cosa si muova dipende dal tenuto scelto. |
-| Brillantezza | 0 – 1 | Frequenza di taglio del passa-basso di voce. |
+| Movimento | 0 – 1 | Ampiezza del movimento interno. |
+| Brillantezza | 0 – 1 | Frequenza di taglio del filtro passa-basso. |
 | Corpo | 0 – 1 | Peso della fondamentale rispetto alle bande superiori. |
 
 <!-- g.gocce.insieme -->
@@ -182,8 +180,8 @@ La somma del bus si normalizza sugli inviluppi e non sul numero di voci aperte: 
 -->
 |   |   |   |
 |---|---|---|
-| Intreccio | 0 – 1 | Durata di una tenuta come frazione del periodo della sua linea, e con essa quante ne restano aperte insieme. |
-| Livello | −19,0 – −1,5 dB | Livello della classe rispetto al primo piano, in decibel. È un parametro del modello, distinto dall'asta del mixer: la deriva lo muove di ±9 e un mood lo riscrive. |
+| Intreccio | 0 – 1 | Durata di una tenuta come frazione del periodo della sua linea. |
+| Livello | −19,0 – −1,5 dB | Livello della classe rispetto al primo piano, in decibel. È un parametro del modello, distinto dal volume nel mixer: la deriva lo muove di ±9 e un mood lo riscrive. |
 | Spazio | 0 – 1 | Mandata al riverbero comune del canale. |
 
 <!-- g.gocce.man -->
@@ -196,7 +194,7 @@ La somma del bus si normalizza sugli inviluppi e non sul numero di voci aperte: 
 -->
 |   |   |   |
 |---|---|---|
-| Registro | 0 – 3,2 ott | Ampiezza della finestra sul campo armonico, con ripiegamento per ottave che conserva la classe d'altezza. |
+| Registro | 0 – 3,2 ott | Ampiezza della finestra sul campo armonico. |
 | Passo | 0 – 1 | Velocità del movimento interno. L'unità dipende dal tenuto: centesimi di semitono, hertz di battimento, larghezza di banda. |
 
 <!-- g.tess.timbri -->
@@ -217,12 +215,12 @@ La somma del bus si normalizza sugli inviluppi e non sul numero di voci aperte: 
 |---|---|
 | Bordone | Fondamentale con quinta e ottava, deriva di intonazione lentissima. |
 | Marea | Due bande di rumore filtrato che si scambiano energia. |
-| Attrito | Dente di sega dentro un passa-basso la cui frequenza oscilla: grana dentro l'altezza. |
-| Frangia | Due sinusoidi separate di pochi hertz. Il battimento è la loro differenza, e il passo la scrive in hertz. |
+| Attrito | Onda a dente di sega dentro un filtro passa-basso la cui frequenza oscilla. |
+| Frangia | Due sinusoidi separate di pochi hertz. Il battimento è la loro differenza. |
 | Corrente | Rumore filtrato con banda che si sposta in continuo. |
 | Cavo | Tre formanti che si spostano fra la posizione della «a» e quella della «u». Altezza ferma, spettro in movimento. |
 | Brina | Parziali alti con ampiezze che si accendono e si spengono in modo indipendente. |
-| Soglia | Rumore ad alta frequenza di cui varia solo il livello. Nessuna altezza, nessun battimento. |
+| Soglia | Rumore ad alta frequenza di cui varia solo il livello. |
 
 ---
 
@@ -230,7 +228,7 @@ La somma del bus si normalizza sugli inviluppi e non sul numero di voci aperte: 
 ## Inserti
 
 <!-- g.ins.1 -->
-Ogni classe ha un inserto sul proprio canale, fra il normalizzatore e la coppia livello/mandata. L'effetto si sceglie dalla tendina sotto il quadrante; le tre manopole cambiano funzione con l'effetto ma mantengono la posizione, come le manopole di un pannello che sta fuori dall'effetto.
+Ogni classe ha un inserto sul proprio canale, fra il normalizzatore e la coppia livello/mandata. L'effetto si sceglie dalla tendina sotto il quadrante; le tre manopole cambiano funzione con l'effetto.
 
 <!-- g.ins.2 -->
 Il riverbero non è fra gli effetti: la mandata alla stanza comune è già il comando Spazio della corona di ciascuna classe.
@@ -252,7 +250,7 @@ Il cambio di effetto dal vivo passa per una dissolvenza di 30 ms in entrata e in
 | eco | Linea di ritardo con retroazione e passa-basso nell'anello a 2,8 kHz. Miscelazione a potenza costante fra secco e ripetizioni. |
 | tremolo | Modulazione d'ampiezza sui due canali, con sfasamento regolabile fra destra e sinistra. |
 | coro | Due copie ritardate di 11 e 17 ms, modulate in controfase. La larghezza nasce dalla differenza fra i due lati. |
-| filtro | Passa-basso risonante con oscillatore lento sul taglio. In serie, non miscelato. |
+| filtro | Filtro passa-basso risonante con oscillatore lento sul taglio. In serie, non miscelato. |
 
 <!-- effetto.eco -->
 ### eco
@@ -267,7 +265,7 @@ Il cambio di effetto dal vivo passa per una dissolvenza di 30 ms in entrata e in
 |---|---|---|
 | Tempo | 60 – 1200 ms | Tempo di ritardo. |
 | Ritorni | 0 – 0,80 | Guadagno d'anello. Il massimo è 0,8: sopra, la coda cresce invece di scendere. |
-| Quantità | 0 – 1 | Miscelazione fra segnale diretto ed effetto, a potenza costante. |
+| Quantità | 0 – 1 | Miscelazione fra segnale diretto ed effetto. |
 
 <!-- effetto.tremolo -->
 ### tremolo
@@ -297,7 +295,7 @@ Il cambio di effetto dal vivo passa per una dissolvenza di 30 ms in entrata e in
 |---|---|---|
 | Velocità | 0,05 – 2,00 Hz | Frequenza dell'oscillatore di modulazione. |
 | Profondità | 0,4 – 5,9 ms | Ampiezza della modulazione. |
-| Quantità | 0 – 1 | Miscelazione fra segnale diretto ed effetto, a potenza costante. |
+| Quantità | 0 – 1 | Miscelazione fra segnale diretto ed effetto. |
 
 <!-- effetto.filtro -->
 ### filtro
@@ -317,7 +315,7 @@ Il cambio di effetto dal vivo passa per una dissolvenza di 30 ms in entrata e in
 ---
 
 <!-- g.banco.t -->
-## 03 · Banco
+## Banco
 
 <!-- g.banco.1 -->
 Uscita dello studio. Ogni canale ha un normalizzatore scritto dalla sorgente — che compensa quante voci sono aperte — un cursore di livello e una mandata al riverbero comune, in quest'ordine: il riverbero riceve il segnale già compensato.
@@ -359,7 +357,7 @@ Sommando le tracce delle sorgenti e quella della stanza si ritrova l'uscita prim
 ---
 
 <!-- g.pae.t -->
-## 04 · Paesaggio
+## Paesaggio
 
 <!-- g.pae.1 -->
 Riproduce materiale registrato — un file caricato o una presa dal microfono — rallentato di un fattore fra 1 e 10 senza trasporlo. Il materiale non si conserva: vive finché la pagina resta aperta.
@@ -409,7 +407,7 @@ La testa di lettura ha cinque modi. AVANTI la fa camminare verso la fine del seg
 ---
 
 <!-- g.der.t -->
-## 05 · Deriva
+## Deriva
 
 <!-- g.der.1 -->
 Il campo armonico è una pentatonica anemitonica — gradi 0, 2, 4, 7, 9 — replicata su cinque ottave, per venticinque altezze. Le due classi leggono lo stesso campo e lo stesso baricentro; cambia solo l'ampiezza della finestra.
