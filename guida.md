@@ -24,7 +24,7 @@
 *Manuale d'uso*
 
 <!-- g.intro -->
-Hiroshi è un generatore di musica ambientale che gira nel browser. Produce due classi di eventi — impulsi brevi e suoni tenuti — su otto linee cicliche indipendenti, li intona su un campo armonico che si sposta lentamente, e li somma in un banco d'uscita con equalizzatore, limitatore e registratore. Una quarta sorgente riproduce materiale registrato rallentato senza trasposizione. Questo documento descrive ogni comando: corsa, unità e effetto sul segnale.
+Hiroshi è un generatore di ambienti sonori. Per creare questi ambienti, produce due classi di eventi, impulsi brevi e suoni tenuti, su otto linee cicliche indipendenti. Questi eventi vengono intonati su un campo armonico che si sposta lentamente, e vengono sommati in un banco d'uscita con equalizzatore, limitatore e registratore. Una quarta sorgente riproduce materiale registrato applicando un rallentamento del campione e aggiungendo degli effetti.
 
 ---
 
@@ -32,7 +32,8 @@ Hiroshi è un generatore di musica ambientale che gira nel browser. Produce due 
 ## Catena del segnale
 
 <!-- g.pan.1 -->
-Le tre sorgenti sono indipendenti e si possono spegnere una per una col tasto ON sotto il loro canale del mixer. Ogni sorgente ha un canale nel banco: normalizzatore, inserto d'effetto, cursore di livello e mandata al riverbero comune. La somma passa per un filtro di colore d'insieme, l'equalizzatore a otto bande e un limitatore a due stadi.
+Le tre sorgenti sono indipendenti e ciascuna può essere spenta col tasto ON sotto il rispettivo canale del mixer. Ogni sorgente ha un canale nel banco: normalizzatore, effetto, cursore di livello e mandata al riverbero comune. La somma passa per un filtro di colore d'insieme, per un equalizzatore a otto bande e per un limitatore regolabile.
+
 
 <!-- g.pan.catena -->
 ```
@@ -41,10 +42,10 @@ livello → mandata → riverbero → somma
 ```
 
 <!-- g.pan.2 -->
-Spegnere una sorgente non mette in pausa il modello: i cicli e il ricambio delle idee proseguono, e riaccendendola si sente il punto in cui il pezzo è arrivato, non quello in cui era stato lasciato.
+Spegnere una sorgente non mette in pausa il modello che la genera.
 
 <!-- g.pan.3 -->
-Il riverbero della sorgente Paesaggio è interno e non usa la mandata comune: la sua coda è parte del suono.
+Il riverbero del materiale usato dalla sorgente Paesaggio è interno e non usa la mandata comune.
 
 ---
 
@@ -52,13 +53,13 @@ Il riverbero della sorgente Paesaggio è interno e non usa la mandata comune: la
 ## Struttura temporale
 
 <!-- g.tempo.1 -->
-Otto linee cicliche, quattro per classe. Ogni linea ha un periodo proprio, regolabile fra 3 e 30 s per le gocce e fra 7 e 60 s per i tessuti, e mantiene una fase indipendente. Il generatore riempie un giro alla volta e prenota gli eventi con un anticipo di 0,15 s.
+Il riverbero della materiale utilizzato nel  banco: Paesaggio è interno e non usa la mandata comune.
 
 <!-- g.tempo.2 -->
-Di default i quattro periodi di una classe sono coprimi a due a due. La combinazione delle otto fasi si ripete solo dopo il minimo comune multiplo dei periodi: con i valori d'esordio il riallineamento cade oltre le sessanta ore. La lettura RIALLINEA in testa alla sezione 05 riporta quel tempo per i periodi correnti.
+Di default i quattro periodi di una classe sono coprimi a due a due. La combinazione delle otto fasi si ripete solo dopo il minimo comune multiplo dei periodi: con i valori d'esordio il riallineamento cade oltre le sessanta ore.
 
 <!-- g.tempo.3 -->
-Ogni riga di linea espone la durata del giro, un interruttore di silenziamento e un comando di rigenerazione, che sostituisce l'idea di quella linea senza toccare le altre.
+Ogni riga di linea espone la durata del giro, un interruttore di silenziamento e un comando di rigenerazione, che sostituisce la serie di note di quella linea senza toccare le altre.
 
 ---
 
@@ -66,7 +67,7 @@ Ogni riga di linea espone la durata del giro, un interruttore di silenziamento e
 ## 01 · Gocce
 
 <!-- g.gocce.1 -->
-Impulsi brevi con inviluppo percussivo. Ogni linea tiene un'idea — una sequenza di posizioni nel campo armonico — e la ripete a ogni giro finché non viene sostituita. La posizione è relativa: la frequenza si calcola al momento della prenotazione, quindi un'idea ferma segue i cambi del campo senza essere riscritta.
+Impulsi brevi con inviluppo percussivo. Ogni linea tiene una sequenza di posizioni nel campo armonico e la ripete a ogni giro finché non viene sostituita. 
 
 <!-- g.gocce.forma -->
 ### Forma del suono
@@ -84,7 +85,7 @@ Impulsi brevi con inviluppo percussivo. Ogni linea tiene un'idea — una sequenz
 | Attacco | 1 – 60 ms | Tempo di salita dell'inviluppo. |
 | Coda | 0,2 – 6,0 s | Tempo di discesa. Determina la lunghezza della tacca radiale sul quadrante. |
 | Inarmonicità | 0 – 1 | Scostamento dei parziali dai multipli interi della fondamentale. |
-| Brillantezza | 0 – 1 | Frequenza di taglio del passa-basso di voce, in scala esponenziale. |
+| Brillantezza | 0 – 1 | Frequenza di taglio del filtro passa-basso, in scala esponenziale. |
 | Corpo | 0 – 1 | Peso relativo della fondamentale rispetto ai parziali. |
 
 <!-- g.gocce.insieme -->
@@ -98,8 +99,8 @@ Impulsi brevi con inviluppo percussivo. Ogni linea tiene un'idea — una sequenz
 -->
 |   |   |   |
 |---|---|---|
-| Addensamento | 0,05 – 1 | Frazione del giro entro cui cadono gli eventi di un'idea. A valori bassi si raccolgono all'inizio del giro; a 100 sono distribuiti su tutto il giro. |
-| Densità | 1 – 20 | Numero massimo di eventi per giro. Il valore effettivo per ciascuna idea viene sorteggiato entro questo limite alla nascita dell'idea. |
+| Addensamento | 0,05 – 1 | Frazione del giro entro cui cadono gli eventi di una frase. A valori bassi si raccolgono all'inizio del giro; a 100 sono distribuiti su tutto il giro. |
+| Densità | 1 – 20 | Numero massimo di eventi per giro. Il valore effettivo per ciascuna frase viene sorteggiato entro questo limite al momento dell'elaborazione della frase. |
 | Spazio | 0 – 1 | Mandata al riverbero comune del canale. |
 
 <!-- g.gocce.man -->
@@ -135,7 +136,7 @@ Impulsi brevi con inviluppo percussivo. Ogni linea tiene un'idea — una sequenz
 | Legno | Impulso filtrato con risonanza media e decadimento rapido. |
 | Onda | Triangolare filtrata, attacco morbido, nessun parziale inarmonico. |
 | Soffio | Rumore filtrato a banda stretta accordato sull'altezza. |
-| Corda | Dente di sega con passa-basso che scende durante la coda. Non è una Karplus-Strong: un anello su un nodo di ritardo non scende sotto i 128 campioni, che fisserebbero l'altezza massima a 375 Hz. |
+| Corda | Dente di sega con filtro passa-basso che scende durante la coda. Non è una Karplus-Strong: un anello su un nodo di ritardo non scende sotto i 128 campioni, che fisserebbero l'altezza massima a 375 Hz. |
 | Metallo | Sei parziali in rapporti inarmonici fissi, decadimento differenziato. |
 | Canna | Quadra filtrata con formante fissa, attacco con rumore. |
 | Sabbia | Rumore a banda larga con inviluppo brevissimo: grana, non altezza. |
