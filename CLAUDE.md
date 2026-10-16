@@ -1637,6 +1637,24 @@ CHI AGGIUNGE UNA RIGA A UNA COLONNA la scriva in pixel interi. Si verifica
 guardando la FASE, non l'aspetto: la frazione di `getBoundingClientRect().top` di
 ogni cursore deve essere la stessa per tutti.
 
+**I CINQUE SEGNI DELLE LETTURE VANNO A TREDICI, le parole restano a otto.** È la
+regola dei tasti delle linee applicata qui: a otto pixel «PENDOLO» si legge e il
+suo ⇄ no, cioè il contrario di quello che quella riga vorrebbe — il disegno dice
+il modo e la parola lo conferma. IL PULSANTE NON CRESCE: la riga del segno resta
+quella della parola, dieci pixel, e l'inchiostro che esce dalla riga trova l'aria
+del padding; i cinque restano alti diciotto. Oltre i tredici non si va — a
+quindici le due aste di «fermo», alte quanto tutto il corpo del carattere, vanno
+a toccare il filo del pulsante. Il vano del segno passa da dieci a quattordici
+perché ⇄ e ⤮ sono larghi sette e cinque e mezzo, e le cinque parole devono
+restare incolonnate. Il ⤮ del random è l'unico che il carattere disegna fuori
+centro, un pixel sotto, e si sposta di un pixel intero: sotto quello lo schermo
+non sa andare.
+
+Con l'occasione la riga del pulsante è passata da `1.2` a DIECI PIXEL, per la
+regola del ritmo verticale qui sotto: a 1,2 di otto faceva 9,6, il pulsante 17,59
+e i cinque cadevano su cinque fasi diverse — cinque bordi da un pixel
+arrotondati in cinque modi.
+
 **I numeri che cambiano** usano cifre a larghezza fissa, altrimenti tremolano
 a ogni aggiornamento.
 
