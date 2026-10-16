@@ -27,9 +27,10 @@
    ripulito, la CPU audio sale, i buffer prima frusciano e poi saltano.
 ============================================================================= */
 
-/* Gli otto, più i TRE CANDIDATI in coda: stanno in fondo alla tendina perché
-   sono in prova, e quando la scelta è fatta ne resta uno al posto di sabbia. */
-const TIMBRI = ["vetro", "legno", "onda", "soffio", "corda", "metallo", "canna", "sabbia",
+/* DIECI, e sabbia non c'è più: era l'unica senza un'altezza vera — un clic di
+   rumore accanto a una campana e a un pizzicato — e al suo posto ne sono entrati
+   tre, che quel ruolo se lo dividono per tre strade diverse (vedi più sotto). */
+const TIMBRI = ["vetro", "legno", "onda", "soffio", "corda", "metallo", "canna",
                 "bolla", "pelle", "argilla"];
 
 /* La forma del suono: i cinque filetti sotto la tendina. Valori d'esordio
@@ -252,38 +253,13 @@ function tCanna({ ctx, when, freq, vel, dest, F }) {
   return dur;
 }
 
-/* SABBIA — quasi solo attacco. Rumore risonante e cortissimo: serve a dare
-   grana all'insieme, non altezza. Resta intonato quel tanto che basta a non
-   litigare col resto. */
-function tSabbia({ ctx, when, freq, vel, dest, F }) {
-  const dur = 0.16 + F.coda * 0.30;
-  const src = ctx.createBufferSource(); src.buffer = rumore(ctx);
-  src.playbackRate.value = 0.8 + Math.random() * 0.4;
-  const bp = ctx.createBiquadFilter();
-  bp.type = "bandpass";
-  bp.frequency.value = freq * (2 + F.brill * 6);
-  bp.Q.value = 3 + F.corpo * 9;
-  const env = ctx.createGain();
-  const picco = 0.14 * vel;
-  env.gain.setValueAtTime(0, when);
-  env.gain.linearRampToValueAtTime(picco, when + 0.003);
-  spegni(env, when, dur);
-  src.connect(bp); bp.connect(env); env.connect(dest);
-  src.start(when); src.stop(when + dur + 0.05);
-  libera(src, [src, bp, env]);
-  return dur;
-}
-
 /* --------------------------------------------------------------------------
-   TRE CANDIDATI AL POSTO DI SABBIA, da ascoltare e scegliere. Stanno in
-   tendina accanto agli otto e non li sostituiscono: quando la scelta è fatta,
-   due se ne vanno insieme al loro nome, alla loro riga nella guida e al loro
-   peso, e il terzo prende il posto di sabbia nel mood «pioggia».
-
-   I tre attaccano in tre modi diversi, che è dove si decide un timbro (vedi in
-   cima al file): BOLLA arriva sulla nota da sotto, PELLE ci scende sopra da
-   un'ottava più su, ARGILLA la fa suonare a un rumore che dura venticinque
-   millesimi.
+   I TRE CHE HANNO PRESO IL POSTO DI SABBIA. Erano candidati, sono rimasti tutti
+   e tre: fanno quello che sabbia prometteva — grana e materia, non note — ma
+   ciascuno da una strada sua, e tutte e tre le strade stanno nei primi trenta
+   millesimi, che è dove si decide un timbro (vedi in cima al file). BOLLA
+   arriva sulla nota DA SOTTO, PELLE ci scende SOPRA da una terza più su,
+   ARGILLA la fa suonare a un rumore lungo venticinque millesimi.
 -------------------------------------------------------------------------- */
 
 /* BOLLA — l'unico evento che si muove in altezza. Una sinusoide che SALE sulla
@@ -372,13 +348,13 @@ function tPelle({ ctx, when, freq, vel, dest, F }) {
   return dur;
 }
 
-/* ARGILLA — la grana di sabbia, ma suonata. Venticinque millesimi di rumore
+/* ARGILLA — la grana che sabbia prometteva, ma suonata. Venticinque millesimi di rumore
    spinti dentro TRE passa-banda a Q alto, accordati sulla nota e su due
    parziali: il rumore li eccita e quello che resta in aria è la loro coda.
    È la stessa idea dell'accordatura del paesaggio — non si trasporta una
    materia, le si mette dietro un risonatore — applicata a una goccia.
-   A differenza di sabbia ha un'altezza e una coda; come sabbia, è materia e
-   non nota, quindi la fondamentale non domina. */
+   Ha un'altezza e una coda, che a sabbia mancavano; resta però materia e non
+   nota, quindi la fondamentale non domina. */
 const COCCIO = [1, 3.01, 5.04];
 /* DUE NUMERI MISURATI, non teorici. RECUPERO è quanto si riprende di quello che
    la banda stretta butta via: un passa-banda suona per Q/(π·f) secondi e lascia
@@ -387,8 +363,8 @@ const COCCIO = [1, 3.01, 5.04];
    cioè muta. RIF/freq raddrizza la pendenza che resta, perché quello che un
    risonatore restituisce cresce con la sua frequenza.
    E IL BATTENTE È SEMPRE LO STESSO RUMORE, alla stessa velocità e dallo stesso
-   punto del buffer. Con la velocità sorteggiata — come fa sabbia, dove non
-   conta — quanta energia finiva dentro una banda larga due hertz era un
+   punto del buffer. Con la velocità sorteggiata — innocua su del rumore largo,
+   non qui — quanta energia finiva dentro una banda larga due hertz era un
    sorteggio: misurato, il livello della stessa nota ballava fra −26,8 e −20,2 dB
    da una goccia all'altra. Il sorteggio resta dov'è innocuo, sul graffio. */
 const RECUPERO = 4.6, RIF = 220;
@@ -443,30 +419,28 @@ function tArgilla({ ctx, when, freq, vel, dest, F }) {
 
 const COSTRUTTORI = {
   vetro: tVetro, legno: tLegno, onda: tOnda, soffio: tSoffio,
-  corda: tCorda, metallo: tMetallo, canna: tCanna, sabbia: tSabbia,
+  corda: tCorda, metallo: tMetallo, canna: tCanna,
   bolla: tBolla, pelle: tPelle, argilla: tArgilla,
 };
 
 /* --------------------------------------------------------------- il pareggio
-   Otto timbri costruiti ciascuno per conto suo escono a livelli molto diversi:
+   Dieci timbri costruiti ciascuno per conto suo escono a livelli molto diversi:
    misurati su sei note, andavano da −11 dB (Onda, una sinusoide tenuta, che è
-   la forma d'onda più densa che esista) a −34 dB (Sabbia, un impulso di
-   rumore, tutto attacco e niente corpo). Cambiare timbro sarebbe stato
-   cambiare volume, e il cursore del livello non c'entra nulla.
+   la forma d'onda più densa che esista) a −50 dB (Argilla prima del recupero,
+   tre risonatori strettissimi eccitati da una sferzata di rumore). Cambiare
+   timbro sarebbe stato cambiare volume, e il cursore del livello non c'entra
+   nulla.
 
    Questi pesi vengono da quella misura, non dall'orecchio: obiettivo −16 dB di
    picco sulla stessa prova. Chi aggiunge un timbro rifaccia `node prova.mjs` e
    scriva qui il numero che ne esce — è il motivo per cui quella prova esiste.
-   Sabbia e Soffio restano di proposito un po' sotto: sono grana e fiato, non
+   Argilla e Soffio restano di proposito un po' sotto: sono grana e fiato, non
    note, e portarli al livello degli altri li farebbe suonare come uno
-   strumento invece che come una materia. */
+   strumento invece che come una materia. Bolla e Pelle invece un'altezza ce
+   l'hanno, e stanno al livello di casa. */
 const PESO = {
   vetro: 0.78, legno: 1.05, onda: 0.55, soffio: 2.60,
-  corda: 1.00, metallo: 1.50, canna: 1.90, sabbia: 4.50,
-  /* I TRE IN PROVA, misurati come gli altri. Bolla e Pelle sono note e
-     stanno al livello di casa, −16,5 dB di picco; Argilla è materia come
-     sabbia e resta tre decibel sotto, per la stessa ragione scritta qui
-     sopra. */
+  corda: 1.00, metallo: 1.50, canna: 1.90,
   bolla: 1.40, pelle: 1.33, argilla: 1.00,
 };
 

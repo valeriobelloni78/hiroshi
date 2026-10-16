@@ -129,7 +129,9 @@ Impulsi brevi con inviluppo percussivo. Ogni linea tiene una sequenza di posizio
   riga: timbri.corda | g.tim.corda
   riga: timbri.metallo | g.tim.metallo
   riga: timbri.canna | g.tim.canna
-  riga: timbri.sabbia | g.tim.sabbia
+  riga: timbri.bolla | g.tim.bolla
+  riga: timbri.pelle | g.tim.pelle
+  riga: timbri.argilla | g.tim.argilla
 -->
 | Nome | Sintesi |
 |---|---|
@@ -140,7 +142,9 @@ Impulsi brevi con inviluppo percussivo. Ogni linea tiene una sequenza di posizio
 | Corda | Dente di sega con filtro passa-basso che scende durante la coda. Non è una Karplus-Strong: un anello su un nodo di ritardo non scende sotto i 128 campioni, che fisserebbero l'altezza massima a 375 Hz. |
 | Metallo | Sei parziali in rapporti inarmonici fissi, decadimento differenziato. |
 | Canna | Quadra filtrata con formante fissa, attacco con rumore. |
-| Sabbia | Rumore a banda larga con inviluppo brevissimo: grana, non altezza. |
+| Bolla | Sinusoide con glissata ascendente di 40 ms che arriva sulla nota, più un tic di rumore all'attacco. L'inarmonicità governa la profondità della salita e a zero la annulla. |
+| Pelle | Membrana: triangolare con l'altezza che scende sulla nota in 35 ms e un colpo di rumore passa-basso di 12 ms. Quasi tutta fondamentale. |
+| Argilla | Sferzata di rumore di 25 ms dentro tre passa-banda a Q alto accordati sulla nota e su due parziali: la coda è la risonanza dei filtri, non un inviluppo. |
 
 ---
 
@@ -448,7 +452,7 @@ Ogni timbro compare una volta sola per tabella: girando gli otto si attraversano
 <!-- tabella
   intestazione: sez.gocce | et.timbro | g.col.periodi
   riga: mood.sereno | timbri.vetro | a mano: corsa
-  riga: mood.pioggia | timbri.sabbia | a mano: corsa
+  riga: mood.pioggia | timbri.argilla | a mano: corsa
   riga: mood.vespro | timbri.onda | a mano: corsa
   riga: mood.carillon | timbri.metallo | a mano: corsa
   riga: mood.arcipelago | timbri.corda | a mano: corsa
@@ -459,7 +463,7 @@ Ogni timbro compare una volta sola per tabella: girando gli otto si attraversano
 | Gocce | TIMBRO | Periodi |
 |---|---|---|
 | Sereno | Vetro | 7 · 11 · 13 · 17 |
-| Pioggia | Sabbia | 5 · 7 · 9 · 11 |
+| Pioggia | Argilla | 5 · 7 · 9 · 11 |
 | Vespro | Onda | 17 · 19 · 23 · 29 |
 | Carillon | Metallo | 4 · 9 · 17 · 25 |
 | Arcipelago | Corda | 13 · 16 · 21 · 25 |

@@ -36,7 +36,7 @@
    fondamentale. L'ora del giorno lo inclina di ±18 punti. */
 const MOOD_GOCCE = {
   sereno:     { timbro: "vetro",   registro: 45, calore: 70, spazio: 72, densita: 5,  addensamento: 30, periodi: [7, 11, 13, 17]  },
-  pioggia:    { timbro: "sabbia",  registro: 60, calore: 55, spazio: 58, densita: 11, addensamento: 45, periodi: [5, 7, 9, 11]    },
+  pioggia:    { timbro: "argilla", registro: 60, calore: 55, spazio: 58, densita: 11, addensamento: 45, periodi: [5, 7, 9, 11]    },
   vespro:     { timbro: "onda",    registro: 35, calore: 85, spazio: 85, densita: 3,  addensamento: 22, periodi: [17, 19, 23, 29] },
   carillon:   { timbro: "metallo", registro: 70, calore: 45, spazio: 66, densita: 8,  addensamento: 35, periodi: [4, 9, 17, 25]   },
   arcipelago: { timbro: "corda",   registro: 72, calore: 58, spazio: 80, densita: 3,  addensamento: 18, periodi: [13, 16, 21, 25] },

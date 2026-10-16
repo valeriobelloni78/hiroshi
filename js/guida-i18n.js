@@ -80,7 +80,9 @@ const GUIDA = {
     "g.tim.corda":   "Dente di sega con filtro passa-basso che scende durante la coda. Non è una Karplus-Strong: un anello su un nodo di ritardo non scende sotto i 128 campioni, che fisserebbero l'altezza massima a 375 Hz.",
     "g.tim.metallo": "Sei parziali in rapporti inarmonici fissi, decadimento differenziato.",
     "g.tim.canna":   "Quadra filtrata con formante fissa, attacco con rumore.",
-    "g.tim.sabbia":  "Rumore a banda larga con inviluppo brevissimo: grana, non altezza.",
+    "g.tim.bolla":   "Sinusoide con glissata ascendente di 40 ms che arriva sulla nota, più un tic di rumore all'attacco. L'inarmonicità governa la profondità della salita e a zero la annulla.",
+    "g.tim.pelle":   "Membrana: triangolare con l'altezza che scende sulla nota in 35 ms e un colpo di rumore passa-basso di 12 ms. Quasi tutta fondamentale.",
+    "g.tim.argilla": "Sferzata di rumore di 25 ms dentro tre passa-banda a Q alto accordati sulla nota e su due parziali: la coda è la risonanza dei filtri, non un inviluppo.",
 
     /* 3 · tessuti */
     "g.tess.t": "Tessuti",
@@ -264,7 +266,9 @@ const GUIDA = {
     "g.tim.corda":   `Dent de scie avec filtre passe-bas descendant pendant la traîne. Ce n'est pas une Karplus-Strong${NNBSP}: une boucle sur un nœud de retard ne descend pas sous 128 échantillons, ce qui fixerait la hauteur maximale à 375 Hz.`,
     "g.tim.metallo": "Six partiels en rapports inharmoniques fixes, décroissances différenciées.",
     "g.tim.canna":   "Carrée filtrée avec formant fixe, attaque bruitée.",
-    "g.tim.sabbia":  "Bruit large bande à enveloppe très brève : du grain, pas une hauteur.",
+    "g.tim.bolla":   `Sinusoïde avec un glissando ascendant de 40 ms qui arrive sur la note, plus un tic de bruit à l'attaque. L'inharmonicité règle la profondeur de la montée et l'annule à zéro.`,
+    "g.tim.pelle":   `Membrane${NNBSP}: triangulaire dont la hauteur descend sur la note en 35 ms, avec un coup de bruit passe-bas de 12 ms. Presque toute la fondamentale.`,
+    "g.tim.argilla": `Giclée de bruit de 25 ms dans trois passe-bande à Q élevé accordés sur la note et sur deux partiels${NNBSP}: la traîne est la résonance des filtres, non une enveloppe.`,
 
     "g.tess.t": "Tissus",
     "g.tess.1": "Sons tenus, de quelques secondes à une minute.",
@@ -437,7 +441,9 @@ const GUIDA = {
     "g.tim.corda":   "Sawtooth with a low-pass filter falling through the tail. Not a Karplus-Strong: a loop on a delay node cannot go below 128 samples, which would cap the pitch at 375 Hz.",
     "g.tim.metallo": "Six partials at fixed inharmonic ratios, with differentiated decay.",
     "g.tim.canna":   "Filtered square with a fixed formant, noisy attack.",
-    "g.tim.sabbia":  "Wide-band noise with a very short envelope: grain, not pitch.",
+    "g.tim.bolla":   "Sine with a 40 ms rising glide that lands on the note, plus a noise tick at the attack. Inharmonicity sets how deep the rise is, and cancels it at zero.",
+    "g.tim.pelle":   "Membrane: triangle whose pitch falls onto the note in 35 ms, with a 12 ms low-passed noise hit. Almost all fundamental.",
+    "g.tim.argilla": "A 25 ms noise burst into three high-Q band-passes tuned to the note and two partials: the tail is the filters' ringing, not an envelope.",
 
     "g.tess.t": "Weaves",
     "g.tess.1": "Sustained tones, from a few seconds to a minute.",
@@ -610,7 +616,9 @@ const GUIDA = {
     "g.tim.corda":   "余韻の途中で遮断周波数が下がる鋸歯状波。カープラス・ストロングではありません。遅延節点の帰還は128標本を下回れず、最高音が375 Hzに制限されるためです。",
     "g.tim.metallo": "固定した非調和比の六つの部分音、減衰は各々異なります。",
     "g.tim.canna":   "固定共振域を持つ濾波矩形波、立ち上がりに雑音。",
-    "g.tim.sabbia":  "きわめて短い包絡の広帯域雑音。音高ではなく粒です。",
+    "g.tim.bolla":   "40 msで音高が上がって音に着く正弦波。立ち上がりに雑音の点が付きます。上がり幅は非調和が決め、零で消えます。",
+    "g.tim.pelle":   "膜。三角波の音高が35 msで音まで下がり、12 msの低域雑音の打撃が重なります。ほとんどが基音です。",
+    "g.tim.argilla": "25 msの雑音を、音と二つの倍音に合わせたQの高い三つの帯域通過濾波器に通します。余韻は包絡ではなく濾波器の共振です。",
 
     "g.tess.t": "織り",
     "g.tess.1": "数秒から一分までの持続音です。",

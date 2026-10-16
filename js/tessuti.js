@@ -68,7 +68,10 @@
    ripulito.
 ============================================================================= */
 
-const TESSUTI = ["bordone", "marea", "attrito", "frangia", "corrente", "cavo", "brina", "soglia"];
+/* Gli otto, più i TRE CANDIDATI al posto di corrente, in coda perché sono in
+   prova (vedi più sotto, prima dei costruttori). */
+const TESSUTI = ["bordone", "marea", "attrito", "frangia", "corrente", "cavo", "brina", "soglia",
+                 "rugiada", "riflesso", "serra"];
 
 /* La forma dei tenuti. `apertura`, `chiusura` e `passo` sono BASI: quelle vere
    arrivano da `effGT`, perché la stagione le inclina e un mood le scrive. Le
@@ -114,6 +117,9 @@ const TERRITORIO = {
   cavo:     [90, 330],     //   (la fondamentale sta sotto: a cantare sono le formanti)
   brina:    [420, 1500],   // il velo
   soglia:   [500, 2000],
+  rugiada:  [300, 1400],   // i tre in prova stanno nell'aria, dove sta corrente
+  riflesso: [300, 1400],
+  serra:    [300, 1400],
 };
 
 function nelTerritorio(f, banda) {
@@ -458,9 +464,137 @@ function xSoglia({ ctx, e, freq, vel, dest, F }) {
   libera(src, [src, hp, lp, d, porta, env, ...L.nodi]);
 }
 
+/* --------------------------------------------------------------------------
+   TRE CANDIDATI AL POSTO DI CORRENTE, da ascoltare e scegliere. Stanno in coda
+   alla tendina accanto agli otto e vivono nello stesso territorio, l'aria,
+   perché è quel posto che devono prendere: chi resta erediterà anche il mood
+   «velo». Vengono dai dischi di Hiroshi Yoshimura, cioè da voci pulite e
+   tiepide dove non raschia niente, e ciascuno porta un MOVIMENTO che nella
+   serie non c'è — la regola dei quattro territori dice due tenuti per posto
+   con movimenti opposti, e il compagno è Cavo, che muove le formanti tenendo
+   ferma l'altezza.
+-------------------------------------------------------------------------- */
+
+/* RUGIADA — l'aria, per indice. La campana di «Music for Nine Post Cards»:
+   portante e modulante in rapporto di campana, 2,76, cioè il timbro a metà fra
+   il piano elettrico e il metallo. A muoversi è L'INDICE di modulazione, non
+   l'altezza e non una finestra: i parziali nascono e muoiono, e fra un respiro
+   e l'altro la voce passa da una sinusoide quasi nuda a una campana aperta.
+   Non è il movimento di Cavo: là tre risonanze fisse guardano uno spettro
+   immobile — una vocale — qui è lo spettro a cambiare da dentro. */
+function xRugiada({ ctx, e, freq, vel, dest, F }) {
+  const env = ctx.createGain();
+  const car = ctx.createOscillator(); car.frequency.value = freq;
+  const mod = ctx.createOscillator(); mod.frequency.value = freq * 2.76;
+  const idx = ctx.createGain();
+  const base = freq * (0.20 + F.brill * 0.75);
+  idx.gain.value = base;
+  /* il respiro dell'indice: profondità sotto la base, così non attraversa lo
+     zero — la stessa prudenza di Soglia, dove sotto zero il rumore si rovescia
+     di fase */
+  const L = lento(ctx, e, 0.012 + F.passo * 0.065, Math.SQRT2);
+  const amp = ctx.createGain();
+  amp.gain.value = base * (0.25 + F.movimento * 0.70);
+  L.uscita.connect(amp); amp.connect(idx.gain);
+  mod.connect(idx); idx.connect(car.frequency);
+  const gc = ctx.createGain(); gc.gain.value = 0.55 + F.corpo * 0.35;
+  car.connect(gc); gc.connect(env);
+  env.connect(dest);
+  car.start(e.t0); mod.start(e.t0);
+  car.stop(e.t1 + 0.05); mod.stop(e.t1 + 0.05);
+  apriChiudi(env, 0.30 * vel, e);
+  libera(car, [car, mod, idx, amp, gc, env, ...L.nodi]);
+}
+
+/* RIFLESSO — l'aria, per pettine. Una presa diretta e una RITARDATA di pochi
+   millesimi, sommate: l'interferenza scava nello spettro un pettine di buchi,
+   e il ritardo che scivola li fa camminare su e giù. È il nastro e il chorus
+   di «Wet Land», ed è la luce che si muove sul soffitto.
+   Niente anello: presa diretta più presa ritardata, come il passa-tutto svolto
+   del riverbero — un ritorno sul ritardo riaprirebbe la trappola dei 128
+   campioni, che in questo progetto è già costata cara. E il ritardo si muove
+   LENTISSIMO: spostarlo in fretta è una glissata, non un riflesso. */
+function xRiflesso({ ctx, e, freq, vel, dest, F }) {
+  const env = ctx.createGain();
+  const o = ctx.createOscillator();
+  o.type = "sawtooth"; o.frequency.value = freq;
+  const lp = ctx.createBiquadFilter();
+  lp.type = "lowpass";
+  lp.frequency.value = clamp(freq * (3 + F.brill * 8), 300, 12000);
+  lp.Q.value = 0.6;
+  const pre = ctx.createGain(); pre.gain.value = 0.34;
+  o.connect(lp); lp.connect(pre);
+
+  const base = 0.006 + F.brill * 0.012;              // da sei a diciotto millesimi
+  const dly = ctx.createDelay(0.05);
+  dly.delayTime.value = base;
+  const L = lento(ctx, e, 0.010 + F.passo * 0.045, Math.sqrt(3));
+  const amp = ctx.createGain();
+  amp.gain.value = base * (0.20 + F.movimento * 0.55);
+  L.uscita.connect(amp); amp.connect(dly.delayTime);
+
+  const diretto = ctx.createGain(); diretto.gain.value = 0.55 + F.corpo * 0.20;
+  const rit = ctx.createGain(); rit.gain.value = 0.55;
+  pre.connect(diretto); diretto.connect(env);
+  pre.connect(dly); dly.connect(rit); rit.connect(env);
+  env.connect(dest);
+  o.start(e.t0); o.stop(e.t1 + 0.05);
+  apriChiudi(env, 0.34 * vel, e);
+  libera(o, [o, lp, pre, dly, diretto, rit, amp, env, ...L.nodi]);
+}
+
+/* SERRA — l'aria, per respiri indipendenti. Quattro parziali armonici,
+   ciascuno con la SUA ampiezza mossa da una combinazione diversa di tre
+   oscillatori lentissimi in rapporto irrazionale: non vanno mai d'accordo,
+   quindi l'accordo cambia colore da dentro senza che niente si muova in
+   altezza e senza che niente batta. È il pad fermo di «GREEN».
+   Non è Bordone e non è Brina: là il movimento è la DIFFERENZA fra due
+   frequenze vicine, cioè un battimento; qui battimenti non ce ne sono, ogni
+   parziale vive per conto suo. Le profondità stanno sotto le basi, così
+   nessun parziale attraversa lo zero e si rovescia di fase. */
+const ERBA = [1, 2, 3, 5];
+const INTRECCI = [[0, 1], [1, 2], [2, 0], [0, 2]];
+function xSerra({ ctx, e, freq, vel, dest, F }) {
+  const env = ctx.createGain();
+  const nodi = [env];
+  /* tre lentissimi soli per tutta la voce: quattro parziali con quattro
+     coppie diverse bastano a non farli mai coincidere, e costano la metà */
+  const lenti = [1, Math.SQRT2, Math.sqrt(5) / 1.7].map((r) => {
+    const l = ctx.createOscillator();
+    l.frequency.value = (0.009 + F.passo * 0.05) * r;
+    l.start(e.t0); l.stop(e.t1 + 0.05);
+    nodi.push(l);
+    return l;
+  });
+  let primo = null;
+  ERBA.forEach((r, k) => {
+    const f = freq * r;
+    if (f > 14000) return;
+    const o = ctx.createOscillator(); o.frequency.value = f;
+    const g = ctx.createGain();
+    const base = k === 0 ? 0.42 + F.corpo * 0.28 : (0.26 * (0.4 + F.brill)) / (k + 0.7);
+    g.gain.value = base;
+    const prof = base * (0.25 + F.movimento * 0.65);
+    INTRECCI[k].forEach((i, j) => {
+      const a = ctx.createGain();
+      a.gain.value = prof * (j === 0 ? 0.62 : 0.38);
+      lenti[i].connect(a); a.connect(g.gain);
+      nodi.push(a);
+    });
+    o.connect(g); g.connect(env);
+    o.start(e.t0); o.stop(e.t1 + 0.05);
+    nodi.push(o, g);
+    if (!primo) primo = o;
+  });
+  env.connect(dest);
+  apriChiudi(env, 0.30 * vel, e);
+  libera(primo || lenti[0], nodi);
+}
+
 const COSTRUTTORI_T = {
   bordone: xBordone, marea: xMarea, attrito: xAttrito, frangia: xFrangia,
   corrente: xCorrente, cavo: xCavo, brina: xBrina, soglia: xSoglia,
+  rugiada: xRugiada, riflesso: xRiflesso, serra: xSerra,
 };
 
 /* --------------------------------------------------------------- il pareggio
@@ -487,6 +621,10 @@ const COSTRUTTORI_T = {
 const PESO_T = {
   bordone: 0.47, marea: 0.53, attrito: 0.45, frangia: 0.51,
   corrente: 1.30, cavo: 2.54, brina: 0.59, soglia: 0.22,
+  /* I TRE IN PROVA, misurati come gli altri: a peso 1 uscivano a −16,9
+     (Rugiada e Serra) e −20,4 (Riflesso, dove il pettine si mangia metà dello
+     spettro), e questi pesi li portano tutti e tre a −18. */
+  rugiada: 0.88, riflesso: 1.32, serra: 0.88,
 };
 
 /* L'unico nome che esce da qui. Restituisce l'INVILUPPO usato: chi chiama lo

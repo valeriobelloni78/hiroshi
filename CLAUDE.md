@@ -1031,9 +1031,17 @@ carattere per due o tre secondi, cioè un fondo che si dissolve — il contrario
 di un cambio di scena.
 
 **Ogni timbro compare una volta sola per tabella di mood.** Non è simmetria
-decorativa: è la garanzia che girando gli otto pulsanti si attraversino
-davvero tutti e otto i suoni invece di ritrovarsi tre volte nello stesso
-posto. La prova lo verifica.
+decorativa: è la garanzia che girando gli otto pulsanti si attraversino suoni
+sempre diversi invece di ritrovarsi tre volte nello stesso posto. La prova lo
+verifica.
+
+DA QUANDO LE GOCCE SONO DIECI, la copertura non è più piena: otto mood non
+possono chiamare dieci timbri, e BOLLA e PELLE si raggiungono solo dalla
+tendina. È una perdita vera — un mood è il modo in cui un suono si presenta da
+solo — e si chiude in un modo solo, aggiungendo due mood; ma due mood nuovi
+vogliono due serie di periodi coprimi, il riallineamento sopra le 24 ore su
+tutte e OTTANTA le combinazioni e due nomi in quattro lingue, e quel lavoro non
+si fa di straforo. Finché non si fa, sta scritto qui.
 
 **L'ora del giorno inclina le gocce, la stagione inclina i tessuti**, e nessuna
 delle due si sovrappone alla deriva: ogni parametro pende da una cosa sola,
@@ -1880,7 +1888,7 @@ clic.
 d'uscita** (mixer a tre canali con mandata al riverbero, normalizzazione
 per canale, colore d'insieme, equalizzatore a otto bande, limitatore doppio,
 misuratori), la **deriva** trapiantata intatta, il **modello delle linee** con
-piani, trame e ricambio, gli **otto timbri** delle gocce, gli **otto tenuti**
+piani, trame e ricambio, i **dieci timbri** delle gocce, gli **otto tenuti**
 dei tessuti con la normalizzazione del bus, i **sedici mood**, le **due
 influenze esterne**, i **comandi per linea**, il **movimento del materiale** col
 rinnovo al passo di quinta, l'**accensione per classe**, lo **scheduler** e
@@ -1972,23 +1980,65 @@ Sotto i 1180 px le cinque colonne diventano due e i quadranti si impilano; sotto
 i 720 una sola. I quadranti non crescono oltre 460 px: un cerchio da mezzo metro
 con quattro anelli lontanissimi si legge peggio, non meglio.
 
-**IN TENDINA CI SONO TRE TIMBRI IN PROVA, e due se ne andranno.** «Sabbia» non
-convince — è l'unico degli otto senza un'altezza vera, un clic di rumore accanto
-a una campana e a un pizzicato — e al suo posto si ascoltano tre candidati, in
-coda alla tendina delle gocce: BOLLA, che arriva sulla nota da sotto con una
-glissata di quaranta millesimi e un tic, ed è l'unico evento della classe che si
-muove in altezza; PELLE, una membrana che scende sulla nota da una terza sopra,
-l'unico registro basso; ARGILLA, la grana di sabbia fatta suonare con tre
-risonatori accordati sulla nota, come il paesaggio si intona senza essere
-trasposto. Stanno al livello di casa — bolla e pelle a −16,6 e −16,8 di picco,
-argilla tre decibel sotto come sabbia, perché è materia e non nota.
+**LE GOCCE SONO DIECI, E SABBIA NON C'È PIÙ.** Era l'unica senza un'altezza
+vera — un clic di rumore accanto a una campana e a un pizzicato — e al suo posto
+ne sono entrate TRE, scelte all'ascolto fra tre candidate che facevano lo stesso
+mestiere per tre strade diverse, tutte e tre nei primi trenta millesimi:
 
-QUANDO LA SCELTA È FATTA: i due scartati se ne vanno da `TIMBRI`, da
-`COSTRUTTORI`, da `PESO` e dai quattro dizionari dei nomi; il terzo prende il
-posto di sabbia nel mood «pioggia» e si porta la sua riga nella tabella dei
-timbri della guida, in quattro lingue — che oggi NON c'è, perché tre righe
-scritte per cancellarne due sono tre righe da tradurre per niente. Finché dura
-la prova la guida dice otto timbri e la tendina ne offre undici.
+- BOLLA arriva sulla nota DA SOTTO, con una glissata di quaranta millesimi e un
+  tic di rumore. È l'unico evento della classe che si muove in altezza, e il
+  verso conta: l'altezza che il campo legge è quella d'ARRIVO, quindi la
+  glissata non litiga con l'armonia. L'inarmonicità ne governa la profondità e a
+  zero la annulla, cioè sa spegnere quello che ha di figurativo.
+- PELLE è una membrana: l'altezza SCENDE sulla nota in trentacinque millesimi e
+  sopra ci sta il colpo, rumore passa-basso di dodici. È l'unico registro basso
+  di una classe che stava tutta fra il medio e l'acuto.
+- ARGILLA è la grana che sabbia prometteva, ma suonata: venticinque millesimi di
+  rumore dentro tre passa-banda a Q alto accordati sulla nota e su due parziali.
+  La coda è la risonanza dei filtri e non un inviluppo — è l'accordatura del
+  paesaggio applicata a una goccia, e per la stessa ragione: non si trasporta
+  una materia, le si mette dietro un risonatore.
+
+Bolla e Pelle un'altezza ce l'hanno e stanno al livello di casa, −16,6 e −16,8
+di picco; ARGILLA resta tre decibel sotto, come stava sabbia, perché è materia e
+non nota. Il mood «pioggia» — il più fitto, undici eventi per giro — è passato
+ad ARGILLA, che di quel ruolo è l'erede.
+
+DUE NUMERI DI ARGILLA SONO MISURATI E VANNO LASCIATI STARE. Un passa-banda a
+Q 90 restituisce così poco che senza recupero il timbro usciva a −50 dB, cioè
+muto: il guadagno di compensazione è proporzionale al Q e non alla sua radice, e
+un secondo fattore raddrizza la pendenza che resta con l'altezza. E IL BATTENTE
+È SEMPRE LO STESSO RUMORE, alla stessa velocità e dallo stesso punto del buffer:
+con la velocità sorteggiata — innocua su una banda larga, non su una larga due
+hertz — il livello della stessa nota ballava fra −26,8 e −20,2 dB da una goccia
+all'altra. Il sorteggio resta dov'è innocuo, sul graffio dell'attacco.
+
+**IN TENDINA CI SONO TRE TENUTI IN PROVA, al posto di «Corrente».** Vengono dai
+dischi di Hiroshi Yoshimura — voci pulite e tiepide dove non raschia niente — e
+stanno tutti e tre nel territorio dell'ARIA, perché è quel posto che devono
+prendere, insieme al mood «velo». Ciascuno porta un movimento che nella serie
+non c'è, perché il compagno di territorio è Cavo, che muove le formanti tenendo
+ferma l'altezza:
+
+- RUGIADA, la campana di «Music for Nine Post Cards»: portante e modulante in
+  rapporto 2,76, e a muoversi è L'INDICE — i parziali nascono e muoiono, e fra
+  un respiro e l'altro la voce passa da una sinusoide nuda a una campana aperta.
+- RIFLESSO, il nastro di «Wet Land»: una presa diretta e una ritardata di sei÷
+  diciotto millesimi, sommate, col ritardo che scivola. L'interferenza scava un
+  PETTINE e il pettine cammina. Niente anello, per la trappola dei 128 campioni.
+- SERRA, il pad fermo di «GREEN»: quattro parziali armonici, ciascuno con la sua
+  ampiezza mossa da una combinazione diversa di tre lentissimi irrazionali. Non
+  battono — il movimento non è una differenza di frequenze — e l'accordo cambia
+  colore da dentro.
+
+Tutti e tre a −18 dB di picco, il bersaglio dei tenuti, con i pesi misurati.
+Quando la scelta è fatta, gli scartati se ne vanno da `TESSUTI`, `TERRITORIO`,
+`COSTRUTTORI_T`, `PESO_T` e dai quattro dizionari; chi resta prende il posto di
+corrente nel mood «velo» e si porta la riga nella tabella della guida, in quattro
+lingue — che oggi non c'è, come per i tre timbri delle gocce: righe scritte per
+cancellarne due sono righe tradotte per niente. QUELLO CHE SI PERDE con corrente,
+se se ne va, è l'unico tenuto la cui voce è vento; il rumore resta comunque, in
+Soglia e come grana in Attrito.
 
 Da fare, in ordine:
 
