@@ -27,7 +27,10 @@
    ripulito, la CPU audio sale, i buffer prima frusciano e poi saltano.
 ============================================================================= */
 
-const TIMBRI = ["vetro", "legno", "onda", "soffio", "corda", "metallo", "canna", "sabbia"];
+/* Gli otto, più i TRE CANDIDATI in coda: stanno in fondo alla tendina perché
+   sono in prova, e quando la scelta è fatta ne resta uno al posto di sabbia. */
+const TIMBRI = ["vetro", "legno", "onda", "soffio", "corda", "metallo", "canna", "sabbia",
+                "bolla", "pelle", "argilla"];
 
 /* La forma del suono: i cinque filetti sotto la tendina. Valori d'esordio
    uguali a quelli scritti sulla tavola. Questa è la BASE; quella che arriva
@@ -271,9 +274,177 @@ function tSabbia({ ctx, when, freq, vel, dest, F }) {
   return dur;
 }
 
+/* --------------------------------------------------------------------------
+   TRE CANDIDATI AL POSTO DI SABBIA, da ascoltare e scegliere. Stanno in
+   tendina accanto agli otto e non li sostituiscono: quando la scelta è fatta,
+   due se ne vanno insieme al loro nome, alla loro riga nella guida e al loro
+   peso, e il terzo prende il posto di sabbia nel mood «pioggia».
+
+   I tre attaccano in tre modi diversi, che è dove si decide un timbro (vedi in
+   cima al file): BOLLA arriva sulla nota da sotto, PELLE ci scende sopra da
+   un'ottava più su, ARGILLA la fa suonare a un rumore che dura venticinque
+   millesimi.
+-------------------------------------------------------------------------- */
+
+/* BOLLA — l'unico evento che si muove in altezza. Una sinusoide che SALE sulla
+   nota invece di partirci: il verso è quello della bolla che si stacca, e
+   soprattutto l'altezza del campo è quella d'ARRIVO, non quella di partenza —
+   così la glissata non litiga con l'armonia, perché quello che resta in aria è
+   il grado giusto. Sopra, un tic di rumore di quattro millesimi: è il «plop»,
+   e senza di lui la bolla è solo un fischio corto.
+   `inarm` governa quanto è profonda la salita, fino a una sesta, e a zero la
+   toglie del tutto: una manopola che sa spegnere quello che ha di figurativo. */
+function tBolla({ ctx, when, freq, vel, dest, F }) {
+  const dur = 0.25 + F.coda * 0.45;
+  const salita = 0.035 + F.attacco * 2;
+  const salto = 1 + 0.08 + F.inarm * 0.60;        // da quanto sotto arriva
+  const env = ctx.createGain();
+  const picco = 0.17 * vel;
+  env.gain.setValueAtTime(0, when);
+  env.gain.linearRampToValueAtTime(picco, when + 0.004);
+  spegni(env, when, dur);
+  env.connect(dest);
+
+  const o = ctx.createOscillator();
+  o.frequency.setValueAtTime(freq / salto, when);
+  o.frequency.exponentialRampToValueAtTime(freq, when + salita);
+  const g0 = ctx.createGain(); g0.gain.value = 0.6 + F.corpo * 0.4;
+  o.connect(g0); g0.connect(env);
+
+  const p2 = ctx.createOscillator();              // il secondo parziale segue la salita
+  p2.frequency.setValueAtTime(freq * 2 / salto, when);
+  p2.frequency.exponentialRampToValueAtTime(freq * 2, when + salita);
+  const g2 = ctx.createGain();
+  g2.gain.setValueAtTime(0.22 * F.brill, when);
+  g2.gain.exponentialRampToValueAtTime(0.001, when + dur * 0.4);
+  p2.connect(g2); g2.connect(env);
+
+  const tic = ctx.createBufferSource(); tic.buffer = rumore(ctx);
+  tic.playbackRate.value = 0.9 + Math.random() * 0.2;
+  const bp = ctx.createBiquadFilter();
+  bp.type = "bandpass"; bp.frequency.value = freq * 6; bp.Q.value = 2;
+  const gT = ctx.createGain();
+  gT.gain.setValueAtTime(0.5 * (0.2 + F.brill), when);
+  gT.gain.exponentialRampToValueAtTime(0.0008, when + 0.004);
+  tic.connect(bp); bp.connect(gT); gT.connect(env);
+
+  o.start(when); p2.start(when); tic.start(when);
+  o.stop(when + dur + 0.05); p2.stop(when + dur + 0.05); tic.stop(when + 0.05);
+  libera(o, [o, p2, tic, bp, g0, g2, gT, env]);
+  return dur;
+}
+
+/* PELLE — il registro basso che alla classe manca: una membrana. L'altezza
+   SCENDE sulla nota in trentacinque millesimi, che è quello che fa una pelle
+   tesa quando il battente la molla, e sopra ci sta il colpo: rumore passa-basso
+   lungo dodici millesimi. Il resto è fondamentale, perché un tamburo è quasi
+   tutto fondamentale.
+   Chi lo sceglie tenga presente che una percussione, con quattro linee coprime
+   e undici eventi per giro, si legge come RITMO: vorrebbe un mood lento, non
+   quello della pioggia. */
+function tPelle({ ctx, when, freq, vel, dest, F }) {
+  const dur = 0.30 + F.coda * 0.60;
+  const env = ctx.createGain();
+  const picco = 0.20 * vel;
+  env.gain.setValueAtTime(0, when);
+  env.gain.linearRampToValueAtTime(picco, when + Math.max(0.002, F.attacco));
+  spegni(env, when, dur);
+  env.connect(dest);
+
+  const o = ctx.createOscillator(); o.type = "triangle";
+  o.frequency.setValueAtTime(freq * (1.3 + F.inarm * 0.9), when);
+  o.frequency.exponentialRampToValueAtTime(freq, when + 0.035);
+  const g0 = ctx.createGain(); g0.gain.value = 0.55 + F.corpo * 0.45;
+  o.connect(g0); g0.connect(env);
+
+  const colpo = ctx.createBufferSource(); colpo.buffer = rumore(ctx);
+  const lp = ctx.createBiquadFilter();
+  lp.type = "lowpass";
+  lp.frequency.value = Math.min(freq * (5 + F.brill * 9), 9000);
+  const gC = ctx.createGain();
+  gC.gain.setValueAtTime(0.45 * (0.3 + F.brill), when);
+  gC.gain.exponentialRampToValueAtTime(0.0008, when + 0.012);
+  colpo.connect(lp); lp.connect(gC); gC.connect(env);
+
+  o.start(when); colpo.start(when);
+  o.stop(when + dur + 0.05); colpo.stop(when + 0.06);
+  libera(o, [o, colpo, lp, g0, gC, env]);
+  return dur;
+}
+
+/* ARGILLA — la grana di sabbia, ma suonata. Venticinque millesimi di rumore
+   spinti dentro TRE passa-banda a Q alto, accordati sulla nota e su due
+   parziali: il rumore li eccita e quello che resta in aria è la loro coda.
+   È la stessa idea dell'accordatura del paesaggio — non si trasporta una
+   materia, le si mette dietro un risonatore — applicata a una goccia.
+   A differenza di sabbia ha un'altezza e una coda; come sabbia, è materia e
+   non nota, quindi la fondamentale non domina. */
+const COCCIO = [1, 3.01, 5.04];
+/* DUE NUMERI MISURATI, non teorici. RECUPERO è quanto si riprende di quello che
+   la banda stretta butta via: un passa-banda suona per Q/(π·f) secondi e lascia
+   passare una fetta larga f/Q, quindi a Q 90 su 220 Hz la coda è un decimo di
+   secondo e la fetta due hertz e mezzo — senza recupero argilla usciva a −50 dB,
+   cioè muta. RIF/freq raddrizza la pendenza che resta, perché quello che un
+   risonatore restituisce cresce con la sua frequenza.
+   E IL BATTENTE È SEMPRE LO STESSO RUMORE, alla stessa velocità e dallo stesso
+   punto del buffer. Con la velocità sorteggiata — come fa sabbia, dove non
+   conta — quanta energia finiva dentro una banda larga due hertz era un
+   sorteggio: misurato, il livello della stessa nota ballava fra −26,8 e −20,2 dB
+   da una goccia all'altra. Il sorteggio resta dov'è innocuo, sul graffio. */
+const RECUPERO = 4.6, RIF = 220;
+function tArgilla({ ctx, when, freq, vel, dest, F }) {
+  const dur = 0.30 + F.coda * 0.50;
+  const env = ctx.createGain();
+  const picco = 0.14 * vel;
+  env.gain.setValueAtTime(0, when);
+  env.gain.linearRampToValueAtTime(picco, when + 0.002);
+  spegni(env, when, dur);
+  env.connect(dest);
+
+  /* la graffiata dell'attacco: rumore cortissimo, e NON passa dai risonatori —
+     di là dentro il suo livello tornerebbe a essere un sorteggio */
+  const graffio = ctx.createBufferSource(); graffio.buffer = rumore(ctx);
+  graffio.playbackRate.value = 0.9 + Math.random() * 0.2;
+  const bpG = ctx.createBiquadFilter();
+  bpG.type = "bandpass";
+  bpG.frequency.value = Math.min(freq * 7, 12000);
+  bpG.Q.value = 1.2;
+  const gG = ctx.createGain();
+  gG.gain.setValueAtTime(0.5 * (0.25 + F.brill), when);
+  gG.gain.exponentialRampToValueAtTime(0.0008, when + 0.012);
+  graffio.connect(bpG); bpG.connect(gG); gG.connect(env);
+
+  const battente = ctx.createBufferSource(); battente.buffer = rumore(ctx);
+  const sferza = ctx.createGain();
+  sferza.gain.setValueAtTime(0.0001, when);
+  sferza.gain.linearRampToValueAtTime(1, when + 0.002);
+  sferza.gain.exponentialRampToValueAtTime(0.001, when + 0.025);
+  battente.connect(sferza);
+  const nodi = [graffio, bpG, gG, battente, sferza, env];
+  COCCIO.forEach((r, k) => {
+    const rr = 1 + (r - 1) * (0.6 + F.inarm * 1.2);
+    const Q = 50 + F.corpo * 90;
+    const bp = ctx.createBiquadFilter();
+    bp.type = "bandpass";
+    bp.frequency.value = Math.min(freq * rr, 15000);
+    bp.Q.value = Q;
+    const g = ctx.createGain();
+    const peso = k === 0 ? 0.5 + F.corpo * 0.3 : (0.55 * F.brill) / (k + 1);
+    g.gain.value = peso * Q * RECUPERO * (RIF / freq);
+    sferza.connect(bp); bp.connect(g); g.connect(env);
+    nodi.push(bp, g);
+  });
+
+  graffio.start(when); graffio.stop(when + 0.06);
+  battente.start(when); battente.stop(when + dur + 0.05);
+  libera(battente, nodi);
+  return dur;
+}
+
 const COSTRUTTORI = {
   vetro: tVetro, legno: tLegno, onda: tOnda, soffio: tSoffio,
   corda: tCorda, metallo: tMetallo, canna: tCanna, sabbia: tSabbia,
+  bolla: tBolla, pelle: tPelle, argilla: tArgilla,
 };
 
 /* --------------------------------------------------------------- il pareggio
@@ -292,6 +463,11 @@ const COSTRUTTORI = {
 const PESO = {
   vetro: 0.78, legno: 1.05, onda: 0.55, soffio: 2.60,
   corda: 1.00, metallo: 1.50, canna: 1.90, sabbia: 4.50,
+  /* I TRE IN PROVA, misurati come gli altri. Bolla e Pelle sono note e
+     stanno al livello di casa, −16,5 dB di picco; Argilla è materia come
+     sabbia e resta tre decibel sotto, per la stessa ragione scritta qui
+     sopra. */
+  bolla: 1.40, pelle: 1.33, argilla: 1.00,
 };
 
 /* L'unico nome che esce da qui. Il panorama sta fuori dai costruttori perché

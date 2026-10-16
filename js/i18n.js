@@ -209,7 +209,8 @@ const TESTI = {
 
     note:    ["do", "do♯", "re", "mi♭", "mi", "fa", "fa♯", "sol", "la♭", "la", "si♭", "si"],
     timbri:  { vetro: "Vetro", legno: "Legno", onda: "Onda", soffio: "Soffio",
-               corda: "Corda", metallo: "Metallo", canna: "Canna", sabbia: "Sabbia" },
+               corda: "Corda", metallo: "Metallo", canna: "Canna", sabbia: "Sabbia",
+               bolla: "Bolla", pelle: "Pelle", argilla: "Argilla" },
     tenuti:  { bordone: "Bordone", marea: "Marea", attrito: "Attrito", frangia: "Frangia",
                corrente: "Corrente", cavo: "Cavo", brina: "Brina", soglia: "Soglia" },
     mood:    { sereno: "Sereno", pioggia: "Pioggia", vespro: "Vespro", carillon: "Carillon",
@@ -394,7 +395,8 @@ const TESTI = {
 
     note:    ["do", "do♯", "ré", "mi♭", "mi", "fa", "fa♯", "sol", "la♭", "la", "si♭", "si"],
     timbri:  { vetro: "Verre", legno: "Bois", onda: "Onde", soffio: "Souffle",
-               corda: "Corde", metallo: "Métal", canna: "Roseau", sabbia: "Sable" },
+               corda: "Corde", metallo: "Métal", canna: "Roseau", sabbia: "Sable",
+               bolla: "Bulle", pelle: "Peau", argilla: "Argile" },
     tenuti:  { bordone: "Bourdon", marea: "Marée", attrito: "Frottement", frangia: "Frange",
                corrente: "Courant", cavo: "Creux", brina: "Givre", soglia: "Seuil" },
     mood:    { sereno: "Serein", pioggia: "Pluie", vespro: "Vêpres", carillon: "Carillon",
@@ -579,7 +581,8 @@ const TESTI = {
 
     note:    ["C", "C♯", "D", "E♭", "E", "F", "F♯", "G", "A♭", "A", "B♭", "B"],
     timbri:  { vetro: "Glass", legno: "Wood", onda: "Wave", soffio: "Breath",
-               corda: "String", metallo: "Metal", canna: "Reed", sabbia: "Sand" },
+               corda: "String", metallo: "Metal", canna: "Reed", sabbia: "Sand",
+               bolla: "Bubble", pelle: "Skin", argilla: "Clay" },
     tenuti:  { bordone: "Drone", marea: "Tide", attrito: "Friction", frangia: "Fringe",
                corrente: "Current", cavo: "Hollow", brina: "Frost", soglia: "Threshold" },
     mood:    { sereno: "Clear", pioggia: "Rain", vespro: "Vespers", carillon: "Carillon",
@@ -764,7 +767,8 @@ const TESTI = {
 
     note:    ["C", "C♯", "D", "E♭", "E", "F", "F♯", "G", "A♭", "A", "B♭", "B"],
     timbri:  { vetro: "硝子", legno: "木", onda: "波", soffio: "息吹",
-               corda: "弦", metallo: "金", canna: "葦", sabbia: "砂" },
+               corda: "弦", metallo: "金", canna: "葦", sabbia: "砂",
+               bolla: "泡", pelle: "皮", argilla: "土" },
     tenuti:  { bordone: "持続", marea: "潮", attrito: "摩擦", frangia: "干渉",
                corrente: "流れ", cavo: "空洞", brina: "霜", soglia: "閾" },
     mood:    { sereno: "凪", pioggia: "雨", vespro: "晩鐘", carillon: "風鈴",

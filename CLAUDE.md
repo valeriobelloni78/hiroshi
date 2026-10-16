@@ -1972,6 +1972,24 @@ Sotto i 1180 px le cinque colonne diventano due e i quadranti si impilano; sotto
 i 720 una sola. I quadranti non crescono oltre 460 px: un cerchio da mezzo metro
 con quattro anelli lontanissimi si legge peggio, non meglio.
 
+**IN TENDINA CI SONO TRE TIMBRI IN PROVA, e due se ne andranno.** «Sabbia» non
+convince — è l'unico degli otto senza un'altezza vera, un clic di rumore accanto
+a una campana e a un pizzicato — e al suo posto si ascoltano tre candidati, in
+coda alla tendina delle gocce: BOLLA, che arriva sulla nota da sotto con una
+glissata di quaranta millesimi e un tic, ed è l'unico evento della classe che si
+muove in altezza; PELLE, una membrana che scende sulla nota da una terza sopra,
+l'unico registro basso; ARGILLA, la grana di sabbia fatta suonare con tre
+risonatori accordati sulla nota, come il paesaggio si intona senza essere
+trasposto. Stanno al livello di casa — bolla e pelle a −16,6 e −16,8 di picco,
+argilla tre decibel sotto come sabbia, perché è materia e non nota.
+
+QUANDO LA SCELTA È FATTA: i due scartati se ne vanno da `TIMBRI`, da
+`COSTRUTTORI`, da `PESO` e dai quattro dizionari dei nomi; il terzo prende il
+posto di sabbia nel mood «pioggia» e si porta la sua riga nella tabella dei
+timbri della guida, in quattro lingue — che oggi NON c'è, perché tre righe
+scritte per cancellarne due sono tre righe da tradurre per niente. Finché dura
+la prova la guida dice otto timbri e la tendina ne offre undici.
+
 Da fare, in ordine:
 
 1. **Rifinire la tavola sul vetro vero.** Il disegno è al primo passaggio
