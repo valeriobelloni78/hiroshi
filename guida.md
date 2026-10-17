@@ -115,10 +115,10 @@ Impulsi brevi con inviluppo percussivo. Ogni linea tiene una sequenza di posizio
 |   |   |   |
 |---|---|---|
 | Registro | 0 – 3,2 ott | Ampiezza della finestra sul campo armonico. A cursore pieno la finestra copre poco più di tre ottave. |
-| Calore | 0 – 1 | Parametro unico del timbro: ciascuno degli otto lo interpreta a modo suo, e la corona ne mostra il valore effettivo dopo l'influenza dell'ora del giorno. |
+| Calore | 0 – 1 | Parametro unico del timbro: ciascuno dei dieci lo interpreta a modo suo, e la corona ne mostra il valore effettivo dopo l'influenza dell'ora del giorno. |
 
 <!-- g.gocce.timbri -->
-### Gli otto timbri
+### I dieci timbri
 
 <!-- tabella
   intestazione: g.col.nome | g.col.desc
@@ -145,6 +145,9 @@ Impulsi brevi con inviluppo percussivo. Ogni linea tiene una sequenza di posizio
 | Bolla | Sinusoide con glissata ascendente di 40 ms che arriva sulla nota, più un tic di rumore all'attacco. L'inarmonicità governa la profondità della salita e a zero la annulla. |
 | Pelle | Membrana: triangolare con l'altezza che scende sulla nota in 35 ms e un colpo di rumore passa-basso di 12 ms. Quasi tutta fondamentale. |
 | Argilla | Sferzata di rumore di 25 ms dentro tre passa-banda a Q alto accordati sulla nota e su due parziali: la coda è la risonanza dei filtri, non un inviluppo. |
+
+<!-- g.gocce.2 -->
+Fra i dieci, tre occupano un posto che gli altri non hanno: Bolla è l'unica la cui altezza si muove dentro l'evento — sale sulla nota, e il campo legge l'altezza d'arrivo —, Pelle è l'unica che suona nel registro basso, Argilla è grana e non nota, e per questo sta tre decibel sotto le altre.
 
 ---
 
@@ -202,7 +205,7 @@ Suoni tenuti, da pochi secondi a un minuto.
 | Passo | 0 – 1 | Velocità del movimento interno. L'unità dipende dal tenuto: centesimi di semitono, hertz di battimento, larghezza di banda. |
 
 <!-- g.tess.timbri -->
-### Gli otto tenuti
+### I dieci tenuti
 
 <!-- tabella
   intestazione: g.col.nome | g.col.desc
@@ -210,8 +213,10 @@ Suoni tenuti, da pochi secondi a un minuto.
   riga: tenuti.marea | g.ten.marea
   riga: tenuti.attrito | g.ten.attrito
   riga: tenuti.frangia | g.ten.frangia
-  riga: tenuti.corrente | g.ten.corrente
   riga: tenuti.cavo | g.ten.cavo
+  riga: tenuti.rugiada | g.ten.rugiada
+  riga: tenuti.riflesso | g.ten.riflesso
+  riga: tenuti.serra | g.ten.serra
   riga: tenuti.brina | g.ten.brina
   riga: tenuti.soglia | g.ten.soglia
 -->
@@ -221,10 +226,15 @@ Suoni tenuti, da pochi secondi a un minuto.
 | Marea | Due bande di rumore filtrato che si scambiano energia. |
 | Attrito | Onda a dente di sega dentro un filtro passa-basso la cui frequenza oscilla. |
 | Frangia | Due sinusoidi separate di pochi hertz. Il battimento è la loro differenza. |
-| Corrente | Rumore filtrato con banda che si sposta in continuo. |
 | Cavo | Tre formanti che si spostano fra la posizione della «a» e quella della «u». Altezza ferma, spettro in movimento. |
+| Rugiada | Modulazione di frequenza in rapporto di campana, 2,76, con l'indice mosso da due oscillatori lentissimi: i parziali nascono e muoiono, l'altezza resta ferma. |
+| Riflesso | Presa diretta più presa ritardata di 6–18 ms, sommate, col ritardo che scivola: l'interferenza scava un pettine di buchi che cammina nello spettro. Nessuna retroazione. |
+| Serra | Quattro parziali armonici, ciascuno con l'ampiezza mossa da una combinazione diversa di tre oscillatori lentissimi in rapporto irrazionale. Nessun battimento. |
 | Brina | Parziali alti con ampiezze che si accendono e si spengono in modo indipendente. |
 | Soglia | Rumore ad alta frequenza di cui varia solo il livello. |
+
+<!-- g.tess.2 -->
+I tenuti stanno in quattro registri — fondo, corpo, aria, velo — e la nota scelta dal campo viene ripiegata per ottave dentro il registro del tenuto: la classe d'altezza resta quella, il registro no. Nell'aria ne vivono quattro: Cavo, Rugiada, Riflesso e Serra.
 
 ---
 
@@ -444,10 +454,10 @@ Con il MOTO di tutte e due le classi su «ancora» il passo di quinta si ferma: 
 ## Mood
 
 <!-- g.mood.1 -->
-Sedici configurazioni complete, otto per classe. Un mood scrive insieme i parametri, i quattro periodi delle linee e il nome del timbro, perché la configurazione temporale è parte del carattere quanto il suono. La scrittura è immediata e non lisciata: un mood è uno scatto, non un gesto.
+Venti configurazioni complete, dieci per classe. Un mood scrive insieme i parametri, i quattro periodi delle linee e il nome del timbro, perché la configurazione temporale è parte del carattere quanto il suono. La scrittura è immediata e non lisciata: un mood è uno scatto, non un gesto.
 
 <!-- g.mood.2 -->
-Ogni timbro compare una volta sola per tabella: girando gli otto si attraversano tutti e otto i suoni.
+Ogni timbro compare una volta sola per tabella: girando i dieci mood di una classe si attraversano tutti e dieci i suoni.
 
 <!-- tabella
   intestazione: sez.gocce | et.timbro | g.col.periodi
@@ -459,6 +469,8 @@ Ogni timbro compare una volta sola per tabella: girando gli otto si attraversano
   riga: mood.collina | timbri.legno | a mano: corsa
   riga: mood.finestra | timbri.soffio | a mano: corsa
   riga: mood.nuvola | timbri.canna | a mano: corsa
+  riga: mood.stagno | timbri.bolla | a mano: corsa
+  riga: mood.baia | timbri.pelle | a mano: corsa
 -->
 | Gocce | TIMBRO | Periodi |
 |---|---|---|
@@ -470,10 +482,12 @@ Ogni timbro compare una volta sola per tabella: girando gli otto si attraversano
 | Collina | Legno | 8 · 13 · 19 · 27 |
 | Finestra | Soffio | 9 · 14 · 23 · 25 |
 | Nuvola | Canna | 6 · 11 · 19 · 25 |
+| Stagno | Bolla | 5 · 8 · 13 · 27 |
+| Baia | Pelle | 11 · 15 · 19 · 28 |
 
 <!-- tabella
   intestazione: sez.tessuti | et.timbro | g.col.periodi
-  riga: mood.velo | tenuti.corrente | a mano: corsa
+  riga: mood.velo | tenuti.serra | a mano: corsa
   riga: mood.fondale | tenuti.bordone | a mano: corsa
   riga: mood.lino | tenuti.attrito | a mano: corsa
   riga: mood.respiro | tenuti.frangia | a mano: corsa
@@ -481,10 +495,12 @@ Ogni timbro compare una volta sola per tabella: girando gli otto si attraversano
   riga: mood.tenda | tenuti.cavo | a mano: corsa
   riga: mood.seta | tenuti.brina | a mano: corsa
   riga: mood.vela | tenuti.marea | a mano: corsa
+  riga: mood.chiarore | tenuti.rugiada | a mano: corsa
+  riga: mood.specchio | tenuti.riflesso | a mano: corsa
 -->
 | Tessuti | TIMBRO | Periodi |
 |---|---|---|
-| Velo | Corrente | 9 · 16 · 25 · 31 |
+| Velo | Serra | 9 · 16 · 25 · 31 |
 | Fondale | Bordone | 31 · 37 · 41 · 43 |
 | Lino | Attrito | 8 · 15 · 19 · 23 |
 | Respiro | Frangia | 23 · 29 · 41 · 43 |
@@ -492,6 +508,8 @@ Ogni timbro compare una volta sola per tabella: girando gli otto si attraversano
 | Tenda | Cavo | 19 · 29 · 37 · 47 |
 | Seta | Brina | 8 · 9 · 25 · 29 |
 | Vela | Marea | 31 · 41 · 47 · 53 |
+| Chiarore | Rugiada | 13 · 23 · 36 · 41 |
+| Specchio | Riflesso | 17 · 27 · 35 · 53 |
 
 ---
 

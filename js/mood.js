@@ -1,12 +1,13 @@
 /* =============================================================================
-   HIROSHI · mood.js — i sedici stati dello strumento
+   HIROSHI · mood.js — i venti stati dello strumento
 
-   Otto per le gocce, otto per i tessuti, trapiantati da Rada Deriva coi loro
-   nomi e coi loro numeri. Un mood non è un preset di timbro: cambia insieme
-   **quanto** si sente, **come** si sente e **con che ritmo** — perché in Rada
-   la configurazione temporale è parte del carattere quanto lo è il suono. Un
-   «vespro» con i periodi della «pioggia» non sarebbe un vespro più lento:
-   sarebbe un'altra cosa.
+   Dieci per le gocce, dieci per i tessuti: otto e otto trapiantati da Rada
+   Deriva coi loro nomi e coi loro numeri, più quattro nati qui il giorno che
+   le due classi sono passate a dieci suoni. Un mood non è un preset di
+   timbro: cambia insieme **quanto** si sente, **come** si sente e **con che
+   ritmo** — perché in Rada la configurazione temporale è parte del carattere
+   quanto lo è il suono. Un «vespro» con i periodi della «pioggia» non sarebbe
+   un vespro più lento: sarebbe un'altra cosa.
 
    QUESTO FILE È L'UNICO CHE ATTRAVERSA. Le dipendenze del progetto scorrono in
    una direzione sola — deriva ← linee ← timbri ← tessuti ← mood ← banco ←
@@ -16,17 +17,23 @@
    posto.
 
    OGNI TIMBRO COMPARE UNA VOLTA SOLA, in ciascuna delle due tabelle. Non è
-   una simmetria decorativa: è la garanzia che girando gli otto pulsanti si
-   attraversino davvero tutti e otto i suoni, invece di ritrovarsi tre volte
-   nello stesso posto.
+   una simmetria decorativa: è la garanzia che girando le due tendine si
+   attraversino davvero tutti e dieci i suoni, invece di ritrovarsi tre volte
+   nello stesso posto. I mood sono DIECI per classe perché i suoni sono dieci:
+   quando le gocce e i tessuti sono passati da otto a dieci, per due giri di
+   tendina Bolla, Pelle, Rugiada e Riflesso non avevano un mood che li
+   presentasse, ed è il motivo per cui stagno, baia, chiarore e specchio
+   esistono.
 
    I PERIODI E IL RIALLINEAMENTO. Le due tabelle si scelgono indipendentemente,
-   quindi esistono 64 combinazioni e in alcune un periodo delle gocce condivide
+   quindi esistono 100 combinazioni e in alcune un periodo delle gocce condivide
    un divisore con uno dei tessuti — «carillon» ha 4, 9, 25 e «seta» ha 8, 9,
    25. La regola scritta in CLAUDE.md («coprimi anche fra le classi») è una
    condizione SUFFICIENTE, non necessaria: quello che va difeso è il tempo di
-   riallineamento, e misurato su tutte e 64 le combinazioni il peggiore è di
-   **246 ore**, cioè dieci giorni. `prova.mjs` rifà quel conto a ogni corsa e
+   riallineamento, e misurato su tutte e 100 le combinazioni il peggiore è
+   sempre quello, carillon × seta: **247 ore**, cioè dieci giorni. Le quattro
+   serie nuove non lo abbassano — la peggiore delle loro è stagno × seta, 566
+   ore. `prova.mjs` rifà quel conto a ogni corsa e
    fallisce sotto le 24 ore. Chi cambia un periodo guardi lì, non qui.
 ============================================================================= */
 
@@ -43,15 +50,24 @@ const MOOD_GOCCE = {
   collina:    { timbro: "legno",   registro: 40, calore: 75, spazio: 55, densita: 6,  addensamento: 38, periodi: [8, 13, 19, 27]  },
   finestra:   { timbro: "soffio",  registro: 55, calore: 30, spazio: 40, densita: 4,  addensamento: 20, periodi: [9, 14, 23, 25]  },
   nuvola:     { timbro: "canna",   registro: 63, calore: 4,  spazio: 92, densita: 14, addensamento: 64, periodi: [6, 11, 19, 25]  },
+  /* I DUE CHE CHIUDONO LA COPERTURA. Dieci timbri e otto mood lasciavano Bolla
+     e Pelle raggiungibili solo dalla tendina, cioè due suoni senza un posto in
+     cui presentarsi da soli. STAGNO è l'acqua che gocciola: registro medio,
+     calore basso perché una bolla è chiara, molto spazio e una densità media.
+     BAIA è il contrario e porta Pelle dove nessun altro mood va, in fondo:
+     registro basso, calore alto, lo spazio più largo dopo nuvola, eventi radi
+     e raccolti all'inizio del giro. */
+  stagno:     { timbro: "bolla",   registro: 58, calore: 40, spazio: 76, densita: 7,  addensamento: 34, periodi: [5, 8, 13, 27]    },
+  baia:       { timbro: "pelle",   registro: 20, calore: 80, spazio: 88, densita: 4,  addensamento: 26, periodi: [11, 15, 19, 28]  },
 };
 
 /* ----------------------------------------------------------------- tessuti
    `apertura` e `chiusura` sono in secondi; `passo` è la velocità del movimento
-   interno del tenuto, che ciascuno dei otto interpreta a modo suo — centesimi
+   interno del tenuto, che ciascuno dei dieci interpreta a modo suo — centesimi
    in Bordone, hertz in Frangia, larghezza della scossa in Attrito. `livello` è
    quanto lo sfondo sta sotto al primo piano, e la deriva lo muove di ±9. */
 const MOOD_TESSUTI = {
-  velo:     { timbro: "corrente", registro: 55, apertura: 3.0, chiusura: 4.3, intreccio: 42, passo: 38, livello: 32, periodi: [9, 16, 25, 31]  },
+  velo:     { timbro: "serra",    registro: 55, apertura: 3.0, chiusura: 4.3, intreccio: 42, passo: 38, livello: 32, periodi: [9, 16, 25, 31]  },
   fondale:  { timbro: "bordone",  registro: 22, apertura: 3.5, chiusura: 5.0, intreccio: 26, passo: 22, livello: 38, periodi: [31, 37, 41, 43] },
   lino:     { timbro: "attrito",  registro: 38, apertura: 3.2, chiusura: 4.7, intreccio: 78, passo: 30, livello: 28, periodi: [8, 15, 19, 23]  },
   respiro:  { timbro: "frangia",  registro: 66, apertura: 2.6, chiusura: 3.8, intreccio: 20, passo: 52, livello: 30, periodi: [23, 29, 41, 43] },
@@ -59,6 +75,14 @@ const MOOD_TESSUTI = {
   tenda:    { timbro: "cavo",     registro: 18, apertura: 3.5, chiusura: 5.0, intreccio: 66, passo: 20, livello: 42, periodi: [19, 29, 37, 47] },
   seta:     { timbro: "brina",    registro: 60, apertura: 2.0, chiusura: 3.0, intreccio: 58, passo: 74, livello: 28, periodi: [8, 9, 25, 29]   },
   vela:     { timbro: "marea",    registro: 45, apertura: 3.3, chiusura: 4.8, intreccio: 32, passo: 24, livello: 36, periodi: [31, 41, 47, 53] },
+  /* I DUE CHE CHIUDONO LA COPERTURA, come stagno e baia fra le gocce.
+     CHIARORE porta Rugiada: registro alto, apertura e chiusura lunghe,
+     intreccio basso — poche campane aperte insieme, o il respiro dell'indice
+     non si sente più. SPECCHIO porta Riflesso e ha il PASSO PIÙ LENTO di tutti,
+     diciotto: il ritardo del pettine deve strisciare, perché mosso in fretta
+     non è un riflesso ma una glissata. */
+  chiarore: { timbro: "rugiada",  registro: 62, apertura: 3.4, chiusura: 5.0, intreccio: 28, passo: 26, livello: 34, periodi: [13, 23, 36, 41] },
+  specchio: { timbro: "riflesso", registro: 50, apertura: 3.1, chiusura: 4.6, intreccio: 48, passo: 18, livello: 30, periodi: [17, 27, 35, 53] },
 };
 
 /* --------------------------------------------------------------- applicare

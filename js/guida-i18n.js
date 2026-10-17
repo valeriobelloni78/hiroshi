@@ -57,10 +57,11 @@ const GUIDA = {
     /* 2 · gocce */
     "g.gocce.t": "Gocce",
     "g.gocce.1": "Impulsi brevi con inviluppo percussivo. Ogni linea tiene una sequenza di posizioni nel campo armonico e la ripete a ogni giro finché non viene sostituita.",
+    "g.gocce.2": "Fra i dieci, tre occupano un posto che gli altri non hanno: Bolla è l'unica la cui altezza si muove dentro l'evento — sale sulla nota, e il campo legge l'altezza d'arrivo —, Pelle è l'unica che suona nel registro basso, Argilla è grana e non nota, e per questo sta tre decibel sotto le altre.",
     "g.gocce.forma": "Forma del suono",
     "g.gocce.insieme": "Insieme",
     "g.gocce.man": "Manopole",
-    "g.gocce.timbri": "Gli otto timbri",
+    "g.gocce.timbri": "I dieci timbri",
 
     "g.p.attacco":  "Tempo di salita dell'inviluppo.",
     "g.p.coda":     "Tempo di discesa. Determina la lunghezza della tacca radiale sul quadrante.",
@@ -71,7 +72,7 @@ const GUIDA = {
     "g.p.densita":  "Numero massimo di eventi per giro. Il valore effettivo per ciascuna frase viene sorteggiato entro questo limite al momento dell'elaborazione della frase.",
     "g.p.spazio":   "Mandata al riverbero comune del canale.",
     "g.p.registro": "Ampiezza della finestra sul campo armonico. A cursore pieno la finestra copre poco più di tre ottave.",
-    "g.p.calore":   "Parametro unico del timbro: ciascuno degli otto lo interpreta a modo suo, e la corona ne mostra il valore effettivo dopo l'influenza dell'ora del giorno.",
+    "g.p.calore":   "Parametro unico del timbro: ciascuno dei dieci lo interpreta a modo suo, e la corona ne mostra il valore effettivo dopo l'influenza dell'ora del giorno.",
 
     "g.tim.vetro":   "Sinusoide con due parziali inarmonici e coda lunga.",
     "g.tim.legno":   "Impulso filtrato con risonanza media e decadimento rapido.",
@@ -87,7 +88,8 @@ const GUIDA = {
     /* 3 · tessuti */
     "g.tess.t": "Tessuti",
     "g.tess.1": "Suoni tenuti, da pochi secondi a un minuto.",
-    "g.tess.timbri": "Gli otto tenuti",
+    "g.tess.2": "I tenuti stanno in quattro registri — fondo, corpo, aria, velo — e la nota scelta dal campo viene ripiegata per ottave dentro il registro del tenuto: la classe d'altezza resta quella, il registro no. Nell'aria ne vivono quattro: Cavo, Rugiada, Riflesso e Serra.",
+    "g.tess.timbri": "I dieci tenuti",
 
     "g.p.apertura":  "Tempo di salita dell'inviluppo.",
     "g.p.chiusura":  "Tempo di discesa.",
@@ -104,7 +106,9 @@ const GUIDA = {
     "g.ten.marea":    "Due bande di rumore filtrato che si scambiano energia.",
     "g.ten.attrito":  "Onda a dente di sega dentro un filtro passa-basso la cui frequenza oscilla.",
     "g.ten.frangia":  "Due sinusoidi separate di pochi hertz. Il battimento è la loro differenza.",
-    "g.ten.corrente": "Rumore filtrato con banda che si sposta in continuo.",
+    "g.ten.rugiada":  "Modulazione di frequenza in rapporto di campana, 2,76, con l'indice mosso da due oscillatori lentissimi: i parziali nascono e muoiono, l'altezza resta ferma.",
+    "g.ten.riflesso": "Presa diretta più presa ritardata di 6–18 ms, sommate, col ritardo che scivola: l'interferenza scava un pettine di buchi che cammina nello spettro. Nessuna retroazione.",
+    "g.ten.serra":    "Quattro parziali armonici, ciascuno con l'ampiezza mossa da una combinazione diversa di tre oscillatori lentissimi in rapporto irrazionale. Nessun battimento.",
     "g.ten.cavo":     "Tre formanti che si spostano fra la posizione della «a» e quella della «u». Altezza ferma, spettro in movimento.",
     "g.ten.brina":    "Parziali alti con ampiezze che si accendono e si spengono in modo indipendente.",
     "g.ten.soglia":   "Rumore ad alta frequenza di cui varia solo il livello.",
@@ -182,8 +186,8 @@ const GUIDA = {
 
     /* 8 · mood */
     "g.mood.t": "Mood",
-    "g.mood.1": "Sedici configurazioni complete, otto per classe. Un mood scrive insieme i parametri, i quattro periodi delle linee e il nome del timbro, perché la configurazione temporale è parte del carattere quanto il suono. La scrittura è immediata e non lisciata: un mood è uno scatto, non un gesto.",
-    "g.mood.2": "Ogni timbro compare una volta sola per tabella: girando gli otto si attraversano tutti e otto i suoni.",
+    "g.mood.1": "Venti configurazioni complete, dieci per classe. Un mood scrive insieme i parametri, i quattro periodi delle linee e il nome del timbro, perché la configurazione temporale è parte del carattere quanto il suono. La scrittura è immediata e non lisciata: un mood è uno scatto, non un gesto.",
+    "g.mood.2": "Ogni timbro compare una volta sola per tabella: girando i dieci mood di una classe si attraversano tutti e dieci i suoni.",
 
     /* 9 · influenze */
     "g.infl.t": "Influenze esterne",
@@ -243,10 +247,11 @@ const GUIDA = {
 
     "g.gocce.t": "Gouttes",
     "g.gocce.1": "Impulsions brèves à enveloppe percussive. Chaque ligne tient une suite de positions dans le champ harmonique et la répète à chaque tour jusqu'à son remplacement.",
+    "g.gocce.2": `Parmi les dix, trois occupent une place que les autres n'ont pas${NNBSP}: Bulle est la seule dont la hauteur bouge à l'intérieur de l'événement — elle monte sur la note, et le champ lit la hauteur d'arrivée —, Peau est la seule qui sonne dans le grave, Argile est du grain et non une note, et reste pour cela trois décibels sous les autres.`,
     "g.gocce.forma": "Forme du son",
     "g.gocce.insieme": "Ensemble",
     "g.gocce.man": "Boutons",
-    "g.gocce.timbri": "Les huit timbres",
+    "g.gocce.timbri": "Les dix timbres",
 
     "g.p.attacco":  "Temps de montée de l'enveloppe.",
     "g.p.coda":     "Temps de descente. Détermine la longueur du trait radial sur le cadran.",
@@ -257,7 +262,7 @@ const GUIDA = {
     "g.p.densita":  "Nombre maximal d'événements par tour. La valeur effective de chaque phrase est tirée au sort sous cette limite au moment où la phrase est élaborée.",
     "g.p.spazio":   "Départ vers la réverbération commune de la voie.",
     "g.p.registro": "Largeur de la fenêtre sur le champ harmonique. Curseur au maximum, la fenêtre couvre un peu plus de trois octaves.",
-    "g.p.calore":   "Paramètre unique du timbre : chacun des huit l'interprète à sa manière, et la couronne en montre la valeur effective après l'influence de l'heure du jour.",
+    "g.p.calore":   "Paramètre unique du timbre : chacun des dix l'interprète à sa manière, et la couronne en montre la valeur effective après l'influence de l'heure du jour.",
 
     "g.tim.vetro":   "Sinusoïde avec deux partiels inharmoniques et longue traîne.",
     "g.tim.legno":   "Impulsion filtrée, résonance médium, décroissance rapide.",
@@ -272,7 +277,8 @@ const GUIDA = {
 
     "g.tess.t": "Tissus",
     "g.tess.1": "Sons tenus, de quelques secondes à une minute.",
-    "g.tess.timbri": "Les huit tenues",
+    "g.tess.2": `Les tenues occupent quatre registres — fond, corps, air, voile — et la note choisie par le champ est repliée par octaves dans le registre de la tenue${NNBSP}: la classe de hauteur reste la même, le registre non. Quatre vivent dans l'air${NNBSP}: Creux, Rosée, Reflet et Serre.`,
+    "g.tess.timbri": "Les dix tenues",
 
     "g.p.apertura":  "Temps de montée de l'enveloppe.",
     "g.p.chiusura":  "Temps de descente.",
@@ -289,7 +295,9 @@ const GUIDA = {
     "g.ten.marea":    "Deux bandes de bruit filtré qui échangent leur énergie.",
     "g.ten.attrito":  "Onde en dent de scie dans un filtre passe-bas dont la fréquence oscille.",
     "g.ten.frangia":  "Deux sinusoïdes séparées de quelques hertz. Le battement est leur différence.",
-    "g.ten.corrente": "Bruit filtré dont la bande se déplace en continu.",
+    "g.ten.rugiada":  "Modulation de fréquence en rapport de cloche, 2,76, l'indice déplacé par deux oscillateurs très lents : les partiels naissent et meurent, la hauteur reste fixe.",
+    "g.ten.riflesso": "Prise directe plus prise retardée de 6–18 ms, sommées, le retard glissant : l'interférence creuse un peigne de trous qui marche dans le spectre. Aucune réinjection.",
+    "g.ten.serra":    "Quatre partiels harmoniques, chacun avec son amplitude déplacée par une combinaison différente de trois oscillateurs très lents en rapport irrationnel. Aucun battement.",
     "g.ten.cavo":     "Trois formants qui se déplacent entre la position du « a » et celle du « ou ». Hauteur fixe, spectre en mouvement.",
     "g.ten.brina":    "Partiels aigus dont les amplitudes s'allument et s'éteignent indépendamment.",
     "g.ten.soglia":   "Bruit haute fréquence dont seul le niveau varie.",
@@ -362,8 +370,8 @@ const GUIDA = {
     "g.p.registra":   "Prise en direct sur la sortie de la console. Le fichier sort en wav 24 bits stéréo.",
 
     "g.mood.t": "Humeurs",
-    "g.mood.1": "Seize configurations complètes, huit par classe. Une humeur écrit d'un coup les paramètres, les quatre périodes des lignes et le nom du timbre, car la configuration temporelle fait partie du caractère autant que le son. L'écriture est immédiate et non lissée : une humeur est un plan de coupe, pas un geste.",
-    "g.mood.2": "Chaque timbre n'apparaît qu'une fois par tableau : en parcourant les huit on traverse bien les huit sons.",
+    "g.mood.1": "Vingt configurations complètes, dix par classe. Une humeur écrit d'un coup les paramètres, les quatre périodes des lignes et le nom du timbre, car la configuration temporelle fait partie du caractère autant que le son. L'écriture est immédiate et non lissée : une humeur est un plan de coupe, pas un geste.",
+    "g.mood.2": `Chaque timbre n'apparaît qu'une fois par tableau${NNBSP}: en parcourant les dix humeurs d'une classe on traverse les dix sons.`,
 
     "g.infl.t": "Influences extérieures",
     "g.infl.1": "Deux grandeurs prises à l'horloge du système modifient les valeurs effectives sans toucher à la position des curseurs. L'heure du jour déplace chaleur, espace et couleur d'ensemble des gouttes ; la saison déplace registre, émergence, fondu et allure des tissus. L'écart entre la position du curseur et la valeur effective se lit en comparant le curseur en colonne avec la couronne autour du cadran.",
@@ -418,10 +426,11 @@ const GUIDA = {
 
     "g.gocce.t": "Drops",
     "g.gocce.1": "Short impulses with a percussive envelope. Each line holds a sequence of positions in the harmonic field and repeats it every cycle until it is replaced.",
+    "g.gocce.2": "Three of the ten hold a place the others do not: Bubble is the only one whose pitch moves inside the event — it rises onto the note, and the field reads the arrival pitch — Skin is the only one in the low register, and Clay is grain rather than note, which is why it sits three decibels under the rest.",
     "g.gocce.forma": "Shape of the sound",
     "g.gocce.insieme": "Together",
     "g.gocce.man": "Knobs",
-    "g.gocce.timbri": "The eight timbres",
+    "g.gocce.timbri": "The ten timbres",
 
     "g.p.attacco":  "Envelope rise time.",
     "g.p.coda":     "Envelope fall time. Sets the length of the radial tick on the dial.",
@@ -432,7 +441,7 @@ const GUIDA = {
     "g.p.densita":  "Maximum number of events per cycle. The actual figure for each phrase is drawn under this limit when the phrase is worked out.",
     "g.p.spazio":   "Send to the channel's shared reverb.",
     "g.p.registro": "Width of the window onto the harmonic field. At full travel the window covers a little over three octaves.",
-    "g.p.calore":   "The timbre's single parameter: each of the eight reads it its own way, and the crown shows the effective value after the influence of the hour of day.",
+    "g.p.calore":   "The timbre's single parameter: each of the ten reads it its own way, and the crown shows the effective value after the influence of the hour of day.",
 
     "g.tim.vetro":   "Sine with two inharmonic partials and a long tail.",
     "g.tim.legno":   "Filtered impulse, mid resonance, fast decay.",
@@ -447,7 +456,8 @@ const GUIDA = {
 
     "g.tess.t": "Weaves",
     "g.tess.1": "Sustained tones, from a few seconds to a minute.",
-    "g.tess.timbri": "The eight sustains",
+    "g.tess.2": "The sustains live in four registers — bottom, body, air, veil — and the note the field picks is folded by octaves into the sustain's register: the pitch class stays, the register does not. Four of them live in the air: Hollow, Dew, Reflection and Greenhouse.",
+    "g.tess.timbri": "The ten sustains",
 
     "g.p.apertura":  "Envelope rise time.",
     "g.p.chiusura":  "Envelope fall time.",
@@ -464,7 +474,9 @@ const GUIDA = {
     "g.ten.marea":    "Two bands of filtered noise trading energy.",
     "g.ten.attrito":  "Sawtooth wave inside a low-pass filter whose frequency oscillates.",
     "g.ten.frangia":  "Two sines a few hertz apart. The beat is their difference.",
-    "g.ten.corrente": "Filtered noise with a continuously moving band.",
+    "g.ten.rugiada":  "Frequency modulation at a bell ratio, 2.76, with the index moved by two very slow oscillators: partials are born and die, the pitch stays put.",
+    "g.ten.riflesso": "Direct tap plus a tap delayed by 6–18 ms, summed, with the delay sliding: the interference carves a comb of notches that walks through the spectrum. No feedback.",
+    "g.ten.serra":    "Four harmonic partials, each with its amplitude moved by a different combination of three very slow oscillators in irrational ratio. No beating.",
     "g.ten.cavo":     "Three formants moving between the position of an «a» and that of a «u». Fixed pitch, moving spectrum.",
     "g.ten.brina":    "High partials whose amplitudes switch on and off independently.",
     "g.ten.soglia":   "High-frequency noise with only its level varying.",
@@ -537,8 +549,8 @@ const GUIDA = {
     "g.p.registra":   "Live capture from the desk output. The file comes out as 24-bit stereo wav.",
 
     "g.mood.t": "Moods",
-    "g.mood.1": "Sixteen complete configurations, eight per class. A mood writes the parameters, the four line periods and the timbre name in one go, because the time configuration is as much part of the character as the sound. The write is immediate and not smoothed: a mood is a cut, not a gesture.",
-    "g.mood.2": "Each timbre appears once per table: going through the eight takes you through all eight sounds.",
+    "g.mood.1": "Twenty complete configurations, ten per class. A mood writes the parameters, the four line periods and the timbre name in one go, because the time configuration is as much part of the character as the sound. The write is immediate and not smoothed: a mood is a cut, not a gesture.",
+    "g.mood.2": "Each timbre appears once per table: going through a class's ten moods takes you through all ten sounds.",
 
     "g.infl.t": "External influences",
     "g.infl.1": "Two quantities taken from the system clock modify the effective values without moving the faders. The hour of day moves warmth, space and ensemble colour of the drops; the season moves register, surfacing, fading and pace of the weaves. The gap between fader position and effective value is read by comparing the fader in the column with the crown around the dial.",
@@ -593,10 +605,11 @@ const GUIDA = {
 
     "g.gocce.t": "しずく",
     "g.gocce.1": "打楽器的な包絡を持つ短い打点です。各線は音高の場における位置の並びを保ち、差し替えられるまで毎周繰り返します。",
+    "g.gocce.2": "十のうち三つは、ほかにない場所を占めます。泡は音高が音の中で動く唯一の音色で、下から音に上がり、場が読むのは着いた先の高さです。皮は唯一の低音域、土は音ではなく粒で、そのぶん三デシベル低く鳴ります。",
     "g.gocce.forma": "音のかたち",
     "g.gocce.insieme": "全体",
     "g.gocce.man": "つまみ",
-    "g.gocce.timbri": "八つの音色",
+    "g.gocce.timbri": "十の音色",
 
     "g.p.attacco":  "包絡の立ち上がり時間。",
     "g.p.coda":     "包絡の減衰時間。円盤上の放射状の目盛りの長さを決めます。",
@@ -607,7 +620,7 @@ const GUIDA = {
     "g.p.densita":  "一周あたりの音数の上限。フレーズごとの実数は、そのフレーズを組み立てる時にこの上限内で決まります。",
     "g.p.spazio":   "その系統から共通残響への送り。",
     "g.p.registro": "音高の場に開く窓の幅。最大で三オクターブ強を覆います。",
-    "g.p.calore":   "音色ごとの唯一の変数で、八つがそれぞれ独自に解釈します。円環には時刻の影響を受けたあとの実効値が出ます。",
+    "g.p.calore":   "音色ごとの唯一の変数で、十がそれぞれ独自に解釈します。円環には時刻の影響を受けたあとの実効値が出ます。",
 
     "g.tim.vetro":   "正弦波に二つの非調和部分音、長い余韻。",
     "g.tim.legno":   "濾波した打点、中域の共振、速い減衰。",
@@ -622,7 +635,8 @@ const GUIDA = {
 
     "g.tess.t": "織り",
     "g.tess.1": "数秒から一分までの持続音です。",
-    "g.tess.timbri": "八つの持続音",
+    "g.tess.2": "持続音は四つの音域——底、胴、空気、薄衣——に分かれ、場が選んだ音はその音域までオクターブで折り返されます。音名は変わらず、音域だけが変わります。空気には四つが住みます。空洞・露・映り・温室です。",
+    "g.tess.timbri": "十の持続音",
 
     "g.p.apertura":  "包絡の立ち上がり時間。",
     "g.p.chiusura":  "包絡の減衰時間。",
@@ -639,7 +653,9 @@ const GUIDA = {
     "g.ten.marea":    "濾波雑音の二帯域がエネルギーを受け渡します。",
     "g.ten.attrito":  "遮断周波数が揺れる低域通過濾波器の中の鋸歯状波。",
     "g.ten.frangia":  "数ヘルツ離れた二つの正弦波。うなりはその差です。",
-    "g.ten.corrente": "帯域が絶えず移動する濾波雑音。",
+    "g.ten.rugiada":  "鐘の比2.76による周波数変調。変調指数を二つの極低速発振器が動かし、倍音が生まれては消えます。音高は動きません。",
+    "g.ten.riflesso": "直接音と6〜18 ms遅らせた音の和。遅延がゆっくり滑り、干渉が作る櫛形の谷が音色の中を移動します。帰還はありません。",
+    "g.ten.serra":    "四つの倍音。それぞれの音量を、無理数比の三つの極低速発振器の別々の組み合わせが動かします。うなりはありません。",
     "g.ten.cavo":     "「あ」の位置と「う」の位置のあいだを移動する三つの共振域。音高は動かず、スペクトルが動きます。",
     "g.ten.brina":    "高い部分音が、それぞれ独立に点いたり消えたりします。",
     "g.ten.soglia":   "音量だけが変化する高域の雑音。",
@@ -712,8 +728,8 @@ const GUIDA = {
     "g.p.registra":   "卓の出力からの実時間収録。24ビット・ステレオのwavで書き出します。",
 
     "g.mood.t": "気分",
-    "g.mood.1": "完成した設定が十六。各種類に八つずつ。気分は変数、四本の線の周期、音色の名前を一度に書き込みます。時間の設定も音と同じくらい性格の一部だからです。書き込みは滑らかにせず即時に行います。気分は身振りではなく場面の切り替えです。",
-    "g.mood.2": "同じ音色は表に一度しか出ません。八つを順に回れば八つの音すべてを通ります。",
+    "g.mood.1": "完成した設定が二十。各種類に十ずつ。気分は変数、四本の線の周期、音色の名前を一度に書き込みます。時間の設定も音と同じくらい性格の一部だからです。書き込みは滑らかにせず即時に行います。気分は身振りではなく場面の切り替えです。",
+    "g.mood.2": "同じ音色は表に一度しか出ません。一つの種類の十の気分を順に回れば、十の音すべてを通ります。",
 
     "g.infl.t": "外からの影響",
     "g.infl.1": "系統時計から取った二つの量が、操作子の位置を動かさずに実効値を変えます。時刻はしずくの温かみ・空間・全体の色を、季節は織りの音域・立ち上がり・消えぎわ・速さを動かします。操作子の位置と実効値の差は、列の中の操作子と円盤を囲む円環を見比べれば読めます。",

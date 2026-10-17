@@ -16,8 +16,8 @@
    che si sente solo quando si spegne. Un bordone immobile non è un suono
    lungo: è un suono corto che diventa architettura.
 
-   Quindi questi otto non sono otto materie, come lo sono le gocce. Sono OTTO
-   MODI DI ESSERE INSTABILI, e ciascuno è definito da due cose sole:
+   Quindi questi dieci non sono dieci materie, come lo sono le gocce. Sono
+   DIECI MODI DI ESSERE INSTABILI, e ciascuno è definito da due cose sole:
 
        DOVE STA            e     CHE COSA SI MUOVE
 
@@ -25,16 +25,29 @@
      2 Marea     il fondo     l'intonazione stessa, che deriva
      3 Attrito   il corpo     una grana velocissima dentro l'altezza
      4 Frangia   il corpo     interferenza pura, senza nessuna grana
-     5 Corrente  l'aria       il centro di una banda di rumore che vaga
-     6 Cavo      l'aria       l'altezza ferma e le formanti che camminano
-     7 Brina     il velo      molti battimenti insieme, nessuno leggibile
-     8 Soglia    il velo      solo la luminosità, appena sopra il silenzio
+     5 Cavo      l'aria       l'altezza ferma e le formanti che camminano
+     6 Rugiada   l'aria       l'indice: i parziali che nascono e muoiono
+     7 Riflesso  l'aria       un pettine di buchi che cammina
+     8 Serra     l'aria       quattro parziali che respirano da soli
+     9 Brina     il velo      molti battimenti insieme, nessuno leggibile
+    10 Soglia    il velo      solo la luminosità, appena sopra il silenzio
 
    I quattro TERRITORI non sono decorazione: i tessuti non sono radi come le
    gocce, ne suonano quattro insieme di continuo, e due voci che occupassero lo
    stesso posto diventerebbero fango — che nessuna quantità di equalizzatore
    disfa a valle. Due tenuti per territorio, con movimenti opposti: Attrito e
    Frangia sono l'uno il negativo dell'altro, tutto grana contro tutto polso.
+
+   L'ARIA PERÒ ADESSO NE HA QUATTRO, e va detto invece di nasconderlo. Al posto
+   di «Corrente» — rumore stretto in una banda che vagava, l'unico tenuto la cui
+   voce fosse vento — ne sono entrati tre, e stanno tutti lì perché è quel posto
+   che prendevano in prova. Il fango non arriva perché i quattro movimenti sono
+   diversi davvero — formanti, indice, pettine, respiri indipendenti — e perché
+   quattro voci aperte insieme sono quasi sempre di CLASSI diverse, non quattro
+   tenuti dello stesso territorio: la tendina ne sceglie uno solo per volta, e a
+   coincidere sono al massimo le quattro linee dei tessuti, che quel tenuto se
+   lo dividono. Ma chi aggiunge ancora un tenuto all'aria guardi prima di qui, e
+   chi sente fango con intreccio alto sposti una banda invece di equalizzare.
 
    IL MODELLO DICE QUALE NOTA, IL TIMBRO DICE IN CHE REGISTRO VIVE.
    `TERRITORIO` ripiega la nota scelta dal campo dentro la banda del tenuto,
@@ -68,10 +81,10 @@
    ripulito.
 ============================================================================= */
 
-/* Gli otto, più i TRE CANDIDATI al posto di corrente, in coda perché sono in
-   prova (vedi più sotto, prima dei costruttori). */
-const TESSUTI = ["bordone", "marea", "attrito", "frangia", "corrente", "cavo", "brina", "soglia",
-                 "rugiada", "riflesso", "serra"];
+/* DIECI, e corrente non c'è più: al suo posto, nell'aria, ne sono entrati tre
+   (vedi il capo del file e i costruttori). */
+const TESSUTI = ["bordone", "marea", "attrito", "frangia", "cavo",
+                 "rugiada", "riflesso", "serra", "brina", "soglia"];
 
 /* La forma dei tenuti. `apertura`, `chiusura` e `passo` sono BASI: quelle vere
    arrivano da `effGT`, perché la stagione le inclina e un mood le scrive. Le
@@ -113,11 +126,10 @@ const TERRITORIO = {
   marea:    [40, 150],
   attrito:  [110, 520],    // il corpo
   frangia:  [130, 620],
-  corrente: [300, 1400],   // l'aria
-  cavo:     [90, 330],     //   (la fondamentale sta sotto: a cantare sono le formanti)
+  cavo:     [90, 330],     // l'aria (la fondamentale sta sotto: a cantare sono le formanti)
   brina:    [420, 1500],   // il velo
   soglia:   [500, 2000],
-  rugiada:  [300, 1400],   // i tre in prova stanno nell'aria, dove sta corrente
+  rugiada:  [300, 1400],   //   e i tre che hanno preso il posto di corrente
   riflesso: [300, 1400],
   serra:    [300, 1400],
 };
@@ -321,36 +333,6 @@ function xFrangia({ ctx, e, freq, vel, dest, F }) {
   libera(oscs[0], nodi);
 }
 
-/* CORRENTE — l'aria, per vagare. Rumore stretto in una banda il cui centro
-   cammina per conto suo. Sotto, una sinusoide quasi inudibile tiene
-   l'intonazione: senza, la corrente avrebbe un'altezza vaga e non si
-   accorderebbe con il resto — è la stessa toppa che sotto «Soffio», fra le
-   gocce, fa la differenza fra un fiato e un fruscio. */
-function xCorrente({ ctx, e, freq, vel, dest, F }) {
-  const env = ctx.createGain();
-  const src = ctx.createBufferSource();
-  src.buffer = rumore(ctx); src.loop = true;
-  const bp = ctx.createBiquadFilter();
-  bp.type = "bandpass";
-  const centro = clamp(freq * (2 + F.brill * 5), 250, 8000);
-  bp.frequency.value = centro;
-  bp.Q.value = 1.2 + F.corpo * 5;
-  const L = lento(ctx, e, 0.018 + F.passo * 0.10, Math.sqrt(5));
-  const amp = ctx.createGain();
-  amp.gain.value = centro * (0.10 + F.movimento * 0.65);
-  L.uscita.connect(amp); amp.connect(bp.frequency);
-  const gn = ctx.createGain(); gn.gain.value = 0.85;
-  const o = ctx.createOscillator(); o.frequency.value = freq;
-  const go = ctx.createGain(); go.gain.value = 0.03 + F.corpo * 0.09;
-  src.connect(bp); bp.connect(gn); gn.connect(env);
-  o.connect(go); go.connect(env);
-  env.connect(dest);
-  src.start(e.t0); src.stop(e.t1 + 0.05);
-  o.start(e.t0); o.stop(e.t1 + 0.05);
-  apriChiudi(env, 0.30 * vel, e);
-  libera(src, [src, bp, gn, o, go, amp, env, ...L.nodi]);
-}
-
 /* CAVO — l'aria, per formanti. L'altezza sta ferma e lo spettro cammina: tre
    bande risonanti si spostano fra la posizione della «a» e quella della «u»,
    così il suono sembra pronunciare una vocale lentissima. È il più strano dei
@@ -465,14 +447,13 @@ function xSoglia({ ctx, e, freq, vel, dest, F }) {
 }
 
 /* --------------------------------------------------------------------------
-   TRE CANDIDATI AL POSTO DI CORRENTE, da ascoltare e scegliere. Stanno in coda
-   alla tendina accanto agli otto e vivono nello stesso territorio, l'aria,
-   perché è quel posto che devono prendere: chi resta erediterà anche il mood
-   «velo». Vengono dai dischi di Hiroshi Yoshimura, cioè da voci pulite e
-   tiepide dove non raschia niente, e ciascuno porta un MOVIMENTO che nella
-   serie non c'è — la regola dei quattro territori dice due tenuti per posto
-   con movimenti opposti, e il compagno è Cavo, che muove le formanti tenendo
-   ferma l'altezza.
+   I TRE CHE HANNO PRESO IL POSTO DI CORRENTE. Erano candidati, sono rimasti
+   tutti e tre, e vivono dove viveva lei: nell'aria, accanto a Cavo. Vengono dai
+   dischi di Hiroshi Yoshimura — voci pulite e tiepide dove non raschia niente —
+   e ciascuno porta un MOVIMENTO che nella serie non c'era: l'indice, il
+   pettine, i respiri indipendenti. Quello che se n'è andato con corrente è
+   l'unico tenuto la cui voce fosse vento; il rumore resta in Soglia, e come
+   grana dentro Attrito.
 -------------------------------------------------------------------------- */
 
 /* RUGIADA — l'aria, per indice. La campana di «Music for Nine Post Cards»:
@@ -593,7 +574,7 @@ function xSerra({ ctx, e, freq, vel, dest, F }) {
 
 const COSTRUTTORI_T = {
   bordone: xBordone, marea: xMarea, attrito: xAttrito, frangia: xFrangia,
-  corrente: xCorrente, cavo: xCavo, brina: xBrina, soglia: xSoglia,
+  cavo: xCavo, brina: xBrina, soglia: xSoglia,
   rugiada: xRugiada, riflesso: xRiflesso, serra: xSerra,
 };
 
@@ -620,8 +601,8 @@ const COSTRUTTORI_T = {
    esce — è il motivo per cui quella prova esiste. */
 const PESO_T = {
   bordone: 0.47, marea: 0.53, attrito: 0.45, frangia: 0.51,
-  corrente: 1.30, cavo: 2.54, brina: 0.59, soglia: 0.22,
-  /* I TRE IN PROVA, misurati come gli altri: a peso 1 uscivano a −16,9
+  cavo: 2.54, brina: 0.59, soglia: 0.22,
+  /* I TRE DELL'ARIA, misurati come gli altri: a peso 1 uscivano a −16,9
      (Rugiada e Serra) e −20,4 (Riflesso, dove il pettine si mangia metà dello
      spettro), e questi pesi li portano tutti e tre a −18. */
   rugiada: 0.88, riflesso: 1.32, serra: 0.88,

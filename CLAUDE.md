@@ -17,13 +17,14 @@ devono essere primi — 8, 9 e 25 sono composti e vanno benissimo: **il vincolo
 toccare una serie, non dopo.
 
 **Fra le due classi la coprimalità è un obiettivo, non una legge.** Le due
-tabelle di mood si scelgono indipendentemente e fanno 64 combinazioni: in
+tabelle di mood si scelgono indipendentemente e fanno 100 combinazioni: in
 alcune un periodo delle gocce condivide un divisore con uno dei tessuti —
 «carillon» ha 4, 9, 25 e «seta» ha 8, 9, 25. Quello che va difeso non è il
 gcd ma **il tempo di riallineamento**, cioè quando tutte e otto le linee
 tornano nella stessa combinazione; la coprimalità è una condizione
-*sufficiente* per tenerlo alto, non necessaria. Misurato su tutte e 64: il
-peggiore è **247 ore**, dieci giorni. `prova.mjs` rifà quel conto a ogni corsa
+*sufficiente* per tenerlo alto, non necessaria. Misurato su tutte e 100: il
+peggiore è **247 ore**, dieci giorni — carillon × seta, come quando le
+combinazioni erano sessantaquattro. `prova.mjs` rifà quel conto a ogni corsa
 e fallisce sotto le 24 ore.
 
 **IL PAESAGGIO SI RALLENTA SENZA TRASPORRE, e questo è tutto il pezzo.** Non
@@ -1035,13 +1036,17 @@ decorativa: è la garanzia che girando gli otto pulsanti si attraversino suoni
 sempre diversi invece di ritrovarsi tre volte nello stesso posto. La prova lo
 verifica.
 
-DA QUANDO LE GOCCE SONO DIECI, la copertura non è più piena: otto mood non
-possono chiamare dieci timbri, e BOLLA e PELLE si raggiungono solo dalla
-tendina. È una perdita vera — un mood è il modo in cui un suono si presenta da
-solo — e si chiude in un modo solo, aggiungendo due mood; ma due mood nuovi
-vogliono due serie di periodi coprimi, il riallineamento sopra le 24 ore su
-tutte e OTTANTA le combinazioni e due nomi in quattro lingue, e quel lavoro non
-si fa di straforo. Finché non si fa, sta scritto qui.
+LA COPERTURA È PIENA, ED È COSTATA QUATTRO MOOD. Per due giri di tendina non lo
+è stata: le classi erano passate a dieci suoni e i mood erano rimasti otto, così
+BOLLA e PELLE fra le gocce, RUGIADA e RIFLESSO fra i tessuti si raggiungevano
+solo dalla tendina — e un mood è il modo in cui un suono si presenta da solo.
+Si è chiusa nell'unico modo possibile, aggiungendone due per parte: STAGNO e
+BAIA, CHIARORE e SPECCHIO. Il prezzo era quello che era scritto qui: quattro
+serie di periodi coprimi e il riallineamento sopra le 24 ore su CENTO
+combinazioni invece di sessantaquattro, più quattro nomi in quattro lingue. Il
+peggiore è rimasto dov'era, 247 ore su carillon × seta; la peggiore delle serie
+nuove è stagno × seta, 566 ore. CHI AGGIUNGE UN SUONO ADESSO SA QUANTO COSTA: un
+mood, o un buco nella copertura.
 
 **L'ora del giorno inclina le gocce, la stagione inclina i tessuti**, e nessuna
 delle due si sovrappone alla deriva: ogni parametro pende da una cosa sola,
@@ -1696,9 +1701,10 @@ nessuna tenuta che attraversa un passo di quinta resti fuori collezione, che una
 quinta A MANO sia davvero una quinta — cambia una nota su cinque, rimanda il passo
 automatico, e dodici di fila chiudono il giro, che è anche il modo in cui quella
 prova rimette a posto quello che ha mosso — e che i
-sedici mood siano in regola: periodi coprimi dentro ogni serie, riallineamento
-sopra le 24 ore in tutte e 64 le combinazioni, ogni timbro una volta sola, e
-quattro accoppiate rese dal motore intero senza clippare. Sugli **inserti**
+venti mood siano in regola: periodi coprimi dentro ogni serie, riallineamento
+sopra le 24 ore in tutte e 100 le combinazioni, ogni timbro una volta sola, e
+cinque accoppiate rese dal motore intero senza clippare — fra queste «baia ×
+specchio», l'estremo basso che è arrivato coi mood nuovi. Sugli **inserti**
 verifica ogni effetto DA SOLO, in un contesto suo e con un segnale noto — l'eco
 che ripeta alla distanza giusta e scenda, il tremolo che scavi e tenga i due lati
 in controfase, il coro che allarghi due canali identici, il filtro che tolga
@@ -1888,13 +1894,13 @@ clic.
 d'uscita** (mixer a tre canali con mandata al riverbero, normalizzazione
 per canale, colore d'insieme, equalizzatore a otto bande, limitatore doppio,
 misuratori), la **deriva** trapiantata intatta, il **modello delle linee** con
-piani, trame e ricambio, i **dieci timbri** delle gocce, gli **otto tenuti**
-dei tessuti con la normalizzazione del bus, i **sedici mood**, le **due
+piani, trame e ricambio, i **dieci timbri** delle gocce, i **dieci tenuti**
+dei tessuti con la normalizzazione del bus, i **venti mood**, le **due
 influenze esterne**, i **comandi per linea**, il **movimento del materiale** col
 rinnovo al passo di quinta, l'**accensione per classe**, lo **scheduler** e
 l'**esportazione fuori tempo reale**.
 
-Gli otto tenuti stanno su due assi — dove stanno e che cosa si muove — e non
+I dieci tenuti stanno su due assi — dove stanno e che cosa si muove — e non
 sono materie come le gocce, sono modi di essere instabili. Il fatto che li
 regge sta in cima a `tessuti.js`: un tenuto perfettamente fermo, dopo pochi
 secondi, smette di essere un suono e diventa una proprietà della stanza.
@@ -2013,32 +2019,36 @@ con la velocità sorteggiata — innocua su una banda larga, non su una larga du
 hertz — il livello della stessa nota ballava fra −26,8 e −20,2 dB da una goccia
 all'altra. Il sorteggio resta dov'è innocuo, sul graffio dell'attacco.
 
-**IN TENDINA CI SONO TRE TENUTI IN PROVA, al posto di «Corrente».** Vengono dai
-dischi di Hiroshi Yoshimura — voci pulite e tiepide dove non raschia niente — e
-stanno tutti e tre nel territorio dell'ARIA, perché è quel posto che devono
-prendere, insieme al mood «velo». Ciascuno porta un movimento che nella serie
-non c'è, perché il compagno di territorio è Cavo, che muove le formanti tenendo
-ferma l'altezza:
+**I TESSUTI SONO DIECI, E CORRENTE NON C'È PIÙ.** Al suo posto, nell'aria, ne
+sono entrati tre, scelti all'ascolto e tenuti tutti e tre. Vengono dai dischi di
+Hiroshi Yoshimura — voci pulite e tiepide dove non raschia niente — e ciascuno
+porta un movimento che nella serie non c'era:
 
 - RUGIADA, la campana di «Music for Nine Post Cards»: portante e modulante in
-  rapporto 2,76, e a muoversi è L'INDICE — i parziali nascono e muoiono, e fra
-  un respiro e l'altro la voce passa da una sinusoide nuda a una campana aperta.
-- RIFLESSO, il nastro di «Wet Land»: una presa diretta e una ritardata di sei÷
-  diciotto millesimi, sommate, col ritardo che scivola. L'interferenza scava un
-  PETTINE e il pettine cammina. Niente anello, per la trappola dei 128 campioni.
+  rapporto 2,76, e a muoversi è L'INDICE. I parziali nascono e muoiono, e fra un
+  respiro e l'altro la voce passa da una sinusoide nuda a una campana aperta;
+  l'altezza non si sposta di un centesimo.
+- RIFLESSO, il nastro di «Wet Land»: una presa diretta e una ritardata di
+  sei÷diciotto millesimi, sommate, col ritardo che scivola. L'interferenza scava
+  un PETTINE di buchi e il pettine cammina. Niente anello — presa diretta più
+  presa ritardata, come il passa-tutto svolto del riverbero — e il ritardo si
+  muove lentissimo, perché spostarlo in fretta è una glissata e non un riflesso.
 - SERRA, il pad fermo di «GREEN»: quattro parziali armonici, ciascuno con la sua
   ampiezza mossa da una combinazione diversa di tre lentissimi irrazionali. Non
   battono — il movimento non è una differenza di frequenze — e l'accordo cambia
-  colore da dentro.
+  colore da dentro. Le profondità stanno sotto le basi, così nessun parziale
+  attraversa lo zero e si rovescia di fase: è la prudenza di Soglia.
 
-Tutti e tre a −18 dB di picco, il bersaglio dei tenuti, con i pesi misurati.
-Quando la scelta è fatta, gli scartati se ne vanno da `TESSUTI`, `TERRITORIO`,
-`COSTRUTTORI_T`, `PESO_T` e dai quattro dizionari; chi resta prende il posto di
-corrente nel mood «velo» e si porta la riga nella tabella della guida, in quattro
-lingue — che oggi non c'è, come per i tre timbri delle gocce: righe scritte per
-cancellarne due sono righe tradotte per niente. QUELLO CHE SI PERDE con corrente,
-se se ne va, è l'unico tenuto la cui voce è vento; il rumore resta comunque, in
-Soglia e come grana in Attrito.
+Tutti e tre a −18,0 dB di picco, il bersaglio dei tenuti, coi pesi misurati. Il
+mood «velo» è passato a SERRA: di quel nome — un velo, uno strato sottile e
+fermo — è l'erede più vicina, mentre una campana non è un velo.
+
+QUELLO CHE SE N'È ANDATO con corrente è l'unico tenuto la cui voce fosse vento.
+Il rumore resta comunque nella famiglia, in Soglia e come grana dentro Attrito,
+e in Yoshimura il vento è quasi sempre una registrazione sul campo e non una
+voce del sintetizzatore. L'ARIA ADESSO HA QUATTRO TENUTI invece di due, contro
+la regola dei territori: la ragione per cui non fa fango sta in cima a
+`tessuti.js`, dove la regola stessa è stata riscritta.
 
 Da fare, in ordine:
 

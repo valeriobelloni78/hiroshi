@@ -283,12 +283,16 @@ const esito = await p.evaluate(async () => {
     R.mood.timbriGocce = unaVolta(MOOD_GOCCE, "delle gocce");
     R.mood.timbriTessuti = unaVolta(MOOD_TESSUTI, "dei tessuti");
 
-    /* (d) Quattro mood scelti agli estremi, resi dal motore intero: che
-           nessuno sia muto e che nessuno clippi. «Nuvola» è quello che ci va
-           più vicino — quattordici gocce per idea e addensamento a 64. */
+    /* (d) Cinque mood scelti agli estremi, resi dal motore intero: che nessuno
+           sia muto e che nessuno clippi. «Nuvola» è quello che ci va più vicino
+           — quattordici gocce per idea e addensamento a 64 — e «baia ×
+           specchio» è l'estremo nuovo, dalla parte opposta: il registro più
+           basso delle gocce, con Pelle che è l'unico timbro del fondo, contro
+           il tenuto più lento. In basso il margine si consuma in fretta. */
     R.resa = {};
     for (const [g, t] of [["sereno", "velo"], ["nuvola", "seta"],
-                          ["vespro", "fondale"], ["pioggia", "lino"]]) {
+                          ["vespro", "fondale"], ["pioggia", "lino"],
+                          ["baia", "specchio"]]) {
       applicaMoodGocce(g); applicaMoodTessuti(t);
       const m = misura(await rendiOffline(14));
       R.resa[g + "+" + t] = { rms: m.rms, picco: m.picco };
